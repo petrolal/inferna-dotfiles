@@ -14,14 +14,9 @@ export OMARCHY_PATH="${OMARCHY_PATH:-$INFERNA_PATH}"
 export PATH="$here/core/bin:$HOME/.local/bin:$PATH"
 
 mkdir -p "$HOME/.local/bin"
-ln -sf "$here/core/bin/inferna" "$HOME/.local/bin/inferna"
-ln -sf "$here/core/bin/inferna-shell" "$HOME/.local/bin/inferna-shell"
-ln -sf "$here/core/bin/inferna-launch-shell" "$HOME/.local/bin/inferna-launch-shell"
-ln -sf "$here/core/bin/inferna-restart-shell" "$HOME/.local/bin/inferna-restart-shell"
-ln -sf "$here/core/bin/omarchy" "$HOME/.local/bin/omarchy"
-ln -sf "$here/core/bin/omarchy-shell" "$HOME/.local/bin/omarchy-shell"
-ln -sf "$here/core/bin/omarchy-launch-shell" "$HOME/.local/bin/omarchy-launch-shell"
-ln -sf "$here/core/bin/omarchy-restart-shell" "$HOME/.local/bin/omarchy-restart-shell"
+for bin in "$here"/core/bin/*; do
+  [[ -f "$bin" && -x "$bin" ]] && ln -sf "$bin" "$HOME/.local/bin/$(basename "$bin")"
+done
 
 if ! command -v inferna >/dev/null 2>&1; then
   echo "inferna not found in PATH or $here/core/bin." >&2

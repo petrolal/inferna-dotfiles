@@ -118,3 +118,12 @@ o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl
 o.bind("SUPER + CTRL + K", "Keybindings cheat sheet", "omarchy-menu-keybindings")
 o.bind("SUPER + CTRL + P", "Power Menu", { menu = "system" })
 
+-- Rebind SUPER + SLASH from monitor scaling to cheat sheet (avoid accidental zoom)
+hl.unbind("SUPER + SLASH")
+o.bind("SUPER + SLASH", "Keybindings cheat sheet", "omarchy-menu-keybindings")
+
+-- Dedicated monitor zoom controls
+o.bind("SUPER + equal", "Zoom in (Scale up)", "omarchy-hyprland-monitor-scaling up")
+o.bind("SUPER + minus", "Zoom out (Scale down)", "omarchy-hyprland-monitor-scaling down")
+
+
