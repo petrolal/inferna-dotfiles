@@ -1,7 +1,10 @@
 -- Learn how to configure Hyprland: https://wiki.hypr.land/Configuring/Start/
 
--- Omarchy's bootstrap keeps path setup out of this user config.
-dofile((os.getenv("OMARCHY_PATH") or "/usr/share/omarchy") .. "/default/hypr/bootstrap.lua")
+-- Inferna/Omarchy bootstrap path setup
+local dotfiles = os.getenv("INFERNA_DOTFILES") or (os.getenv("HOME") .. "/inferna-dotfiles")
+local omarchy_core = os.getenv("OMARCHY_PATH") or (dotfiles .. "/core")
+hl.env("OMARCHY_PATH", omarchy_core)
+dofile(omarchy_core .. "/default/hypr/bootstrap.lua")
 
 -- Disable all Omarchy default bindings. Add your own in hypr/bindings.lua.
 -- omarchy_default_bindings = false

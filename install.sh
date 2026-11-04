@@ -9,8 +9,17 @@ set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 config="$HOME/.config"
 
+export OMARCHY_PATH="${OMARCHY_PATH:-$here/core}"
+export PATH="$here/core/bin:$HOME/.local/bin:$PATH"
+
+mkdir -p "$HOME/.local/bin"
+ln -sf "$here/core/bin/omarchy" "$HOME/.local/bin/omarchy"
+ln -sf "$here/core/bin/omarchy-shell" "$HOME/.local/bin/omarchy-shell"
+ln -sf "$here/core/bin/omarchy-launch-shell" "$HOME/.local/bin/omarchy-launch-shell"
+ln -sf "$here/core/bin/omarchy-restart-shell" "$HOME/.local/bin/omarchy-restart-shell"
+
 if ! command -v omarchy >/dev/null 2>&1; then
-  echo "omarchy not found. These dots need Omarchy (https://omarchy.org)." >&2
+  echo "omarchy not found in PATH or $here/core/bin." >&2
   exit 1
 fi
 
@@ -21,7 +30,7 @@ if [[ -n "${XDG_CONFIG_HOME:-}" && "$(realpath -m "$XDG_CONFIG_HOME")" != "$(rea
   exit 1
 fi
 
-# Plugins installed from their own repos: "<git url> <plugin id>".
+# External plugins (pre-bundled in $here/plugins): "<git url> <plugin id>".
 external=(
   "https://github.com/denonmaryland/hello-lock hello-lock"
   "https://github.com/denonmaryland/omarchy-theme-studio io.github.denonmaryland.theme-studio"
@@ -104,6 +113,9 @@ missing=()
 for entry in "${external[@]}"; do
   read -r repo id <<<"$entry"
   save "$config/omarchy/plugins/$id"
+  if [[ -f "$config/omarchy/plugins/$id/manifest.json" ]]; then
+    continue
+  fi
   if ! omarchy plugin add "$repo" --enable --yes || [[ ! -f "$config/omarchy/plugins/$id/manifest.json" ]]; then
     echo "  could not add $repo (try later: omarchy plugin add $repo --enable)"
     missing+=("$id")

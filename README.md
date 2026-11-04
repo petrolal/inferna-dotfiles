@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/wordmark.svg" alt="My Omarchy Dotfiles" width="700">
+<h1>inferna-dotfiles</h1>
 
-<p><strong>My whole Omarchy desktop, ready to install.</strong><br>
-A frosted rail that wraps the screen as one surface, a quarter-circle control corner, a search-first menu, recessed windows and a fastfetch dashboard.</p>
+<p><strong>Pebble Shell & Recessed Windows, engineered natively for NixOS.</strong><br>
+A frosted rail that wraps the screen as one surface, a quarter-circle control corner, a search-first menu, recessed windows, fastfetch dashboard, backed by a declarative NixOS Flake.</p>
 
 <p>
-<a href="https://omarchy.org"><img alt="Omarchy 4" src="https://img.shields.io/badge/omarchy-4-7AA2F7?style=flat-square"></a>
+<img alt="NixOS" src="https://img.shields.io/badge/NixOS-unstable-5277C3?style=flat-square&logo=nixos&logoColor=white">
 <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/hyprland-0.56%2B-1E2330?style=flat-square">
-<img alt="24 plugins" src="https://img.shields.io/badge/shell%20plugins-24-1E2330?style=flat-square">
-<img alt="Backs up first" src="https://img.shields.io/badge/installer-backs%20up%20first-1E2330?style=flat-square">
+<img alt="Quickshell" src="https://img.shields.io/badge/quickshell-Qt6-1E2330?style=flat-square">
+<img alt="28 plugins" src="https://img.shields.io/badge/shell%20plugins-28-1E2330?style=flat-square">
 <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-1E2330?style=flat-square"></a>
 </p>
 
@@ -109,36 +109,34 @@ The screenshots use two themes. Their wallpapers come with them.
 - **Artzen** by tahfizhabib: `omarchy theme install https://github.com/tahfizhabib/omarchy-artzen-theme`
 - **Arc Blueberry** by vale-c: `omarchy theme install https://github.com/vale-c/omarchy-arc-blueberry`
 
-## Install
+## Install on NixOS
 
-You need a working Omarchy 4 install.
+This repository is self-contained. It ships with the core shell runtime (`core/`), 28 bundled plugins (`plugins/`), Hyprland depth & glass setup (`hypr/`), and the complete NixOS configuration (`nixos/`).
+
+### 1. Apply NixOS System Configuration
+
+Rebuild and switch to the system configuration:
 
 ```bash
-git clone https://github.com/denonmaryland/omarchy-dotfiles
-cd omarchy-dotfiles
+cd ~/inferna-dotfiles/nixos
+sudo nixos-rebuild switch --flake .#primary
+```
+
+### 2. Deploy User Dotfiles & Plugins
+
+Run the installer to deploy the shell layout, Hyprland overrides, and Quickshell plugins to `~/.config`:
+
+```bash
+cd ~/inferna-dotfiles
 ./install.sh
 ```
 
-The script lists what it will change and asks once. Everything it replaces is copied to `~/.config/omarchy-dotfiles-backup/<time>/` first. It never touches `hypr/monitors.lua`.
+Everything replaced is safely backed up to `~/.config/omarchy-dotfiles-backup/<time>/`.
 
-Then log out and back in, or run `hyprctl reload && omarchy restart shell`.
-
-### Installing with an AI agent
-
-Paste this repository's link into your coding agent (Claude Code, Codex and so on) and ask it to install the dots. For the agent:
-
-1. Confirm this is an Omarchy 4 system: `omarchy plugin list` should run. Stop if it doesn't.
-2. Clone the repo and run the installer without the prompt:
-
-   ```bash
-   git clone https://github.com/denonmaryland/omarchy-dotfiles ~/omarchy-dotfiles
-   ~/omarchy-dotfiles/install.sh --yes
-   ```
-
-3. Check that `omarchy plugin list --json` shows `denon.shell` and `hello-lock` enabled, and pass on any "could not add" lines the installer printed.
-4. Tell the user where the backup folder is (the installer prints it) and how to set their name (see "Make it yours").
-
-Don't copy files into `~/.config` by hand or edit `hypr/monitors.lua`. The installer backs up everything it replaces; hand edits skip that.
+Then reload Hyprland and start the shell:
+```bash
+hyprctl reload && omarchy restart shell
+```
 
 ### Optional apps
 
