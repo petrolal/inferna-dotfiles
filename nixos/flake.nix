@@ -1,4 +1,6 @@
 {
+  description = "Inferna - Declarative NixOS configuration and desktop environment";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     antigravity-nix = {

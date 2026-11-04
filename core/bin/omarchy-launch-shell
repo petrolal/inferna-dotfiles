@@ -15,10 +15,18 @@
 # against a half-written tree, and that failed reload leaves a second engine
 # generation behind that turns the next restart's IPC kill into a crash.
 run_shell() {
+  local core_path="${INFERNA_PATH:-$OMARCHY_PATH}"
+  if [[ -z $core_path || ! -d "$core_path/shell" ]]; then
+    local _h="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
+    core_path="$(cd "$_h/.." && pwd)"
+  fi
+  export OMARCHY_PATH="$core_path"
+  export INFERNA_PATH="$core_path"
+
   local startup_background
-  startup_background=$(readlink -f "$HOME/.local/state/omarchy/current/background" 2>/dev/null)
+  startup_background=$(readlink -f "$HOME/.local/state/omarchy/current/background" 2>/dev/null || readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null)
   OMARCHY_STARTUP_BACKGROUND="$startup_background" QS_DISABLE_FILE_WATCHER=1 QS_NO_RELOAD_POPUP=1 \
-    systemd-cat -t omarchy-shell -- quickshell -n -p "$OMARCHY_PATH/shell" &
+    systemd-cat -t omarchy-shell -- quickshell -n -p "$core_path/shell" &
   shell_pid=$!
 
   local status

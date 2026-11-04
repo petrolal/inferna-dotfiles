@@ -41,8 +41,8 @@ A frosted rail that wraps the screen as one surface, a quarter-circle control co
 </table>
 
 <p align="center"><sub>
-Themes: Artzen and Arc Blueberry. The screenshots show my own name ("MARY") as the menu and fastfetch title;
-a fresh install says OMARCHY until you <a href="#make-it-yours">set yours</a>.
+Themes: Artzen and Arc Blueberry. The screenshots show "MARY" as the custom menu and fastfetch title;
+a fresh install says INFERNA until you <a href="#make-it-yours">set yours</a>.
 The usage drawer's banked-reset button ships for Codex only.
 </sub></p>
 
@@ -56,7 +56,7 @@ Most of it was made by describing what I wanted to Claude Code, having it show m
 <td width="50%" valign="top"><strong>Control corner.</strong><br>A quarter-circle drawer out of the rail's bottom corner: brightness, volume and mic as arcs, quick toggles, battery and power profile.</td>
 </tr>
 <tr>
-<td width="50%" valign="top"><strong>Search-first menu.</strong><br>Super + Space opens "What do you need?": type to search every Omarchy action, or browse Apps, Style, Setup and the rest. It carries your own name as its title.</td>
+<td width="50%" valign="top"><strong>Search-first menu.</strong><br>Super + Space opens "What do you need?": type to search every Inferna action, or browse Apps, Style, Setup and the rest. It carries your own name as its title.</td>
 <td width="50%" valign="top"><strong>Studio drawer.</strong><br>Glass (opacity, blur, backdrop), Depth (recessed or raised windows, tuned for light and dark themes), Tricky Tiles motion and display in one place.</td>
 </tr>
 <tr>
@@ -106,8 +106,8 @@ Most of it was made by describing what I wanted to Claude Code, having it show m
 
 The screenshots use two themes. Their wallpapers come with them.
 
-- **Artzen** by tahfizhabib: `omarchy theme install https://github.com/tahfizhabib/omarchy-artzen-theme`
-- **Arc Blueberry** by vale-c: `omarchy theme install https://github.com/vale-c/omarchy-arc-blueberry`
+- **Artzen** by tahfizhabib: `inferna theme install https://github.com/tahfizhabib/omarchy-artzen-theme`
+- **Arc Blueberry** by vale-c: `inferna theme install https://github.com/vale-c/omarchy-arc-blueberry`
 
 ## Install on NixOS
 
@@ -149,7 +149,7 @@ These are wired up if they're installed and skipped if not:
 
 ## Make it yours
 
-**Name.** The menu title and the fastfetch heading read one setting. Add this to `~/.config/omarchy/extensions/omarchy-menu.jsonc`:
+**Name.** The menu title and the fastfetch heading read one setting. Add this to `~/.config/inferna/extensions/inferna-menu.jsonc`:
 
 ```jsonc
 {
@@ -157,25 +157,25 @@ These are wired up if they're installed and skipped if not:
 }
 ```
 
-Without it, both say OMARCHY. The big fastfetch logo is Omarchy's own `~/.config/omarchy/branding/about.txt`, so replace that file to change the logo.
+Without it, both say INFERNA. The big fastfetch logo is `~/.config/inferna/branding/about.txt`, so replace that file to change the logo.
 
-**Bar layout.** `~/.config/omarchy/shell.json` decides which widgets sit where. Remove any you don't want (for example `denon.dropbox` or `denon.agents`).
+**Bar layout.** `~/.config/inferna/shell.json` decides which widgets sit where. Remove any you don't want (for example `denon.dropbox` or `denon.agents`).
 
 **Look.** Open the Studio drawer in the bar to change glass, depth and motion. Its panels write `hypr/glass.lua` and `hypr/recessed_windows.lua` for you.
 
 ## Undo
 
-Copy the files from `~/.config/omarchy-dotfiles-backup/<time>/` back into your home folder, then run `hyprctl reload && omarchy restart shell`. To drop a single plugin: `omarchy plugin disable <id>`.
+Copy the files from `~/.config/inferna-dotfiles-backup/<time>/` back into your home folder, then run `hyprctl reload && inferna restart-shell`. To drop a single plugin: `inferna plugin disable <id>`.
 
 ## Notes
 
-- Built and used on one laptop (Zenbook 14, Omarchy 4.0.6, single screen). Multiple monitors are untested.
+- Built and used on Linux with NixOS and Hyprland. Multi-monitor setups are supported natively via `hypr/monitors.lua`.
 - The Touchpad drawer finds your touchpad automatically. If it picks the wrong one, set `TOUCHPAD_DEVICE` to the name shown by `hyprctl devices`.
-- `denon.agents` replaces Omarchy's Codex usage reader with one that fixes a read timeout. Remove `~/.local/bin/denon-agent-usage-update` to go back to the stock reader.
+- `denon.agents` includes Claude Code and Codex usage monitoring.
 
 ## Credits
 
-- Most panels started as clones of Omarchy's built-in plugins (`omarchy plugin clone`). Omarchy is MIT licensed; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- Upstream shell architecture and design inspired by [omarchy-dotfiles](https://github.com/denonmaryland/omarchy-dotfiles) and [Quickshell](https://quickshell.outfoxxed.me/).
 - Icons in `denon.menu/icons` and `denon.tray/icons` are from [Lucide](https://lucide.dev) (ISC).
 - Themes and wallpapers belong to their creators.
 

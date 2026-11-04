@@ -5,11 +5,15 @@
 
 # A caller opened after dev link/unlink may disagree with the still-running
 # desktop. The user manager receives Hyprland's environment at session start.
-session_omarchy_path=$(systemctl --user show-environment 2>/dev/null | sed -n 's/^OMARCHY_PATH=//p' | tail -n 1)
-: "${session_omarchy_path:=$OMARCHY_PATH}"
+session_omarchy_path=$(systemctl --user show-environment 2>/dev/null | sed -n 's/^INFERNA_PATH=//p; s/^OMARCHY_PATH=//p' | tail -n 1)
+: "${session_omarchy_path:=${INFERNA_PATH:-$OMARCHY_PATH}}"
+if [[ -z $session_omarchy_path || ! -d "$session_omarchy_path/shell" ]]; then
+  _here="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
+  session_omarchy_path="$(cd "$_here/.." && pwd)"
+fi
 
 CONFIG_DIR="$session_omarchy_path/shell"
-[[ -f $CONFIG_DIR/shell.qml ]] || { echo "Omarchy shell config not found: $CONFIG_DIR" >&2; exit 1; }
+[[ -f $CONFIG_DIR/shell.qml ]] || { echo "Inferna shell config not found: $CONFIG_DIR" >&2; exit 1; }
 
 # Allow running from outside the session (e.g. over ssh) by deriving the
 # Hyprland instance signature from the newest instance runtime dir.

@@ -97,12 +97,12 @@ o.bind("ALT + PRINT", "Snip: Record screen", hl.dsp.global("snip:record"))
 end
 
 -- flea --default: begin. Written by `flea --default`; `flea --default off` removes the block whole.
--- Only when flea is installed; otherwise Omarchy's file manager keys stay.
+-- Only when flea is installed; otherwise Inferna's file manager keys stay.
 if os.execute("command -v flea >/dev/null 2>&1") then
 hl.unbind("SUPER + SHIFT + F")
 o.bind("SUPER + SHIFT + F", "File manager", { launch = 'flea --gui' })
 hl.unbind("SUPER + ALT + SHIFT + F")
-o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { launch = 'flea --gui "$(omarchy-cmd-terminal-cwd)"' })
+o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { launch = 'flea --gui "$(inferna-cmd-terminal-cwd)"' })
 end
 -- flea --default: end.
 
@@ -115,15 +115,15 @@ o.bind("SUPER + B", "Open Browser", { omarchy = "browser" })
 o.bind("SUPER + E", "Open File Manager", hl.dsp.exec_cmd("thunar"))
 o.bind("SUPER + CTRL + RETURN", "Open application launcher", { menu = "root" })
 o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl activewindow | grep pid | tr -d 'pid:' | xargs kill"))
-o.bind("SUPER + CTRL + K", "Keybindings cheat sheet", "omarchy-menu-keybindings")
+o.bind("SUPER + CTRL + K", "Keybindings cheat sheet", "inferna-menu-keybindings")
 o.bind("SUPER + CTRL + P", "Power Menu", { menu = "system" })
 
 -- Rebind SUPER + SLASH from monitor scaling to cheat sheet (avoid accidental zoom)
 hl.unbind("SUPER + SLASH")
-o.bind("SUPER + SLASH", "Keybindings cheat sheet", "omarchy-menu-keybindings")
+o.bind("SUPER + SLASH", "Keybindings cheat sheet", "inferna-menu-keybindings")
 
 -- Dedicated monitor zoom controls
-o.bind("SUPER + equal", "Zoom in (Scale up)", "omarchy-hyprland-monitor-scaling up")
-o.bind("SUPER + minus", "Zoom out (Scale down)", "omarchy-hyprland-monitor-scaling down")
+o.bind("SUPER + equal", "Zoom in (Scale up)", "inferna-hyprland-monitor-scaling up")
+o.bind("SUPER + minus", "Zoom out (Scale down)", "inferna-hyprland-monitor-scaling down")
 
 

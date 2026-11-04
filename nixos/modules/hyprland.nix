@@ -71,6 +71,11 @@
     # Tell Chromium/Chrome/Electron to use native Wayland
     NIXOS_OZONE_WL = "1";
 
+    # Inferna Dotfiles and Pebble Shell environment
+    INFERNA_DOTFILES = "/home/petrolal/inferna-dotfiles";
+    INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
+    OMARCHY_PATH = "/home/petrolal/inferna-dotfiles/core";
+
     # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Quickshell, and Inferna shell modules
     QML2_IMPORT_PATH = (lib.makeSearchPath "lib/qt-6/qml" [
       pkgs.qt6.qtquick3d
