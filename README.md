@@ -131,11 +131,11 @@ cd ~/inferna-dotfiles
 ./install.sh
 ```
 
-Everything replaced is safely backed up to `~/.config/omarchy-dotfiles-backup/<time>/`.
+Everything replaced is safely backed up to `~/.config/inferna-dotfiles-backup/<time>/`.
 
 Then reload Hyprland and start the shell:
 ```bash
-hyprctl reload && omarchy restart shell
+hyprctl reload && inferna-restart-shell
 ```
 
 ### Optional apps

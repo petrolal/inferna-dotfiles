@@ -44,7 +44,7 @@ Item {
   property bool barHidden: false
   property string home: Quickshell.env("HOME")
   property string stateHome: home + "/.local/state"
-  property string omarchyConfigDir: home + "/.config/omarchy"
+  property string omarchyConfigDir: home + "/.config/inferna"
   property var fallbackBarConfig: ({
     position: "top",
     background: "opaque",

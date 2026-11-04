@@ -44,6 +44,7 @@
 
   # Inferna / Omarchy environment variables
   environment.sessionVariables = {
+    INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
     OMARCHY_PATH = "/home/petrolal/inferna-dotfiles/core";
     INFERNA_DOTFILES = "/home/petrolal/inferna-dotfiles";
   };

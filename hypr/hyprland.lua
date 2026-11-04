@@ -1,10 +1,11 @@
 -- Learn how to configure Hyprland: https://wiki.hypr.land/Configuring/Start/
 
--- Inferna/Omarchy bootstrap path setup
+-- Inferna / Pebble Shell bootstrap path setup
 local dotfiles = os.getenv("INFERNA_DOTFILES") or (os.getenv("HOME") .. "/inferna-dotfiles")
-local omarchy_core = os.getenv("OMARCHY_PATH") or (dotfiles .. "/core")
-hl.env("OMARCHY_PATH", omarchy_core)
-dofile(omarchy_core .. "/default/hypr/bootstrap.lua")
+local inferna_core = os.getenv("INFERNA_PATH") or os.getenv("OMARCHY_PATH") or (dotfiles .. "/core")
+hl.env("INFERNA_PATH", inferna_core)
+hl.env("OMARCHY_PATH", inferna_core)
+dofile(inferna_core .. "/default/hypr/bootstrap.lua")
 
 -- Disable all Omarchy default bindings. Add your own in hypr/bindings.lua.
 -- omarchy_default_bindings = false

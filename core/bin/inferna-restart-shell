@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export INFERNA_PATH="${INFERNA_PATH:-$(cd "$here/.." && pwd)}"
+export OMARCHY_PATH="${OMARCHY_PATH:-$INFERNA_PATH}"
+exec "$here/omarchy-restart-shell" "$@"

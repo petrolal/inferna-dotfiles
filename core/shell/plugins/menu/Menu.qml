@@ -54,15 +54,15 @@ Item {
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
   property string defaultMenuPath: omarchyPath + "/default/omarchy/omarchy-menu.jsonc"
-  property string userMenuPath: Quickshell.env("HOME") + "/.config/omarchy/extensions/omarchy-menu.jsonc"
+  property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Display language for the shipped rows. The code lives in
-  // ~/.config/omarchy/language (omarchy-language owns it); a missing file
+  // ~/.config/inferna/language; a missing file
   // means English. The catalog at default/i18n/<code>/menu.json is applied
   // to the default items before the user extension merges on top, so a
   // user's own rows and retitles always win.
   property string language: "en"
   property var menuCatalog: ({})
-  readonly property string languagePath: Quickshell.env("OMARCHY_LANGUAGE_FILE") || ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/language")
+  readonly property string languagePath: Quickshell.env("INFERNA_LANGUAGE_FILE") || Quickshell.env("OMARCHY_LANGUAGE_FILE") || ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/inferna/language")
   property var defaultMenuItems: []
   property var userMenuItems: []
   // Whether each file has answered once, loaded or (the user's) missing. At
