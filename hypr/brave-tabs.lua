@@ -19,7 +19,11 @@ function tabs.step(direction)
   }))
 end
 
--- A completed swipe advances one tab, independent of swipe distance.
+-- Unset defaults if present
+pcall(hl.gesture, { fingers = 4, direction = "left", action = "unset" })
+pcall(hl.gesture, { fingers = 4, direction = "right", action = "unset" })
+pcall(hl.gesture, { fingers = 4, direction = "down", action = "unset" })
+
 for _, direction in ipairs({ "left", "up" }) do
   hl.gesture({ fingers = 4, direction = direction, action = function()
     tabs.step("next")

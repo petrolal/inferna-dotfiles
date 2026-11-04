@@ -20,11 +20,18 @@ require("default.hypr.omarchy")
 -- Put your personal overrides in these files. They're loaded after Omarchy's
 -- defaults so package updates can improve the defaults without rewriting your
 -- ~/.config/hypr files.
-require("hypr.monitors")
-require("hypr.input")
-require("hypr.bindings")
-require("hypr.looknfeel")
-require("hypr.autostart")
+local function safe_require(mod)
+  local ok, err = pcall(require, mod)
+  if not ok and not string.find(err, "not found") then
+    print("[hyprland.lua] Error loading " .. mod .. ": " .. tostring(err))
+  end
+end
+
+safe_require("hypr.monitors")
+safe_require("hypr.input")
+safe_require("hypr.bindings")
+safe_require("hypr.looknfeel")
+safe_require("hypr.autostart")
 
 
 -- Toggle config flags dynamically.
