@@ -3,6 +3,7 @@
 set -o pipefail
 
 OMARCHY_BIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+export PATH="$OMARCHY_BIN_DIR:$PATH"
 METADATA_SCAN_LIMIT=80
 
 COMMAND_KEYS=()
@@ -585,33 +586,34 @@ show_group_list() {
 }
 
 show_main_help() {
-  cat <<'EOF'
-Omarchy command center
+  local cmd_name="${INFERNA_NAME:-inferna}"
+  cat <<EOF
+${cmd_name^} command center
 
 Usage:
-  omarchy <command> [args...]
-  omarchy commands [--all] [--json] [--check]
-  omarchy <group> --help
-  omarchy <group> <command> --help
+  $cmd_name <command> [args...]
+  $cmd_name commands [--all] [--json] [--check]
+  $cmd_name <group> --help
+  $cmd_name <group> <command> --help
 
 Common commands:
-  omarchy update              Update Omarchy and system packages
-  omarchy theme list          List available themes
-  omarchy theme set <name>    Apply a theme
-  omarchy font list           List available fonts
-  omarchy screenshot          Take a screenshot
-  omarchy debug               Print debugging information
+  $cmd_name update              Update system packages and shell
+  $cmd_name theme list          List available themes
+  $cmd_name theme set <name>    Apply a theme
+  $cmd_name font list           List available fonts
+  $cmd_name screenshot          Take a screenshot
+  $cmd_name debug               Print debugging information
 
 Groups:
 EOF
   show_group_list
-  cat <<'EOF'
+  cat <<EOF
 
 Discovery:
-  omarchy commands            List all commands
-  omarchy commands --all      Include commands explicitly marked hidden
-  omarchy commands --json     Machine-readable command list
-  omarchy commands --check    Validate command metadata and routes
+  $cmd_name commands            List all commands
+  $cmd_name commands --all      Include commands explicitly marked hidden
+  $cmd_name commands --json     Machine-readable command list
+  $cmd_name commands --check    Validate command metadata and routes
 EOF
 }
 

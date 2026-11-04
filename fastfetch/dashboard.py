@@ -8,15 +8,19 @@ CURRENT=Path.home()/'.local/state/omarchy/current/theme'
 try: theme=tomllib.loads((CURRENT/'colors.toml').read_text())
 except (OSError,ValueError): theme={}
 def brand_name():
-    """Same name as the menu title: "root": {"title": ...} in Omarchy's menu extension file."""
-    try:
-        import re
-        text=(Path.home()/'.config/omarchy/extensions/omarchy-menu.jsonc').read_text()
-        m=re.search(r'"root"\s*:\s*\{[^}]*?"title"\s*:\s*"([^"]+)"',text)
-        if m: return m.group(1)
-    except Exception:
-        pass
-    return 'OMARCHY'
+    """Same name as the menu title: "root": {"title": ...} in Inferna's menu extension file."""
+    for p in (
+        Path.home() / '.config/inferna/extensions/inferna-menu.jsonc',
+        Path.home() / '.config/omarchy/extensions/omarchy-menu.jsonc',
+    ):
+        try:
+            if p.exists():
+                text = p.read_text()
+                m = re.search(r'"root"\s*:\s*\{[^}]*?"title"\s*:\s*"([^"]+)"', text)
+                if m: return m.group(1)
+        except Exception:
+            pass
+    return 'INFERNA'
 BRAND=brand_name()
 def color(key,default):
     value=theme.get(key,default).lstrip('#')
@@ -46,7 +50,7 @@ def rate(n): return f'{n/1024:.1f} KiB/s'
 def run(args,fallback='unknown'):
     try: return subprocess.check_output(args,text=True,stderr=subprocess.DEVNULL,timeout=2).strip()
     except (OSError,subprocess.SubprocessError): return fallback
-name=run(['omarchy','theme','current'],CURRENT.resolve().name)
+name=run(['inferna','theme','current'],CURRENT.resolve().name)
 cpu=d('cpu'); gpu=first('gpu'); mem=d('memory'); swap=d('swap'); disk=next((x for x in data.get('disk',[]) if x['mountpoint']=='/'),{})
 net=first('netio'); bat=first('battery'); display=first('display'); wm=d('wm'); kernel=d('kernel')
 up=int(d('uptime').get('uptime',0)/1000); proc=d('processes'); usage=data.get('cpuusage') or [0]
@@ -62,7 +66,7 @@ def resource(key):
 hardware=[('Model',d('host').get('name','')),('Processor',cpu.get('cpu','')),('Topology',f"{cores.get('physical','?')} cores / {cores.get('logical','?')} threads"),('Boost',f"{cpu.get('frequency',{}).get('max',0)/1000:.2f} GHz"),('Graphics',gpu.get('name','')),('GPU driver',gpu.get('driver','')),('Display',f"{display.get('output',{}).get('width','?')} × {display.get('output',{}).get('height','?')}  /  {display.get('output',{}).get('refreshRate',0):.0f} Hz"),('Board',d('board').get('name','')),('Firmware',d('bios').get('version',''))]
 ram_meter,ram_size=resource('memory'); swap_meter,swap_size=resource('swap'); db=disk.get('bytes',{}); total=db.get('total',1); used=total-db.get('free',total)
 telemetry=[('CPU',meter(sum(usage)/len(usage))),('Memory',ram_meter),('Allocated',ram_size),('Swap',swap_meter),('Swap used',swap_size),('Root disk',meter(used/total*100)),('Capacity',f'{size(used)} / {size(total)}'),('Filesystem',disk.get('filesystem','')),('Processes',f"{proc.get('processes','?')} / {proc.get('threads','?')} threads"),('Load avg','  '.join(f'{x:.2f}' for x in (data.get('loadavg') or []))),('Battery',f"{bat.get('capacity',0):.0f}%  /  {', '.join(bat.get('status',[]))}")]
-system=[('Distribution',f'{BRAND} · Arch Linux'),('Kernel',kernel.get('release','')),('Architecture',kernel.get('architecture','')),('Uptime',f'{up//86400}d {up%86400//3600}h {up%3600//60}m'),('Packages',str(d('packages').get('all','?'))),('Session',wm.get('protocolName','')),('Snapshot',datetime.now().strftime('%H:%M:%S  /  %d %b %Y'))]
+system=[('Distribution',f'{BRAND} · NixOS'),('Kernel',kernel.get('release','')),('Architecture',kernel.get('architecture','')),('Uptime',f'{up//86400}d {up%86400//3600}h {up%3600//60}m'),('Packages',str(d('packages').get('all','?'))),('Session',wm.get('protocolName','')),('Snapshot',datetime.now().strftime('%H:%M:%S  /  %d %b %Y'))]
 term=d('terminal'); font=d('terminalfont')
 # The outer Fastfetch process otherwise looks like a terminal to the inner one.
 terminal_name=''
@@ -102,7 +106,9 @@ def stack(*cards):
         if lines: lines.append('')
         lines+=c
     return lines
-logo_path=Path.home()/'.config/omarchy/branding/about.txt'
+logo_path=Path.home()/'.config/inferna/branding/about.txt'
+if not logo_path.exists():
+    logo_path=Path.home()/'.config/omarchy/branding/about.txt'
 logo=logo_path.read_text().splitlines() if logo_path.exists() else [BRAND]
 lw=max(map(len,logo)); gap=3
 print()

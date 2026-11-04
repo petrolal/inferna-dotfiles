@@ -71,31 +71,7 @@
     # Tell Chromium/Chrome/Electron to use native Wayland
     NIXOS_OZONE_WL = "1";
 
-    # AstalNotifd aborts at startup ("Settings schema 'io.astal.notifd'
-    # is not installed") unless its compiled GSettings schema is on this
-    # path -- confirmed empirically: `ags` is a generic launcher, not
-    # built with wrapGAppsHook against astal.notifd specifically, so
-    # nothing else wires this up automatically the way a single
-    # self-contained GTK app's own nixpkgs derivation would.
-    GSETTINGS_SCHEMA_DIR =
-      "${pkgs.astal.notifd}/share/gsettings-schemas/${pkgs.astal.notifd.name}/glib-2.0/schemas";
-
-    # Same story as GSETTINGS_SCHEMA_DIR above, for `gi://Astal*` imports
-    # themselves: the `ags` binary is a plain Go executable with no
-    # wrapGAppsHook-injected GI_TYPELIB_PATH, so without this every
-    # astal.{hyprland,tray,wireplumber,notifd} typelib sits on disk
-    # (installed via environment.systemPackages below) but is invisible to
-    # gjs's `gi://` resolver, which fails with "Typelib file for namespace
-    # '...' not found" even though the package is installed.
-    GI_TYPELIB_PATH = lib.makeSearchPath "lib/girepository-1.0" [
-      pkgs.astal.hyprland
-      pkgs.astal.tray
-      pkgs.astal.wireplumber
-      pkgs.astal.notifd
-      pkgs.astal.mpris
-    ];
-
-    # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Quickshell, and Omarchy shell modules
+    # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Quickshell, and Inferna shell modules
     QML2_IMPORT_PATH = (lib.makeSearchPath "lib/qt-6/qml" [
       pkgs.qt6.qtquick3d
       pkgs.quickshell
@@ -103,41 +79,19 @@
   };
 
   environment.systemPackages = with pkgs; [
-    ags
-
-    # AstalNotifd/AstalWp/AstalTray/AstalHyprland/AstalMpris GI typelibs --
-    # `ags` itself only pulls in the core astal-io/astal-gjs/astal3/astal4
-    # libs it needs to run any Astal app at all; each service library is a
-    # separate package and has to be listed explicitly for its
-    # `gi://Astal*` import to resolve (see apps/ags/widget/Bar.tsx,
-    # Osd.tsx, Media.tsx, Hud.tsx).
-    astal.notifd
-    astal.wireplumber
-    astal.tray
-    astal.hyprland
-    astal.mpris
-
+    # Hyprland session daemons
     hyprpaper
     hyprlock
     hypridle
 
-    # Traditional black XCursor pointer (DMZ-Black) -- with no XCursor theme
-    # package installed at all, Hyprland falls back to its own bundled
-    # hyprcursor theme (a stylized white/cyan rounded pointer), which is
-    # what config/hypr/conf/cursor.lua's XCURSOR_THEME/HYPRCURSOR_THEME env
-    # vars need an actual theme on disk to point at.
+    # Cursor theme
     vanilla-dmz
 
-    # RetroVHSSucks & 3D Retro Room ecosystem
+    # Inferna Pebble Shell (Quickshell Qt6 ecosystem)
     quickshell
     qt6.qtquick3d
     qt6.qtshadertools
-    sox
     ffmpeg
-    tofi
-    rmpc
-    mpd
-    fyi
     libnotify
 
     # Wayland runtime/client libraries

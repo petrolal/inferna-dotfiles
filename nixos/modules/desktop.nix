@@ -32,8 +32,7 @@
   # Portal and dconf management
   programs.dconf.enable = true;
 
-  # Bluetooth manager with tray applet (consumed by AGS's own tray widget
-  # under Hyprland, see hyprland.nix)
+  # Bluetooth manager with tray applet (consumed by Inferna shell tray widget)
   services.blueman.enable = true;
 
   # Hardware-accelerated screen recorder (ShadowPlay-style instant replay & capture)

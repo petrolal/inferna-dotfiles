@@ -112,6 +112,15 @@ echo "Installing Hyprland, fastfetch and foot config..."
 for file in "$here"/hypr/*.lua; do
   place "$file" "$config/hypr/$(basename "$file")"
 done
+rm -rf "$config/hypr/conf"
+
+if [[ -d "$here/inferna/extensions" ]]; then
+  mkdir -p "$config/inferna/extensions"
+  for ext in "$here"/inferna/extensions/*; do
+    place "$ext" "$config/inferna/extensions/$(basename "$ext")"
+  done
+fi
+
 place "$here/fastfetch/config.jsonc" "$config/fastfetch/config.jsonc"
 place "$here/fastfetch/dashboard.py" "$config/fastfetch/dashboard.py"
 place "$here/foot/foot.ini" "$config/foot/foot.ini"

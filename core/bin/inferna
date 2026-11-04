@@ -2,4 +2,6 @@
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export INFERNA_PATH="${INFERNA_PATH:-$(cd "$here/.." && pwd)}"
 export OMARCHY_PATH="${OMARCHY_PATH:-$INFERNA_PATH}"
+export INFERNA_NAME="inferna"
+export PATH="$here:$PATH"
 exec "$here/omarchy" "$@"
