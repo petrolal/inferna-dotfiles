@@ -109,3 +109,12 @@ end
 -- flea --picker: begin. Written by `flea --picker`; `flea --picker off` removes the block whole.
 o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
 -- flea --picker: end.
+
+-- ML4W style keybinding aliases
+o.bind("SUPER + B", "Open Browser", { omarchy = "browser" })
+o.bind("SUPER + E", "Open File Manager", hl.dsp.exec_cmd("thunar"))
+o.bind("SUPER + CTRL + RETURN", "Open application launcher", { menu = "root" })
+o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl activewindow | grep pid | tr -d 'pid:' | xargs kill"))
+o.bind("SUPER + CTRL + K", "Keybindings cheat sheet", "omarchy-menu-keybindings")
+o.bind("SUPER + CTRL + P", "Power Menu", { menu = "system" })
+

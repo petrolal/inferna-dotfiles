@@ -131,6 +131,11 @@ let
     wl-clipboard
     brightnessctl # Monitor & keyboard brightness control for Omarchy corner & bindings
     socat        # Fast IPC communication socket used by Omarchy shell
+    hyprsunset   # Nightlight shader & color temperature daemon
+    gum          # Charm TUI toolkit used by Omarchy CLI scripts
+    imagemagick  # Wallpaper blur, palette generation, and icon transcoding
+    inotify-tools # File watcher used by plugins and theme services
+    fzf          # Fuzzy finder CLI
   ];
 
   mediaUtils = with pkgs; [
