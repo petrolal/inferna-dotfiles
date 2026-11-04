@@ -95,7 +95,7 @@ Panel {
     if (busy || Object.keys(pending).length === 0) return
     const id = Object.keys(pending)[0]
     const p = Object.assign({}, pending); delete p[id]; pending = p
-    writeProc.command = ["/usr/bin/python3", helper].concat(JSON.parse(id))
+    writeProc.command = ["python3", helper].concat(JSON.parse(id))
     writeProc.running = true
   }
   function commit(key, value) {
@@ -155,7 +155,7 @@ Panel {
   }
   Process {
     id: readProc
-    command: ["/usr/bin/python3", root.helper, "state"]
+    command: ["python3", root.helper, "state"]
     stdout: StdioCollector { onStreamFinished: root.receive(text, false) }
     onExited: Qt.callLater(root.drain)
   }

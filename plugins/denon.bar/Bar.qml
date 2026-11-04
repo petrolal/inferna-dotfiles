@@ -1343,6 +1343,11 @@ Item {
   //   Raised:   the rim catches the light on top, rolls round the corners and
   //             darkens into the lower edge; a faint convex sheen; a drop shadow
   //             masked to fall only outside the pill so the glass stays clean.
+  component ScreenMoveRemap: Item {
+    property var window: null
+    property bool remapping: false
+  }
+
   component GlassPill: Rectangle {
     id: pill
     // Raised pills are true capsules (pebbles have round ends; a rounded

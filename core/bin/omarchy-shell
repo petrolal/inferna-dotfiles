@@ -36,8 +36,9 @@ USAGE
   exit 0
 fi
 
-(( $# >= 2 )) || fail "Usage: omarchy-shell <target> <method> [args...]"
-[[ -n ${OMARCHY_PATH:-} ]] || fail "OMARCHY_PATH is not set"
+if [[ -z ${OMARCHY_PATH:-} ]]; then
+  export OMARCHY_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
+fi
 [[ -f $OMARCHY_PATH/shell/shell.qml ]] || fail "omarchy-shell config not found: $OMARCHY_PATH/shell/shell.qml"
 
 # qs matches instances by display, and a caller from outside the session (an
@@ -71,7 +72,7 @@ fi
 socket_id=$(printf '%s\n%s' "$OMARCHY_PATH/shell" "${WAYLAND_DISPLAY:-}" | md5sum)
 socket="${XDG_RUNTIME_DIR:-/run/user/$UID}/omarchy-shell-${socket_id:0:16}.sock"
 request="$*"
-if [[ -S $socket && $request != *$'\x1e'* && $request != *$'\x1f'* ]]; then
+if command -v socat >/dev/null 2>&1 && [[ -S $socket && $request != *$'\x1e'* && $request != *$'\x1f'* ]]; then
   saved_ifs=$IFS
   IFS=$'\x1f'
   request="$*"

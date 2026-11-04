@@ -100,14 +100,14 @@ Panel {
 
   function glassSet(key, value) {
     var g = Object.assign({}, glass); g[key] = value; glass = g
-    write(["/usr/bin/python3", glassHelper, "set", key, String(value)])
+    write(["python3", glassHelper, "set", key, String(value)])
   }
-  function glassUsePreset(id) { glassPreset = id; write(["/usr/bin/python3", glassHelper, "preset", id]) }
+  function glassUsePreset(id) { glassPreset = id; write(["python3", glassHelper, "preset", id]) }
   function depthSet(key, value, perProfile) {
-    var cmd = ["/usr/bin/python3", depthHelper, "set", key, String(value)]
+    var cmd = ["python3", depthHelper, "set", key, String(value)]
     write(perProfile ? cmd.concat(["--profile", profile]) : cmd)
   }
-  function depthLook(id) { write(["/usr/bin/python3", depthHelper, "preset", id, "--profile", profile]) }
+  function depthLook(id) { write(["python3", depthHelper, "preset", id, "--profile", profile]) }
   function depthMode(mode) {
     var wasOff = depth.enabled === false
     if (mode === "flat") { depth = Object.assign({}, depth, { enabled: false }); depthSet("enabled", "false"); return }
@@ -117,9 +117,9 @@ Panel {
   }
   function tilesSet(key, value) {
     var t = Object.assign({}, tiles); t[key] = value; tiles = t
-    write(["/usr/bin/python3", tilesHelper, "set", key, String(value)])
+    write(["python3", tilesHelper, "set", key, String(value)])
   }
-  function tilesUsePreset(id) { write(["/usr/bin/python3", tilesHelper, "preset", id]) }
+  function tilesUsePreset(id) { write(["python3", tilesHelper, "preset", id]) }
   function setBrightness(f) {
     brightness = Math.max(0.01, Math.min(1, f))
     var mon = Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : ""
@@ -131,7 +131,7 @@ Panel {
 
   Process {
     id: glassRead
-    command: ["/usr/bin/python3", root.glassHelper, "state"]
+    command: ["python3", root.glassHelper, "state"]
     stdout: StdioCollector {
       onStreamFinished: {
         var d = root.parse(text)
@@ -143,7 +143,7 @@ Panel {
   }
   Process {
     id: depthRead
-    command: ["/usr/bin/python3", root.depthHelper, "state"]
+    command: ["python3", root.depthHelper, "state"]
     stdout: StdioCollector {
       onStreamFinished: {
         var d = root.parse(text)
@@ -154,7 +154,7 @@ Panel {
   }
   Process {
     id: tilesRead
-    command: ["/usr/bin/python3", root.tilesHelper, "state"]
+    command: ["python3", root.tilesHelper, "state"]
     stdout: StdioCollector {
       onStreamFinished: {
         var d = root.parse(text)

@@ -76,9 +76,11 @@
     INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
     OMARCHY_PATH = "/home/petrolal/inferna-dotfiles/core";
 
-    # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Quickshell, and Inferna shell modules
+    # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Qt5Compat, QtMultimedia, Quickshell, and Inferna shell modules
     QML2_IMPORT_PATH = (lib.makeSearchPath "lib/qt-6/qml" [
       pkgs.qt6.qtquick3d
+      pkgs.qt6.qt5compat
+      pkgs.qt6.qtmultimedia
       pkgs.quickshell
     ]) + ":/home/petrolal/inferna-dotfiles/core/shell";
   };
@@ -95,9 +97,12 @@
     # Inferna Pebble Shell (Quickshell Qt6 ecosystem)
     quickshell
     qt6.qtquick3d
+    qt6.qt5compat
+    qt6.qtmultimedia
     qt6.qtshadertools
     ffmpeg
     libnotify
+    socat
 
     # Wayland runtime/client libraries
     wayland

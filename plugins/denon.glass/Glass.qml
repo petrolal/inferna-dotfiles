@@ -105,13 +105,13 @@ Panel {
     const key = Object.keys(pending)[0], value = pending[key]
     const p = Object.assign({}, pending); delete p[key]; pending = p
     message = "Applying…"
-    writeProc.command = ["/usr/bin/python3", helper, "set", key, String(value)]
+    writeProc.command = ["python3", helper, "set", key, String(value)]
     writeProc.running = true
   }
   function run(args) {
     if (busy || Object.keys(pending).length) return false
     message = "Applying…"
-    writeProc.command = ["/usr/bin/python3", helper].concat(args)
+    writeProc.command = ["python3", helper].concat(args)
     writeProc.running = true
     return true
   }
@@ -163,7 +163,7 @@ Panel {
   }
   Process {
     id: readProc
-    command: ["/usr/bin/python3", root.helper, "state"]
+    command: ["python3", root.helper, "state"]
     stdout: StdioCollector { onStreamFinished: root.receive(text, false) }
     onExited: Qt.callLater(root.drain)
   }

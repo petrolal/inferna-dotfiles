@@ -205,7 +205,7 @@ Item {
     var dir = Quickshell.env("HOME") + "/.local/share/denon-agent-usage/"
     var command
     if (providerId === "codex") {
-      command = ["/usr/bin/python3", "-I", dir + "codex-reset.py"]
+      command = ["python3", "-I", dir + "codex-reset.py"]
       if (creditId) command.push(String(creditId))
     } else return
     resetMessage = ""

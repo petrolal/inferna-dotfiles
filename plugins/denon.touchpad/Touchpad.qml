@@ -62,7 +62,7 @@ Panel {
     delete next[key]
     pending = next
     actionOutput = ""
-    writeProc.command = ["/usr/bin/python", helper, "set", key, String(value)]
+    writeProc.command = ["python3", helper, "set", key, String(value)]
     writeProc.running = true
   }
   function adjust(dx) {
@@ -99,7 +99,7 @@ Panel {
   }
   Process {
     id: readProc
-    command: ["/usr/bin/python", root.helper, "state"]
+    command: ["python3", root.helper, "state"]
     stdout: StdioCollector { onStreamFinished: root.receive(text, false) }
     onExited: Qt.callLater(root.drain)
   }
