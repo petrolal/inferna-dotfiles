@@ -30,7 +30,9 @@ POLICY_DIRS=(
 # The path etc/sudoers.d/inferna-theme-browser names. The privileged half always
 # runs from there rather than from whichever copy was invoked, so the rule
 # matches even where $INFERNA_PATH points at a checkout.
-PACKAGED_PATH=/usr/bin/inferna-theme-set-browser-policy
+PACKAGED_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}/bin/inferna-theme-set-browser-policy"
+[[ -x $PACKAGED_PATH ]] || PACKAGED_PATH="$(command -v inferna-theme-set-browser-policy 2>/dev/null || true)"
+[[ -n $PACKAGED_PATH ]] || PACKAGED_PATH=/usr/bin/inferna-theme-set-browser-policy
 
 usage() {
   echo "Usage: inferna-theme-set-browser-policy <rrggbb>" >&2

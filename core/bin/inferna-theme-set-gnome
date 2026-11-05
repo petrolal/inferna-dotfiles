@@ -10,6 +10,35 @@ if [[ -z ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
   exit 0
 fi
 
+# Locate gsettings executable
+GSETTINGS_BIN=$(command -v gsettings 2>/dev/null)
+if [[ -z $GSETTINGS_BIN ]]; then
+  for candidate in /nix/store/*-glib-*-bin/bin/gsettings; do
+    if [[ -x $candidate ]]; then
+      GSETTINGS_BIN="$candidate"
+      break
+    fi
+  done
+fi
+
+if [[ -z $GSETTINGS_BIN ]]; then
+  exit 0
+fi
+
+# Ensure schema dir is found if not already in XDG_DATA_DIRS
+if [[ -z ${GSETTINGS_SCHEMA_DIR:-} ]]; then
+  for sdir in /nix/store/*-gsettings-desktop-schemas-*/share/gsettings-schemas/*/glib-2.0/schemas; do
+    if [[ -d $sdir ]]; then
+      export GSETTINGS_SCHEMA_DIR="$sdir"
+      break
+    fi
+  done
+fi
+
+run_gsettings() {
+  "$GSETTINGS_BIN" "$@" 2>/dev/null || true
+}
+
 THEME_DIR=$HOME/.local/state/inferna/current/theme
 COLORS_FILE="$THEME_DIR/colors.toml"
 
@@ -18,17 +47,19 @@ COLORS_FILE="$THEME_DIR/colors.toml"
 mode=$(inferna-theme-color --file "$COLORS_FILE" mode)
 
 if [[ $mode == "light" ]]; then
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
+  run_gsettings set org.gnome.desktop.interface color-scheme "prefer-light"
+  run_gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
 else
-  gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+  run_gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+  run_gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 fi
 
 # Change gnome icon theme color
 GNOME_ICONS_THEME=$HOME/.local/state/inferna/current/theme/icons.theme
 if [[ -f $GNOME_ICONS_THEME ]]; then
-  gsettings set org.gnome.desktop.interface icon-theme "$(<$GNOME_ICONS_THEME)"
+  run_gsettings set org.gnome.desktop.interface icon-theme "$(<$GNOME_ICONS_THEME)"
 else
-  gsettings set org.gnome.desktop.interface icon-theme "Yaru-blue"
+  run_gsettings set org.gnome.desktop.interface icon-theme "Yaru-blue"
 fi
+
+exit 0
