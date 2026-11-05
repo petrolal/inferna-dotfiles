@@ -2,27 +2,26 @@
 
 # inferna:summary=Print the installed Omarchy version
 
-omarchy_path=${OMARCHY_PATH:-/usr/share/omarchy}
-omarchy_path=${omarchy_path%/}
+inferna_path=${INFERNA_PATH:-${OMARCHY_PATH:-$HOME/inferna-dotfiles/core}}
+inferna_path=${inferna_path%/}
 
-if [[ $omarchy_path != "/usr/share/omarchy" ]]; then
-  hash=$(git -C "$omarchy_path" rev-parse --short HEAD 2>/dev/null || true)
-
+if [[ -d $inferna_path ]]; then
+  repo_dir=$(cd "$inferna_path/.." && pwd)
+  hash=$(git -C "$repo_dir" rev-parse --short HEAD 2>/dev/null || true)
   if [[ -n $hash ]]; then
-    echo "dev ($hash)"
+    echo "Inferna dev ($hash)"
   else
-    echo "dev"
+    echo "Inferna 1.0.0-nixos"
   fi
-
   exit 0
 fi
 
 # The edge channel installs inferna-dev instead of omarchy, so check both.
-for package in inferna-dev omarchy; do
+for package in inferna-dev inferna omarchy; do
   version=$(pacman -Q "$package" 2>/dev/null | awk '{ print $2 }')
   [[ -n $version ]] && break
 done
 
-[[ -n $version ]] || exit 1
+[[ -n $version ]] || version="Inferna 1.0.0-nixos"
 
 echo "$version"
