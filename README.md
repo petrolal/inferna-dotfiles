@@ -10,7 +10,7 @@ A frosted rail that wraps the screen as one surface, a quarter-circle control co
 <img alt="Hyprland 0.56+" src="https://img.shields.io/badge/hyprland-0.56%2B-1E2330?style=flat-square">
 <img alt="Quickshell" src="https://img.shields.io/badge/quickshell-Qt6-1E2330?style=flat-square">
 <img alt="28 plugins" src="https://img.shields.io/badge/shell%20plugins-28-1E2330?style=flat-square">
-<a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-1E2330?style=flat-square"></a>
+<a href="LICENSE"><img alt="GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"></a>
 </p>
 
 <img src="docs/fastfetch-claude.webp" alt="fastfetch dashboard next to Claude Code, Artzen theme" width="880">
@@ -173,12 +173,16 @@ Copy the files from `~/.config/inferna-dotfiles-backup/<time>/` back into your h
 - The Touchpad drawer finds your touchpad automatically. If it picks the wrong one, set `TOUCHPAD_DEVICE` to the name shown by `hyprctl devices`.
 - `denon.agents` includes Claude Code and Codex usage monitoring.
 
-## Credits
+## Credits & Attribution
 
+- **Author & Maintainer:** Lucas Petrolal ([@petrolal](https://github.com/petrolal/dotfiles))
 - Upstream shell architecture and design inspired by [omarchy-dotfiles](https://github.com/denonmaryland/omarchy-dotfiles) and [Quickshell](https://quickshell.outfoxxed.me/).
+- Built-in shell plugin bases originated as part of [Omarchy](https://github.com/basecamp/omarchy) by David Heinemeier Hansson.
 - Icons in `denon.menu/icons` and `denon.tray/icons` are from [Lucide](https://lucide.dev) (ISC).
-- Themes and wallpapers belong to their creators.
+- Themes and wallpapers belong to their respective creators.
+- Complete third-party notices: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+GNU General Public License v3.0 (GPL-3.0-or-later). See [LICENSE](LICENSE).  
+Modifications, redistributions, and forks must retain attribution to Lucas Petrolal and link to the original repository (<https://github.com/petrolal/dotfiles>).

@@ -9,4 +9,18 @@ if [[ ${1:-} == --pid=* ]]; then
   shift
 fi
 
-exec setsid uwsm-app -- xdg-terminal-exec --dir="$(omarchy-cmd-terminal-cwd "$pid")" "$@"
+dir="$(omarchy-cmd-terminal-cwd "$pid" 2>/dev/null || echo "$HOME")"
+[[ -d "$dir" ]] || dir="$HOME"
+
+# Launch terminal (prefer kitty on NixOS if xdg-terminal-exec is unavailable)
+if command -v xdg-terminal-exec >/dev/null 2>&1; then
+  exec setsid xdg-terminal-exec --dir="$dir" "$@"
+elif command -v kitty >/dev/null 2>&1; then
+  exec setsid kitty --directory="$dir" "$@"
+elif command -v foot >/dev/null 2>&1; then
+  exec setsid foot --working-directory="$dir" "$@"
+elif command -v alacritty >/dev/null 2>&1; then
+  exec setsid alacritty --working-directory "$dir" "$@"
+else
+  exec setsid xterm -e "$@"
+fi

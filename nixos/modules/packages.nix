@@ -124,6 +124,8 @@ let
     less
     rlwrap
     kitty
+    ghostty
+    alacritty
     foot         # Omarchy terminal emulator
     thunar  # standalone GTK file manager; no longer pulled in transitively now that desktopManager.xfce is gone
     grim         # Wayland screenshot capture, bound in config/hypr/hyprland.lua
