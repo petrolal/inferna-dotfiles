@@ -58,7 +58,7 @@ prepare_theme_intro() {
       background=${names[0]}
     else
       mapfile -d '' -t names < <(
-        find -L "$OMARCHY_PATH/themes/$theme/backgrounds" "$HOME/.config/inferna/themes/$theme/backgrounds" -maxdepth 1 -type f \
+        find -L "$INFERNA_PATH/themes/$theme/backgrounds" "$HOME/.config/inferna/themes/$theme/backgrounds" -maxdepth 1 -type f \
           \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.bmp' -o -iname '*.webp' \) -printf '%f\0' 2>/dev/null | sort -zu
       )
       (( ${#names[@]} > 0 )) || return 0
@@ -66,7 +66,7 @@ prepare_theme_intro() {
     fi
   fi
   if [[ -n ${name:-} ]]; then
-    for source in "$HOME/.config/inferna/themes/$theme" "$OMARCHY_PATH/themes/$theme"; do
+    for source in "$HOME/.config/inferna/themes/$theme" "$INFERNA_PATH/themes/$theme"; do
       if [[ -f $source/backgrounds/$name ]]; then
         background="$source/backgrounds/$name"
         break

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install Helix and configure it to use the current Omarchy theme
+# inferna:summary=Install Helix and configure it to use the current Inferna theme
 
 echo "Installing Helix..."
 inferna-pkg-add helix
 
 mkdir -p ~/.config/helix/themes
 
-# Symlink the rendered Omarchy theme so Helix tracks the active theme
+# Symlink the rendered Inferna theme so Helix tracks the active theme
 ln -sf "$HOME/.local/state/inferna/current/theme/helix.toml" ~/.config/helix/themes/omarchy.toml
 
 # Only seed a config.toml if the user does not already have one

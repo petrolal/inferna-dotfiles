@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Apply an Omarchy theme
+# inferna:summary=Apply an Inferna theme
 # inferna:args=<theme-name>
 # inferna:examples=inferna theme list | inferna theme set "Tokyo Night"
 
@@ -20,7 +20,7 @@ THEME_SET_LOG="$HOME/.local/state/inferna/theme-set.log"
 THEME_RETINT_LOCK="${XDG_RUNTIME_DIR:-/tmp}/inferna-theme-set-retint.lock"
 THEME_GENERATION_PATH="$HOME/.local/state/inferna/current/theme.generation"
 USER_THEMES_PATH="$HOME/.config/inferna/themes"
-OMARCHY_THEMES_PATH="$OMARCHY_PATH/themes"
+OMARCHY_THEMES_PATH="$INFERNA_PATH/themes"
 
 # What a theme installed from a git repo may not ship, because these run code.
 # Hyprland requires a theme's hyprland.lua and gum_env.lua at login and Neovim
@@ -37,7 +37,7 @@ IGNORED_THEME_FILES=()
 
 FAILED_THEME_COMMANDS=()
 
-# Each command is an Omarchy command on the PATH this one already has, so it
+# Each command is an Inferna command on the PATH this one already has, so it
 # runs directly rather than through a login shell that rereads the profile.
 # A background command would otherwise get /dev/null as stdin, and the browser
 # policy asks for a sudo password on stdin when it is a terminal.
@@ -333,7 +333,7 @@ stage_installed_dir() {
   done
 }
 
-# `omarchy theme install` clones into ~/.config/inferna/themes, so a .git
+# `inferna theme install` clones into ~/.config/inferna/themes, so a .git
 # directory there means the contents came from a stranger and are held to the
 # list above. A directory the user wrote themselves, and a symlink to their own
 # working copy, are theirs to fill however they like -- the same distinction

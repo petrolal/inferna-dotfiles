@@ -1,14 +1,14 @@
-# Omarchy Shell: Bar, Plugins, and Idle
+# Inferna Shell: Bar, Plugins, and Idle
 
 Read this before changing the status bar, notifications, shell plugins,
 widgets, or idle/lock behavior.
 
 The bar, notification daemon, settings panel, and assorted overlays all run
-inside a single long-running Quickshell process (`omarchy-shell`).
+inside a single long-running Quickshell process (`inferna-shell`).
 
 ```
-~/.config/omarchy/shell.json             # User overrides: bar, plugins, idle
-~/.config/omarchy/plugins/<plugin-id>/   # User-owned shell plugins
+~/.config/inferna/shell.json             # User overrides: bar, plugins, idle
+~/.config/inferna/plugins/<plugin-id>/   # User-owned shell plugins
 $OMARCHY_PATH/config/omarchy/shell.json  # Canonical defaults
 ```
 
@@ -19,7 +19,7 @@ changes. `idle.screensaver` and `idle.lock` are seconds since user idle began.
 
 ## Plugin UI Safety
 
-Plugins run inside Omarchy's long-lived, unsandboxed shell. Treat text from network responses, files, IPC, settings, environment variables, and command output as untrusted.
+Plugins run inside Inferna's long-lived, unsandboxed shell. Treat text from network responses, files, IPC, settings, environment variables, and command output as untrusted.
 
 - QML `Text` defaults to `Text.AutoText`. Do not bind untrusted data to an AutoText sink: markup-shaped input such as `<img src="https://example.invalid/tracker">` can be interpreted as rich text and load a resource.
 - For display text owned by the plugin, set `textFormat: Text.PlainText`. Prefer a local `PlainText` component when the plugin has multiple text elements.
@@ -31,18 +31,18 @@ Text {
 }
 ```
 
-- When passing dynamic text to an Omarchy-owned component whose internal `Text` format the plugin cannot set, neutralize markup in the plugin first with a helper of its own, and add a regression test; Omarchy ships no such helper. Never edit the packaged component to add a plain-text option: that belongs in a pull request to Omarchy.
+- When passing dynamic text to an Inferna-owned component whose internal `Text` format the plugin cannot set, neutralize markup in the plugin first with a helper of its own, and add a regression test; Inferna ships no such helper. Never edit the packaged component to add a plain-text option: that belongs in a pull request to Inferna.
 - Bound and validate downloaded data before displaying or saving it: limit response and collection sizes, string lengths, identifiers, and timestamps.
 - Keep network access explicit. Use fixed HTTPS sources, timeouts, response-size limits, and validation. For periodic background refreshes, disclose the behavior and let users enable or disable it. Never execute downloaded content or interpolate untrusted values into shell commands.
 - Add regression coverage for markup-shaped input and every shared tooltip or notification sink that receives dynamic text.
 
 ## Plugin Motion
 
-Motion in a plugin should feel like the rest of the shell. Most of it comes free from Omarchy's kit in `qs.Ui`: a `KeyboardPanel` grows out of its bar icon and fades, morphs into a neighbouring panel in the same bar section, and grows to fit content that arrives late; a `PopupCard` grows and fades; a `Button` gives a little when pressed. Build on those rather than animating your own open and close.
+Motion in a plugin should feel like the rest of the shell. Most of it comes free from Inferna's kit in `qs.Ui`: a `KeyboardPanel` grows out of its bar icon and fades, morphs into a neighbouring panel in the same bar section, and grows to fit content that arrives late; a `PopupCard` grows and fades; a `Button` gives a little when pressed. Build on those rather than animating your own open and close.
 
 For anything the plugin animates itself, `import qs.Commons` and:
 
-- Give every duration as `Style.duration(ms)`, never a bare number. It returns 0 when the user has turned animations off with `omarchy toggle animations`.
+- Give every duration as `Style.duration(ms)`, never a bare number. It returns 0 when the user has turned animations off with `inferna toggle animations`.
 - Ease movement and entrances with `Style.easeOut` (`easing.type: Easing.Bezier; easing.bezierCurve: Style.easeOut`) or `Easing.OutCubic`. Never an ease-in curve, no bounce, and linear only for constant motion such as a spinner.
 - Keep it under 300ms, with exits shorter than entrances: about 180ms in, 120ms out.
 - Never scale from 0; start at 0.95–0.97 with opacity 0.
@@ -66,7 +66,7 @@ Item {
 
 ## Translations
 
-Omarchy runs in 50 languages, and a plugin should follow the one picked under Setup > Language the way the built-in plugins do: live, without a shell restart. Ship the plugin's strings as flat JSON catalogs in an `i18n/` directory beside its QML, one file per Omarchy language code (`en.json`, `da.json`, `pt-BR.json`; `$OMARCHY_PATH/default/i18n/locales.json` lists all 50), and read them through `Commons.Translations`:
+Inferna runs in 50 languages, and a plugin should follow the one picked under Setup > Language the way the built-in plugins do: live, without a shell restart. Ship the plugin's strings as flat JSON catalogs in an `i18n/` directory beside its QML, one file per Inferna language code (`en.json`, `da.json`, `pt-BR.json`; `$OMARCHY_PATH/default/i18n/locales.json` lists all 50), and read them through `Commons.Translations`:
 
 ```qml
 import qs.Commons as Commons
@@ -93,18 +93,18 @@ Item {
 - Keep calls to `strings.t(...)` inside bindings so a language switch re-renders them. Text built once when something happens keeps the old language until it is rebuilt.
 - Format dates with `Qt.locale(Commons.I18n.formatLocale)`, not `Qt.formatDate` or a bare `Qt.locale()`: those follow the locale the shell started with, which changes only when it restarts.
 - Keep brand names, units, and keyboard keys as they are, and leave log and diagnostic output in English.
-- Use `strings.t()` only for the plugin's own text. `Commons.I18n` holds Omarchy's catalog, which can rename or drop its keys in any update.
+- Use `strings.t()` only for the plugin's own text. `Commons.I18n` holds Inferna's catalog, which can rename or drop its keys in any update.
 
 ## Bar Layout
 
-Use the `omarchy bar` group to move and manage widgets:
+Use the `inferna bar` group to move and manage widgets:
 
 ```bash
-omarchy bar move omarchy.clock --section right
+inferna bar move omarchy.clock --section right
 ```
 
 For layout edits beyond what the commands cover, edit the bar configuration
-in `~/.config/omarchy/shell.json`; it hot-reloads on save.
+in `~/.config/inferna/shell.json`; it hot-reloads on save.
 
 `bar.layout` has five sections, in the order they run along the bar: `left`,
 `centerBegin`, `center`, `centerEnd`, and `right`, plus `tray`, drawn inside
@@ -119,19 +119,19 @@ To customize a built-in bar widget, never edit `$OMARCHY_PATH/shell/plugins/`.
 Clone it into the user plugin directory instead:
 
 ```bash
-omarchy plugin clone omarchy.workspaces
-# Edit ~/.config/omarchy/plugins/<username>.workspaces/; saved changes reload automatically.
+inferna plugin clone omarchy.workspaces
+# Edit ~/.config/inferna/plugins/<username>.workspaces/; saved changes reload automatically.
 ```
 
 Cloning switches the bar to the cloned copy (e.g. `<username>.workspaces`),
 which is yours to edit and survives updates.
 
-Saving a file anywhere under `~/.config/omarchy/plugins/` reloads plugin code
+Saving a file anywhere under `~/.config/inferna/plugins/` reloads plugin code
 automatically. If a change somehow fails to apply, force a reload with
-`omarchy-shell shell rescanPlugins`.
+`inferna-shell shell rescanPlugins`.
 
 ## Idle and Lock
 
-Set `idle.screensaver` and `idle.lock` in `~/.config/omarchy/shell.json`,
+Set `idle.screensaver` and `idle.lock` in `~/.config/inferna/shell.json`,
 in seconds since user idle began. Example: "lock after ten minutes" means
 setting `idle.lock` to `600`.

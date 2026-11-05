@@ -42,7 +42,7 @@ provider_from_arg() {
 
 # The path etc/sudoers.d/inferna-dns names. The privileged half always runs from
 # there rather than from whichever copy was invoked, so the rule matches even
-# where $OMARCHY_PATH points at a checkout.
+# where $INFERNA_PATH points at a checkout.
 PACKAGED_PATH=/usr/bin/inferna-dns
 
 # True when sudo would run this exact command without stopping for a password.
@@ -153,7 +153,7 @@ write_networkmanager_dns() {
   # DNS server list written as data, not a path or command; nothing user-writable
   # is resolved or executed from the root-owned drop-in.
   cat >"$NM_DNS_CONF" <<EOF
-# Managed by inferna-dns. Remove this file or run omarchy dns DHCP to use DHCP DNS again.
+# Managed by inferna-dns. Remove this file or run inferna dns DHCP to use DHCP DNS again.
 [global-dns]
 
 [global-dns-domain-*]

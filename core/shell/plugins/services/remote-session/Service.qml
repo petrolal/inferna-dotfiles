@@ -10,7 +10,7 @@ import "RemoteSessionModel.js" as RemoteSessionModel
 Item {
   id: root
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by inferna-shell (the first-party service loader).
   property var shell: null
 
   property bool stateLoaded: false

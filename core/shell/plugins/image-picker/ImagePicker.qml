@@ -12,7 +12,7 @@ import "ImagePickerModel.js" as ImagePickerModel
 Item {
   id: root
 
-  // Injected by omarchy-shell; defaults to the session OMARCHY_PATH.
+  // Injected by inferna-shell; defaults to the session OMARCHY_PATH.
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
   property string stateHome: Quickshell.env("HOME") + "/.local/state"
   property string userThemesPath: Quickshell.env("HOME") + "/.config/inferna/themes"
@@ -36,7 +36,7 @@ Item {
   property string filterText: ""
   property var doneFilesToRelease: []
   // Themes open from rows the shell already holds, so the picker shows without
-  // waiting on omarchy-theme-switcher; each open refreshes them behind it.
+  // waiting on inferna-theme-switcher; each open refreshes them behind it.
   property string themeRows: ""
   property bool themeMode: false
   property bool themeOpenPending: false
@@ -200,7 +200,7 @@ Item {
     if (themeMode) {
       themeMode = false
       root.opened = false
-      if (path) Util.execArgv(["omarchy-theme-set", nameForPath(path)])
+      if (path) Util.execArgv(["inferna-theme-set", nameForPath(path)])
       return
     }
 
@@ -333,7 +333,7 @@ Item {
     onTriggered: {
       if (root.opened && root.themeMode && !introPrepare.running) {
         introPrepare.theme = root.nameForPath(root.currentPath())
-        introPrepare.command = ["omarchy-theme-bg-boot-intro", "--prepare-theme", root.nameForPath(root.currentPath())]
+        introPrepare.command = ["inferna-theme-bg-boot-intro", "--prepare-theme", root.nameForPath(root.currentPath())]
         introPrepare.running = true
       }
     }
@@ -421,7 +421,7 @@ Item {
     pendingDeleteTheme = ""
   }
 
-  // Removal itself is omarchy-theme-remove's job (including its guards and
+  // Removal itself is inferna-theme-remove's job (including its guards and
   // notification); the picker only refreshes its rows once it finishes.
   function confirmDeleteTheme() {
     var name = pendingDeleteTheme
@@ -430,7 +430,7 @@ Item {
     if (!name || deleteThemeProc.running) return
     // Keep the user's place in the list once the deleted theme is gone.
     if (name === selectedThemeName()) deleteSelectionPath = ImagePickerModel.replacementSelectionPath(imageArray, selectedIndex, filterText)
-    deleteThemeProc.command = ["omarchy-theme-remove", name]
+    deleteThemeProc.command = ["inferna-theme-remove", name]
     deleteThemeProc.running = true
   }
 
@@ -463,7 +463,7 @@ Item {
   Process {
     id: themeRowsProc
     property bool queued: false
-    command: [root.omarchyPath + "/bin/omarchy-theme-switcher", "--print-rows"]
+    command: [root.omarchyPath + "/bin/inferna-theme-switcher", "--print-rows"]
     stdout: StdioCollector {
       onStreamFinished: root.updateThemeRows(String(text || "").trim())
     }
@@ -475,7 +475,7 @@ Item {
     }
   }
 
-  // The same listing omarchy-theme-remove offers interactively: real
+  // The same listing inferna-theme-remove offers interactively: real
   // directories under the user themes path, never symlinked working copies.
   Process {
     id: extraThemesProc
@@ -564,7 +564,7 @@ Item {
     }
   }
 
-  // Lifecycle hooks invoked by omarchy-shell summon/hide. shell.summon(id,
+  // Lifecycle hooks invoked by inferna-shell summon/hide. shell.summon(id,
   // payloadJson) hands the JSON to open() here; shell.hide(id) calls close().
   // The shell host owns the stable `image-selector` IPC target and forwards
   // those lower-level positional calls here.

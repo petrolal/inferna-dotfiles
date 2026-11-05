@@ -387,7 +387,7 @@ modmask_to_text() {
 #
 # Also do some pre-processing:
 # - Fill missing Lua code:... keys and __lua dispatch metadata from the Lua source cache
-# - Remove standard Omarchy bin path prefix
+# - Remove standard Inferna bin path prefix
 # - Map numeric modifier key mask to a textual rendition
 # - Output comma-separated values that the parser can understand
 dynamic_bindings() {
@@ -452,7 +452,7 @@ static_bindings() {
   echo "SHIFT ALT,D,Download Video from Web App,sendshortcut,SHIFT ALT,D,"
 }
 
-# Actions Omarchy binds to a second chord meant as an alternative, named one at
+# Actions Inferna binds to a second chord meant as an alternative, named one at
 # a time. A rule would be wrong here: Alt + Tab and Shift + Alt + Tab both say
 # "Reveal active window on top" while cycling opposite ways, and a media key is
 # nobody's idea of an alternative to a Super chord. Only chords a user reaches
@@ -562,7 +562,7 @@ prioritize_entries() {
 
     prio = 50
     if (match(line, /Keybindings/)) prio = 0
-    if (match(line, /Omarchy menu/))  prio = 1
+    if (match(line, /Inferna menu/))  prio = 1
     if (match(line, /Terminal/)) prio = 2
     if (match(line, /Browser/) && !match(line, /Browser[[:space:]]*\(/) && !match(line, /SUPER SHIFT.*\+.*B.*→.*Browser/)) prio = 3
     if (match(line, /File manager/) && !match(line, /File manager \(cwd\)/))  prio = 4
@@ -624,7 +624,7 @@ prioritize_entries() {
 # Drop repeated records while keeping the order Hyprland reported them in, so
 # the chord a user declared first is the one that leads a merged entry.
 # The bindings describe themselves in English; show the descriptions in the
-# Omarchy language from default/i18n/<code>/keybindings.json. One with a
+# Inferna language from default/i18n/<code>/keybindings.json. One with a
 # number in it ("Switch to workspace 3") matches its catalog pattern
 # ("Switch to workspace %1"). A description the catalog doesn't know, like
 # one a user wrote, shows as written. Runs after the English ordering, and
@@ -632,7 +632,7 @@ prioritize_entries() {
 translate_binding_records() {
   local language catalog
   language=$(inferna-language 2>/dev/null) || language=en
-  catalog=$OMARCHY_PATH/default/i18n/$language/keybindings.json
+  catalog=$INFERNA_PATH/default/i18n/$language/keybindings.json
   if [[ $language == "en" || ! -f $catalog ]]; then
     cat
     return
@@ -685,7 +685,7 @@ keybindings_cache_key() {
     printf 'v19\n'
     leading_keyboard
     inferna-language 2>/dev/null
-    cat "$OMARCHY_PATH/default/i18n/$(inferna-language 2>/dev/null)/keybindings.json" 2>/dev/null
+    cat "$INFERNA_PATH/default/i18n/$(inferna-language 2>/dev/null)/keybindings.json" 2>/dev/null
     hyprctl devices 2>/dev/null | grep -F 'active keymap:'
     cat "$key_names_file" 2>/dev/null
     hyprctl binds 2>/dev/null

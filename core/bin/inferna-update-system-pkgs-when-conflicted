@@ -19,7 +19,7 @@
 set -e
 
 [[ ${OMARCHY_UPDATE_CONFLICT:-} == 1 ]] || {
-  echo "inferna-update-system-pkgs-when-conflicted runs as part of omarchy update" >&2
+  echo "inferna-update-system-pkgs-when-conflicted runs as part of inferna update" >&2
   exit 1
 }
 
@@ -72,7 +72,7 @@ if grep -q 'unresolvable package conflicts detected' "$errors"; then
   # isn't running --noconfirm puts its questions on stderr and reads the answers
   # from stdin, so those are the two that have to be a terminal.
   if [[ ${OMARCHY_UPDATE_UNATTENDED:-} == 1 || ! -t 0 || ! -t 2 ]]; then
-    echo -e "\e[33m\nThis upgrade needs an answer. Run omarchy update interactively to give it.\e[0m" >&2
+    echo -e "\e[33m\nThis upgrade needs an answer. Run inferna update interactively to give it.\e[0m" >&2
     exit 1
   fi
 

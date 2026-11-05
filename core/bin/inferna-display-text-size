@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Scale text everywhere — omarchy shell, GTK apps, and terminals
+# inferna:summary=Scale text everywhere — inferna shell, GTK apps, and terminals
 # inferna:args=[size|reset]
 # inferna:examples=inferna display text size | inferna display text size 16 | inferna display text size reset
 
 # One knob for apparent text size across the desktop. It drives three settings
 # in lockstep, all anchored to the shell default of 12px:
-#   • the omarchy shell's font base-size (~/.config/inferna/shell.toml [font])
+#   • the inferna shell's font base-size (~/.config/inferna/shell.toml [font])
 #   • GNOME/GTK's text-scaling-factor    (12px -> 1.0, quantized so the GTK
 #     interface font lands on a whole point size, so 16 -> 15pt/11pt = 1.3636)
 #   • the terminal font point size       (12px -> 9pt, so terminal_pt = px * 9/12)
@@ -222,7 +222,7 @@ if [[ ! $size =~ ^[0-9]+$ ]] || ((size < MIN || size > MAX)); then
   exit 1
 fi
 
-# Shell side: base-size in px (the omarchy shell's rem root).
+# Shell side: base-size in px (the inferna shell's rem root).
 set_base_size "$size"
 
 # GTK side: multiplier anchored so 12px == 1.0, quantized so the interface

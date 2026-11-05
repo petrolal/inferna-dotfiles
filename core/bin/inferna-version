@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Print the installed Omarchy version
+# inferna:summary=Print the installed Inferna version
 
-inferna_path=${INFERNA_PATH:-${OMARCHY_PATH:-$HOME/inferna-dotfiles/core}}
+inferna_path=${INFERNA_PATH:-${INFERNA_PATH:-$HOME/inferna-dotfiles/core}}
 inferna_path=${inferna_path%/}
 
 if [[ -d $inferna_path ]]; then

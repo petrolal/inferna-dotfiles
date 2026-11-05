@@ -31,7 +31,7 @@ def main():
   proc = subprocess.Popen([codex, "-s", "read-only", "-a", "on-request", "app-server"],
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, env=mod.ENV)
   try:
-    collector.rpc_request(proc, 1, "initialize", {"clientInfo": {"name": "omarchy-agent-usage", "version": "1"}}, timeout=8)
+    collector.rpc_request(proc, 1, "initialize", {"clientInfo": {"name": "inferna-agent-usage", "version": "1"}}, timeout=8)
     proc.stdin.write(json.dumps({"method": "initialized", "params": {}}) + "\n")
     proc.stdin.flush()
     params = {"idempotencyKey": str(uuid.uuid4())}

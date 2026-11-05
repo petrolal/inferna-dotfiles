@@ -22,7 +22,7 @@ start() {
 }
 
 # Hex pastes with a bare Ctrl+V, which terminals ignore, so take the transcript
-# and let Omarchy type it into whatever is focused.
+# and let Inferna type it into whatever is focused.
 stop() {
   local text result
   if inferna-cmd-missing hex || [[ $(hex_state) != "dictating" ]]; then

@@ -36,7 +36,7 @@ Item {
   readonly property bool hasSmallIcon: smallIconSource.length > 0 && iconImage.status !== Image.Error
   readonly property string appLabel: {
     var name = String(app || "").trim()
-    if (!name || name === "notify-send" || name === "omarchy-action") return "Omarchy"
+    if (!name || name === "notify-send" || name === "inferna-action") return "Omarchy"
     return name.charAt(0).toUpperCase() + name.slice(1)
   }
   readonly property string timeLabel: timestamp > 0 && Date.now() - timestamp > 60000

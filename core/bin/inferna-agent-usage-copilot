@@ -54,7 +54,7 @@ from typing import Any
 
 # The shared collector plumbing ships with the agents panel.
 sys.dont_write_bytecode = True
-sys.path.insert(0, os.path.join(os.environ["OMARCHY_PATH"], "shell", "plugins", "agents"))
+sys.path.insert(0, os.path.join((os.environ.get("INFERNA_PATH") or os.environ.get("INFERNA_PATH", "/usr/share/inferna")), "shell", "plugins", "agents"))
 from collectors import (  # noqa: E402
   NUMBER_CEILING,
   HttpError,

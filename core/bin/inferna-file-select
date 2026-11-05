@@ -33,7 +33,7 @@ EXIT_NOTHING_PICKED = 1
 EXIT_CHOOSER_FAILED = 2
 
 
-# The dialog's own title when the caller names none, in the Omarchy language.
+# The dialog's own title when the caller names none, in the Inferna language.
 def default_title():
     try:
         title = subprocess.run("inferna-i18n files.selectFile".split(), capture_output=True, text=True).stdout

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync current Omarchy theme environment into tmux
+# inferna:summary=Sync current Inferna theme environment into tmux
 # inferna:hidden=true
 
 CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"

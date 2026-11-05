@@ -17,6 +17,15 @@ menu background
 menu theme
 menu share
 menu reminder-set
+panel inferna.clipboard
+panel inferna.emojis
+panel inferna.audio
+panel inferna.bluetooth
+panel inferna.monitor
+panel inferna.clock
+panel inferna.elsewhen
+panel inferna.network
+panel inferna.power
 panel omarchy.clipboard
 panel omarchy.emojis
 panel omarchy.audio

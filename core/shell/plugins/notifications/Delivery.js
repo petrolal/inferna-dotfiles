@@ -10,7 +10,7 @@ var CRITICAL = 2
 // critical to force visibility, under their own app name.
 function bypassesQuiet(row) {
   var app = String((row && row.app) || "")
-  if (app === "omarchy-action") return true
+  if (app === "inferna-action") return true
   return app === "notify-send" && Number(row.urgency) === CRITICAL
 }
 
@@ -37,7 +37,7 @@ function deeds(row, senderActions) {
 function isEphemeral(row) {
   if (row && row.transient === true) return true
   var app = String((row && row.app) || "")
-  return app === "notify-send" || app === "omarchy-action"
+  return app === "notify-send" || app === "inferna-action"
 }
 
 // "silenced", or "" when the row shows. A verification code always passes: it

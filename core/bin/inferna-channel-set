@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Set the Omarchy package channel.
+# inferna:summary=Set the Inferna package channel.
 # inferna:args=<stable|rc|edge|dev>
 # inferna:requires-sudo=true
 
@@ -17,8 +17,8 @@ fail() { echo "Error: $*" >&2; exit 1; }
 confirm_dev() {
   cat <<'WARNING'
 
-The dev channel links Omarchy directly to a checkout of the source in ~/omarchy.
-It's exclusively intended for developers working on Omarchy itself.
+The dev channel links Inferna directly to a checkout of the source in ~/omarchy.
+It's exclusively intended for developers working on Inferna itself.
 
 WARNING
 
@@ -33,7 +33,7 @@ validate_dev_checkout() {
   fi
 
   if [[ -d $checkout/.git && ( ! -d $checkout/bin || ! -d $checkout/default || ! -d $checkout/shell ) ]]; then
-    fail "$checkout is a git checkout, but it does not look like Omarchy."
+    fail "$checkout is a git checkout, but it does not look like Inferna."
   fi
 }
 
@@ -74,8 +74,8 @@ link_dev_checkout() {
   done
 
   # The checkout's own channel refresh runs next, from its own templates.
-  if [[ ! -f $checkout/${templates#"$OMARCHY_PATH"/}/pacman-$pacman_channel.conf ||
-    ! -f $checkout/${templates#"$OMARCHY_PATH"/}/mirrorlist-$pacman_channel ]]; then
+  if [[ ! -f $checkout/${templates#"$INFERNA_PATH"/}/pacman-$pacman_channel.conf ||
+    ! -f $checkout/${templates#"$INFERNA_PATH"/}/mirrorlist-$pacman_channel ]]; then
     fail "Update the checkout before switching to dev; it has no $pacman_channel templates for $platform."
   fi
 
@@ -125,11 +125,11 @@ esac
 
 # A channel this machine's platform has no templates for is refused before
 # anything changes (install/helpers/pacman.sh).
-source "$OMARCHY_PATH/install/helpers/pacman.sh"
+source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform) || fail "Cannot tell this machine's platform; nothing changed."
 templates=$(omarchy_pacman_templates "$platform") || exit 1
 [[ -f $templates/pacman-$pacman_channel.conf && -f $templates/mirrorlist-$pacman_channel ]] ||
-  fail "Omarchy has no $pacman_channel channel for $platform; nothing changed."
+  fail "Inferna has no $pacman_channel channel for $platform; nothing changed."
 
 if [[ $channel == "dev" ]]; then
   confirm_dev || { echo "Cancelled."; exit 0; }
@@ -141,14 +141,15 @@ fi
 # to pick it back up rather than dying silently under set -e.
 trap 'echo -e "\nThe channel switch did not complete. Review the error above, then rerun: inferna-channel-set '"$channel"'" >&2' ERR
 
-if [[ -z $dev_checkout && $OMARCHY_PATH != "/usr/share/omarchy" ]]; then
+if [[ -z $dev_checkout && $INFERNA_PATH != "/usr/share/omarchy" ]]; then
   leaving_dev=1
 fi
 
 if [[ -n $dev_checkout ]]; then
   link_dev_checkout "$dev_checkout"
-  export OMARCHY_PATH="$dev_checkout"
-  export PATH="$OMARCHY_PATH/bin:$PATH"
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="$dev_checkout"
+  export PATH="$INFERNA_PATH/bin:$PATH"
   inferna-state set reboot-required
 fi
 
@@ -166,14 +167,15 @@ if [[ -z $dev_checkout ]]; then
     IFS=: read -r -a entries <<<"$PATH"
     path=""
     for entry in "${entries[@]}"; do
-      [[ ${entry%/} == "$OMARCHY_PATH/bin" ]] || path+="${path:+:}$entry"
+      [[ ${entry%/} == "$INFERNA_PATH/bin" ]] || path+="${path:+:}$entry"
     done
     export PATH=$path
     inferna-state set reboot-required
   fi
-  export OMARCHY_PATH=/usr/share/omarchy
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH=/usr/share/omarchy
 fi
 
 # The switch was already confirmed, but the user is still here: keep the
 # reboot prompt interactive.
-OMARCHY_UPDATE_UNATTENDED=0 "$OMARCHY_PATH/bin/inferna-update" -y
+OMARCHY_UPDATE_UNATTENDED=0 "$INFERNA_PATH/bin/inferna-update" -y

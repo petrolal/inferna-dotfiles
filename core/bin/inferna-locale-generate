@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Generate the system locale for an Omarchy language
+# inferna:summary=Generate the system locale for an Inferna language
 # inferna:args=<code>
 # inferna:hidden=true
 

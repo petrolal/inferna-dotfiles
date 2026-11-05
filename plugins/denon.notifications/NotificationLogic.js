@@ -117,13 +117,13 @@ function summaryStartsWithGlyph(summary) {
 
 function shouldBypassDnd(notification, criticalUrgency) {
   var appName = String((notification && notification.appName) || "")
-  if (appName === "omarchy-action") return true
+  if (appName === "inferna-action") return true
   return appName === "notify-send" && notification && notification.urgency === criticalUrgency
 }
 
 function isEphemeralApp(appName) {
   var name = String(appName || "")
-  return name === "notify-send" || name === "omarchy-action"
+  return name === "notify-send" || name === "inferna-action"
 }
 
 function stringHint(hints, name) {
@@ -138,19 +138,19 @@ function stringHint(hints, name) {
 }
 
 function glyphFromHints(hints) {
-  return stringHint(hints, "omarchy-glyph")
+  return stringHint(hints, "inferna-glyph")
 }
 
-// The click action: a JSON argv string from omarchy-notification-send
+// The click action: a JSON argv string from inferna-notification-send
 // --exec. Carried as data so a toast restored after a shell restart stays
 // clickable (a libnotify action can't — its sender is gone). Run via
 // Util.execArgv as bash positional parameters, never a shell string, so
 // attacker-controlled values (a title, a filename) can't become commands.
 function execArgvFromHints(hints) {
-  return stringHint(hints, "omarchy-exec-argv")
+  return stringHint(hints, "inferna-exec-argv")
 }
 
-// Validate a persisted omarchy-exec-argv into a runnable argv, or null. This is
+// Validate a persisted inferna-exec-argv into a runnable argv, or null. This is
 // a STRUCTURAL check only: it fails closed on a malformed hint (non-array, a
 // non-string or empty program, or a leading-dash program that argv would read as
 // an option). It does not judge intent — a well-formed ["bash","-c",…] is
@@ -276,7 +276,7 @@ function parseSettings(raw) {
 //
 // Each on-screen popup is mirrored to its own file under
 // ~/.local/state/inferna/notifications/ so toasts survive shell restarts
-// (e.g. the restart `omarchy-update` performs). The file exists exactly as
+// (e.g. the restart `inferna-update` performs). The file exists exactly as
 // long as the popup is on screen: it is written when the toast appears and
 // moved into the history/ subdirectory when the toast expires, is dismissed,
 // or its action is invoked. History is those moved files, newest last-10.

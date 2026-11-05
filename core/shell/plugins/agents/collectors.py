@@ -1,6 +1,6 @@
 """The plumbing every agent usage collector shares.
 
-Each `bin/omarchy-agent-usage-<id>` keeps what is its own: where its
+Each `bin/inferna-agent-usage-<id>` keeps what is its own: where its
 credentials live, the endpoint it asks and how to read the answer, which
 providers' tokens it counts, and the quirks of its record. Everything the
 collector contract (docs/agent-usage-collectors.md) asks of all of them lives
@@ -80,7 +80,7 @@ HTTP_BODY_LIMIT = 1_048_576
 
 def program() -> str:
   name = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else ""
-  return name if name.startswith("omarchy-agent-usage-") else "omarchy-agent-usage"
+  return name if name.startswith("inferna-agent-usage-") else "inferna-agent-usage"
 
 
 def warn(message: str) -> None:
@@ -2647,7 +2647,7 @@ def read_codex_rollout(path: Path, stat_result: os.stat_result, previous: dict[s
   return record
 
 
-# How long a refresh's start, as omarchy-agent-usage-update hands it to the
+# How long a refresh's start, as inferna-agent-usage-update hands it to the
 # collectors it runs, speaks for a forced read: longer than any refresh takes,
 # so a stamp inherited from elsewhere soon stops standing in for --force.
 CODEX_REFRESH_SECONDS = 300

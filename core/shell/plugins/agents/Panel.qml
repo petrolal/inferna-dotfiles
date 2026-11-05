@@ -41,7 +41,7 @@ Panel {
 
   function runLocalAction(model, action) {
     if (action === "launch") {
-      Util.execArgv(["omarchy-agent", "--local-model", model.recipe])
+      Util.execArgv(["inferna-agent", "--local-model", model.recipe])
       root.close()
     } else if (action === "toggle") {
       var running = model.unit === "active" || model.unit === "activating"
@@ -49,7 +49,7 @@ Panel {
       if (!running && localStartBlocked(model)) return
       // The panel has no terminal: a start that fails records its reason,
       // which the model's line shows.
-      Util.execArgv(["omarchy-agent-local", running ? "stop" : "start", model.recipe])
+      Util.execArgv(["inferna-agent-local", running ? "stop" : "start", model.recipe])
     }
   }
 
@@ -87,7 +87,7 @@ Panel {
     deleteTarget = null
     if (!target) return
     if (target.localModel) {
-      Util.execArgv(["omarchy-agent-local", "remove", target.localModel.recipe])
+      Util.execArgv(["inferna-agent-local", "remove", target.localModel.recipe])
     } else if (bar && bar.shell) {
       var next = JSON.parse(JSON.stringify(settings || {}))
       if (!next.providers) next.providers = {}
@@ -381,7 +381,7 @@ Panel {
   //
   // Adding a subscription happens right here: pick a provider, name it if
   // it's a second account, then sign in through the browser while the panel
-  // follows omarchy-agent-account-add --events. The browser taking focus may
+  // follows inferna-agent-account-add --events. The browser taking focus may
   // close the panel; the login carries on, and its result arrives as a
   // notification too.
 
@@ -417,7 +417,7 @@ Panel {
 
   function setUpLocal(recipe) {
     if (!recipe) return
-    Util.execArgv(["omarchy-launch-floating-terminal-with-presentation", "omarchy-agent-local use " + Util.shellQuote(String(recipe.id))])
+    Util.execArgv(["inferna-launch-floating-terminal-with-presentation", "inferna-agent-local use " + Util.shellQuote(String(recipe.id))])
     cancelAdd()
     root.close()
   }
@@ -469,7 +469,7 @@ Panel {
     addNeedsPaste = addProvider === "claude"
     addResult = ""
     addStage = "running"
-    addProcess.command = ["omarchy-agent-account-add", "--events", addProvider].concat(label !== "" ? [label] : [])
+    addProcess.command = ["inferna-agent-account-add", "--events", addProvider].concat(label !== "" ? [label] : [])
     addProcess.running = true
   }
 
@@ -522,29 +522,29 @@ Panel {
 
   function reopenSignIn() {
     if (addUrl === "") return
-    Util.execArgv(addPrivate ? ["omarchy-launch-browser", "--private", addUrl] : ["omarchy-launch-browser", addUrl])
+    Util.execArgv(addPrivate ? ["inferna-launch-browser", "--private", addUrl] : ["inferna-launch-browser", addUrl])
   }
 
   // A few ways into making Omarchy your own, handed to the default agent.
   readonly property var starterPrompts: [
     { glyph: "󰏘", label: Commons.I18n.t("agents.theme"), prompt: "Make me a new Omarchy theme. Ask me what look or inspiration I have in mind, then build it following the Omarchy skill's theming guide and switch to it." },
     { glyph: "󰐱", label: Commons.I18n.t("agents.plugin"), prompt: "Make me a new Omarchy shell plugin. Ask me what I'd like it to do, then build it following the Omarchy skill's plugin guide and enable it." },
-    { glyph: "󰣆", label: Commons.I18n.t("agents.app"), prompt: "Make me a new app for my Omarchy desktop. Ask me what it should do, then build it following the omarchy-app skill and install it so it shows up in the app launcher." }
+    { glyph: "󰣆", label: Commons.I18n.t("agents.app"), prompt: "Make me a new app for my Omarchy desktop. Ask me what it should do, then build it following the inferna-app skill and install it so it shows up in the app launcher." }
   ]
 
   function startPrompt(prompt) {
     root.close()
-    Util.execArgv(["omarchy-agent-prompt", prompt])
+    Util.execArgv(["inferna-agent-prompt", prompt])
   }
 
   function renameAccount(p, account, label) {
     if (!p || !account) return
-    Util.execArgv(["omarchy-agent-account-rename", p.providerId, String(account.id), label])
+    Util.execArgv(["inferna-agent-account-rename", p.providerId, String(account.id), label])
   }
 
   function useAccount(p, account) {
     if (!p || !account || account.active) return
-    Util.execArgv(["omarchy-agent-account-use", p.providerId, String(account.id)])
+    Util.execArgv(["inferna-agent-account-use", p.providerId, String(account.id)])
   }
 
   function autoSwitchFor(p) {
@@ -557,8 +557,8 @@ Panel {
 
   function setSwitchMode(p, mode) {
     if (!p || providerAccounts(p).length < 2 || mode === (autoSwitchFor(p) ? "auto" : "manual")) return
-    Util.execArgv(["bash", "-c", 'omarchy-agent-account-mode "$1" "$2" >/dev/null && omarchy-agent-usage-update --limits-only "$1"',
-                   "omarchy-agent-account-mode", p.providerId, mode])
+    Util.execArgv(["bash", "-c", 'inferna-agent-account-mode "$1" "$2" >/dev/null && inferna-agent-usage-update --limits-only "$1"',
+                   "inferna-agent-account-mode", p.providerId, mode])
   }
 
   // `m` flips autoswitch for the picked account's provider, or the first
@@ -601,7 +601,7 @@ Panel {
     return parts.join(" · ")
   }
 
-  // Only the agents `omarchy-agent-account-add` signs in get the link; any
+  // Only the agents `inferna-agent-account-add` signs in get the link; any
   // other agent's sign-in trouble stays text, with its own help to follow.
   function supportsSignIn(p) {
     for (var i = 0; i < addProviders.length; i++)
@@ -643,7 +643,7 @@ Panel {
     addNeedsPaste = addProvider === "claude"
     addResult = ""
     addStage = "running"
-    addProcess.command = ["omarchy-agent-account-add", "--events", "--reauth",
+    addProcess.command = ["inferna-agent-account-add", "--events", "--reauth",
       account && account.primary !== true ? String(account.id) : ":primary", p.providerId]
     addProcess.running = true
   }
@@ -670,7 +670,7 @@ Panel {
   }
 
   function launchAgent() {
-    if (root.bar) root.bar.run("omarchy-agent --pick")
+    if (root.bar) root.bar.run("inferna-agent --pick")
     root.close()
   }
 
@@ -700,7 +700,7 @@ Panel {
   function launchHarness(provider) {
     var harness = harnessFor(provider)
     if (harness === "") return
-    Util.execArgv(["omarchy-agent", "--agent", harness])
+    Util.execArgv(["inferna-agent", "--agent", harness])
     root.close()
   }
 
@@ -1110,7 +1110,7 @@ Panel {
     usage.refreshLimits()
     // "Doesn't fit" was true when a model last started or stopped; memory an
     // app has since let go of only shows after a fresh look, once per open.
-    if (localBlocked) Util.execArgv(["omarchy-agent-local", "status", "--write"])
+    if (localBlocked) Util.execArgv(["inferna-agent-local", "status", "--write"])
     if (picking) refreshLocalListing()
     Qt.callLater(function() { if (panel.loadedContent) panel.loadedContent.forceActiveFocus() })
   }
@@ -1123,7 +1123,7 @@ Panel {
   Process {
     id: checkProcess
     running: false
-    command: ["omarchy-agent-account-add", "--check"]
+    command: ["inferna-agent-account-add", "--check"]
     stdout: SplitParser {
       onRead: function(line) {
         var parts = String(line).trim().split(" ")

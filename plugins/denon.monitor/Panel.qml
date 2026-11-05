@@ -83,7 +83,7 @@ Panel {
   property bool cursorActive: false
 
   // Text size slider — curated macOS-style notches (px). The panel snaps to
-  // these stops; the CLI (omarchy-display-text-size) accepts any integer in range.
+  // these stops; the CLI (inferna-display-text-size) accepts any integer in range.
   readonly property var textSizeStops: [9, 10, 11, 12, 14, 16, 20]
   // While a change is in flight, the chosen stop index overrides the live
   // base-size so the knob doesn't snap back during the file round-trip. -1 =
@@ -282,7 +282,7 @@ Panel {
     }
 
     root.brightnessSetQueued = false
-    setBrightnessProc.command = ["omarchy-brightness-display", "--no-osd", "--monitor", root.focusedMonitor, percent + "%"]
+    setBrightnessProc.command = ["inferna-brightness-display", "--no-osd", "--monitor", root.focusedMonitor, percent + "%"]
     setBrightnessProc.running = true
   }
 
@@ -349,7 +349,7 @@ Panel {
   }
 
   function setScale(scale) {
-    actionProc.command = ["bash", "-c", "omarchy-hyprland-monitor-scaling " + scale]
+    actionProc.command = ["bash", "-c", "inferna-hyprland-monitor-scaling " + scale]
     if (!actionProc.running) actionProc.running = true
   }
 
@@ -377,7 +377,7 @@ Panel {
   }
 
   function setTextSize(px) {
-    textScaleProc.command = ["omarchy-display-text-size", String(px)]
+    textScaleProc.command = ["inferna-display-text-size", String(px)]
     if (!textScaleProc.running) textScaleProc.running = true
   }
 
@@ -430,7 +430,7 @@ Panel {
 
   Process {
     id: stateProc
-    command: ["omarchy-monitor-state"]
+    command: ["inferna-monitor-state"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
@@ -461,7 +461,7 @@ Panel {
     stdout: StdioCollector { waitForEnd: true }
     // Do NOT call refresh() after a brightness set completes. The local
     // brightnessPercent we just wrote is authoritative; re-reading via
-    // `omarchy-brightness-display` races the hardware/driver and can
+    // `inferna-brightness-display` races the hardware/driver and can
     // return an empty string, which the parser then coerces to 0 —
     // visible as a "bounce to zero" after h/l keypresses. External
     // brightness changes are still picked up by the 5s periodic refresh,
@@ -476,7 +476,7 @@ Panel {
 
   Process {
     id: nightStatusProc
-    command: ["omarchy-toggle-nightlight", "--status"]
+    command: ["inferna-toggle-nightlight", "--status"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
@@ -491,7 +491,7 @@ Panel {
 
   Process {
     id: nightToggleProc
-    command: ["omarchy-toggle-nightlight"]
+    command: ["inferna-toggle-nightlight"]
     onRunningChanged: if (!running) nightStatusProc.running = true
   }
 

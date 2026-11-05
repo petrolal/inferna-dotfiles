@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Clone a built-in Omarchy shell plugin into your own config
+# inferna:summary=Clone a built-in Inferna shell plugin into your own config
 # inferna:group=plugin
 # inferna:args=<source-id> [--edit]
 

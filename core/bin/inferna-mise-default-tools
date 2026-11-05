@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# inferna:summary=List Omarchy's default mise tools, or opt this user out of or back into them
+# inferna:summary=List Inferna's default mise tools, or opt this user out of or back into them
 # inferna:args=<list|declares <tool>|disable|enable>
 # inferna:hidden=true
 
 set -euo pipefail
 
 # The settings package owns this file, so a user opts out by having mise skip it
-# rather than by deleting it. Skipping the file drops only Omarchy's
+# rather than by deleting it. Skipping the file drops only Inferna's
 # declarations: the same tools declared in a project or the user's own config
 # still load, which a disable_tools entry would block as well.
 tools_config="${OMARCHY_MISE_CONFIG_PATH:-/etc/mise/conf.d/inferna-tools.toml}"
@@ -47,7 +47,7 @@ disable)
     # miserc.toml is flat, so a second ignored_config_paths key would be a
     # duplicate. Merging into the user's own list is left to them.
     if [[ -f $miserc ]] && grep -q '^[[:space:]]*ignored_config_paths[[:space:]]*=' "$miserc"; then
-      echo "Add \"$tools_config\" to ignored_config_paths in $miserc to opt out of Omarchy's mise tools." >&2
+      echo "Add \"$tools_config\" to ignored_config_paths in $miserc to opt out of Inferna's mise tools." >&2
       exit 1
     fi
     mkdir -p "$(dirname "$miserc")"
@@ -56,7 +56,7 @@ disable)
     fi
     printf '%s\n' "$ignore_line" >>"$miserc"
   fi
-  # A user reshim retires the lazy shims built from Omarchy's declarations.
+  # A user reshim retires the lazy shims built from Inferna's declarations.
   mise reshim
   ;;
 enable)
@@ -69,7 +69,7 @@ enable)
     fi
   fi
   if opted_out; then
-    echo "Remove \"$tools_config\" from ignored_config_paths in $miserc to restore Omarchy's mise tools." >&2
+    echo "Remove \"$tools_config\" from ignored_config_paths in $miserc to restore Inferna's mise tools." >&2
     exit 1
   fi
   mise reshim --system

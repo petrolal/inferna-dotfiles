@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# inferna:summary=Add branded glyphs to the Omarchy icon font
+# inferna:summary=Add branded glyphs to the Inferna icon font
 # inferna:args=[list|add] <name> <svg-file-or-url> [--codepoint U+E9xx] [--font PATH]
 # inferna:examples=inferna dev font list | inferna dev font add ollama https://simpleicons.org/icons/ollama.svg
 """Append monochrome SVG marks to default/fonts/omarchy/omarchy.ttf.
@@ -574,9 +574,9 @@ def svg_contours(svg, location):
 
 
 def default_font():
-    root = os.environ.get('OMARCHY_PATH')
+    root = os.environ.get('INFERNA_PATH')
     if not root:
-        sys.exit('OMARCHY_PATH is not set')
+        sys.exit('INFERNA_PATH is not set')
     return os.path.join(root, 'default/fonts/omarchy/omarchy.ttf')
 
 
@@ -602,7 +602,7 @@ def record_source(font_path, codepoint, label, location):
 def main():
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument('--font', help='font to edit '
-                        '(default: $OMARCHY_PATH/default/fonts/omarchy/omarchy.ttf)')
+                        '(default: $INFERNA_PATH/default/fonts/omarchy/omarchy.ttf)')
 
     p = argparse.ArgumentParser(prog='omarchy dev font', parents=[common],
                                 description=__doc__.split('\n')[0])
@@ -644,7 +644,7 @@ def main():
         print('  - check the new line in %s' % os.path.relpath(readme))
     print('  - point a menu entry at it: "icon":"%s","iconFont":"omarchy"' % chr(cp))
     print('  - the font is package-owned, so it reaches the desktop through an')
-    print('    inferna-settings release, not through omarchy update')
+    print('    inferna-settings release, not through inferna update')
 
 
 if __name__ == '__main__':

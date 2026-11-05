@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install Slack Desktop with live Omarchy theme support
+# inferna:summary=Install Slack Desktop with live Inferna theme support
 # inferna:requires-sudo=true
 
 set -euo pipefail

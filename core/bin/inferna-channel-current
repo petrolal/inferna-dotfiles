@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Print the active Omarchy package channel
+# inferna:summary=Print the active Inferna package channel
 
 set -euo pipefail
 
-# Dev is a linked source checkout: OMARCHY_PATH points somewhere other than
+# Dev is a linked source checkout: INFERNA_PATH points somewhere other than
 # the package-backed install at /usr/share/omarchy. This takes precedence over
 # the package channels, since the checkout overrides whatever is installed.
-if [[ $OMARCHY_PATH != "/usr/share/omarchy" ]]; then
+if [[ $INFERNA_PATH != "/usr/share/omarchy" ]]; then
   echo dev
   exit 0
 fi

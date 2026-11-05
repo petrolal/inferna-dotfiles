@@ -4,7 +4,7 @@
   "name": "Disk speed test",
   "version": "1.0.0",
   "author": "Omarchy",
-  "description": "Live disk write and read speed dials. Summon with: omarchy-shell shell summon omarchy.disk-speedtest",
+  "description": "Live disk write and read speed dials. Summon with: inferna-shell shell summon omarchy.disk-speedtest",
   "kinds": [
     "panel"
   ],

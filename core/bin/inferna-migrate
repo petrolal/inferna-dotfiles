@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Run pending Omarchy migrations.
+# inferna:summary=Run pending Inferna migrations.
 # inferna:args=[--pending]
 
 set -euo pipefail
@@ -28,9 +28,9 @@ while (($#)); do
   esac
 done
 
-OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
+INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
 STATE_DIR="${OMARCHY_MIGRATION_STATE:-$HOME/.local/state/inferna/migrations}"
-MIGRATIONS_DIR="$OMARCHY_PATH/migrations"
+MIGRATIONS_DIR="$INFERNA_PATH/migrations"
 
 migration_entries() {
   [[ -d $MIGRATIONS_DIR ]] || return 0
@@ -69,14 +69,14 @@ wait_for_pacman_transaction() {
   local lock_file=/var/lib/pacman/db.lck
 
   [[ -e $lock_file ]] || return 0
-  echo "Waiting for pacman transaction to finish before running Omarchy migrations..."
+  echo "Waiting for pacman transaction to finish before running Inferna migrations..."
 
   for _ in {1..900}; do
     [[ -e $lock_file ]] || return 0
     sleep 1
   done
 
-  echo "Pacman transaction is still running; Omarchy migrations will retry on next login."
+  echo "Pacman transaction is still running; Inferna migrations will retry on next login."
   exit 0
 }
 
@@ -90,7 +90,7 @@ while IFS=$'\t' read -r name file marker <&3; do
 
   if [[ ! -f $marker ]]; then
     echo -e "\e[32m\nRunning migration (${name%.sh})\e[0m"
-    OMARCHY_PATH="$OMARCHY_PATH" bash -euo pipefail "$file" 3<&-
+    INFERNA_PATH="$INFERNA_PATH" bash -euo pipefail "$file" 3<&-
     mkdir -p "$(dirname "$marker")"
     touch "$marker"
   fi
@@ -99,4 +99,4 @@ done 3< <(migration_entries)
 # Clear a login-time notification the user left sitting there and then resolved
 # by running migrations some other way. The substring matches both the current
 # and legacy notification titles.
-inferna-notification-dismiss "Omarchy Migrations" >/dev/null 2>&1 || true
+inferna-notification-dismiss "Inferna Migrations" >/dev/null 2>&1 || true

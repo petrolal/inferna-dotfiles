@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Validate a plugin folder against the Omarchy plugin manifest schema
+# inferna:summary=Validate a plugin folder against the Inferna plugin manifest schema
 # inferna:group=plugin
 # inferna:args=<plugin-folder>
 # inferna:examples=inferna plugin validate ./my-plugin

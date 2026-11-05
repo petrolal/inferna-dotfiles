@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Remove Sunshine and close Omarchy-managed Moonlight streaming ports.
+# inferna:summary=Remove Sunshine and close Inferna-managed Moonlight streaming ports.
 # inferna:requires-sudo=true
 
 set -e
@@ -66,4 +66,4 @@ disable_hyprland_autostart
 close_ufw_ports
 
 echo ""
-echo "Sunshine has been removed and its Omarchy-managed Moonlight streaming ports have been closed."
+echo "Sunshine has been removed and its Inferna-managed Moonlight streaming ports have been closed."

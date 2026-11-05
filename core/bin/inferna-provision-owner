@@ -16,7 +16,7 @@
 set -euo pipefail
 
 PROVISIONING_DIR=/var/lib/omarchy/provisioning
-OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
+INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
 LOG_FILE=/var/log/inferna-provision-owner.log
 
 if (( EUID != 0 )); then
@@ -33,22 +33,22 @@ if [[ -f $PROVISIONING_DIR/wipe-pending ]]; then
   exit 1
 fi
 
-export PATH="$OMARCHY_PATH/bin:$PATH"
+export PATH="$INFERNA_PATH/bin:$PATH"
 
 REKEY_STATE=$PROVISIONING_DIR/luks-rekey.state
-source "$OMARCHY_PATH/install/provisioning/luks-rekey.sh"
+source "$INFERNA_PATH/install/provisioning/luks-rekey.sh"
 
 # The shared setup form — the same questions, prompts, and validation the ISO
 # configurator's user step asks. The ISO vendors this very file out of the
 # runtime package it bundles, so an install and the first boot that finishes it
 # can never offer different layouts or accept different usernames.
-source "$OMARCHY_PATH/install/provisioning/setup-form.sh"
+source "$INFERNA_PATH/install/provisioning/setup-form.sh"
 
 # Unlike a fresh install target, this machine already has accounts; a pinned
 # resume (below) bypasses the prompt entirely.
 omarchy_username_taken() { getent passwd "$1" >/dev/null; }
 
-LOGO_PATH="$OMARCHY_PATH/logo.txt"
+LOGO_PATH="$INFERNA_PATH/logo.txt"
 LOGO_WIDTH=$(awk '{ if (length > max) max = length } END { print max+0 }' "$LOGO_PATH" 2>/dev/null || echo 0)
 LOGO_HEIGHT=$(wc -l <"$LOGO_PATH" 2>/dev/null || echo 0)
 (( LOGO_WIDTH > 0 )) || LOGO_WIDTH=81
@@ -162,7 +162,7 @@ log_step() {
 # started on: the same traced icon, percentage and rotating tips. Position =
 # max(floor, work) in per-mille, monotonic; the floor is asymptotic per phase
 # band and the work signal counts finalize-user's run_logged scripts in the log.
-source "$OMARCHY_PATH/install/provisioning/progress-icon.sh"
+source "$INFERNA_PATH/install/provisioning/progress-icon.sh"
 
 CSI=$'\033['
 RESET="${CSI}0m"
@@ -176,7 +176,7 @@ STATE_FILE=/run/inferna-provision-owner.state
 FINALIZE_WARNING_FLAG=/run/inferna-provision-owner.finalize-warning
 
 tips=(
-  "Super + Space opens the Omarchy menu for apps, settings, and more"
+  "Super + Space opens the Inferna menu for apps, settings, and more"
   "Super + K shows all the key bindings"
   "Super is the Windows or command key on your keyboard"
   "Sign PDFs and fill them in with Signed"
@@ -187,13 +187,13 @@ tips=(
   "Super + Ctrl + Print grabs text off the screen with OCR"
   "Print takes a screenshot, Alt + Print records the screen"
   "Set a reminder with Super + Ctrl + R"
-  "Switch themes from Appearance > Theme in the Omarchy menu"
+  "Switch themes from Appearance > Theme in the Inferna menu"
   "Double-click the menu bar to make it transparent"
   "Run a full Windows VM via Install > Windows in the menu"
   "Super + Ctrl + V opens the clipboard manager"
   "Super + 1 through 0 switches workspaces, add Shift to bring the window"
   "Super + Print picks a color from anywhere on screen"
-  "Keep the system fresh with Update in the Omarchy menu"
+  "Keep the system fresh with Update in the Inferna menu"
 )
 
 term_cols() {
@@ -269,7 +269,7 @@ SETUP_PHASE_T0=0
 SETUP_T0=0
 NOW=0
 FINALIZE_BASE=-1
-FINALIZE_TOTAL=$(grep -c '^run_logged' "$OMARCHY_PATH/install/user/all.sh" 2>/dev/null || echo 0)
+FINALIZE_TOTAL=$(grep -c '^run_logged' "$INFERNA_PATH/install/user/all.sh" 2>/dev/null || echo 0)
 
 # Whether this boot will re-key LUKS (encrypted installs stage a throwaway key).
 # The re-key rebuilds the UKI and is the slowest single step, so it needs a wide
@@ -364,7 +364,7 @@ render_setup_finish() {
 
 # The first thing a new owner sees, shown once before the keyboard step:
 # the logo (vertically centered like the boot logo) running a looping ColorShift,
-# the Omarchy tagline, and a hint. Return skips ahead into setup at any time.
+# the Inferna tagline, and a hint. Return skips ahead into setup at any time.
 greeter_screen() {
   local anim="" drawn_sig cur_sig resized=0
 
@@ -742,7 +742,7 @@ create_user() {
   echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-inferna-wheel
   chmod 440 /etc/sudoers.d/00-inferna-wheel
 
-  source "$OMARCHY_PATH/install/helpers/browser-policy.sh"
+  source "$INFERNA_PATH/install/helpers/browser-policy.sh"
   for dir in "${BROWSER_POLICY_MANAGED_DIRS[@]}"; do
     [[ -d $dir || -L $dir ]] || continue
     browser_policy_setup_dir "$dir"
@@ -844,7 +844,7 @@ configure_region() {
     Asia/Hong_Kong | Hongkong | Asia/Macau | Asia/Macao | Asia/Taipei | ROC) region=global ;;
     *)
       region=$fallback
-      for profile in "$OMARCHY_PATH"/default/regions/*/; do
+      for profile in "$INFERNA_PATH"/default/regions/*/; do
         [[ -r $profile/timezones ]] && grep -qxF -- "$timezone" "$profile/timezones" && region=$(basename "$profile")
       done
       ;;
@@ -858,8 +858,8 @@ configure_region() {
   fi
   # Re-render pacman for the region with the channel this machine installed.
   channel=$(sed -n 's|^Server = https://pkgs\.omarchy\.[a-z]*/\([a-z]*\)/.*|\1|p' "$pacman_conf" | head -1)
-  if [[ -n $channel && -x $OMARCHY_PATH/bin/inferna-apply-pacman ]]; then
-    "$OMARCHY_PATH/bin/inferna-apply-pacman" "$channel" "${OMARCHY_REGION_TARGET:-/}" 2>&1 || true
+  if [[ -n $channel && -x $INFERNA_PATH/bin/inferna-apply-pacman ]]; then
+    "$INFERNA_PATH/bin/inferna-apply-pacman" "$channel" "${OMARCHY_REGION_TARGET:-/}" 2>&1 || true
   fi
 }
 
@@ -868,7 +868,7 @@ configure_region() {
 # here. No reboot follows setup, so the radios get it now the way udev applies
 # it at every boot.
 configure_wireless_regdom() {
-  bash "$OMARCHY_PATH/install/hardware/set-wireless-regdom.sh" 2>&1 || return 0
+  bash "$INFERNA_PATH/install/hardware/set-wireless-regdom.sh" 2>&1 || return 0
   if inferna-cmd-present set-wireless-regdom; then
     set-wireless-regdom 2>&1 || true
   fi
@@ -884,12 +884,12 @@ finalize_user() {
     USER="$username" \
     LOGNAME="$username" \
     SHELL="${shell:-/bin/bash}" \
-    OMARCHY_PATH="$OMARCHY_PATH" \
-    OMARCHY_INSTALL="$OMARCHY_PATH/install" \
+    INFERNA_PATH="$INFERNA_PATH" \
+    OMARCHY_INSTALL="$INFERNA_PATH/install" \
     OMARCHY_SETUP_CONTEXT=provision-owner \
     OMARCHY_INSTALL_LOG_FILE="$LOG_FILE" \
     OMARCHY_LOG_TO_STDOUT=1 \
-    "$OMARCHY_PATH/bin/inferna-provision-user" --force --first-install
+    "$INFERNA_PATH/bin/inferna-provision-user" --force --first-install
 }
 
 # During the provisioning window the staged key rides in the UKI's initramfs,
@@ -943,8 +943,8 @@ unlock_owner() {
   [[ -z ${UNLOCK_OWNER:-} ]] || return 0
 
   local commit verify
-  commit=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-commit) || return 1
-  verify=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-verify) || return 1
+  commit=$("$INFERNA_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-commit) || return 1
+  verify=$("$INFERNA_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-verify) || return 1
   if [[ -n $commit && -n $verify ]]; then
     UNLOCK_OWNER=platform
   elif [[ -z $commit && -z $verify ]]; then
@@ -958,7 +958,7 @@ unlock_owner() {
 luks_auto_unlock_present() {
   unlock_owner || return 0
   if [[ $UNLOCK_OWNER == "platform" ]]; then
-    ! "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-verify >>"$LOG_FILE" 2>&1
+    ! "$INFERNA_PATH/bin/inferna-lifecycle-dispatch" provision-verify >>"$LOG_FILE" 2>&1
   else
     limine_auto_unlock_present
   fi
@@ -967,7 +967,7 @@ luks_auto_unlock_present() {
 luks_auto_unlock_drop() {
   unlock_owner || return 1
   if [[ $UNLOCK_OWNER == "platform" ]]; then
-    "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-commit >>"$LOG_FILE" 2>&1
+    "$INFERNA_PATH/bin/inferna-lifecycle-dispatch" provision-commit >>"$LOG_FILE" 2>&1
   else
     limine_auto_unlock_drop
   fi
@@ -976,7 +976,7 @@ luks_auto_unlock_drop() {
 # The platform records the slot the re-key keeps, and no recovery slot; a no-op
 # where nothing does.
 luks_record_slots() {
-  "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" luks-slots "owner=$1" "recovery=" >>"$LOG_FILE" 2>&1
+  "$INFERNA_PATH/bin/inferna-lifecycle-dispatch" luks-slots "owner=$1" "recovery=" >>"$LOG_FILE" 2>&1
 }
 
 # Move the LUKS volume from the throwaway install passphrase to the user's
@@ -1059,8 +1059,8 @@ reset_limine_config() {
   local esp template="" candidate machine_id entries=""
   esp=$(esp_path)
 
-  for candidate in "$OMARCHY_PATH/install/assets/limine/limine.conf" \
-                   "$OMARCHY_PATH/default/limine/limine.conf"; do
+  for candidate in "$INFERNA_PATH/install/assets/limine/limine.conf" \
+                   "$INFERNA_PATH/default/limine/limine.conf"; do
     if [[ -f $candidate ]]; then
       template=$candidate
       break
@@ -1158,8 +1158,8 @@ run_provisioning() {
 # anything.
 platform_ready() {
   local error
-  if error=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-prepare 2>&1 >>"$LOG_FILE") &&
-    error=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve luks-slots 2>&1 >/dev/null); then
+  if error=$("$INFERNA_PATH/bin/inferna-lifecycle-dispatch" provision-prepare 2>&1 >>"$LOG_FILE") &&
+    error=$("$INFERNA_PATH/bin/inferna-lifecycle-dispatch" --resolve luks-slots 2>&1 >/dev/null); then
     return 0
   fi
   error=${error:-"The boot package could not prepare this machine for setup."}
@@ -1245,7 +1245,7 @@ run_setup() {
   # in on encrypted installs. No timed celebration screen and no "start" button
   # here — that send-off belongs to a direct install, not first-boot setup. The
   # finished progress bar is the last frame; clearing it for a "Starting
-  # Omarchy..." card would only add a flash of screen before the handoff.
+  # Inferna..." card would only add a flash of screen before the handoff.
 }
 
 # A failed first-boot setup must not strand the machine at a user-less login

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Reinstall all default Omarchy packages from the stable channel, or on Apple Silicon the edge channel
+# inferna:summary=Reinstall all default Inferna packages from the stable channel, or on Apple Silicon the edge channel
 # inferna:requires-sudo=true
 
 set -e
 
-# Reinstall all default Omarchy packages from the platform's default channel
+# Reinstall all default Inferna packages from the platform's default channel
 # (stable, or edge on Apple Silicon) and downgrade any packages that are too new.
 
 # Set the package repository to the platform's default channel
-source "$OMARCHY_PATH/install/helpers/pacman.sh"
+source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform)
 channel=$(omarchy_pacman_default_channel "$platform")
 inferna-refresh-pacman "$channel"

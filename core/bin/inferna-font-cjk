@@ -20,7 +20,7 @@ case "${1:-}" in
   echo "${variant:-default}"
   ;;
 jp | kr | sc | tc | hk | default)
-  /usr/bin/python3 "$OMARCHY_PATH/default/input-methods/configure.py" font "$1"
+  /usr/bin/python3 "$INFERNA_PATH/default/input-methods/configure.py" font "$1"
   inferna-restart-shell
   inferna-notification-send -g  "$(inferna-i18n font.cjkChanged)" "$(inferna-i18n font.restartAppsToSeeChange)"
   ;;

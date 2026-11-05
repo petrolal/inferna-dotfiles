@@ -64,7 +64,7 @@ Panel {
   }
 
   function launchAgent() {
-    if (root.bar) root.bar.run("omarchy-agent --pick")
+    if (root.bar) root.bar.run("inferna-agent --pick")
     root.close()
   }
 

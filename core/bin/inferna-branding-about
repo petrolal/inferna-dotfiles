@@ -19,7 +19,7 @@ text)
   inferna-launch-editor ~/.config/inferna/branding/about.txt >/dev/null 2>&1 && inferna-launch-about >/dev/null 2>&1
   ;;
 reset)
-  cp "$OMARCHY_PATH/icon.txt" ~/.config/inferna/branding/about.txt && inferna-launch-about >/dev/null 2>&1
+  cp "$INFERNA_PATH/icon.txt" ~/.config/inferna/branding/about.txt && inferna-launch-about >/dev/null 2>&1
   ;;
 *)
   echo "Usage: inferna-branding-about <image|text|reset>" >&2

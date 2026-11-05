@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Launch the Omarchy shell with its log kept in the journal
+# inferna:summary=Launch the Inferna shell with its log kept in the journal
 # inferna:hidden=true
 
 # Quickshell only logs to its instance runtime dir (tmpfs), so when the shell
@@ -10,18 +10,20 @@
 # Backgrounded because bash defers a trap until a foreground command returns but
 # interrupts wait. systemd-cat execs, so the job is Quickshell itself.
 #
-# Quickshell's own reloading is off; Omarchy restarts the shell deliberately.
-# A package upgrade rewriting $OMARCHY_PATH/shell would otherwise reload it
+# Quickshell's own reloading is off; Inferna restarts the shell deliberately.
+# A package upgrade rewriting $INFERNA_PATH/shell would otherwise reload it
 # against a half-written tree, and that failed reload leaves a second engine
 # generation behind that turns the next restart's IPC kill into a crash.
 run_shell() {
-  local core_path="${INFERNA_PATH:-$OMARCHY_PATH}"
+  local core_path="${INFERNA_PATH:-$INFERNA_PATH}"
   if [[ -z $core_path || ! -d "$core_path/shell" ]]; then
     local _h="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
     core_path="$(cd "$_h/.." && pwd)"
   fi
-  export OMARCHY_PATH="$core_path"
-  export INFERNA_PATH="$core_path"
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="$core_path"
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="$core_path"
   export PATH="$core_path/bin/shims:$core_path/bin:$HOME/.local/bin:$PATH"
   export QML2_IMPORT_PATH="/nix/store/ms8md3fbnz70v0yic0c956wf7xc6rij1-qt5compat-6.11.2/lib/qt-6/qml:/nix/store/8kskqmdr4hadys3jqqjs8mkb1a59wn0y-qtmultimedia-6.11.2/lib/qt-6/qml:/nix/store/jlj7mchp8g5xx3i8ny5wpcnrxhqkjqxf-qtquick3d-6.11.2/lib/qt-6/qml:/nix/store/6q6kk7wr9k00c3dhgi9in4wlp0qw63gc-quickshell-0.3.1/lib/qt-6/qml:${QML2_IMPORT_PATH:-}:$core_path/shell"
 
@@ -94,10 +96,10 @@ while true; do
   fi
 
   if (( ++attempts > 5 )); then
-    logger -t inferna-shell "Giving up on the Omarchy shell after $attempts relaunches in under a minute."
+    logger -t inferna-shell "Giving up on the Inferna shell after $attempts relaunches in under a minute."
     exit 1
   fi
 
-  logger -t inferna-shell "Omarchy shell exited with status $status; relaunching."
+  logger -t inferna-shell "Inferna shell exited with status $status; relaunching."
   sleep 1
 done

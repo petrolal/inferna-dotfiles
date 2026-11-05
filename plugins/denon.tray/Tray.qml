@@ -155,7 +155,7 @@ BarWidget {
   property Item snipAnchor: null
   property bool snipRecording: false
   property Item snipItemRef: null
-  // `omarchy-shell denon.tray.snip open|close|toggle` (keyboard / testing).
+  // `inferna-shell denon.tray.snip open|close|toggle` (keyboard / testing).
   IpcHandler {
     target: "denon.tray.snip"
     function open(): string { root.openSnip(root.snipItemRef); return "ok" }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Open the Omarchy Discord community in the Discord app or a browser.
+# inferna:summary=Open the Inferna Discord community in the Discord app or a browser.
 
 invite="https://discord.gg/tXFUdasqhY"
 

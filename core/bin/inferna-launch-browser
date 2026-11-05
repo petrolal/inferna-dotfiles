@@ -19,7 +19,7 @@ done
 # Handing an empty command to uwsm-app surfaces as "Command not found: \"\"",
 # which fails a keybinding silently. Say what is missing and how to fix it.
 if [[ -z $browser_exec ]]; then
-  echo "inferna-launch-browser: no default browser found; set one with 'omarchy default browser <browser>'" >&2
+  echo "inferna-launch-browser: no default browser found; set one with 'inferna default browser <browser>'" >&2
   inferna-notification-send -u critical -g 󰖟 "$(inferna-i18n browser.notFound)" "$(inferna-i18n browser.notFoundHint)"
   exit 1
 fi

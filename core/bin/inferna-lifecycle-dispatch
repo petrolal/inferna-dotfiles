@@ -97,7 +97,7 @@ fi
 # the Mac's boot setup (setup-boot), so those operations are required. So is
 # update-takeover: the Mac boot chain and its image own files no package does,
 # and a Mac whose boot package can't vouch for a takeover keeps them. Setup and
-# the app-install hooks are optional: a Mac without inferna-mac keeps Omarchy's
+# the app-install hooks are optional: a Mac without inferna-mac keeps Inferna's
 # generic setup and installs. So are the fingerprint hooks, which turn on a
 # reader the platform keeps off until the owner agrees (a Mac's Touch ID).
 # Moving an operation to required also changes apple_optional in
@@ -196,7 +196,7 @@ fi
 # and nothing else.
 environment=(PATH="$fixed_path")
 if listed "$operation" "${user_operations[@]}"; then
-  for name in HOME USER XDG_CONFIG_HOME XDG_STATE_HOME XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY OMARCHY_PATH; do
+  for name in HOME USER XDG_CONFIG_HOME XDG_STATE_HOME XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY INFERNA_PATH; do
     [[ -z ${!name:-} ]] || environment+=("$name=${!name}")
   done
 fi

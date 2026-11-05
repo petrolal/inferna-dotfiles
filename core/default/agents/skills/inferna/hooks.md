@@ -3,18 +3,18 @@
 Read this before setting up scripts that run on system events (theme changes,
 updates, boot, low battery, etc.).
 
-Hooks live in `~/.config/omarchy/hooks/<name>.d/` — one directory per event,
+Hooks live in `~/.config/inferna/hooks/<name>.d/` — one directory per event,
 holding any number of independent scripts. Install with
 `omarchy hook install <name> <script>` (copies the script in and makes it
-executable). The runner also executes a flat `~/.config/omarchy/hooks/<name>`
+executable). The runner also executes a flat `~/.config/inferna/hooks/<name>`
 file first, if one exists.
 
 ```
-~/.config/omarchy/hooks/
+~/.config/inferna/hooks/
 ├── battery-low.d/          # Low battery (percentage in $1)
 ├── font-set.d/             # After font change (font name in $1)
 ├── post-boot.d/            # After the desktop starts
-├── post-update.d/          # At the end of `omarchy update`, after privileged work
+├── post-update.d/          # At the end of `inferna update`, after privileged work
 ├── pre-refresh-pacman.d/   # After `omarchy refresh pacman` re-syncs the package config, before it updates packages
 └── theme-set.d/            # After theme change (theme slug in $1)
 ```

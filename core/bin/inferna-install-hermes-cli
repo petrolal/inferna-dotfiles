@@ -64,7 +64,7 @@ legacy_stub() {
   [[ -f $command_path ]] && grep -qxF "$legacy_marker" "$command_path"
 }
 
-# Only the wrapper Omarchy wrote proves the environment is Omarchy's to remove:
+# Only the wrapper Inferna wrote proves the environment is Inferna's to remove:
 # the regular file at its path, or the copy a run of this installer saved aside
 # before upstream's installer took the name, since a user who chose Hermes
 # before the migration ran has it there and the environment still requested.
@@ -100,7 +100,7 @@ mise_retired() {
 
 # Removes the environment the retired wrapper built, judged by what is left
 # rather than by what the commands claimed. Only for a caller that has proved
-# it Omarchy's.
+# it Inferna's.
 retire_mise() {
   if mise_retired; then
     return 0
@@ -112,7 +112,7 @@ retire_mise() {
   fi
   echo "Could not remove the Hermes that mise built. Finish by hand:" >&2
   if inferna-cmd-missing mise; then
-    echo "  omarchy pkg add mise" >&2
+    echo "  inferna pkg add mise" >&2
   fi
   echo "  mise rm -g '$legacy_tool'" >&2
   echo "  mise uninstall --all '$legacy_tool'" >&2
@@ -121,7 +121,7 @@ retire_mise() {
 
 # Once the environment is gone the proof has done its work. Left behind it
 # would keep --check answering no for an install that is finished, and claim
-# an environment the user builds later as Omarchy's. The copies are Omarchy's
+# an environment the user builds later as Inferna's. The copies are Inferna's
 # own wrapper, so removing them takes nothing of the user's; a backup directory
 # that held nothing else goes with them.
 forget_legacy() {
@@ -176,7 +176,7 @@ ours() {
   [[ -f $command_path && ! -L $command_path ]] && grep -qF "$HERMES_HOME/" "$command_path"
 }
 
-# What inferna-agent runs is whichever hermes is first on PATH, and Omarchy puts
+# What inferna-agent runs is whichever hermes is first on PATH, and Inferna puts
 # mise's shims ahead of ~/.local/bin. So the command the probe vets has to be
 # the one PATH finds, or the agent is on a different Hermes than the one set
 # up. A PATH that finds none is not in the way: the theme unit asks from a
@@ -340,7 +340,7 @@ case "$mode" in
   ;;
 --retire-mise)
   # The migration's whole job. The environment goes before the wrapper, since
-  # once the wrapper is gone nothing marks the environment as Omarchy's and a
+  # once the wrapper is gone nothing marks the environment as Inferna's and a
   # rerun could not finish what a failed removal left behind.
   if legacy_owned; then
     retire_mise || exit 1
@@ -371,7 +371,7 @@ fi
 
 if [[ ! -r /usr/share/hermes-desktop/install.sh || ! -r /usr/share/hermes-desktop/runtime.patch ]] ||
   ! release_commit=$(jq -er 'select(.branch == "main") | .commit | select(test("^[0-9a-f]{40}$"))' /opt/hermes-desktop/resources/install-stamp.json 2>/dev/null); then
-  echo "The installed Hermes package cannot prepare in-app updates. Run 'omarchy update', then try again." >&2
+  echo "The installed Hermes package cannot prepare in-app updates. Run 'inferna update', then try again." >&2
   exit 1
 fi
 
@@ -540,7 +540,7 @@ fi
 # What inferna-agent runs is the command, not the venv, so the command is what
 # has to answer for the seeded sessions.
 if ! hermes_prompt_ready; then
-  echo "Hermes is installed at $runtime, but $command_path does not run the interactive seeded sessions Omarchy needs." >&2
+  echo "Hermes is installed at $runtime, but $command_path does not run the interactive seeded sessions Inferna needs." >&2
   echo "Update Hermes with 'hermes update', then run inferna-install-hermes-cli --now again." >&2
   exit 1
 fi

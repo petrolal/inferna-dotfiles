@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Show the current Omarchy dev-link state
+# inferna:summary=Show the current Inferna dev-link state
 # inferna:group=dev
 
 set -euo pipefail
@@ -14,10 +14,10 @@ linked=0
 if [[ -f /etc/omarchy.conf ]]; then
   conf_present=1
   configured=$(
-    OMARCHY_PATH=
+    INFERNA_PATH=
     # shellcheck disable=SC1091
     . /etc/omarchy.conf
-    printf '%s' "${OMARCHY_PATH:-<empty>}"
+    printf '%s' "${INFERNA_PATH:-<empty>}"
   )
   if [[ $configured != "$default_target" ]]; then
     linked=1
@@ -46,19 +46,19 @@ sudo_bin_dir() {
 
 if (( linked )); then
   echo "dev-link: configured"
-  echo "  /etc/omarchy.conf -> OMARCHY_PATH=$configured"
+  echo "  /etc/omarchy.conf -> INFERNA_PATH=$configured"
   echo "  sudo resolves omarchy-* from: $(sudo_bin_dir)"
   echo "  status: reboot required before all session layers use this checkout"
 else
   echo "dev-link: inactive"
   if (( conf_present )); then
-    echo "  /etc/omarchy.conf -> OMARCHY_PATH=$configured (default guard)"
+    echo "  /etc/omarchy.conf -> INFERNA_PATH=$configured (default guard)"
   fi
 fi
 
-echo "  current shell:       OMARCHY_PATH=${OMARCHY_PATH:-<unset>}"
+echo "  current shell:       INFERNA_PATH=${INFERNA_PATH:-<unset>}"
 
-if [[ ${OMARCHY_PATH:-$default_target} != "$configured" ]]; then
+if [[ ${INFERNA_PATH:-$default_target} != "$configured" ]]; then
   echo
   echo "Note: the running session does not match /etc/omarchy.conf. Reboot to settle it."
 fi

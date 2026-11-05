@@ -1477,7 +1477,7 @@ To stop: inferna-windows-vm stop"
     /microphone
     /clipboard
     /cert:ignore
-    "/title:Windows VM - Omarchy"
+    "/title:Windows VM - Inferna"
     /dynamic-resolution
     /gfx:AVC444
     /floatbar:sticky:off,default:visible,show:fullscreen

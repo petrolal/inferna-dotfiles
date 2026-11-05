@@ -4,10 +4,10 @@
 
 # Copy .desktop declarations
 mkdir -p ~/.local/share/applications
-cp "$OMARCHY_PATH"/applications/*.desktop ~/.local/share/applications/
+cp "$INFERNA_PATH"/applications/*.desktop ~/.local/share/applications/
 
 if inferna-cmd-present alacritty; then
-  cp "$OMARCHY_PATH/default/alacritty/Alacritty.desktop" ~/.local/share/applications/
+  cp "$INFERNA_PATH/default/alacritty/Alacritty.desktop" ~/.local/share/applications/
 fi
 
 update-desktop-database ~/.local/share/applications

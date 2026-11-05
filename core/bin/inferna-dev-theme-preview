@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Preview an Omarchy theme palette in the terminal
+# inferna:summary=Preview an Inferna theme palette in the terminal
 # inferna:args=[theme-name|theme-dir|colors.toml] [--no-color] [--no-osc|--osc]
 # inferna:examples=inferna dev theme-preview | inferna dev theme-preview tokyo-night | inferna dev theme-preview themes/gruvbox/colors.toml --no-color --no-osc
 
@@ -8,7 +8,7 @@ set -o pipefail
 
 CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"
 USER_THEMES_PATH="$HOME/.config/inferna/themes"
-OMARCHY_THEMES_PATH="$OMARCHY_PATH/themes"
+OMARCHY_THEMES_PATH="$INFERNA_PATH/themes"
 
 COLOR_OUTPUT=1
 APPLY_OSC="auto"
@@ -88,8 +88,8 @@ omarchy_tool() {
   local tool="$1"
   shift
 
-  if [[ -x $OMARCHY_PATH/bin/$tool ]]; then
-    "$OMARCHY_PATH/bin/$tool" "$@"
+  if [[ -x $INFERNA_PATH/bin/$tool ]]; then
+    "$INFERNA_PATH/bin/$tool" "$@"
   else
     "$tool" "$@"
   fi
@@ -279,7 +279,7 @@ print_practical_samples() {
   paint_segment ' warning ' "${COLORS[yellow]}"
   paint_segment ' success ' "${COLORS[green]}"
   printf '\n  '
-  paint_segment ' $ omarchy theme-preview ' "${COLORS[green]}"
+  paint_segment ' $ inferna theme-preview ' "${COLORS[green]}"
   paint_segment ' # comment ' "${COLORS[muted]}"
   paint_segment ' "string" ' "${COLORS[green]}"
   paint_segment ' function() ' "${COLORS[blue]}"

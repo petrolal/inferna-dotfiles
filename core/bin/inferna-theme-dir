@@ -14,5 +14,5 @@ fi
 if [[ -d $HOME/.config/inferna/themes/$theme ]]; then
   echo "$HOME/.config/inferna/themes/$theme"
 else
-  echo "$OMARCHY_PATH/themes/$theme"
+  echo "$INFERNA_PATH/themes/$theme"
 fi

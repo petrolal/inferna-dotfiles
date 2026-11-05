@@ -29,7 +29,7 @@
 # not realtime yet, since PipeWire only asks rtkit for priority at startup.
 #
 # This never prompts: without cached sudo the machine-wide repair stops, and
-# the caller stays pending until a run that has it, such as omarchy update.
+# the caller stays pending until a run that has it, such as inferna update.
 # Anything it cannot inspect is a failure, never "nothing to do".
 
 proc_root=${OMARCHY_PROC_ROOT:-/proc}
@@ -43,7 +43,7 @@ fail() {
 
 need_sudo() {
   sudo -n true 2>/dev/null ||
-    fail "Repairing realtime budgets needs sudo without a prompt; the next omarchy update finishes it."
+    fail "Repairing realtime budgets needs sudo without a prompt; the next inferna update finishes it."
 }
 
 hard_rttime() {
@@ -199,7 +199,7 @@ repair_machine() {
     # Left masked, as when sudo expires mid-install, nothing is made realtime
     # and nothing is killed; the next run with sudo, or a reboot, releases it.
     trap 'sudo -n systemctl unmask --runtime rtkit-daemon.service >/dev/null 2>&1 ||
-      echo "rtkit stays masked until the next omarchy update or a reboot" >&2' EXIT
+      echo "rtkit stays masked until the next inferna update or a reboot" >&2' EXIT
     sudo -n systemctl mask --runtime rtkit-daemon.service >/dev/null || fail "Could not hold rtkit back during its install"
     sudo -n pacman -S --needed --noconfirm -- rtkit || fail "Could not install rtkit"
     raise_zero_budgets 200000

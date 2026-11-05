@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Overwrite the package configuration for /etc/pacman with the Omarchy default of using its dedicated mirrors and repositories, then update all packages.
+# inferna:summary=Overwrite the package configuration for /etc/pacman with the Inferna default of using its dedicated mirrors and repositories, then update all packages.
 # inferna:requires-sudo=true
 
 set -e
@@ -11,7 +11,7 @@ if [[ -n $channel && $channel != "stable" && $channel != "rc" && $channel != "ed
   exit 2
 fi
 
-source "$OMARCHY_PATH/install/helpers/pacman.sh"
+source "$INFERNA_PATH/install/helpers/pacman.sh"
 if ! platform=$(inferna-hw-platform); then
   echo "Cannot tell this machine's platform. No repository configuration changed." >&2
   exit 1
@@ -31,7 +31,7 @@ if [[ -z $channel ]]; then
   esac
 fi
 if [[ ! -f $templates/pacman-$channel.conf || ! -f $templates/mirrorlist-$channel ]]; then
-  echo "Omarchy has no $channel channel for $platform. No repository configuration changed." >&2
+  echo "Inferna has no $channel channel for $platform. No repository configuration changed." >&2
   exit 1
 fi
 
@@ -40,7 +40,7 @@ fi
 # every exit, including a failed render, a refused sudo prompt, or a signal.
 rendered=$(mktemp -d)
 trap 'rm -rf "$rendered"' EXIT
-"$OMARCHY_PATH/bin/inferna-apply-pacman" --render "$channel" "$rendered"
+"$INFERNA_PATH/bin/inferna-apply-pacman" --render "$channel" "$rendered"
 
 sudo cp -f /etc/pacman.conf /etc/pacman.conf.bak
 sudo cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak

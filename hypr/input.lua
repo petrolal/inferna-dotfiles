@@ -1,5 +1,5 @@
 -- Keep only your personal input overrides here. Uncommented settings below
--- replace Omarchy's defaults.
+-- replace Inferna's defaults.
 
 -- Natural (macOS-style) trackpad scrolling.
 -- hl.config({

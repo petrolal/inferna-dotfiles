@@ -5,9 +5,9 @@ import qs.Ui
 import qs.Commons
 import qs.Commons as Commons
 
-// Visual reference + live playground for omarchy-shell's common UI
+// Visual reference + live playground for inferna-shell's common UI
 // components. Summon with `omarchy dev ui-preview`, or directly via:
-//   omarchy-shell shell summon omarchy.dev-gallery "{}"
+//   inferna-shell shell summon omarchy.dev-gallery "{}"
 //
 // Every section here renders the REAL component (not a copy) so the
 // gallery doubles as a smoke test. When you add a new common component,
@@ -1669,7 +1669,7 @@ Item {
                     { value: "Media", label: "Media", description: "Now-playing + transport" },
                     { value: "Workspaces", label: "Workspaces", description: "Hyprland workspace pills" },
                     { value: "system-tray", label: "System tray", description: "StatusNotifierItem icons" },
-                    { value: "omarchy-menu", label: "Omarchy menu", description: "Launcher / system menu" },
+                    { value: "inferna-menu", label: "Omarchy menu", description: "Launcher / system menu" },
                     { value: "power-profiles", label: "Power profiles", description: "Performance / balanced / saver" },
                     { value: "hardware", label: "Hardware", description: "CPU, GPU, mem utilization" },
                     { value: "notifications", label: "Notifications", description: "Recent notification history" }

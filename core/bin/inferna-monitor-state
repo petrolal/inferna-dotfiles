@@ -45,7 +45,7 @@ done | jq -R -n '[inputs | split("\t") | select(.[1] | test("^[0-9]+$")) | {(.[0
 printf '%s\n' "$monitors_json" | jq -c --argjson brightness "$brightness_json" \
   '[.[] | {name, make, model, enabled:(.disabled != true), focused:(.focused == true), width, height, refreshRate, scale, x, y, transform, mirrorOf, availableModes:(.availableModes // []), brightness:($brightness[.name] // null)}]'
 
-# Whether the mirror is Omarchy's own, which the panel can turn back off.
+# Whether the mirror is Inferna's own, which the panel can turn back off.
 if inferna-hyprland-toggle-enabled internal-monitor-mirror; then
   echo on
 else

@@ -70,7 +70,7 @@ Panel {
   function refresh() { if (!stateRead.running) stateRead.running = true }
   function run(cmd) { Quickshell.execDetached(cmd); refreshSoon.restart() }
   Timer { id: refreshSoon; interval: 450; onTriggered: root.refresh() }
-  function openFull(target) { root.close(); Quickshell.execDetached(["omarchy-shell", target, "open"]) }
+  function openFull(target) { root.close(); Quickshell.execDetached(["inferna-shell", target, "open"]) }
 
   Process {
     id: stateRead
@@ -78,7 +78,7 @@ Panel {
       "echo wifi=$(nmcli radio wifi 2>/dev/null);" +
       "echo bt=$(bluetoothctl show 2>/dev/null | sed -n 's/.*Powered: //p' | head -1);" +
       "echo night=$(omarchy toggle nightlight --status 2>/dev/null | grep -o '\"enabled\":[a-z]*' | cut -d: -f2);" +
-      "echo dnd=$(omarchy-shell notifications isDnd 2>/dev/null);" +
+      "echo dnd=$(inferna-shell notifications isDnd 2>/dev/null);" +
       "echo awake=$(test -e \"$HOME/.local/state/inferna/indicators/stay-awake\" && echo on || echo off);" +
       "echo profile=$(powerprofilesctl get 2>/dev/null);" +
       "echo bright=$(brightnessctl -m 2>/dev/null | head -1 | cut -d, -f4 | tr -d '%')"]
@@ -102,7 +102,7 @@ Panel {
   function setBrightness(f) {
     brightness = Math.max(0.01, Math.min(1, f))
     var mon = Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : ""
-    var cmd = ["omarchy-brightness-display", "--no-osd"]
+    var cmd = ["inferna-brightness-display", "--no-osd"]
     if (mon) cmd = cmd.concat(["--monitor", mon])
     Quickshell.execDetached(cmd.concat([Math.round(brightness * 100) + "%"]))
   }
@@ -326,7 +326,7 @@ Panel {
       Toggle { angle: 21; glyph: "󰖩"; on: root.wifiOn; tip: "Wi-Fi · right-click for networks"; onFlip: { root.wifiOn = !root.wifiOn; root.run(["nmcli", "radio", "wifi", root.wifiOn ? "on" : "off"]) } onMore: root.openFull("omarchy.network") }
       Toggle { angle: 32; glyph: "󰂯"; on: root.btOn; tip: "Bluetooth · right-click for devices"; onFlip: { root.btOn = !root.btOn; root.run(["bluetoothctl", "power", root.btOn ? "on" : "off"]) } onMore: root.openFull("omarchy.bluetooth") }
       Toggle { angle: 43; glyph: "󰖔"; on: root.nightOn; tip: "Night light"; onFlip: { root.nightOn = !root.nightOn; root.run(["omarchy", "toggle", "nightlight"]) } onMore: root.openFull("omarchy.monitor") }
-      Toggle { angle: 54; glyph: "󰂛"; on: root.dndOn; tip: "Do not disturb"; onFlip: { root.dndOn = !root.dndOn; root.run(["omarchy-toggle-notification-silencing"]) } onMore: root.openFull("omarchy.notifications") }
+      Toggle { angle: 54; glyph: "󰂛"; on: root.dndOn; tip: "Do not disturb"; onFlip: { root.dndOn = !root.dndOn; root.run(["inferna-toggle-notification-silencing"]) } onMore: root.openFull("omarchy.notifications") }
       Toggle { angle: 65; glyph: "󰅶"; on: root.awakeOn; tip: "Keep awake"; onFlip: { root.awakeOn = !root.awakeOn; root.run(["omarchy", "toggle", "idle", "toggle"]) } onMore: {} }
       Toggle { angle: 76; glyph: "󰇣"; on: false; tip: "Dropbox"; onFlip: root.openFull("omarchy.dropbox"); onMore: root.openFull("omarchy.dropbox") }
 

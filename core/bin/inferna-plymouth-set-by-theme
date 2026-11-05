@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Set the Plymouth boot theme from an Omarchy theme
+# inferna:summary=Set the Plymouth boot theme from an Inferna theme
 # inferna:args=<theme-name>
 # inferna:requires-sudo=true
 

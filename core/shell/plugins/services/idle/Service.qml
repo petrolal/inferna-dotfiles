@@ -8,7 +8,7 @@ import qs.Commons
 Item {
   id: root
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by inferna-shell (the first-party service loader).
   property var shell: null
 
   readonly property string home: Quickshell.env("HOME")
@@ -66,7 +66,7 @@ Item {
   function launchScreensaver() {
     root.screensaverStartedThisCycle = true
     screensaverLaunchGraceTimer.restart()
-    runProcess(screensaverProcess, "screensaver", "[[ $(omarchy-shell lock isLocked 2>/dev/null) == \"true\" ]] || omarchy-launch-screensaver")
+    runProcess(screensaverProcess, "screensaver", "[[ $(inferna-shell lock isLocked 2>/dev/null) == \"true\" ]] || inferna-launch-screensaver")
   }
 
   function lockSystem(reason) {
@@ -76,7 +76,7 @@ Item {
     screensaverLaunchGraceTimer.stop()
     root.idledThisCycle = false
     root.screensaverStartedThisCycle = false
-    runProcess(lockProcess, "lock", "omarchy-system-lock")
+    runProcess(lockProcess, "lock", "inferna-system-lock")
   }
 
   function startIdleCycle() {
@@ -114,7 +114,7 @@ Item {
     lockTimer.stop()
     screensaverLaunchGraceTimer.stop()
 
-    if (root.idledThisCycle) runProcess(wakeProcess, "wake", "omarchy-system-wake")
+    if (root.idledThisCycle) runProcess(wakeProcess, "wake", "inferna-system-wake")
 
     root.idledThisCycle = false
     root.screensaverStartedThisCycle = false
@@ -269,7 +269,7 @@ Item {
   }
   Process {
     id: screensaverStopProcess
-    command: ["pkill", "-f", "[/]usr/lib/omarchy-screensaver/omarchy-screensaver"]
+    command: ["pkill", "-f", "[/]usr/lib/inferna-screensaver/inferna-screensaver"]
   }
   Process {
     id: lockProcess

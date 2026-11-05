@@ -100,7 +100,7 @@ first_menu_kernel() {
 # boot menu would change nothing that boots. Read as inferna-boot-direct does,
 # from efibootmgr directly, since root runs on a PATH without omarchy-*.
 direct_boot_active() {
-  efibootmgr 2>/dev/null | cut -f1 | grep -Eq '^Boot[0-9A-Fa-f]+\*[[:space:]]+Omarchy[[:space:]]*$'
+  efibootmgr 2>/dev/null | cut -f1 | grep -Eq '^Boot[0-9A-Fa-f]+\*[[:space:]]+Inferna[[:space:]]*$'
 }
 
 # Rebuilding one kernel rewrites limine.conf in BOOT_ORDER order, which
@@ -158,7 +158,7 @@ set_kernel() {
   # The root half runs from the packaged copy when there is one, else from the
   # checkout. Root resolves nothing here: pkexec clears the environment.
   local self=/usr/bin/inferna-kernel
-  [[ -x $self ]] || self=$OMARCHY_PATH/bin/inferna-kernel
+  [[ -x $self ]] || self=$INFERNA_PATH/bin/inferna-kernel
 
   if [[ -t 0 ]]; then
     sudo "$self" set "$kernel"

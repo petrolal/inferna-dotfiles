@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Ensure the Omarchy, Arch and (on aarch64) Arch Linux ARM keyring packages are installed and populated
+# inferna:summary=Ensure the Inferna, Arch and (on aarch64) Arch Linux ARM keyring packages are installed and populated
 # inferna:requires-sudo=true
 
 # inferna-update runs this under set -e as a trusted pre-step, so a failed recv
@@ -26,7 +26,7 @@ fi
 # which every update stops at "unknown trust", so check that it is valid, not
 # just present: populate it from the installed keyring, or fetch it by
 # fingerprint and sign it locally when the package is missing, the way the
-# Omarchy key is bootstrapped, and install the package with the refresh below.
+# Inferna key is bootstrapped, and install the package with the refresh below.
 # keys.openpgp.org does not carry it.
 alarm_key=68B3537F39A313B3E574D06777193F152BDBE6A6
 alarm_keyring_missing=0

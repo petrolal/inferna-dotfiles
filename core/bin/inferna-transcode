@@ -182,7 +182,7 @@ main() {
     fi
   fi
 
-  # Picture qualities are words, so the menu shows them in the Omarchy language
+  # Picture qualities are words, so the menu shows them in the Inferna language
   # and maps the pick back to the value the transcoder takes.
   local high medium low choice
   high=$(inferna-i18n transcode.qualityHigh)

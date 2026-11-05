@@ -308,7 +308,7 @@ function dropRoom(drop, source, sections, drawn) {
 }
 
 // An entry as JSON with its keys in order, so a config written back with its
-// keys sorted (omarchy-shell-config does) reads as the same entry.
+// keys sorted (inferna-shell-config does) reads as the same entry.
 function entryJson(value) {
   if (Array.isArray(value)) return "[" + value.map(entryJson).join(",") + "]"
   if (isPlainObject(value))
@@ -547,7 +547,7 @@ function dragDistanceOutside(point, width, height) {
 }
 
 // Display cutouts (a camera notch at the top of a laptop panel) are described
-// by the platform's own package, in /usr/share/omarchy-platform/display-cutouts.json:
+// by the platform's own package, in /usr/share/inferna-platform/display-cutouts.json:
 //
 //   { "panels": [ { "connector": "eDP", "width": 3024, "height": 1964, "top": 64 } ] }
 //

@@ -6,8 +6,9 @@
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]}"
-export OMARCHY_PATH="${OMARCHY_PATH:-$(cd -- "$(dirname -- "$SCRIPT_PATH")/.." && pwd)}"
-export PATH="$OMARCHY_PATH/bin:/usr/local/bin:/usr/bin:$PATH"
+export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-$(cd -- "$(dirname -- "$SCRIPT_PATH")/.." && pwd)}"
+export PATH="$INFERNA_PATH/bin:/usr/local/bin:/usr/bin:$PATH"
 
 parse_url() {
   jq -r '.url // empty' 2>/dev/null <<<"$1" || true

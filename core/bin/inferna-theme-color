@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Resolve semantic colors from an Omarchy theme colors.toml
+# inferna:summary=Resolve semantic colors from an Inferna theme colors.toml
 # inferna:args=[--file <colors.toml>] (--all | --raw | <key> [fallback])
 # inferna:hidden=true
 

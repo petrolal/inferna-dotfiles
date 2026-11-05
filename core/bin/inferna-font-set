@@ -47,7 +47,7 @@ if [[ -f ~/.config/ghostty/config ]]; then
 fi
 
 if [[ -f ~/.config/foot/foot.ini ]]; then
-  # Preserve the primary font's size, not a fallback's; Omarchy ships 9 when none is present.
+  # Preserve the primary font's size, not a fallback's; Inferna ships 9 when none is present.
   foot_size="$(sed -n 's/^font=[^,]*:size=\([0-9.]\+\).*/\1/p' ~/.config/foot/foot.ini | head -1)"
   if [[ -z $foot_size ]]; then
     foot_size=9
@@ -55,7 +55,7 @@ if [[ -f ~/.config/foot/foot.ini ]]; then
   sed -i "s/^font=.*/font=$font_name:size=$foot_size/g" ~/.config/foot/foot.ini
 fi
 
-# fontconfig is the canonical source of truth — the omarchy shell, Qt apps,
+# fontconfig is the canonical source of truth — the inferna shell, Qt apps,
 # and anything resolving "monospace" all read from here. This file is loaded
 # after the package-owned default, and prepend_first puts the chosen family at
 # the head of the list so it wins over the family that default prefers.

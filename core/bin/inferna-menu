@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Control the Omarchy menu (toggle / summon / close / refresh)
+# inferna:summary=Control the Inferna menu (toggle / summon / close / refresh)
 # inferna:args=[toggle|summon|close|refresh|ping] [route]
 # inferna:examples=inferna menu | inferna menu toggle system | inferna menu summon appearance.theme | inferna menu refresh
 
@@ -46,7 +46,7 @@ USAGE
     exit 0
     ;;
   *)
-    echo "inferna-menu: unknown verb '$verb'. Try 'omarchy menu --help'." >&2
+    echo "inferna-menu: unknown verb '$verb'. Try 'inferna menu --help'." >&2
     exit 2
     ;;
 esac

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install and enable ydotool mouse automation for Omarchy development
+# inferna:summary=Install and enable ydotool mouse automation for Inferna development
 # inferna:requires-sudo=true
 
 set -euo pipefail

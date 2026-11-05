@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Set the default browser for Omarchy and XDG handlers
+# inferna:summary=Set the default browser for Inferna and XDG handlers
 # inferna:args=[chromium|chrome|brave|brave-origin|edge|firefox|zen]
 # inferna:examples=inferna default browser firefox | inferna default browser brave
 

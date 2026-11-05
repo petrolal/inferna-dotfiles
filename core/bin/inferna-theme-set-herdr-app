@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync the generated Omarchy theme to the Herdr desktop app
+# inferna:summary=Sync the generated Inferna theme to the Herdr desktop app
 # inferna:args=[--activate]
 # inferna:hidden=true
 
@@ -22,7 +22,7 @@ theme_path="$app_home/themes/omarchy.json"
 # Do not create state for an app the person has never opened.
 if [[ ! -d $app_home ]]; then
   if (( activate == 1 )); then
-    echo "Open Herdr before activating its Omarchy theme." >&2
+    echo "Open Herdr before activating its Inferna theme." >&2
     exit 1
   fi
   exit 0
@@ -30,7 +30,7 @@ fi
 
 if (( activate == 1 )); then
   if ! inferna-cmd-present herdr-app; then
-    echo "Install Herdr 0.1.11 or newer before activating its Omarchy theme." >&2
+    echo "Install Herdr 0.1.11 or newer before activating its Inferna theme." >&2
     exit 1
   fi
   version=$(herdr-app --version)
@@ -47,7 +47,7 @@ fi
 exec {theme_lock}>"${XDG_RUNTIME_DIR:-/tmp}/inferna-theme-set.lock"
 flock "$theme_lock"
 if [[ ! -f $source_path ]]; then
-  echo "Skipping Herdr theme: refresh the current Omarchy theme to generate its palette." >&2
+  echo "Skipping Herdr theme: refresh the current Inferna theme to generate its palette." >&2
   if (( activate == 1 )); then exit 1; fi
   exit 0
 fi
@@ -81,7 +81,7 @@ fi
 flock -u "$theme_lock"
 if (( activate == 1 )); then
   if ! HERDR_APP_HOME="$app_home" herdr-app do app.theme --name omarchy; then
-    echo "Omarchy was published. Open Herdr and rerun with --activate to select it." >&2
+    echo "Inferna was published. Open Herdr and rerun with --activate to select it." >&2
     exit 1
   fi
 fi

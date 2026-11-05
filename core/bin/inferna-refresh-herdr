@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Overwrite the user herdr config with the Omarchy default and reload herdr.
+# inferna:summary=Overwrite the user herdr config with the Inferna default and reload herdr.
 
 inferna-refresh-config herdr/config.toml
 inferna-restart-herdr

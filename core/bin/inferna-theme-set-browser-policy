@@ -29,7 +29,7 @@ POLICY_DIRS=(
 
 # The path etc/sudoers.d/inferna-theme-browser names. The privileged half always
 # runs from there rather than from whichever copy was invoked, so the rule
-# matches even where $OMARCHY_PATH points at a checkout.
+# matches even where $INFERNA_PATH points at a checkout.
 PACKAGED_PATH=/usr/bin/inferna-theme-set-browser-policy
 
 usage() {
@@ -87,7 +87,7 @@ cleanup() {
 trap cleanup EXIT
 
 for policy_dir in "${POLICY_DIRS[@]}"; do
-  # Only browsers Omarchy has installed have a policy directory. Creating one
+  # Only browsers Inferna has installed have a policy directory. Creating one
   # here would hand a browser a managed-policy root it does not otherwise have.
   [[ -d $policy_dir && ! -L $policy_dir ]] || continue
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Render text as ASCII art in the font the Omarchy logo is drawn in
+# inferna:summary=Render text as ASCII art in the font the Inferna logo is drawn in
 # inferna:args=[text...]
-# inferna:examples=inferna ascii Omarchy | inferna ascii "Hello there"
+# inferna:examples=inferna ascii Inferna | inferna ascii "Hello there"
 
 set -o pipefail
 
@@ -10,7 +10,7 @@ usage() {
   cat <<'EOF'
 Usage: inferna-ascii [text...]
 
-Renders text as ASCII art in Delta Corps Priest 1, the FIGlet font the Omarchy
+Renders text as ASCII art in Delta Corps Priest 1, the FIGlet font the Inferna
 logo is drawn in. Reads the text from stdin when given none.
 
 Options:

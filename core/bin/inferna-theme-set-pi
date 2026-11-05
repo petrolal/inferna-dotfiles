@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync the generated Omarchy Pi theme
+# inferna:summary=Sync the generated Inferna Pi theme
 # inferna:args=[--activate]
 # inferna:hidden=true
 
@@ -37,7 +37,7 @@ done
 if [[ ! -f $PI_SOURCE_PATH ]]; then
   if (( PI_ACTIVATE == 1 )); then
     echo "Pi theme source missing: $PI_SOURCE_PATH" >&2
-    echo "Run inferna-theme-refresh after selecting an Omarchy theme." >&2
+    echo "Run inferna-theme-refresh after selecting an Inferna theme." >&2
     exit 1
   fi
 

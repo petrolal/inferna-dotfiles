@@ -2,9 +2,9 @@
 # inferna:summary=Read and change the registry of Claude, Codex, and Grok subscription accounts
 # inferna:args=<registry|home|homes|list|refresh|begin|register|recover|use|rename|remove|mode|link|autoswitch> [provider] [args...]
 # inferna:hidden=true
-"""The account registry behind `omarchy agent account`.
+"""The account registry behind `inferna agent account`.
 
-An account is a Claude Code, Codex, or Grok login Omarchy keeps a home for.
+An account is a Claude Code, Codex, or Grok login Inferna keeps a home for.
 The login you already have stays where the CLI put it (~/.claude, ~/.codex,
 ~/.grok) and
 is the primary account; added accounts get a home of their own under
@@ -744,10 +744,10 @@ def usage_by_account(provider: str) -> tuple[dict[str, Any], frozenset[str]]:
   )
 
 
-# What a person reads, in the Omarchy language. Each lookup is written as
+# What a person reads, in the Inferna language. Each lookup is written as
 # "inferna-i18n <key>", the form the catalog check finds references by, and
 # carries its English, which stands in when the lookup can't run (as in tests
-# that leave OMARCHY_PATH unset) or the key isn't in the catalog yet.
+# that leave INFERNA_PATH unset) or the key isn't in the catalog yet.
 def tr(lookup: str, english: str, *args: Any) -> str:
   key = lookup.split()[1]
   values = [str(arg) for arg in args]
@@ -763,7 +763,7 @@ def tr(lookup: str, english: str, *args: Any) -> str:
 
 
 def notify(title: str, body: str, action: list[str] | None = None) -> None:
-  command = ["inferna-notification-send", "--app-name", "Omarchy Agents", "-g", "󰚩", title, body]
+  command = ["inferna-notification-send", "--app-name", "Inferna Agents", "-g", "󰚩", title, body]
   if action:
     command += ["--exec"] + action
   subprocess.run(command, check=False)

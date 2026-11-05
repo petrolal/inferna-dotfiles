@@ -44,7 +44,7 @@ if [[ -z $key ]]; then
 fi
 shift
 
-i18n=$OMARCHY_PATH/default/i18n
+i18n=$INFERNA_PATH/default/i18n
 language_file=${OMARCHY_LANGUAGE_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/language}
 language=en
 if [[ -f $language_file ]]; then

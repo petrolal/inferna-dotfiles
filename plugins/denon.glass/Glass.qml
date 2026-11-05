@@ -22,7 +22,7 @@ Panel {
   readonly property color fg: bar ? bar.foreground : Commons.Color.foreground
   readonly property color accent: Commons.Color.accent
   readonly property string family: bar ? bar.fontFamily : Style.font.family
-  readonly property string helper: Quickshell.env("HOME") + "/.local/share/omarchy-glass/control.py"
+  readonly property string helper: Quickshell.env("HOME") + "/.local/share/inferna-glass/control.py"
   readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/inferna/current/background"
   property var values: ({enabled: true})
   property var presets: []

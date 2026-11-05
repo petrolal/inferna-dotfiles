@@ -45,11 +45,11 @@ case "$region" in
 esac
 
 # Each platform has its own channel templates (install/helpers/pacman.sh).
-source "$OMARCHY_PATH/install/helpers/pacman.sh"
+source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform)
 templates=$(omarchy_pacman_templates "$platform")
 if [[ ! -f $templates/pacman-$channel.conf || ! -f $templates/mirrorlist-$channel ]]; then
-  echo "Omarchy has no $channel channel for $platform." >&2
+  echo "Inferna has no $channel channel for $platform." >&2
   exit 1
 fi
 
@@ -67,7 +67,7 @@ if [[ $region == "global" || $platform != "x86" ]]; then
   cp "$templates/pacman-$channel.conf" "$staging/pacman.conf"
   cp "$templates/mirrorlist-$channel" "$staging/mirrorlist"
 else
-  profile="$OMARCHY_PATH/default/regions/$region/pacman"
+  profile="$INFERNA_PATH/default/regions/$region/pacman"
   for fragment in "omarchy-$channel.prepend" "mirrorlist-$channel.prepend"; do
     [[ -r $profile/$fragment ]] || { echo "Region $region lacks $profile/$fragment" >&2; exit 1; }
   done

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Apply current Omarchy theme colors and background alpha to running Foot terminals
+# inferna:summary=Apply current Inferna theme colors and background alpha to running Foot terminals
 # inferna:hidden=true
 
 colors_toml=$HOME/.local/state/inferna/current/theme/colors.toml

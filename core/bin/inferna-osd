@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Show the Omarchy Quickshell on-screen display
+# inferna:summary=Show the Inferna Quickshell on-screen display
 # inferna:args=[-i|--icon <icon>] [-m|--message <text>] [-p|--progress <0-100>] [-d|--duration <ms>]
 # inferna:examples=inferna osd -i brightness -p 50 | inferna osd -m "Hello"
 

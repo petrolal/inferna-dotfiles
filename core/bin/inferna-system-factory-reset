@@ -10,7 +10,7 @@
 #
 # The running root (@) is swapped for a fresh writable clone of the @factory
 # snapshot, so user-installed packages and /etc drift are gone too. That
-# snapshot is taken by the Omarchy Quattro installer, so only machines
+# snapshot is taken by the Inferna Quattro installer, so only machines
 # installed from that ISO can be reset; a machine upgraded to Quattro from an
 # earlier version has no baseline to return to and is turned away.
 #
@@ -32,9 +32,10 @@ set -euo pipefail
 
 PROVISIONING_DIR=/var/lib/omarchy/provisioning
 PACKAGED_PATH=/usr/bin/inferna-system-factory-reset
-# sudo drops OMARCHY_PATH from the environment, and inferna-i18n, which
+# sudo drops INFERNA_PATH from the environment, and inferna-i18n, which
 # supplies every line of the prompts below, needs it there.
-export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
+export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
 TOP_MNT=/run/inferna-system-factory-reset/top
 ESP_MNT=/run/inferna-system-factory-reset/esp
 NEXT_NAME=@inferna-reset-next
@@ -42,7 +43,7 @@ LOG_FILE=/var/log/inferna-system-factory-reset.log
 
 # Never replace a newer checkout reset with a different installed implementation.
 if ! /usr/bin/cmp -s -- "${BASH_SOURCE[0]}" "$PACKAGED_PATH"; then
-  echo "Factory reset differs from the installed command. Install the matching Omarchy package before resetting." >&2
+  echo "Factory reset differs from the installed command. Install the matching Inferna package before resetting." >&2
   exit 1
 fi
 
@@ -55,7 +56,7 @@ if (( EUID != 0 )); then
   exec sudo env -- "${gum_env[@]}" "$PACKAGED_PATH" "$@"
 fi
 
-export PATH="$OMARCHY_PATH/bin:$PATH"
+export PATH="$INFERNA_PATH/bin:$PATH"
 
 # The questions read in the language of the person who asked for the reset.
 # Elevation left their HOME behind, so their language file is found from the
@@ -83,7 +84,7 @@ root_is_btrfs_at() {
   [[ $(findmnt -no FSTYPE /) == btrfs ]] && findmnt -no OPTIONS / | grep -q "subvol=/@\(,\|$\)"
 }
 
-DISPATCH="$OMARCHY_PATH/bin/inferna-lifecycle-dispatch"
+DISPATCH="$INFERNA_PATH/bin/inferna-lifecycle-dispatch"
 
 # A platform whose boot package implements the reset operations rebuilds,
 # verifies and unlocks the factory root's boot chain itself; everywhere else
@@ -531,7 +532,7 @@ rebuild_next_boot() {
       rm -f "$next/etc/mkinitcpio.conf.d/omarchy_resume.conf" \
         "$next/etc/limine-entry-tool.d/resume.conf"
     fi
-    if ! chroot "$next" env OMARCHY_PATH=/usr/share/omarchy \
+    if ! chroot "$next" env INFERNA_PATH=/usr/share/omarchy \
       /usr/bin/inferna-hibernation-setup --force --no-rebuild >>"$LOG_FILE" 2>&1; then
       fail "hibernation setup failed in the factory root (see $LOG_FILE)"
     fi
@@ -715,7 +716,7 @@ require_factory_snapshot() {
 main() {
   inferna-cmd-present btrfs || { echo "Error: btrfs-progs is required" >&2; exit 1; }
 
-  root_is_btrfs_at || fail "reset requires the standard Omarchy Btrfs layout (subvol=@)"
+  root_is_btrfs_at || fail "reset requires the standard Inferna Btrfs layout (subvol=@)"
 
   touch "$LOG_FILE"
   chmod 600 "$LOG_FILE"

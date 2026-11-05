@@ -260,14 +260,14 @@ Item {
     // A cloned background may not summon the picker in-process, so it takes
     // the IPC route instead.
     if (!root.shell || !root.shell.summon("omarchy.image-picker", payload))
-      Util.execArgv(["omarchy-shell", "shell", "summon", "omarchy.image-picker", payload])
+      Util.execArgv(["inferna-shell", "shell", "summon", "omarchy.image-picker", payload])
   }
 
-  // omarchy-theme-bg-set tells this service of the new background itself. A
+  // inferna-theme-bg-set tells this service of the new background itself. A
   // refresh here would start an ordinary transition under an intro's cover.
   Process {
     id: bgSwitchProc
-    command: ["bash", "-c", "background=$(omarchy-theme-bg-switcher); [[ -n $background ]] && omarchy-theme-bg-set \"$background\""]
+    command: ["bash", "-c", "background=$(inferna-theme-bg-switcher); [[ -n $background ]] && inferna-theme-bg-set \"$background\""]
   }
 
   Process {
@@ -405,7 +405,7 @@ Item {
       color: "transparent"
       // Keep render updates enabled. The background layer has been observed to
       // lose its committed buffer while parked with updatesEnabled=false,
-      // leaving a black desktop until omarchy-shell is restarted. A still
+      // leaving a black desktop until inferna-shell is restarted. A still
       // wallpaper costs nothing to keep enabled. OWE manages video layers.
       updatesEnabled: true
 

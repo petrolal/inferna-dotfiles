@@ -1,31 +1,31 @@
-# Reporting a Crash Upstream to Omarchy
+# Reporting a Crash Upstream to Inferna
 
-Read this only after concluding that a crash is genuinely Omarchy's to fix.
+Read this only after concluding that a crash is genuinely Inferna's to fix.
 
-## Is it even Omarchy's bug?
+## Is it even Inferna's bug?
 
-Be strict here. Omarchy is a configuration layer over Arch Linux, so a crash
+Be strict here. Inferna is a configuration layer over Arch Linux, so a crash
 inside a third-party application — a file manager, a browser, a GNOME or Qt
-library — is almost always an upstream bug in **that** project, not in Omarchy.
+library — is almost always an upstream bug in **that** project, not in Inferna.
 
-Omarchy's sphere of control is roughly:
+Inferna's sphere of control is roughly:
 
-- the `omarchy-*` commands
+- the `inferna-*` commands
 - the Quickshell shell and its plugins
 - the Hyprland and terminal configuration it ships
 - its themes
 - its install and migration scripts
 - how it packages and configures what it installs
 
-A crash in a program Omarchy merely installs is **not** an Omarchy bug unless
-Omarchy's own packaging or configuration is implicated.
+A crash in a program Inferna merely installs is **not** an Inferna bug unless
+Inferna's own packaging or configuration is implicated.
 
-If it is not Omarchy's, say so and stop. Suggesting the right upstream project is
+If it is not Inferna's, say so and stop. Suggesting the right upstream project is
 useful; filing there yourself is not part of this.
 
 ## Three conditions, all required
 
-1. **It is a verified bug in Omarchy's sphere**, established on evidence. Issues
+1. **It is a verified bug in Inferna's sphere**, established on evidence. Issues
    are for verified bugs only. An "is this even a bug?" belongs on the Discord at
    <https://omarchy.org/discord>; a feature idea belongs in GitHub Discussions
    under Suggestions.
@@ -86,8 +86,8 @@ gh issue create --repo omacom/omarchy --title "..." --body "..."
 ```
 
 Include what happened, what was expected, steps to reproduce, system details from
-`omarchy version`, and diagnostics from `omarchy debug --no-sudo --print` (which
-also writes `/tmp/omarchy-debug.log`; the interactive `omarchy debug` can upload
+`inferna version`, and diagnostics from `omarchy debug --no-sudo --print` (which
+also writes `/tmp/inferna-debug.log`; the interactive `omarchy debug` can upload
 it and print a shareable URL worth including).
 
 `gh` cannot attach media. If a screenshot would help, save one and give the user

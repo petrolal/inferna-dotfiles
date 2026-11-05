@@ -18,7 +18,7 @@ case "${1:-}" in
     ;;
 esac
 
-# Durations and the status line read in the Omarchy language; the --shell
+# Durations and the status line read in the Inferna language; the --shell
 # time feeds the power panel, which shows it as-is.
 # The power reading is joined with no-break spaces so a longer language wraps
 # the line between its parts rather than inside "13.1W / 53Wh".

@@ -4,7 +4,7 @@
 # inferna:hidden=true
 
 # mise runs this as a postinstall hook (etc/mise/conf.d/omarchy.toml), naming the
-# tools it just installed in MISE_INSTALLED_TOOLS. Omarchy's agents are lazy and
+# tools it just installed in MISE_INSTALLED_TOOLS. Inferna's agents are lazy and
 # self-updating, so that is an agent's first use and every upgrade after it.
 # herdr only installs into a config directory the agent already made, and the
 # agent makes it on its first run, after this hook, so it is created here.

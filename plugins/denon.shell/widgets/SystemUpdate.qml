@@ -17,7 +17,7 @@ BarWidget {
   function clear() { updateAvailable = false }
 
   function runUpdate() {
-    if (root.bar) root.bar.run("omarchy-launch-floating-terminal-with-presentation omarchy-update")
+    if (root.bar) root.bar.run("inferna-launch-floating-terminal-with-presentation inferna-update")
   }
 
   visible: updateAvailable
@@ -38,7 +38,7 @@ BarWidget {
 
   Process {
     id: updateProc
-    command: ["omarchy-update-available"]
+    command: ["inferna-update-available"]
     onExited: function(exitCode) {
       root.updateAvailable = exitCode === 0
     }

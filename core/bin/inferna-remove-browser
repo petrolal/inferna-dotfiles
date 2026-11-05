@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Remove a supported browser and clean up Omarchy browser defaults
+# inferna:summary=Remove a supported browser and clean up Inferna browser defaults
 # inferna:args=<chrome|brave|brave-origin|edge|firefox|zen>
 # inferna:examples=inferna remove browser firefox | inferna remove browser brave
 # inferna:requires-sudo=true

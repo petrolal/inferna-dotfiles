@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Launch Slack with live Omarchy theme support
+# inferna:summary=Launch Slack with live Inferna theme support
 # inferna:args=[slack-arguments...]
 # inferna:hidden=true
 
@@ -12,7 +12,7 @@ for argument in "$@"; do
 done
 
 if [[ -f $HOME/.local/state/inferna/slack/enabled ]]; then
-  exec /usr/bin/python "$OMARCHY_PATH/default/slack/launcher.py" "${arguments[@]}"
+  exec /usr/bin/python "$INFERNA_PATH/default/slack/launcher.py" "${arguments[@]}"
 else
   exec /usr/bin/slack "${arguments[@]}"
 fi

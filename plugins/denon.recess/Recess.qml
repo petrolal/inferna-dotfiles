@@ -25,7 +25,7 @@ Panel {
   readonly property color accent: Commons.Color.accent
   readonly property string family: bar ? bar.fontFamily : Style.font.family
   readonly property string mono: "Adwaita Mono"
-  readonly property string helper: Quickshell.env("HOME") + "/.local/share/omarchy-recess/control.py"
+  readonly property string helper: Quickshell.env("HOME") + "/.local/share/inferna-recess/control.py"
   readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/inferna/current/background"
   property var values: ({enabled: true, style: "recessed", styles: {}})
   property var allLooks: ({})        // style -> look -> profile -> base sliders, from control.py

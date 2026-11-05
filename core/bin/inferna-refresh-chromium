@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Refresh the ~/.config/chromium-flags.conf file from the Omarchy defaults.
+# inferna:summary=Refresh the ~/.config/chromium-flags.conf file from the Inferna defaults.
 
 CONFIG_FILE="$HOME/.config/chromium-flags.conf"
 INSTALL_GOOGLE_ACCOUNTS=false

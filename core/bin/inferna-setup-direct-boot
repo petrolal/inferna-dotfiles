@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Add or remove an EFI boot entry for the Omarchy UKI, allowing the system to boot directly
+# inferna:summary=Add or remove an EFI boot entry for the Inferna UKI, allowing the system to boot directly
 # inferna:requires-sudo=true
 
 # Apple Silicon boots m1n1, then U-Boot, which finds the bootloader on its own
@@ -47,7 +47,7 @@ else
   uki_file=$(sudo find /boot/EFI/Linux/ -name "omarchy*.efi" -printf "%f\n" 2>/dev/null | head -1)
 
   if [[ -z $uki_file ]]; then
-    echo "Error: No Omarchy UKI found in /boot/EFI/Linux/" >&2
+    echo "Error: No Inferna UKI found in /boot/EFI/Linux/" >&2
     exit 1
   fi
 
@@ -61,7 +61,7 @@ else
     sudo efibootmgr --create \
       --disk "$disk" \
       --part "$part" \
-      --label "Omarchy" \
+      --label "Inferna" \
       --loader "\\EFI\\Linux\\$uki_file"
   fi
 fi

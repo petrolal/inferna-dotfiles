@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Apply Omarchy hardware-specific packages and system configuration
+# inferna:summary=Apply Inferna hardware-specific packages and system configuration
 # inferna:group=apply
 # inferna:requires-sudo=true
 # inferna:examples=inferna apply hardware --install-user dhh
@@ -71,10 +71,11 @@ fi
 export OMARCHY_INSTALL_USER="$install_user"
 # Only inferna-provision-hardware runs steps as an image's first boot.
 unset OMARCHY_IMAGE_DEFERRED_HARDWARE
-export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
-export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$OMARCHY_PATH/install}"
+export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
+export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$INFERNA_PATH/install}"
 export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
-export PATH="$OMARCHY_PATH/bin:$PATH"
+export PATH="$INFERNA_PATH/bin:$PATH"
 
 source "$OMARCHY_INSTALL/helpers/logging.sh"
 source "$OMARCHY_INSTALL/helpers/image-target.sh"

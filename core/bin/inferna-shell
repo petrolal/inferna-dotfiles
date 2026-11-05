@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Send an IPC call to the running Omarchy shell
+# inferna:summary=Send an IPC call to the running Inferna shell
 # inferna:args=[-q] <target> <method> [args...]
 # inferna:examples=inferna shell shell ping | inferna-shell shell toggle omarchy.menu '{"menu":"root"}'
 
@@ -20,7 +20,7 @@ if (( $# == 0 )) || [[ $1 == "-h" || $1 == "--help" ]]; then
   cat <<USAGE
 Usage: inferna-shell [-q] <target> <method> [args...]
 
-Forwards an IPC call to the running Omarchy shell. The shell is expected
+Forwards an IPC call to the running Inferna shell. The shell is expected
 to already be running; this command does not start it.
 
 Options:
@@ -36,10 +36,11 @@ USAGE
   exit 0
 fi
 
-if [[ -z ${OMARCHY_PATH:-} ]]; then
-  export OMARCHY_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
+if [[ -z ${INFERNA_PATH:-} ]]; then
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
 fi
-[[ -f $OMARCHY_PATH/shell/shell.qml ]] || fail "inferna-shell config not found: $OMARCHY_PATH/shell/shell.qml"
+[[ -f $INFERNA_PATH/shell/shell.qml ]] || fail "inferna-shell config not found: $INFERNA_PATH/shell/shell.qml"
 
 # qs matches instances by display, and a caller from outside the session (an
 # ssh or TTY inferna-restart-shell, and the migrations it runs for) has none,
@@ -69,7 +70,7 @@ fi
 # request is out is reported, not retried: the call may already have run.
 # Like qs ipc, the socket belongs to one shell, the one running this config on
 # this display, and the shell derives its name from the same two values.
-socket_id=$(printf '%s\n%s' "$OMARCHY_PATH/shell" "${WAYLAND_DISPLAY:-}" | md5sum)
+socket_id=$(printf '%s\n%s' "$INFERNA_PATH/shell" "${WAYLAND_DISPLAY:-}" | md5sum)
 socket="${XDG_RUNTIME_DIR:-/run/user/$UID}/inferna-shell-${socket_id:0:16}.sock"
 request="$*"
 if command -v socat >/dev/null 2>&1 && [[ -S $socket && $request != *$'\x1e'* && $request != *$'\x1f'* ]]; then
@@ -108,7 +109,7 @@ fi
 # positionals. qs reports connection failures with a nonzero exit, but IPC-level
 # failures (unknown target/function, bad arguments) go to stdout with exit 0.
 ipc_timeout=${OMARCHY_SHELL_IPC_TIMEOUT:-2s}
-output=$(timeout --kill-after=1s "$ipc_timeout" qs ipc -n -p "$OMARCHY_PATH/shell" call -- "$@" 2>/dev/null)
+output=$(timeout --kill-after=1s "$ipc_timeout" qs ipc -n -p "$INFERNA_PATH/shell" call -- "$@" 2>/dev/null)
 ipc_status=$?
 
 if (( ipc_status == 124 || ipc_status == 137 )); then

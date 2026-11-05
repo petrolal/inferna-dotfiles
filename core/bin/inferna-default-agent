@@ -17,7 +17,7 @@ if (($# == 0)); then
     read -r agent <"$agent_file"
   fi
 
-  # Silent when unset rather than defaulting: Omarchy picks no agent for you, so
+  # Silent when unset rather than defaulting: Inferna picks no agent for you, so
   # the menu leaves every entry unchecked until one is chosen.
   [[ -n ${agent:-} ]] && echo "$agent"
   exit 0
@@ -71,7 +71,7 @@ commandcode | command-code | cmdc) agent="commandcode"; name="Command Code"; age
 esac
 
 agent_package=${agent_package:-$agent}
-# Omarchy declares a tool that takes backend options under its bare name, with
+# Inferna declares a tool that takes backend options under its bare name, with
 # the options inside the declaration's table, because mise drops bracket options
 # from a table-valued key. The bracketed package is only for the user's config.
 agent_tool=${agent_tool:-$agent_package}
@@ -103,10 +103,10 @@ else
     [[ -x $HOME/.local/bin/$agent ]] && ! mise_wrapper "$HOME/.local/bin/$agent"
   }
   agent_present() { user_install || mise where "$agent_tool" &>/dev/null; }
-  # Omarchy declares the default agents as mise tools, so installing one is
+  # Inferna declares the default agents as mise tools, so installing one is
   # enough and leaves the user's config alone. A user who removed the
-  # preinstalls, like one without Omarchy's declarations, selects it instead.
-  # An npm-backed agent needs node, itself a lazy tool where Omarchy declares
+  # preinstalls, like one without Inferna's declarations, selects it instead.
+  # An npm-backed agent needs node, itself a lazy tool where Inferna declares
   # it, and mise won't install it as the agent's dependency while it's missing.
   npm_backed() {
     [[ $1 == npm:* || $(mise tool "${1%%\[*}" --backend 2>/dev/null) == npm:* ]]
@@ -178,7 +178,7 @@ if [[ $installing == "true" ]]; then
       [[ -n $installer ]] && break
       sleep 0.05
     done
-    printf '\033]2;Omarchy\007'
+    printf '\033]2;Inferna\007'
   fi
 fi
 

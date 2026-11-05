@@ -24,7 +24,7 @@ echo "    docker run -v /:/host alpine   # full read/write of the host, as root"
 echo ""
 echo "and take over the machine with no password prompt. A single rogue script,"
 echo "dependency, or plugin running as you is enough. It is convenient for"
-echo "development, but it removes the protection Omarchy keeps by default, where"
+echo "development, but it removes the protection Inferna keeps by default, where"
 echo "Docker access goes through a polkit/sudo prompt."
 echo ""
 
@@ -32,14 +32,14 @@ if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-
   sudo usermod -aG docker "$USER"
   # A new docker group membership is only picked up by a fresh session, and in
   # practice logging out or newgrp isn't enough — only a reboot reliably applies
-  # it. Record it so a later `omarchy update` still prompts
+  # it. Record it so a later `inferna update` still prompts
   # (inferna-update-restart reads this), then offer to do it now.
   inferna-state set reboot-required
   echo ""
   echo "Sudoless Docker ENABLED. It takes effect after a reboot."
   echo "To disable it again: Setup > Security > Sudoless Docker."
   echo ""
-  # The migration reuses this command during 'omarchy update' and defers the
+  # The migration reuses this command during 'inferna update' and defers the
   # reboot to inferna-update-restart, so it doesn't cut the update short.
   if [[ -z ${OMARCHY_DEFER_REBOOT:-} ]] && gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n docker.rebootToApply)"; then
     inferna-system reboot

@@ -5,7 +5,7 @@ import qs.Ui
 
 // The shared gauge-cluster overlay dressed for the disk speed test: read and
 // write dials in MB/s, titled with the model of the disk under test. One
-// omarchy-disk-speedtest run streams both phases and cleans up after itself,
+// inferna-disk-speedtest run streams both phases and cleans up after itself,
 // so dismissal only has to stop the process.
 Item {
   id: root
@@ -96,7 +96,7 @@ Item {
 
   Process {
     id: proc
-    command: ["omarchy-disk-speedtest"]
+    command: ["inferna-disk-speedtest"]
     stdout: SplitParser { onRead: function(line) { root.updateLine(line) } }
     // Exit and stream-finished have no guaranteed order: when a failed exit
     // beat the collector and published the generic message, replace it with
@@ -131,7 +131,7 @@ Item {
 
   SpeedTestOverlay {
     fontFamily: Style.font.family
-    layerNamespace: "omarchy-disk-speedtest"
+    layerNamespace: "inferna-disk-speedtest"
     title: root.diskName
     leftLabel: I18n.t("diskSpeedtest.read")
     rightLabel: I18n.t("diskSpeedtest.write")

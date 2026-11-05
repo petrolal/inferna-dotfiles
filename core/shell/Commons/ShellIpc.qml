@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Io
 
 // An IpcHandler the shell can also answer over its own socket (see
-// IpcRegistry), so omarchy-shell reaches it without a qs ipc client. qs ipc
+// IpcRegistry), so inferna-shell reaches it without a qs ipc client. qs ipc
 // still reaches it as before.
 //
 // Every bar builds its own copy of a widget, so a target can have one handler

@@ -15,7 +15,7 @@ Item {
 
   PersistentProperties {
     id: persisted
-    reloadableId: "omarchy-battery"
+    reloadableId: "inferna-battery"
     property bool notifiedLowBattery: false
   }
 
@@ -44,7 +44,7 @@ Item {
   function sendLowBatteryWarning(level) {
     if (warningProcess.running) return
     warningProcess.command = [
-      "omarchy-battery-low",
+      "inferna-battery-low",
       String(level)
     ]
     warningProcess.running = true
@@ -56,7 +56,7 @@ Item {
   }
 
   function runPendingPowerProfile() {
-    powerProfileProcess.command = ["omarchy-powerprofiles-set", pendingPowerSource]
+    powerProfileProcess.command = ["inferna-powerprofiles-set", pendingPowerSource]
     pendingPowerSource = ""
     powerProfileProcess.running = true
   }
@@ -70,7 +70,7 @@ Item {
 
   Process {
     id: dismissWarningProcess
-    command: ["omarchy-shell", "notifications", "dismiss", "Time to recharge!"]
+    command: ["inferna-shell", "notifications", "dismiss", "Time to recharge!"]
   }
 
   Process {

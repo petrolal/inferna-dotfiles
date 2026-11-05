@@ -46,7 +46,7 @@ while (($#)); do
       ;;
     *)
       echo "Unexpected argument: $1" >&2
-      echo "To pass a prompt: omarchy agent prompt \"$*\"" >&2
+      echo "To pass a prompt: inferna agent prompt \"$*\"" >&2
       exit 1
       ;;
   esac
@@ -102,19 +102,19 @@ if [[ $use_local == "true" && $agent != "pi" && $agent != "opencode" ]]; then
   fi
 fi
 
-# Omarchy ships without a default, so there is nothing to launch until one is
+# Inferna ships without a default, so there is nothing to launch until one is
 # picked. --pick offers the choice instead of the error, which is what the
 # keybinding wants: a keypress that opens nothing explains nothing.
 if [[ -z $agent ]]; then
   [[ $pick == "true" ]] && exec inferna-menu summon setup.default.agent
-  echo "Choose default agent with: omarchy default agent <name>" >&2
+  echo "Choose default agent with: inferna default agent <name>" >&2
   exit 1
 fi
 
 # OpenClaw's launcher sets OpenClaw up when the package became the seed before
 # this user's OpenClaw moved, so with the package a missing command is its to fix.
 if inferna-cmd-missing "$agent" && ! { [[ $agent == "openclaw" ]] && inferna-pkg-present openclaw; }; then
-  echo "$agent is not installed. Choose an installed agent with: omarchy default agent <name>" >&2
+  echo "$agent is not installed. Choose an installed agent with: inferna default agent <name>" >&2
   exit 1
 fi
 
@@ -268,8 +268,8 @@ commandcode)
   ;;
 esac
 
-# --local points the agent at the model `omarchy agent local use` runs, through
-# a launch-time overlay Omarchy owns, never by editing the agent's own config.
+# --local points the agent at the model `inferna agent local use` runs, through
+# a launch-time overlay Inferna owns, never by editing the agent's own config.
 # Only agents with such an overlay can be pointed there.
 if [[ $use_local == "true" ]]; then
   mapfile -t overlay < <(inferna-agent-local overlay "$agent" ${local_model:+"$local_model"})

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Reset shell.json to Omarchy defaults
+# inferna:summary=Reset shell.json to Inferna defaults
 # inferna:examples=inferna refresh shell
 
 set -euo pipefail

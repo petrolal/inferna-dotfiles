@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Persistent Omarchy glass controls, applied through a dedicated Hyprland file."""
+"""Persistent Inferna glass controls, applied through a dedicated Hyprland file."""
 import argparse
 import datetime
 import fcntl

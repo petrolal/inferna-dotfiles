@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Toggle bar visibility without killing the Omarchy shell (on hides the bar, off shows it)
+# inferna:summary=Toggle bar visibility without killing the Inferna shell (on hides the bar, off shows it)
 # inferna:args=[toggle|on|off]
 # inferna:examples=inferna toggle bar | inferna toggle bar off | inferna toggle bar on
 

@@ -4,7 +4,7 @@
 # inferna:hidden=true
 
 CONFIG_FILE="$HOME/.config/inferna/shell.json"
-DEFAULTS_FILE="$OMARCHY_PATH/config/omarchy/shell.json"
+DEFAULTS_FILE="$INFERNA_PATH/config/inferna/shell.json"
 
 fail() {
   echo "${0##*/}: $*" >&2

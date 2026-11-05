@@ -7,7 +7,7 @@
 
 set -uo pipefail
 
-tunings_dir="$OMARCHY_PATH/default/audio/tunings"
+tunings_dir="$INFERNA_PATH/default/audio/tunings"
 config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 # The tuning is hosted by its own PipeWire client, under its own config name, so
@@ -18,11 +18,11 @@ config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 # make this service host unrelated user filters too.
 host_config_name=inferna-speaker-tuning.conf
 host_config="$config_home/pipewire/$host_config_name"
-host_source="$OMARCHY_PATH/default/audio/filter-chain-host.conf"
+host_source="$INFERNA_PATH/default/audio/filter-chain-host.conf"
 fragment="$config_home/pipewire/$host_config_name.d/90-tuning.conf"
 unit_name=inferna-speaker-tuning.service
 unit="$config_home/systemd/user/$unit_name"
-unit_source="$OMARCHY_PATH/default/systemd/user/$unit_name"
+unit_source="$INFERNA_PATH/default/systemd/user/$unit_name"
 
 # Earlier revisions loaded the tuning into the daemon, as a WirePlumber smart
 # filter, or into the shared filter-chain.conf.d namespace. Remove all three so
@@ -265,7 +265,7 @@ case "$action" in
     [[ -n ${speaker_sink:-} ]] || {
       echo "A tuning applies to this laptop but no sink matching $sink_pattern" >&2
       echo "is present, so there is no audio server yet. Re-run after login:" >&2
-      echo "  omarchy audio tuning on" >&2
+      echo "  inferna audio tuning on" >&2
       exit 1
     }
 

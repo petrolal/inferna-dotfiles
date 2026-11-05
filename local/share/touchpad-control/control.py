@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validated, serialized touchpad settings for the Omarchy bar plugin.
+"""Validated, serialized touchpad settings for the Inferna bar plugin.
 
 The generated Lua file is both persistent configuration and the source of UI
 values. A single bounded .last-good file supports failed-change rollback.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Launch the default editor selected via Omarchy defaults.
+# inferna:summary=Launch the default editor selected via Inferna defaults.
 # inferna:args=[--inline] <path>
 
 default_editor="$HOME/.local/state/inferna/defaults/editor"

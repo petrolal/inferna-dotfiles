@@ -15,7 +15,7 @@ import "../denon.bar/panels" as Motion
 Item {
   id: service
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by inferna-shell (the first-party service loader).
   property var shell: null
 
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
@@ -146,7 +146,7 @@ Item {
 
   // DND bypass: only let through notifications we trust to be intentional
   // and rare.
-  //   - omarchy-action: a user-action confirmation toast ("Theme changed",
+  //   - inferna-action: a user-action confirmation toast ("Theme changed",
   //     "Screenshot saved"). The user JUST did something — their feedback
   //     should show.
   //   - urgency=critical AND app_name=notify-send: bare-CLI emergency alerts.
@@ -166,7 +166,7 @@ Item {
   //   - app_name is "notify-send" (the CLI default — means the sender
   //     didn't bother declaring an identity, so it's almost certainly
   //     ephemeral test/feedback noise)
-  //   - app_name is "omarchy-action" (Omarchy's own user-action toasts —
+  //   - app_name is "inferna-action" (Omarchy's own user-action toasts —
   //     the user just triggered them)
   // Their toasts still land in history like any other once they've been on
   // screen; the distinction only decides whether a DND-silenced one is worth
@@ -427,7 +427,7 @@ Item {
   function focusApp(entry) {
     if (!entry || !entry.app) return
     focusAppProc.command = [
-      service.omarchyPath + "/bin/omarchy-hyprland-focus-app",
+      service.omarchyPath + "/bin/inferna-hyprland-focus-app",
       String(entry.app)
     ]
     focusAppProc.running = true
@@ -444,7 +444,7 @@ Item {
   // ---------------------------------------------------- popup persistence
   //
   // Mirror every on-screen popup to its own file under popupStateDir so
-  // toasts survive shell restarts (notably the restart `omarchy-update`
+  // toasts survive shell restarts (notably the restart `inferna-update`
   // performs). Writes, moves and deletes go through one serialized queue: a
   // burst of replaces_id updates must not race a single reused Process, and
   // ordering guarantees a delete issued after a write wins.
@@ -710,7 +710,7 @@ Item {
       popupModel.insert(0, {
         id: -1,
         originalId: -1,
-        app: "omarchy-action",
+        app: "inferna-action",
         appIcon: "",
         summary: "No recent notifications",
         body: "",

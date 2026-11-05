@@ -16,7 +16,7 @@ set -e
 omarchy_security_sanitize_bash_environment "$0" "$@"
 omarchy_security_require_source_root "$0"
 omarchy_security_install_signal_exit_traps
-export PATH="$OMARCHY_PATH/bin:/usr/bin:/usr/sbin:/bin:/sbin"
+export PATH="$INFERNA_PATH/bin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 stay_awake_state="$HOME/.local/state/inferna/indicators/stay-awake"
 caller_uid=""
@@ -29,7 +29,7 @@ launch_pending=0
 launch_token=""
 
 fail_state_boundary() {
-  echo "Refusing to use an unsafe Omarchy update inhibitor state path." >&2
+  echo "Refusing to use an unsafe Inferna update inhibitor state path." >&2
   return 1
 }
 
@@ -218,7 +218,7 @@ cleanup_pending_launch() {
 
   trap - EXIT HUP INT TERM
   if ! rollback_pending_launch; then
-    echo "Failed to roll back the pending Omarchy update sleep inhibitor." >&2
+    echo "Failed to roll back the pending Inferna update sleep inhibitor." >&2
     (( status != 0 )) || status=1
   fi
   exit "$status"
@@ -258,7 +258,7 @@ process_has_token() {
   local process_pid="$1"
   local token="$2"
   local argument=""
-  local expected="--why=Omarchy update in progress [$token]"
+  local expected="--why=Inferna update in progress [$token]"
 
   [[ -r /proc/$process_pid/cmdline ]] || return 1
   while IFS= read -r -d '' argument; do
@@ -389,7 +389,7 @@ stop_locked() {
         inferna-toggle-idle allow-idle >/dev/null 2>&1 || true
       fi
     else
-      echo "Ignoring unsafe Omarchy update idle ownership state." >&2
+      echo "Ignoring unsafe Inferna update idle ownership state." >&2
       failed=1
     fi
     rm -f -- "$idle_owner_file"
@@ -419,13 +419,13 @@ stop_locked() {
         fi
       fi
     else
-      echo "Ignoring unsafe Omarchy update sleep inhibitor state." >&2
+      echo "Ignoring unsafe Inferna update sleep inhibitor state." >&2
       failed=1
     fi
     if [[ -n $inhibit_pid ]] && (( remove_inhibit_state == 1 )); then
       if process_matches "$inhibit_pid" "$recorded_start_time" "$recorded_owner" "$token"; then
         if ! terminate_inhibitor "$inhibit_pid" "$recorded_start_time" "$recorded_owner" "$token"; then
-          echo "Failed to stop the Omarchy update sleep inhibitor." >&2
+          echo "Failed to stop the Inferna update sleep inhibitor." >&2
           failed=1
           remove_inhibit_state=0
         fi
@@ -463,7 +463,7 @@ start_locked() {
   # systemd-inhibit reports a child killed by a signal as an error.
   local hold_command=(
     /usr/bin/systemd-inhibit --what=sleep:idle --who=inferna-update
-    --why="Omarchy update in progress [$token]" --mode=block
+    --why="Inferna update in progress [$token]" --mode=block
     /usr/bin/setpriv --reuid "$caller_uid" --regid "$(/usr/bin/id -g)" --clear-groups
     /usr/bin/bash -p -c '
       set -e
@@ -493,7 +493,7 @@ start_locked() {
       trap "kill \$!; exit 0" TERM
       /usr/bin/sleep infinity &
       wait
-    ' "--why=Omarchy update in progress [$token]" "$state_dir" "$token" "$caller_uid" "$launch_control_file"
+    ' "--why=Inferna update in progress [$token]" "$state_dir" "$token" "$caller_uid" "$launch_control_file"
   )
 
   if (( EUID == 0 )); then

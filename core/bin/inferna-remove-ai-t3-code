@@ -13,7 +13,7 @@ case $(readlink "$HOME/.local/bin/t3" || true) in
 "$HOME/.t3/bin/t3" | /usr/bin/t3 | /usr/bin/t3-nightly) rm -f "$HOME/.local/bin/t3" ;;
 esac
 
-# The app registers its own hidden link handler next to Omarchy's launcher.
+# The app registers its own hidden link handler next to Inferna's launcher.
 rm -f \
   "$HOME/.local/share/applications/t3code.desktop" \
   "$HOME/.local/share/applications/com.t3tools.T3Code.desktop" \

@@ -1,13 +1,13 @@
 #!/usr/bin/python3
-"""Omarchy's Codex usage collector with a fixed RPC reader.
+"""Inferna's Codex usage collector with a fixed RPC reader.
 
-Upstream (`/usr/share/omarchy/bin/omarchy-agent-usage-codex`) waits on
+Upstream (`inferna-agent-usage-codex`) waits on
 select() but reads with the buffered TextIOWrapper.readline(). When Codex sends
 the account/read reply in the same chunk as its notifications, the reply sits in
 Python's buffer while select() sees an empty pipe, so the call times out and the
 panel shows "account/read". This wrapper reuses the upstream module unchanged
 and only swaps rpc_request for one that reads the raw fd and keeps its own line
-buffer. Remove it once Omarchy ships a fix.
+buffer.
 
 It also adds `resetCredits` {available, credits[]} to the record: the banked
 "Full reset" credits that the same account/rateLimits/read reply carries.

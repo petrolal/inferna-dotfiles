@@ -4,7 +4,7 @@
 # inferna:args=[--inline] <prompt...>
 # inferna:examples=inferna agent prompt "Review this project"
 
-# Prompts live here rather than on `omarchy agent`, where a bare prompt would
+# Prompts live here rather than on `inferna agent`, where a bare prompt would
 # shadow the subcommands under that group.
 
 set -euo pipefail

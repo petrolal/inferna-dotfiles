@@ -89,7 +89,7 @@ done
 
 if [[ -z $url ]]; then
   interactive ||
-    fail "a git URL is required (e.g. omarchy plugin add https://github.com/acme/inferna-weather.git)"
+    fail "a git URL is required (e.g. inferna plugin add https://github.com/acme/inferna-weather.git)"
   url=$(gum input --prompt "$(inferna-i18n plugin.gitUrlPrompt)") || fail "cancelled"
   [[ -n $url ]] || fail "a git URL is required"
 fi
@@ -141,7 +141,7 @@ fi
 target="$PLUGINS_DIR/$id"
 if [[ -e $target || -L $target ]]; then
   rm -rf "$stage"
-  fail "plugin '$id' is already installed; update it with: omarchy plugin update $id"
+  fail "plugin '$id' is already installed; update it with: inferna plugin update $id"
 fi
 
 mv "$stage" "$target"
@@ -172,5 +172,5 @@ if [[ $enable_after == true ]]; then
   (( discovered )) || fail "plugin '$id' is not known"
   inferna-plugin-enable "$id" "${ENABLE_PLACEMENT[@]}"
 else
-  echo "Enable it later with: omarchy plugin enable $id"
+  echo "Enable it later with: inferna plugin enable $id"
 fi

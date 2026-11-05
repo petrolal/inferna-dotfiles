@@ -420,11 +420,11 @@ function hereAfterPick(zones, current, pick, localZone) {
 }
 
 // argv that moves this machine's clock to `zone` through the passwordless
-// `timedatectl set-timezone` rule the timezone menu uses (etc/sudoers.d/omarchy-tzupdate),
+// `timedatectl set-timezone` rule the timezone menu uses (etc/sudoers.d/inferna-tzupdate),
 // then tells the bar clock. `-n`: a missing rule fails rather than waiting on a
 // password nobody can type. The zone is an argument, never script text.
 function timezoneCommand(zone) {
-  return ["bash", "-c", 'sudo -n timedatectl set-timezone "$1" && omarchy-shell -q omarchy.clock refresh', "bash", String(zone)]
+  return ["bash", "-c", 'sudo -n timedatectl set-timezone "$1" && inferna-shell -q omarchy.clock refresh', "bash", String(zone)]
 }
 
 // ---- people

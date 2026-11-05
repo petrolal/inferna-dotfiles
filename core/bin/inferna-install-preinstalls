@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Restore the preinstalled Omarchy applications (web apps, TUIs, and selected packages).
+# inferna:summary=Restore the preinstalled Inferna applications (web apps, TUIs, and selected packages).
 # inferna:requires-sudo=true
 
 if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n preinstalls.confirmRestore)"; then
-  echo -e "Restoring preinstalled Omarchy applications...\n"
+  echo -e "Restoring preinstalled Inferna applications...\n"
 
   # Recreates the shipped .desktop launchers (web apps and TUIs).
   inferna-refresh-applications || exit 1
 
-  # Re-enable Omarchy's default mise tools for this user and rebuild their shims.
+  # Re-enable Inferna's default mise tools for this user and rebuild their shims.
   if ! inferna-mise-default-tools enable; then
     echo -e "\nCould not restore mise tools. Preinstalls remain marked as removed."
     exit 1

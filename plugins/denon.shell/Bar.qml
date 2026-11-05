@@ -17,7 +17,7 @@ import "../denon.bar/panels" as Motion
 Item {
   id: root
 
-  // The omarchy-shell host injects omarchyPath from OMARCHY_PATH.
+  // The inferna-shell host injects omarchyPath from OMARCHY_PATH.
   property string omarchyPath: Quickshell.env("OMARCHY_PATH")
   // Injected by the host shell so bar slots can resolve enabled widgets.
   property var barWidgetRegistry: fallbackBarWidgetRegistry
@@ -1306,7 +1306,7 @@ Item {
 
   // Presence of the `bar-off` flag = bar hidden. Watching the parent toggles
   // directory because FileView can't observe a file that doesn't exist yet,
-  // and the flag is created/removed by `omarchy-toggle-bar`.
+  // and the flag is created/removed by `inferna-toggle-bar`.
   Process {
     id: barHiddenProbe
     running: true
@@ -1322,7 +1322,7 @@ Item {
 
   // The directory watch can permanently stop delivering events after flag
   // changes land in quick succession, stranding the bar off screen until the
-  // shell restarts. `omarchy-toggle-bar` nudges this after flipping the flag
+  // shell restarts. `inferna-toggle-bar` nudges this after flipping the flag
   // so the probe re-reads it even when the watch has gone quiet.
   IpcHandler {
     target: "omarchy.bar"
@@ -1593,7 +1593,7 @@ Item {
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
     function summon(hover) {
-      Quickshell.execDetached(["omarchy-shell", "shell", "summon", "omarchy.menu", JSON.stringify({ menu: "root", hover: hover })])
+      Quickshell.execDetached(["inferna-shell", "shell", "summon", "omarchy.menu", JSON.stringify({ menu: "root", hover: hover })])
     }
 
     MouseArea {

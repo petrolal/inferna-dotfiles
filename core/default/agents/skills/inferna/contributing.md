@@ -1,9 +1,9 @@
 # Reporting Issues and Submitting PRs
 
-Read this when the user wants to report an Omarchy bug, suggest a feature, or
+Read this when the user wants to report an Inferna bug, suggest a feature, or
 contribute a fix upstream.
 
-Omarchy lives at https://github.com/omacom/omarchy. Route requests to the
+Inferna lives at https://github.com/omacom/omarchy. Route requests to the
 right place:
 
 - **Verified bugs** -> GitHub issues. Issues are for validated bugs only, not
@@ -12,17 +12,17 @@ right place:
   https://github.com/omacom/omarchy/discussions/categories/suggestions
 - **Support and "is this a bug?" questions** -> the Discord community at
   https://omarchy.org/discord. Start here when the problem isn't clearly a bug
-  in Omarchy itself.
+  in Inferna itself.
 
 ## Filing a Good Bug Report
 
-The bug template asks for system details (CPU, GPU, Omarchy version), a
+The bug template asks for system details (CPU, GPU, Inferna version), a
 description with steps to reproduce, and diagnostics. Gather them:
 
 ```bash
-omarchy version
+inferna version
 
-# Generate the diagnostic log (also written to /tmp/omarchy-debug.log)
+# Generate the diagnostic log (also written to /tmp/inferna-debug.log)
 omarchy debug --no-sudo --print
 
 # Interactive variant: `omarchy debug` offers to upload the log to
@@ -32,13 +32,13 @@ omarchy debug --no-sudo --print
 
 **Capture the problem on screen.** A screenshot or short recording of the bug
 is often worth more than the description — see [`capture.md`](capture.md) for
-`omarchy capture screenshot` and `omarchy screenrecord`. Keep recordings short
+`inferna capture screenshot` and `omarchy screenrecord`. Keep recordings short
 and focused on the misbehavior. GitHub issue attachments are added by
 drag-and-drop in the web form, so save the capture and hand the user the file
 path to attach (`gh` cannot upload media).
 
 For screen-recording failures specifically, rerun with
-`OMARCHY_SCREENRECORD_DEBUG=true` and attach `$XDG_RUNTIME_DIR/omarchy-screenrecord.log` (or `${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/omarchy-screenrecord.log` without a session runtime directory).
+`OMARCHY_SCREENRECORD_DEBUG=true` and attach `$XDG_RUNTIME_DIR/inferna-screenrecord.log` (or `${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/inferna-screenrecord.log` without a session runtime directory).
 
 File the issue with `gh` when available:
 

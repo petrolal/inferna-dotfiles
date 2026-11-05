@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Adjust output volume and show the Omarchy OSD
+# inferna:summary=Adjust output volume and show the Inferna OSD
 # inferna:args=<raise|lower|mute-toggle|+N|-N>
 # inferna:examples=inferna audio output volume raise | inferna audio output volume lower | inferna audio output volume mute-toggle | inferna audio output volume +1
 

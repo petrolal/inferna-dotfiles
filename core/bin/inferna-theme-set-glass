@@ -107,7 +107,7 @@ glass btop.theme '' \
 # blur protocol.
 glass ghostty.conf '' \
   '^[[:space:]]*background-opacity[[:space:]]*=' 'background-opacity = 0.65' \
-  '' "gtk-custom-css = $OMARCHY_PATH/default/gtk/glass.css" || status=1
+  '' "gtk-custom-css = $INFERNA_PATH/default/gtk/glass.css" || status=1
 
 # Other GTK apps, such as Nautilus, read the user's gtk.css at launch, so the
 # same backdrop blur is imported there. It follows the mode alone, so a theme
@@ -117,7 +117,7 @@ if (( $# == 0 )); then
   remove_block "$gtk_css" "/*" " */" || status=1
   if [[ $GLASSY == "true" ]]; then
     { mkdir -p "${gtk_css%/*}" &&
-      append_block "$gtk_css" "/*" " */" "@import url(\"file://$OMARCHY_PATH/default/gtk/glass.css\");"; } || status=1
+      append_block "$gtk_css" "/*" " */" "@import url(\"file://$INFERNA_PATH/default/gtk/glass.css\");"; } || status=1
   fi
 fi
 

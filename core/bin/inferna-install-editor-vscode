@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install VS Code and configure Omarchy defaults for secrets, updates, and theme
+# inferna:summary=Install VS Code and configure Inferna defaults for secrets, updates, and theme
 
 echo "Installing VSCode..."
 inferna-pkg-add visual-studio-code-bin
@@ -23,7 +23,7 @@ EOF
 # Ensure VSC's own auto-update feature is turned off
 printf '{\n  "update.mode": "none"\n}\n' > ~/.config/Code/User/settings.json
 
-# Apply Omarchy theme to VSCode
+# Apply Inferna theme to VSCode
 inferna-theme-set-vscode
 
 setsid uwsm-app -- gtk-launch code >/dev/null 2>&1 &

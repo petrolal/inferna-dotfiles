@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync Omarchy theme to all Obsidian vaults
+# inferna:summary=Sync Inferna theme to all Obsidian vaults
 # inferna:hidden=true
 
 CURRENT_THEME_DIR="$HOME/.local/state/inferna/current/theme"
@@ -10,16 +10,16 @@ CURRENT_THEME_DIR="$HOME/.local/state/inferna/current/theme"
 jq -r '.vaults | values[].path' ~/.config/obsidian/obsidian.json 2>/dev/null | while read -r vault_path; do
   [[ -d $vault_path/.obsidian ]] || continue
 
-  theme_dir="$vault_path/.obsidian/themes/Omarchy"
+  theme_dir="$vault_path/.obsidian/themes/Inferna"
   mkdir -p "$theme_dir"
 
   [[ -f $theme_dir/manifest.json ]] || cat >"$theme_dir/manifest.json" <<'EOF'
 {
-  "name": "Omarchy",
+  "name": "Inferna",
   "version": "1.0.0",
   "minAppVersion": "0.16.0",
-  "description": "Automatically syncs with your current Omarchy system theme colors and fonts",
-  "author": "Omarchy",
+  "description": "Automatically syncs with your current Inferna system theme colors and fonts",
+  "author": "Inferna",
   "authorUrl": "https://omarchy.org"
 }
 EOF

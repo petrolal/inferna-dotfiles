@@ -23,7 +23,7 @@ import "Icons.js" as Icons
 Item {
   id: service
 
-  // Injected by omarchy-shell (the first-party service loader).
+  // Injected by inferna-shell (the first-party service loader).
   property var shell: null
 
   // ------------------------------------------------------------- displays
@@ -1089,7 +1089,7 @@ Item {
       else if (Markup.hostname(row.source))
         Security.openExternalUrl("https://" + Markup.hostname(row.source) + "/")
       else if (String(row.link || "")) Security.openExternalUrl(String(row.link))
-      else if (String(row.app || "")) Util.execArgv(["omarchy-hyprland-focus-app", String(row.app)])
+      else if (String(row.app || "")) Util.execArgv(["inferna-hyprland-focus-app", String(row.app)])
     }
     closeToast(key, "activated", instant)
   }
@@ -1377,7 +1377,7 @@ Item {
   function showPlaceholder(summary) {
     var key = "placeholder" + nextKey()
     if (!reserveLive(key)) return
-    var row = Store.normalise({ key: key, app: "omarchy-action", summary: summary, glyph: "\u{f009a}",
+    var row = Store.normalise({ key: key, app: "inferna-action", summary: summary, glyph: "\u{f009a}",
                                 urgency: NotificationUrgency.Low, ts: Date.now() / 1000 })
     row.duration = lowDuration
     row.restored = true

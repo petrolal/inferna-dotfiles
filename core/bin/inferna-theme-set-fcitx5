@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync the generated Omarchy theme to the Fcitx candidate window
+# inferna:summary=Sync the generated Inferna theme to the Fcitx candidate window
 # inferna:args=[--activate]
 # inferna:hidden=true
 

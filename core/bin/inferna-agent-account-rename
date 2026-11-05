@@ -7,7 +7,7 @@
 set -uo pipefail
 
 # The provider can be left out when it's your default agent:
-# `omarchy agent account rename primary Hey`.
+# `inferna agent account rename primary Hey`.
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
   default=$(inferna-default-agent)
   [[ $default == "claude" || $default == "codex" || $default == "grok" ]] && set -- "$default" "$@"
@@ -19,6 +19,6 @@ if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]] || (( $# < 
 fi
 
 account=$(inferna-agent-account-state rename "$@") || exit 1
-echo "Renamed to $(jq -r .label <<<"$account"). Switch to it with: omarchy agent account use $1 $(jq -r .id <<<"$account")"
+echo "Renamed to $(jq -r .label <<<"$account"). Switch to it with: inferna agent account use $1 $(jq -r .id <<<"$account")"
 # The panel reads account names from the usage record.
 inferna-agent-usage-update --limits-only "$1" >/dev/null 2>&1 &

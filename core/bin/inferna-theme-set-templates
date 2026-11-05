@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Generate themed config files from Omarchy templates
+# inferna:summary=Generate themed config files from Inferna templates
 # inferna:hidden=true
 
-TEMPLATES_DIR="$OMARCHY_PATH/default/themed"
+TEMPLATES_DIR="$INFERNA_PATH/default/themed"
 USER_TEMPLATES_DIR="$HOME/.config/inferna/themed"
 NEXT_THEME_DIR="$HOME/.local/state/inferna/current/next-theme"
 COLORS_FILE="$NEXT_THEME_DIR/colors.toml"

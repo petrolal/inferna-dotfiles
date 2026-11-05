@@ -7,7 +7,7 @@ preview_dir="${XDG_CACHE_HOME:-$HOME/.cache}/omarchy/unlock-selector/previews"
 rm -rf "$preview_dir"
 mkdir -p "$preview_dir"
 
-ln -s "$OMARCHY_PATH/default/plymouth/preview-unlock.png" "$preview_dir/default.png"
+ln -s "$INFERNA_PATH/default/plymouth/preview-unlock.png" "$preview_dir/default.png"
 
 inferna-plymouth-list | while read -r name; do
   ln -s "$(inferna-theme-dir "$name")/preview-unlock.png" "$preview_dir/$name.png" 2>/dev/null

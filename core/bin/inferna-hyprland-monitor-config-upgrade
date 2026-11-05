@@ -3,10 +3,10 @@
 # inferna:summary=Move an older monitors.lua over to the new template
 # inferna:hidden=true
 
-# Older versions kept Omarchy's monitor defaults in hypr/monitors.lua, with
+# Older versions kept Inferna's monitor defaults in hypr/monitors.lua, with
 # comments explaining them. The defaults now live in default/hypr/monitors.lua,
 # so this puts the new template at the top and the old file below it, minus
-# only lines Omarchy itself shipped there: its comments and examples, and its
+# only lines Inferna itself shipped there: its comments and examples, and its
 # defaults where they're unchanged and nothing else uses them. Everything else
 # is kept exactly as written and in order, since it's the user's own Lua:
 # rules for particular monitors, changed defaults, block comments,
@@ -17,7 +17,7 @@
 # lines is left alone.
 
 monitor_lua="$HOME/.config/hypr/monitors.lua"
-template="$OMARCHY_PATH/config/hypr/monitors.lua"
+template="$INFERNA_PATH/config/hypr/monitors.lua"
 
 [[ -f $monitor_lua && -f $template ]] || exit 0
 target=$(readlink -f "$monitor_lua")
@@ -61,20 +61,20 @@ mapfile -t shipped_comments <<'LINES'
 -- Portrait/rotated secondary monitor (transform: 1 = 90°, 3 = 270°)
 -- Portrait/rotated secondary monitor (transform: 1 = 90°, 3 = 270°).
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
--- sizes X11/XWayland windows, which Omarchy leaves unscaled so they stay
+-- sizes X11/XWayland windows, which Inferna leaves unscaled so they stay
 -- Straight 1x setup for low-resolution displays like 1080p, 1440p, or ultrawides: both 1.
 -- Straight 1x setup for low-resolution displays like 1080p or 1440p.
 -- Wayland-native, accepts fractions (1.6, 1.75), and applies immediately.
 LINES
 
 # The template's defaults, each a local and the line using it, which go only
-# together: when the local holds Omarchy's own value and no other line uses it.
+# together: when the local holds Inferna's own value and no other line uses it.
 monitor_scale_default='local omarchy_monitor_scale = "auto"'
 monitor_scale_use='hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })'
 gdk_scale_default='local omarchy_gdk_scale = 2'
 gdk_scale_use='hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))'
 
-# Defaults older templates set directly, matching Omarchy's own.
+# Defaults older templates set directly, matching Inferna's own.
 mapfile -t shipped_defaults <<'LINES'
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
 hl.env("GDK_SCALE", "2")

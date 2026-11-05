@@ -5,7 +5,7 @@
 # inferna:requires-sudo=true
 
 # Proves that the boot files the package steps left boot the updated system;
-# omarchy update neither finishes nor offers a reboot until this passes. It is
+# inferna update neither finishes nor offers a reboot until this passes. It is
 # the update-verify lifecycle dispatch operation: a no-op where the platform
 # registers no boot package, x86 included, and the platform's own entrypoint
 # says what failed.

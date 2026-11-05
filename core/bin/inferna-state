@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Manage persistent state files for Omarchy toggles and settings.
+# inferna:summary=Manage persistent state files for Inferna toggles and settings.
 # inferna:args=<set|clear> <state-name-or-pattern>
 # inferna:hidden=true
 

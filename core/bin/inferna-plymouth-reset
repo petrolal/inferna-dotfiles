@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Restore the default Omarchy Plymouth boot theme and SDDM login screen
+# inferna:summary=Restore the default Inferna Plymouth boot theme and SDDM login screen
 # inferna:requires-sudo=true
 
 set -euo pipefail
 
-"$OMARCHY_PATH/bin/inferna-refresh-plymouth"
-"$OMARCHY_PATH/bin/inferna-refresh-sddm"
+"$INFERNA_PATH/bin/inferna-refresh-plymouth"
+"$INFERNA_PATH/bin/inferna-refresh-sddm"

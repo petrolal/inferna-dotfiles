@@ -244,7 +244,7 @@ Item {
   // A reorder shows at once; the saved config catches up after.
   function savePins(pins) {
     root.pendingPins = pins
-    Util.execDetached("omarchy-dock pinned " + pins.map(function(id) { return Util.shellQuote(id) }).join(" "))
+    Util.execDetached("inferna-dock pinned " + pins.map(function(id) { return Util.shellQuote(id) }).join(" "))
   }
 
   function moveItem(fromIndex, toIndex) {
@@ -265,7 +265,7 @@ Item {
       root.placeAt(key, root.shownKeys().length)
     } else {
       root.pendingPins = root.pinnedKeys.filter(function(other) { return other !== key })
-      Util.execDetached("omarchy-dock unpin " + Util.shellQuote(key))
+      Util.execDetached("inferna-dock unpin " + Util.shellQuote(key))
     }
   }
 
@@ -291,7 +291,7 @@ Item {
     if (modeProc.running || root.pendingModes.length === 0) return
     root.modeProcWorkspace = root.pendingModes.shift()
     root.modeProcGeneration = root.modeGeneration
-    modeProc.command = ["omarchy-hyprland-workspace-layout-current", String(root.modeProcWorkspace)]
+    modeProc.command = ["inferna-hyprland-workspace-layout-current", String(root.modeProcWorkspace)]
     modeProc.running = true
   }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Check or mark completed Omarchy setup tasks
+# inferna:summary=Check or mark completed Inferna setup tasks
 # inferna:args=<check|mark|ensure> <name>
 # inferna:hidden=true
 

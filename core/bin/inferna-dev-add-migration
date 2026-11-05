@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Create a new Omarchy migration in the current source tree.
+# inferna:summary=Create a new Inferna migration in the current source tree.
 # inferna:args=[--no-edit]
 
 set -euo pipefail
@@ -29,7 +29,7 @@ while (($#)); do
   esac
 done
 
-cd "${OMARCHY_PATH:-$(pwd)}"
+cd "${INFERNA_PATH:-$(pwd)}"
 mkdir -p migrations
 migration_file="migrations/$(git log -1 --format=%cd --date=unix).sh"
 touch "$migration_file"

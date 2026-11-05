@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Run a pacman transaction for the Omarchy update flow, shielded from desktop session teardown.
+# inferna:summary=Run a pacman transaction for the Inferna update flow, shielded from desktop session teardown.
 # inferna:args=<pacman-args>
 # inferna:hidden=true
 # inferna:requires-sudo=true

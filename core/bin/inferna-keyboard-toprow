@@ -83,7 +83,7 @@ options hid_apple fnmode=$fnmode
 options hid_asus fnlock_default=$fnlock
 options asus_wmi fnlock_default=$fnlock"
 
-# Omarchy wrote these before this command existed. An administrator's own
+# Inferna wrote these before this command existed. An administrator's own
 # versions stay, and this file overrides them.
 legacy_apple="options hid_apple fnmode=2"
 legacy_asus="# ASUS ProArt P14: the top row sends media keys by default; Fn+Esc switches to F1-F12.

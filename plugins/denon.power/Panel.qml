@@ -96,8 +96,8 @@ Panel {
   // Charging must be obvious at a glance: plugged in tints the bar icon and the
   // panel in the theme accent; actively charging adds a breathing icon, a
   // "Charging" badge and current flowing through the battery bar.
-  property bool previewCharging: false   // IPC: omarchy-shell omarchy.power previewCharging
-  property bool previewLow: false         // IPC: omarchy-shell omarchy.power previewLow
+  property bool previewCharging: false   // IPC: inferna-shell omarchy.power previewCharging
+  property bool previewLow: false         // IPC: inferna-shell omarchy.power previewLow
   readonly property bool pluggedIn: previewCharging || (batteryPresent && !UPower.onBattery)
   readonly property bool chargingNow: previewCharging || charging
   readonly property color chargeColor: Commons.Color.accent
@@ -208,7 +208,7 @@ Panel {
 
   function setProfile(profile) {
     if (!profile || actionProc.running) return
-    actionProc.command = ["omarchy-powerprofiles-set", root.discharging ? "battery" : "ac", profile]
+    actionProc.command = ["inferna-powerprofiles-set", root.discharging ? "battery" : "ac", profile]
     actionProc.running = true
   }
 
@@ -252,19 +252,19 @@ Panel {
 
   Process {
     id: batteryProc
-    command: ["omarchy-battery-status", "--shell"]
+    command: ["inferna-battery-status", "--shell"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateKeyValue(text, "battery") }
   }
 
   Process {
     id: profilesProc
-    command: ["omarchy-powerprofiles-list", "--active-state"]
+    command: ["inferna-powerprofiles-list", "--active-state"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateProfiles(text) }
   }
 
   Process {
     id: systemProc
-    command: ["omarchy-system-stats"]
+    command: ["inferna-system-stats"]
     stdout: StdioCollector { waitForEnd: true; onStreamFinished: root.updateKeyValue(text, "system") }
   }
 

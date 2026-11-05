@@ -6,7 +6,7 @@
 
 set -e
 
-source "$OMARCHY_PATH/install/helpers/browser-policy.sh"
+source "$INFERNA_PATH/install/helpers/browser-policy.sh"
 
 opt_path="${OMARCHY_OPT_PATH:-/opt}"
 
@@ -32,7 +32,7 @@ link_widevine_cdm() {
 
 copy_chromium_flags() {
   mkdir -p ~/.config
-  cp -f "$OMARCHY_PATH/config/chromium-flags.conf" "$1"
+  cp -f "$INFERNA_PATH/config/chromium-flags.conf" "$1"
   inferna-install-chromium-copy-url
   inferna-install-chromium-ytdlp
   inferna-install-video-decode

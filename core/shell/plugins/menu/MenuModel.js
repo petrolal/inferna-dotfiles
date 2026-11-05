@@ -412,32 +412,32 @@ function displayRow(items, itemOrder, checkedResults, disabledResults, entry, de
 
 // Commands a `checked:` expression reads a value out of. Every sibling row
 // asks the same one -- Defaults > Browser has seven rows all comparing
-// against `omarchy-default-browser` -- so the batch runs it once and the rows
+// against `inferna-default-browser` -- so the batch runs it once and the rows
 // read the captured answer.
 //
 // The capture has to be eager. These are read inside `$(...)`, and a value
 // cached while one expression runs lives in that subshell only, so a lazy
 // memo never survives to the expression after it.
 var GUARD_READERS = [
-  "omarchy-bar background",
-  "omarchy-bar get omarchy.power showPercentage",
-  "omarchy-bar get omarchy.clock format",
-  "omarchy-bar get omarchy.clock verticalFormat",
-  "omarchy-bar position",
-  "omarchy-channel-current",
-  "omarchy-default-agent",
-  "omarchy-default-browser",
-  "omarchy-default-editor",
-  "omarchy-default-terminal",
-  "omarchy-default-dictation",
-  "omarchy-dns",
-  "omarchy-dock autohide",
-  "omarchy-dock position",
-  "omarchy-hyprland-corners",
-  "omarchy-hyprland-window-transparency",
-  "omarchy-hyprland-workspace-layout-default",
-  "omarchy-shell notifications isDnd",
-  "omarchy-toggle-nightlight --status"
+  "inferna-bar background",
+  "inferna-bar get omarchy.power showPercentage",
+  "inferna-bar get omarchy.clock format",
+  "inferna-bar get omarchy.clock verticalFormat",
+  "inferna-bar position",
+  "inferna-channel-current",
+  "inferna-default-agent",
+  "inferna-default-browser",
+  "inferna-default-editor",
+  "inferna-default-terminal",
+  "inferna-default-dictation",
+  "inferna-dns",
+  "inferna-dock autohide",
+  "inferna-dock position",
+  "inferna-hyprland-corners",
+  "inferna-hyprland-window-transparency",
+  "inferna-hyprland-workspace-layout-default",
+  "inferna-shell notifications isDnd",
+  "inferna-toggle-nightlight --status"
 ]
 
 // Package and command presence account for most of what the guards ask, and
@@ -486,7 +486,7 @@ function guardPackageSnapshot() {
 
   return '__omarchy_pkg_db=${OMARCHY_PACMAN_DB_PATH:-$(pacman-conf DBPath 2>/dev/null)} || __omarchy_pkg_db=""\n'
     + '__omarchy_pkg_db=${__omarchy_pkg_db%/}\n'
-    + '__omarchy_pkg_cache=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/omarchy-menu-packages}\n'
+    + '__omarchy_pkg_cache=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/inferna-menu-packages}\n'
     + '__omarchy_pkg_stamp=""\n'
     + '[[ -z $__omarchy_pkg_db ]] || __omarchy_pkg_stamp=$(' + stamp + ') || __omarchy_pkg_stamp=""\n'
     + '__omarchy_pkg_names=()\n'
@@ -513,10 +513,10 @@ function guardHelpers() {
     + 'for __omarchy_pkg in "${__omarchy_pkg_names[@]}"; do __omarchy_pkgs[$__omarchy_pkg]=1; done\n'
     + '__omarchy_pkg_has() { [[ -n ${__omarchy_pkgs[$1]-} ]] && return 0; '
     + '[[ $1 == *[\\<\\>=]* ]] && { pacman -Q "$1" &>/dev/null; return; }; return 1; }\n'
-    + 'omarchy-pkg-present() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 1; done; return 0; }\n'
-    + 'omarchy-pkg-missing() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 0; done; return 1; }\n'
-    + 'omarchy-cmd-present() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 1; done; return 0; }\n'
-    + 'omarchy-cmd-missing() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 0; done; return 1; }\n'
+    + 'inferna-pkg-present() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 1; done; return 0; }\n'
+    + 'inferna-pkg-missing() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 0; done; return 1; }\n'
+    + 'inferna-cmd-present() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 1; done; return 0; }\n'
+    + 'inferna-cmd-missing() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 0; done; return 1; }\n'
 }
 
 // Substitute the captured answer into the expression rather than shadowing
@@ -622,7 +622,7 @@ function guardScript(items) {
 // bare call, such as a second command or a shell-expanded payload, is left to
 // bash.
 function summonAction(action) {
-  var match = /^omarchy-shell shell summon ([A-Za-z0-9._-]+)(?: '([^']*)')?$/.exec(String(action || ""))
+  var match = /^inferna-shell shell summon ([A-Za-z0-9._-]+)(?: '([^']*)')?$/.exec(String(action || ""))
   if (!match) return null
   return { id: match[1], payload: match[2] || "{}" }
 }

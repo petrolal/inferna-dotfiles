@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync the generated Omarchy theme to Claude Code
+# inferna:summary=Sync the generated Inferna theme to Claude Code
 # inferna:args=[--activate]
 # inferna:hidden=true
 
@@ -35,7 +35,7 @@ done
 if [[ ! -f $CLAUDE_SOURCE_PATH ]]; then
   if (( CLAUDE_ACTIVATE == 1 )); then
     echo "Claude Code theme source missing: $CLAUDE_SOURCE_PATH" >&2
-    echo "Run inferna-theme-refresh after selecting an Omarchy theme." >&2
+    echo "Run inferna-theme-refresh after selecting an Inferna theme." >&2
     exit 1
   fi
 

@@ -19,7 +19,7 @@ text)
   inferna-launch-editor ~/.config/inferna/branding/screensaver.txt >/dev/null 2>&1 && inferna-launch-screensaver force >/dev/null 2>&1
   ;;
 reset)
-  cp "$OMARCHY_PATH/logo.txt" ~/.config/inferna/branding/screensaver.txt && inferna-launch-screensaver force >/dev/null 2>&1
+  cp "$INFERNA_PATH/logo.txt" ~/.config/inferna/branding/screensaver.txt && inferna-launch-screensaver force >/dev/null 2>&1
   ;;
 *)
   echo "Usage: inferna-branding-screensaver <image|text|reset>" >&2

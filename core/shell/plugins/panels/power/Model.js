@@ -90,7 +90,7 @@ function modeLabel(device, onBattery, states, tr) {
   return t("power.charging", "Charging")
 }
 
-// omarchy-battery-status --shell answers in plain digits with the unit
+// inferna-battery-status --shell answers in plain digits with the unit
 // attached ("13.1W", "75-80%"); the panel writes each number in the
 // language's digits and decimal separator, keeping its decimals and unit.
 function localizeReading(raw, fmt) {

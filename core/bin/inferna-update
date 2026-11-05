@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Update Omarchy and system packages
+# inferna:summary=Update Inferna and system packages
 # inferna:alias=inferna up
 # inferna:args=[-y]
 # inferna:examples=inferna update | inferna update -y
@@ -71,7 +71,7 @@ trap 'exit 143' TERM
 inferna-update-requires-free-space
 
 # -y skips the start confirmation and, unless the caller set
-# OMARCHY_UPDATE_UNATTENDED itself, suppresses Omarchy confirmation prompts;
+# OMARCHY_UPDATE_UNATTENDED itself, suppresses Inferna confirmation prompts;
 # sudo authorization is still required. Interactive review steps report and
 # move on instead of waiting.
 [[ ${1:-} != "-y" ]] || export OMARCHY_UPDATE_UNATTENDED=${OMARCHY_UPDATE_UNATTENDED:-1}
@@ -114,7 +114,7 @@ if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
   inferna-update-analyze-logs
 
   # The dev checkout was fast-forwarded and the full upgrade went through, so
-  # there is no Omarchy update left to show. Rechecking would download every
+  # there is no Inferna update left to show. Rechecking would download every
   # sync database again and refetch the checkout only to hear the same.
   inferna-shell -q omarchy.system-update clear
 
@@ -151,13 +151,13 @@ if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
   update_stay_awake_stopped=1
 
   if (( mise_updated == 0 )); then
-    echo -e "\e[33m\nSome mise tools could not be updated. Review the errors above and run 'omarchy update mise' to retry.\e[0m" >&2
+    echo -e "\e[33m\nSome mise tools could not be updated. Review the errors above and run 'inferna update mise' to retry.\e[0m" >&2
   fi
 
   if (( boot_verified )); then
-    "$OMARCHY_PATH/bin/inferna-update-restart" --reboot-only
+    "$INFERNA_PATH/bin/inferna-update-restart" --reboot-only
   else
-    echo -e "\e[31m\nThe update is not finished: its boot files did not pass verification (see above). Do not reboot until omarchy update completes.\e[0m" >&2
+    echo -e "\e[31m\nThe update is not finished: its boot files did not pass verification (see above). Do not reboot until inferna update completes.\e[0m" >&2
     exit 1
   fi
 fi

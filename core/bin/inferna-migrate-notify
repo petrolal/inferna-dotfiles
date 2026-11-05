@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Notify the user when Omarchy has pending migrations
+# inferna:summary=Notify the user when Inferna has pending migrations
 
 set -euo pipefail
 
@@ -45,7 +45,7 @@ inferna-notification-send -u critical --transient -g  "$(inferna-i18n migrate
 # Reached when the notification could not be handed off, so fall back to telling
 # the user in the terminal.
 print_pending_migrations() {
-  echo "Omarchy has pending migrations. Run inferna-migrate in a terminal to apply them:"
+  echo "Inferna has pending migrations. Run inferna-migrate in a terminal to apply them:"
   while IFS= read -r migration; do
     [[ -n $migration ]] || continue
     printf '  %s\n' "$migration"

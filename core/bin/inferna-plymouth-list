@@ -5,7 +5,7 @@
 
 {
   find ~/.config/inferna/themes/ -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n' 2>/dev/null
-  find "$OMARCHY_PATH/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
+  find "$INFERNA_PATH/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
 } | sort -u | while read -r name; do
   if [[ -f $(inferna-theme-dir "$name")/preview-unlock.png ]]; then
     echo "$name"

@@ -60,7 +60,7 @@ elif [[ ${2:-} == "--execute" ]]; then
   if [[ $action == "shutdown" ]]; then
     # Block lid handling explicitly: it ignores high-level sleep inhibitors.
     systemd-inhibit --what=sleep:idle:handle-lid-switch \
-      --who=Omarchy --why="Shutdown in progress" --mode=block \
+      --who=Inferna --why="Shutdown in progress" --mode=block \
       "$0" "$action" --inhibited
   else
     exit_session
@@ -73,7 +73,7 @@ elif [[ ${2:-} == "--execute" ]]; then
 elif [[ -z ${2:-} ]]; then
   # Survive closing the terminal that requested the session exit.
   systemd-run --user --collect --quiet --property=Type=exec --property=RuntimeMaxSec=30s \
-    --setenv=PATH --setenv=HYPRLAND_INSTANCE_SIGNATURE --setenv=OMARCHY_PATH \
+    --setenv=PATH --setenv=HYPRLAND_INSTANCE_SIGNATURE --setenv=INFERNA_PATH \
     "$0" "$action" --execute
 else
   echo "$usage" >&2

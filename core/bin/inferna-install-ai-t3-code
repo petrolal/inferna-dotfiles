@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install T3 Code and point it at the Omarchy palette
+# inferna:summary=Install T3 Code and point it at the Inferna palette
 # inferna:args=[stable|nightly] [--no-launch]
 # inferna:requires-sudo=true
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Remove preinstalled Omarchy applications (web apps, TUIs, and selected packages).
+# inferna:summary=Remove preinstalled Inferna applications (web apps, TUIs, and selected packages).
 
 if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n preinstalls.confirmRemove)"; then
-  echo -e "Removing preinstalled Omarchy applications...\n"
+  echo -e "Removing preinstalled Inferna applications...\n"
 
   inferna-webapp-remove-all
   inferna-tui-remove-all
@@ -12,10 +12,10 @@ if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-
   touch ~/.local/state/inferna/preinstalls-removed
   inferna-restart-hyprctl
 
-  # Disable Omarchy's default mise tools for this user and retire their shims.
+  # Disable Inferna's default mise tools for this user and retire their shims.
   inferna-mise-default-tools disable || exit 1
 
-  # Remove wrappers left by older Omarchy releases.
+  # Remove wrappers left by older Inferna releases.
   rm -f ~/.local/bin/codex ~/.local/bin/claude ~/.local/bin/agy ~/.local/bin/copilot \
        ~/.local/bin/gh ~/.local/bin/opencode ~/.local/bin/playwright ~/.local/bin/playwright-cli ~/.local/bin/pi \
        ~/.local/bin/omp ~/.local/bin/ori ~/.local/bin/cf ~/.local/bin/grok ~/.local/bin/crush ~/.local/bin/ghui ~/.local/bin/hunk

@@ -7,7 +7,7 @@
 set -uo pipefail
 
 # The provider can be left out when it's your default agent:
-# `omarchy agent account use work`.
+# `inferna agent account use work`.
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
   default=$(inferna-default-agent)
   [[ $default == "claude" || $default == "codex" || $default == "grok" ]] && set -- "$default" "$@"

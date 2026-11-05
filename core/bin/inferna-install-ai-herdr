@@ -27,7 +27,7 @@ echo "Opening Herdr..."
 setsid uwsm-app -- "$HOME/.local/bin/herdr-app" >/dev/null 2>&1 &
 
 # Herdr picks a theme only through its running window, which creates Herdr's
-# home on first launch. Wait for it to answer, then select Omarchy's palette.
+# home on first launch. Wait for it to answer, then select Inferna's palette.
 echo "Matching Herdr to the current theme..."
 themed=0
 for (( attempt = 0; attempt < 60; attempt++ )); do
@@ -39,7 +39,7 @@ for (( attempt = 0; attempt < 60; attempt++ )); do
 done
 
 if (( themed == 0 )); then
-  echo "Herdr didn't answer in time. Pick Omarchy in its theme picker to match your theme."
+  echo "Herdr didn't answer in time. Pick Inferna in its theme picker to match your theme."
 fi
 
 echo ""

@@ -32,7 +32,7 @@ if [[ -f /etc/NIXOS ]]; then
   exit 0
 fi
 
-# /usr/share/omarchy is wholly Omarchy's; files can land there unowned and would
+# /usr/share/omarchy is wholly Inferna's; files can land there unowned and would
 # otherwise abort the upgrade. Packaged content wins there.
 #
 # Progress bars stay on stdout. Errors are on stderr, kept for the conflict

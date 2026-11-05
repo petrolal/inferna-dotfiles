@@ -34,8 +34,8 @@ Panel {
 
   // ---------------------------------------------------------------- helpers
   readonly property string home: Quickshell.env("HOME")
-  readonly property string glassHelper: home + "/.local/share/omarchy-glass/control.py"
-  readonly property string depthHelper: home + "/.local/share/omarchy-recess/control.py"
+  readonly property string glassHelper: home + "/.local/share/inferna-glass/control.py"
+  readonly property string depthHelper: home + "/.local/share/inferna-recess/control.py"
   readonly property string tilesHelper: home + "/.config/inferna/plugins/io.github.denonmaryland.tricky-tiles/helpers/control.py"
 
   // ---------------------------------------------------------------- state
@@ -70,7 +70,7 @@ Panel {
 
   onOpenedChanged: if (opened) refresh()
 
-  // `omarchy-shell denon.studio.page show depth` opens Studio on a page.
+  // `inferna-shell denon.studio.page show depth` opens Studio on a page.
   IpcHandler {
     target: "denon.studio.page"
     function show(name: string): void { root.page = name; root.open() }
@@ -123,11 +123,11 @@ Panel {
   function setBrightness(f) {
     brightness = Math.max(0.01, Math.min(1, f))
     var mon = Hyprland.focusedMonitor ? Hyprland.focusedMonitor.name : ""
-    var cmd = ["omarchy-brightness-display", "--no-osd"]
+    var cmd = ["inferna-brightness-display", "--no-osd"]
     if (mon) cmd = cmd.concat(["--monitor", mon])
     Quickshell.execDetached(cmd.concat([Math.round(brightness * 100) + "%"]))
   }
-  function openFull(target) { root.close(); Quickshell.execDetached(["omarchy-shell", target, "open"]) }
+  function openFull(target) { root.close(); Quickshell.execDetached(["inferna-shell", target, "open"]) }
 
   Process {
     id: glassRead

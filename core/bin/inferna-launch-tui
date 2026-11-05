@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Launch a TUI command in the default terminal with Omarchy styling
+# inferna:summary=Launch a TUI command in the default terminal with Inferna styling
 # inferna:args=[--app-id=<app-id>] <command> [args...]
 
 if [[ ${1:-} == --app-id=* ]]; then

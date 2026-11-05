@@ -24,12 +24,13 @@ fail() {
 }
 
 if (( EUID == 0 )); then
-  export OMARCHY_PATH=/usr/share/omarchy
+  export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH=/usr/share/omarchy
   export PATH=/usr/share/omarchy/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
-elif [[ -z ${OMARCHY_IMAGE_ROOT:-} || -z ${OMARCHY_PATH:-} ]]; then
+elif [[ -z ${OMARCHY_IMAGE_ROOT:-} || -z ${INFERNA_PATH:-} ]]; then
   fail "inferna-provision-hardware must run as root"
 fi
-export OMARCHY_INSTALL=$OMARCHY_PATH/install
+export OMARCHY_INSTALL=$INFERNA_PATH/install
 export OMARCHY_INSTALL_USER=""
 
 source "$OMARCHY_INSTALL/helpers/logging.sh"
@@ -121,12 +122,12 @@ fi
 while (( ${#remaining[@]} )); do
   step=${remaining[0]}
   [[ $step == install/hardware/*.sh && $step != *..* ]] || fail "Deferred step is not a hardware setup step: $step"
-  script=$OMARCHY_PATH/$step
+  script=$INFERNA_PATH/$step
 
   if [[ -L $script ]]; then
     fail "Deferred step is a symlink: $step"
   elif [[ ! -e $script ]]; then
-    echo "Skipping deferred hardware step $step: this Omarchy no longer ships it"
+    echo "Skipping deferred hardware step $step: this Inferna no longer ships it"
   else
     echo "Running deferred hardware step $step"
     if ! run_logged "$script"; then

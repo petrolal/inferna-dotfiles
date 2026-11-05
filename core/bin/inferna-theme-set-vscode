@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Sync Omarchy theme to VS Code, VSCodium, and Cursor
+# inferna:summary=Sync Inferna theme to VS Code, VSCodium, and Cursor
 # inferna:hidden=true
 
 VS_CODE_THEME_DESCRIPTOR="$HOME/.local/state/inferna/current/theme/vscode.json"
@@ -83,15 +83,15 @@ install_generated_extension() {
   cat > "$ext_dir/package.json" <<EOF
 {
     "name": "$GENERATED_EXTENSION_NAME",
-    "displayName": "Omarchy",
-    "description": "Omarchy color theme",
+    "displayName": "Inferna",
+    "description": "Inferna color theme",
     "publisher": "local",
     "version": "$GENERATED_EXTENSION_VERSION",
     "engines": { "vscode": "^1.70.0" },
     "categories": ["Themes"],
     "contributes": {
         "themes": [{
-            "label": "Omarchy",
+            "label": "Inferna",
             "uiTheme": "$ui_theme",
             "path": "./themes/inferna-color-theme.json",
             "_watch": true
@@ -165,7 +165,7 @@ set_theme() {
   elif [[ -f "$GENERATED_THEME" ]]; then
     # VS Code only discovers local color themes through an extension package.
     install_generated_extension "$ext_base/$GENERATED_EXTENSION_NAME"
-    theme_name="Omarchy"
+    theme_name="Inferna"
   fi
 
   if [[ -n "$theme_name" ]]; then

@@ -109,7 +109,7 @@ Panel {
   // Switching to Mirror reloads Hyprland, and a read can come back from
   // before it lands, so the map shows the stack as soon as Mirror is clicked:
   // every external display mirroring the built-in one, as
-  // omarchy-hyprland-monitor-internal-mirror sets it up. "on" or "off" while
+  // inferna-hyprland-monitor-internal-mirror sets it up. "on" or "off" while
   // a switch is on its way; Extend keeps the stack until the real layout,
   // with the external back in its own place, comes in.
   property string pendingMirror: ""
@@ -175,7 +175,7 @@ Panel {
     return false
   }
   readonly property bool mirrorEnabled: pendingMirror !== "" ? pendingMirror === "on" : mirroredNow
-  // omarchy-hyprland-monitor-internal-mirror puts the built-in display's
+  // inferna-hyprland-monitor-internal-mirror puts the built-in display's
   // picture on every external one, so it needs the built-in display on, not
   // shut in clamshell, and an external one. A mirror set up in
   // the user's own monitors.lua is theirs to undo, so Extend isn't offered.
@@ -213,7 +213,7 @@ Panel {
   property bool cursorActive: false
 
   // Text size slider — curated macOS-style notches (px). The panel snaps to
-  // these stops; the CLI (omarchy-display-text-size) accepts any integer in range.
+  // these stops; the CLI (inferna-display-text-size) accepts any integer in range.
   readonly property var textSizeStops: [9, 10, 11, 12, 14, 16, 20]
   // While a change is in flight, the chosen stop index overrides the live
   // base-size so the knob doesn't snap back during the file round-trip. -1 =
@@ -405,7 +405,7 @@ Panel {
     }
 
     root.brightnessSetQueued = false
-    setBrightnessProc.command = ["omarchy-brightness-display", "--no-osd", "--monitor", name, percent + "%"]
+    setBrightnessProc.command = ["inferna-brightness-display", "--no-osd", "--monitor", name, percent + "%"]
     setBrightnessProc.running = true
   }
 
@@ -523,22 +523,22 @@ Panel {
   }
 
   function setScale(name, scale) {
-    runAction(["omarchy-hyprland-monitor-scaling", "--monitor", name, scale])
+    runAction(["inferna-hyprland-monitor-scaling", "--monitor", name, scale])
   }
 
   function setResolution(name, resolution) {
-    runAction(["omarchy-hyprland-monitor-resolution", "--monitor", name, resolution])
+    runAction(["inferna-hyprland-monitor-resolution", "--monitor", name, resolution])
   }
 
   function setMirror(enabled) {
     if (enabled === mirrorEnabled) return
     pendingMirror = enabled ? "on" : "off"
     mirrorSettle.restart()
-    runAction(["omarchy-hyprland-monitor-internal-mirror", enabled ? "on" : "off"])
+    runAction(["inferna-hyprland-monitor-internal-mirror", enabled ? "on" : "off"])
   }
 
   function setRotation(name, degrees) {
-    runAction(["omarchy-hyprland-monitor-rotate", "--monitor", name, String(degrees)])
+    runAction(["inferna-hyprland-monitor-rotate", "--monitor", name, String(degrees)])
   }
 
   // The layout map's right-click menu: the display it's for, where it opened
@@ -606,7 +606,7 @@ Panel {
   }
 
   function layoutCommand(rects) {
-    var args = ["omarchy-hyprland-monitor-layout"]
+    var args = ["inferna-hyprland-monitor-layout"]
     for (var i = 0; i < rects.length; i++)
       args.push(rects[i].name + "=" + rects[i].x + "x" + rects[i].y)
     return args
@@ -638,7 +638,7 @@ Panel {
   }
 
   function setTextSize(px) {
-    textScaleProc.command = ["omarchy-display-text-size", String(px)]
+    textScaleProc.command = ["inferna-display-text-size", String(px)]
     if (!textScaleProc.running) textScaleProc.running = true
   }
 
@@ -685,7 +685,7 @@ Panel {
 
   Process {
     id: stateProc
-    command: ["omarchy-monitor-state"]
+    command: ["inferna-monitor-state"]
     onRunningChanged: {
       if (running) {
         root.readAfterActions = root.actionsDone
@@ -738,7 +738,7 @@ Panel {
     stdout: StdioCollector { waitForEnd: true }
     // Do NOT call refresh() after a brightness set completes. The local
     // level we just wrote is authoritative; re-reading via
-    // `omarchy-brightness-display` races the hardware/driver and can
+    // `inferna-brightness-display` races the hardware/driver and can
     // return an empty string, which the parser then coerces to 0 —
     // visible as a "bounce to zero" after h/l keypresses. External
     // brightness changes are still picked up by the 5s periodic refresh,

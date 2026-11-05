@@ -1,18 +1,18 @@
 ---
-name: omarchy-app
+name: inferna-app
 description: >
-  Build a new desktop app for Omarchy the way Omarchy's own apps are built
+  Build a new desktop app for Inferna the way Inferna's own apps are built
   (Hype, Monologue, Omacut): C++ and Qt Quick, compiled with qmake6 and make
-  into a single binary, following the Omarchy theme live, and installed as an
+  into a single binary, following the Inferna theme live, and installed as an
   Arch package so it shows up in the app launcher. Use when asked to make,
   build, or scaffold an app, tool, utility, or GUI program for the desktop.
   Triggers: new app, make me an app, desktop app, GUI, Qt, QML, Qt Quick, C++
   app, qmake, app launcher entry, PKGBUILD for my app.
 ---
 
-# Building an Omarchy App
+# Building an Inferna App
 
-Omarchy's own apps are dead simple on purpose: one window, one job, driven
+Inferna's own apps are dead simple on purpose: one window, one job, driven
 from the keyboard, following the desktop theme, and installed like any other
 package. Build new ones the same way. `templates.md` has the starter files;
 the published apps are the reference for anything bigger:
@@ -29,9 +29,9 @@ Pick a short lowercase name (`tally`, `pomo`); it is the binary, the package,
 the `.desktop` file, the icon, and the Wayland app id all at once. Create the
 project in `~/Work/<name>` unless the user says otherwise, and `git init` it.
 
-Everything an app needs is part of Omarchy: `qmake6`, `make`, a C++
+Everything an app needs is part of Inferna: `qmake6`, `make`, a C++
 compiler, Qt's base, declarative, multimedia, SVG, and Wayland modules, and
-`ffmpeg`. If `qmake6` is missing, install the set with `omarchy-pkg-add
+`ffmpeg`. If `qmake6` is missing, install the set with `inferna-pkg-add
 base-devel qt6-base qt6-declarative qt6-multimedia qt6-svg qt6-wayland ffmpeg`.
 
 ## Shape
@@ -43,7 +43,7 @@ bin/test                builds and runs the Qt Test binary offscreen
 bin/install             makepkg -fsi, so the app lands in the launcher
 src/main.cpp            app setup; hands C++ objects to QML
 src/backend.{h,cpp}     the app's state and work, as a QObject
-src/theme.{h,cpp}       follows the Omarchy accent and Hyprland's rounding
+src/theme.{h,cpp}       follows the Inferna accent and Hyprland's rounding
 src/Main.qml            the window: layout, keys, nothing else
 src/resources.qrc       compiles the QML into the binary
 tests/<name>_tests.{pro,cpp}
@@ -75,23 +75,23 @@ files committed.
   `src/portalfilepicker.{h,cpp}` behind an abstract `src/filepicker.h` is the
   pattern to copy, with its attribution, and lets tests inject a fake picker.
 
-## Omarchy conventions
+## Inferna conventions
 
 - **Follow the theme live.** Read `accent` from
-  `~/.local/state/omarchy/current/theme/colors.toml` and watch it; a theme
+  `~/.local/state/inferna/current/theme/colors.toml` and watch it; a theme
   switch replaces files and symlinks, so re-arm the watcher on every change.
-  Fall back to `#FFD60A` when Omarchy isn't there. `templates.md` has the
-  `Theme` class. Never change Omarchy's config.
-- **Speak the user's language.** Omarchy runs in 50 languages, and the app
+  Fall back to `#FFD60A` when Inferna isn't there. `templates.md` has the
+  `Theme` class. Never change Inferna's config.
+- **Speak the user's language.** Inferna runs in 50 languages, and the app
   follows the one picked under Setup > Language, live, like the theme. Write
   every visible string as `qsTr("Save")` in QML or `tr("Save")` in C++, with
   `%1` placeholders filled by `.arg()` rather than sentences glued together,
   and a counted string as `qsTr("%n clips", "", count)` so each language gets
   its own plural forms. Ship translations as `src/i18n/<code>.json` (English
   text to translation) compiled into the binary. The `Translator` in
-  `templates.md` reads `~/.config/omarchy/language`, falls back from `pt-BR`
+  `templates.md` reads `~/.config/inferna/language`, falls back from `pt-BR`
   to `pt` to English per string, and sets the default `QLocale` and layout
-  direction from Omarchy's registry: write numbers and dates through
+  direction from Inferna's registry: write numbers and dates through
   `Qt.locale()` (`value.toLocaleString(Qt.locale(), 'f', 1)`) so they take
   the language's separators and digits, and keep the window's content under
   the template's mirrored root so Arabic, Hebrew, Persian, and Urdu read
@@ -100,7 +100,7 @@ files committed.
   `.desktop` file's `Name` and `Comment` too (`Name[da]=…`). Keep brand
   names, units, and keyboard keys as they are.
 - **Corners match the windows.** Hyprland's `decoration:rounding` is 0 on
-  Omarchy's default, so corners are sharp unless the theme or the user rounds
+  Inferna's default, so corners are sharp unless the theme or the user rounds
   windows. The template `Theme` asks `hyprctl` for the effective value and
   exposes it as `theme.radius`; use it for every panel, dialog, and button,
   set `Material.roundedScale: theme.radius` on the window and on Material
@@ -133,9 +133,9 @@ files committed.
 2. `bin/test` after each change to the backend. Tests compile `../src/*.cpp`
    straight in, run offscreen, and pass temp directories to anything that
    reads the disk (the `Theme` takes the theme directory as an argument).
-3. Look at it. Take a screenshot with `omarchy capture screenshot fullscreen
+3. Look at it. Take a screenshot with `inferna capture screenshot fullscreen
    save` and check the window against the theme before calling it done.
-   Switch the language once (`omarchy language da`) and look again: longer
+   Switch the language once (`inferna language da`) and look again: longer
    words must not clip, and nothing should still be in English.
 4. Drive the real QML offscreen when a change is about interaction. A small
    harness in the scratchpad that loads `qrc:/Main.qml` with
@@ -145,7 +145,7 @@ files committed.
    journal instead of the terminal.
 5. `bin/install` builds the package with `makepkg -fsi`, which installs the
    binary, the `.desktop` entry, and the icon. The app then appears in the
-   Omarchy app launcher (`Super + Space`). Run it again after every change
+   Inferna app launcher (`Super + Space`). Run it again after every change
    the user should see there.
 
 ## Qt Quick traps
@@ -173,9 +173,9 @@ files committed.
   current theme, and with made-up content: never the user's name, signature,
   files, or other personal data.
 - To ship: tag `v<version>` and make a GitHub release, then add the package to
-  `omacom/omarchy-pkgs` under `pkgbuilds/<name>/` building from the release
+  `omacom/inferna-pkgs` under `pkgbuilds/<name>/` building from the release
   tarball, with `.omarchy/package.json` set to `"source": "local"`,
   `"auto_merge": true`, and an `upstream.watch` on the GitHub repo so later
   releases sync on their own. Only once that package is published can
-  Omarchy install it: `install/omarchy-base.packages`, the preinstall
+  Inferna install it: `install/inferna-base.packages`, the preinstall
   scripts, and a migration for existing machines.

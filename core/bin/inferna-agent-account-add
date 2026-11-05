@@ -51,7 +51,7 @@ if [[ $check == "true" ]]; then
 fi
 
 # The provider can be left out when it's your default agent:
-# `omarchy agent account add Work`.
+# `inferna agent account add Work`.
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
   default=$(inferna-default-agent)
   [[ $default == "claude" || $default == "codex" || $default == "grok" ]] && set -- "$default" "$@"
@@ -176,7 +176,7 @@ if ! primary_signed_in "$provider"; then
   say "$(inferna-i18n agents.signInBrowser "$name")"
   if login && primary_signed_in "$provider"; then
     # The first agent signed in on a machine with none chosen becomes the
-    # default, so `omarchy agent` and the panel's starter prompts have one to
+    # default, so `inferna agent` and the panel's starter prompts have one to
     # run. A default someone already picked is never touched.
     if [[ -z $(inferna-default-agent) ]]; then
       mkdir -p "$HOME/.config/inferna/defaults"
@@ -231,7 +231,7 @@ EOF
       finish "$(inferna-i18n agents.added "$added")"
     else
       finish "$(inferna-i18n agents.added "$added")"
-      echo "Switch to it with: omarchy agent account use $provider $(jq -r .id <<<"$account")"
+      echo "Switch to it with: inferna agent account use $provider $(jq -r .id <<<"$account")"
     fi
   else
     registration_status=$?

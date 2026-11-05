@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Reinstall Omarchy packages and reset default configs
+# inferna:summary=Reinstall Inferna packages and reset default configs
 # inferna:requires-sudo=true
 
 set -e
 
-echo -e "This will reinstall all default Omarchy packages and reset default configs.\nWarning: user config changes will be overwritten.\n"
+echo -e "This will reinstall all default Inferna packages and reset default configs.\nWarning: user config changes will be overwritten.\n"
 
 if gum confirm "Are you sure you want to reinstall and lose config changes?"; then
   inferna-reinstall-pkgs

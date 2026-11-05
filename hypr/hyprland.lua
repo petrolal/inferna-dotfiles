@@ -17,7 +17,7 @@ dofile(inferna_core .. "/default/hypr/bootstrap.lua")
 -- Load Inferna defaults.
 require("default.hypr.inferna")
 
--- Put your personal overrides in these files. They're loaded after Omarchy's
+-- Put your personal overrides in these files. They're loaded after Inferna's
 -- defaults so package updates can improve the defaults without rewriting your
 -- ~/.config/hypr files.
 local function safe_require(mod)

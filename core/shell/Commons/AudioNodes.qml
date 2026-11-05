@@ -33,7 +33,7 @@ Singleton {
     // A file that went away hints nothing, whatever text() still holds.
     property bool missing: false
 
-    path: "/usr/share/omarchy-platform/audio.json"
+    path: "/usr/share/inferna-platform/audio.json"
     blockLoading: true
     watchChanges: true
     printErrors: false

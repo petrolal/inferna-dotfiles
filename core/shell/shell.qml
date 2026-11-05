@@ -157,7 +157,7 @@ ShellRoot {
   }
 
   Component.onCompleted: {
-    console.log("omarchy-shell paths",
+    console.log("inferna-shell paths",
       "omarchyPath=" + shell.omarchyPath,
       "shellDir=" + Quickshell.shellDir,
       "firstPartyPluginsDir=" + shell.firstPartyPluginsDir,
@@ -1621,14 +1621,14 @@ ShellRoot {
       var method = entry.target.slice(dot + 1)
       var service = shell.serviceFor(shell.ipcShortcutServices[target] || "")
       if (!service || !service.runShortcut(method))
-        Util.execArgv(["omarchy-shell", target, method])
+        Util.execArgv(["inferna-shell", target, method])
     } else if (entry.kind === "brightness") {
       if (!shell.brightnessKeys.handle(entry.target))
-        Util.execArgv(["omarchy-brightness-display", entry.target === "raise" ? "+5%" : "5%-"])
+        Util.execArgv(["inferna-brightness-display", entry.target === "raise" ? "+5%" : "5%-"])
     } else if (entry.kind === "audio") {
       var media = shell.serviceFor("omarchy.media")
       if (!media || !media.handleVolumeKey(entry.target))
-        Util.execArgv(["omarchy-audio-output-volume", entry.target])
+        Util.execArgv(["inferna-audio-output-volume", entry.target])
     } else {
       shell.toggle(entry.target, "{}")
     }
@@ -1636,9 +1636,22 @@ ShellRoot {
 
   FileView {
     id: shortcutsFile
-    path: shell.omarchyPath + "/default/omarchy/shortcuts"
+    path: shell.omarchyPath + "/default/inferna/shortcuts"
     watchChanges: true
     onFileChanged: reload()
+  }
+
+  Variants {
+    model: shell.parseShortcuts(shortcutsFile.text())
+
+    GlobalShortcut {
+      required property var modelData
+
+      appid: "inferna"
+      name: modelData.name
+      description: modelData.kind === "audio" || modelData.kind === "brightness" ? (modelData.kind === "audio" ? "Volume " : "Brightness ") + modelData.target : (modelData.kind === "ipc" ? "Run " + modelData.target : "Toggle the " + modelData.target + " " + modelData.kind)
+      onPressed: shell.runShortcut(modelData)
+    }
   }
 
   Variants {
@@ -1656,16 +1669,16 @@ ShellRoot {
 
   // ------------------------------------------------------------ IPC socket
   //
-  // omarchy-shell reaches the shell here first: a qs ipc client costs ~45ms
+  // inferna-shell reaches the shell here first: a qs ipc client costs ~45ms
   // to start per call, socat ~5ms. A request is target, method and arguments
   // separated by unit separators and ended by a record separator. The reply is
   // "OK" and the output, or "SKIP" when nothing ran (no such target or
-  // function, or the wrong number of arguments), which omarchy-shell hands to
+  // function, or the wrong number of arguments), which inferna-shell hands to
   // qs ipc for its exact answer. The socket sits in XDG_RUNTIME_DIR, private
   // to the user like qs ipc's own. Like qs ipc, it belongs to one shell: the
-  // one running this config on this display. omarchy-shell derives the same
+  // one running this config on this display. inferna-shell derives the same
   // name from the same two values.
-  readonly property string ipcSocketPath: Quickshell.env("XDG_RUNTIME_DIR") + "/omarchy-shell-"
+  readonly property string ipcSocketPath: Quickshell.env("XDG_RUNTIME_DIR") + "/inferna-shell-"
     + Qt.md5(shell.omarchyPath + "/shell\n" + Quickshell.env("WAYLAND_DISPLAY")).slice(0, 16) + ".sock"
 
   SocketServer {
@@ -1760,7 +1773,7 @@ ShellRoot {
       return shell.backgroundSwitch.play(token, stillPath, introPath, prepared)
     }
 
-    // omarchy-theme-bg-set's change, with the intro it found or none.
+    // inferna-theme-bg-set's change, with the intro it found or none.
     function switchBackground(path: string, introPath: string): string {
       return shell.backgroundSwitch.switchTo(path, introPath)
     }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Send an Omarchy desktop notification
+# inferna:summary=Send an Inferna desktop notification
 # inferna:args=[--app-name <app-name>] [-g <glyph>] [-u <low|normal|critical>] [-i <icon>] [-t <ms>] [-r <id>] [-p] [--transient] [--image <path-or-uri>] <headline> [description] [--exec <program> [args...] | --action <label> <program> [words...]... [--with <args...>]]
 # inferna:examples=inferna notification send "Reminder" "5 minutes are up" -g 󰢌
 

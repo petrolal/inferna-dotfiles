@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Make Slack follow Omarchy themes live
+# inferna:summary=Make Slack follow Inferna themes live
 
 set -euo pipefail
 
@@ -40,4 +40,4 @@ update-desktop-database "${override%/*}"
 inferna-theme-set-slack
 
 echo "Slack theme sync enabled. Fully quit Slack and reopen it from the launcher once."
-echo "Future Omarchy theme changes will recolor open Slack windows automatically."
+echo "Future Inferna theme changes will recolor open Slack windows automatically."

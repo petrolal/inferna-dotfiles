@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install Zed Editor and configure it with the current Omarchy theme
+# inferna:summary=Install Zed Editor and configure it with the current Inferna theme
 
 echo "Installing Zed Editor..."
 inferna-pkg-add zed omazed
 
-# Apply Omarchy theme to Zed
+# Apply Inferna theme to Zed
 omazed setup
 
 setsid uwsm-app -- gtk-launch dev.zed.Zed >/dev/null 2>&1 &

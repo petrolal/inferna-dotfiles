@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # inferna:hidden=true
-# inferna:summary=Provide internal helpers for privileged Omarchy entrypoints
+# inferna:summary=Provide internal helpers for privileged Inferna entrypoints
 
 if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
   echo "inferna-security-functions is an internal function library." >&2
@@ -55,10 +55,10 @@ omarchy_security_require_source_root() {
 
   # A runtime root selects the code used by this invocation. Accept the
   # canonical checkout containing the entrypoint or the package's bin links.
-  if [[ ${OMARCHY_PATH:-} != /* || $(/usr/bin/realpath -e -- "$OMARCHY_PATH") != "$OMARCHY_PATH" ]] ||
-    ! { [[ $command_source == "$OMARCHY_PATH/bin/$command_name" ]] ||
-      [[ $OMARCHY_PATH == "/usr/share/omarchy" && $command_source == "/usr/bin/$command_name" ]]; }; then
-    echo "OMARCHY_PATH does not match this Omarchy command." >&2
+  if [[ ${INFERNA_PATH:-} != /* || $(/usr/bin/realpath -e -- "$INFERNA_PATH") != "$INFERNA_PATH" ]] ||
+    ! { [[ $command_source == "$INFERNA_PATH/bin/$command_name" ]] ||
+      [[ $INFERNA_PATH == "/usr/share/omarchy" && $command_source == "/usr/bin/$command_name" ]]; }; then
+    echo "INFERNA_PATH does not match this Inferna command." >&2
     return 1
   fi
 }

@@ -16,7 +16,7 @@ BarIndicator {
 
   function refresh() {
     if (!root.bar || statusProc.running) return
-    statusProc.command = ["omarchy-capture-screenrecording", "--status"]
+    statusProc.command = ["inferna-capture-screenrecording", "--status"]
     statusProc.running = true
   }
 
@@ -38,7 +38,7 @@ BarIndicator {
 
   onPressed: function() {
     if (root.bar) {
-      root.bar.run(root.recording ? "omarchy-capture-screenrecording --stop-recording" : "omarchy-menu toggle trigger.capture.screenrecord")
+      root.bar.run(root.recording ? "inferna-capture-screenrecording --stop-recording" : "inferna-menu toggle trigger.capture.screenrecord")
     }
   }
 }

@@ -1,4 +1,4 @@
--- Change the default Omarchy look'n'feel.
+-- Change the default Inferna look'n'feel.
 
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
@@ -23,7 +23,7 @@ hl.config({
     gaps_out = 16,
     border_size = 1,
   },
-  -- The Omarchy shell also uses this radius for its panels and controls.
+  -- The Inferna shell also uses this radius for its panels and controls.
   decoration = {
     rounding = 14,
     rounding_power = 2.0,
@@ -51,7 +51,7 @@ hl.config({
 })
 
 -- macOS-style motion, 2026-10-24: shorter durations, responsive start, soft landing.
--- Speeds are in tenths of a second (2.8 = 280 ms). Omarchy defaults were
+-- Speeds are in tenths of a second (2.8 = 280 ms). Inferna defaults were
 -- windows 3.79, windowsIn 4.1 popin 87%, windowsOut 1.49 linear, border 5.39.
 -- macEase (easeOutQuart) is slightly less front-loaded than easeOutQuint, which
 -- spreads movement more evenly across frames on this 60 Hz panel.

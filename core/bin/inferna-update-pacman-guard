@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Prevent direct pacman system upgrades from bypassing omarchy update.
+# inferna:summary=Prevent direct pacman system upgrades from bypassing inferna update.
 # inferna:hidden=true
 
 set -euo pipefail
@@ -47,15 +47,15 @@ cat >&2 <<'MESSAGE'
 
 Woah partner...
 
-This looks like a direct pacman system upgrade. Omarchy updates should normally
+This looks like a direct pacman system upgrade. Inferna updates should normally
 run through:
 
-  omarchy update
+  inferna update
 
 That path handles the update transcript, snapshot, keyrings, package upgrade,
 migrations, post-update hooks, shell update state, and restart checks together.
 
-If you really meant to bypass Omarchy for this transaction, rerun pacman with:
+If you really meant to bypass Inferna for this transaction, rerun pacman with:
 
   sudo env OMARCHY_ALLOW_DIRECT_PACMAN=1 pacman -Syu
 

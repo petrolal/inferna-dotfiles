@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Launch a floating terminal with the Omarchy presentation wrapper
+# inferna:summary=Launch a floating terminal with the Inferna presentation wrapper
 # inferna:args=<command>
 
 # Export the current theme's gum styling so gum widgets match the active theme
@@ -11,4 +11,4 @@ cmd="$*"
 # 130 is the user bailing with Ctrl-C; anything else gets the Done/Failed prompt.
 presentation_script="inferna-show-logo; $cmd; code=\$?; if (( code != 130 )); then inferna-show-done \$code; fi"
 
-exec setsid uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.terminal --title=Omarchy -e bash -c "$presentation_script"
+exec setsid uwsm-app -- xdg-terminal-exec --app-id=org.omarchy.terminal --title=Inferna -e bash -c "$presentation_script"

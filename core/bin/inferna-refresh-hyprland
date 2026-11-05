@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Overwrite all the user Hyprland Lua configs in ~/.config/hypr with the Omarchy defaults.
+# inferna:summary=Overwrite all the user Hyprland Lua configs in ~/.config/hypr with the Inferna defaults.
 
 inferna-refresh-config hypr/.luarc.json
 inferna-refresh-config hypr/autostart.lua
@@ -11,4 +11,4 @@ inferna-refresh-config hypr/hyprland.lua
 inferna-refresh-config hypr/monitors.lua
 
 mkdir -p ~/.local/state/inferna/toggles/hypr
-cp "$OMARCHY_PATH/default/hypr/toggles/flags.lua" ~/.local/state/inferna/toggles/hypr/
+cp "$INFERNA_PATH/default/hypr/toggles/flags.lua" ~/.local/state/inferna/toggles/hypr/

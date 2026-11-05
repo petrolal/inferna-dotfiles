@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Copy subscription account logins to another Omarchy machine over SSH
+# inferna:summary=Copy subscription account logins to another Inferna machine over SSH
 # inferna:args=[--replace] <ssh-host> [claude|codex|grok...]
 # inferna:examples=inferna agent account copy laptop | inferna agent account copy user@desktop claude
 
