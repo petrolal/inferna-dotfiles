@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec /nix/store/1fl4qsghsryd5f764m5v64vlxdz9d8qx-gtk+3-3.24.52/bin/gtk-launch "$@"

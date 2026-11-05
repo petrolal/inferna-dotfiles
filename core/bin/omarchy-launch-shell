@@ -22,6 +22,7 @@ run_shell() {
   fi
   export OMARCHY_PATH="$core_path"
   export INFERNA_PATH="$core_path"
+  export PATH="$core_path/bin/shims:$core_path/bin:$HOME/.local/bin:$PATH"
   export QML2_IMPORT_PATH="/nix/store/ms8md3fbnz70v0yic0c956wf7xc6rij1-qt5compat-6.11.2/lib/qt-6/qml:/nix/store/8kskqmdr4hadys3jqqjs8mkb1a59wn0y-qtmultimedia-6.11.2/lib/qt-6/qml:/nix/store/jlj7mchp8g5xx3i8ny5wpcnrxhqkjqxf-qtquick3d-6.11.2/lib/qt-6/qml:/nix/store/6q6kk7wr9k00c3dhgi9in4wlp0qw63gc-quickshell-0.3.1/lib/qt-6/qml:${QML2_IMPORT_PATH:-}:$core_path/shell"
 
   local startup_background
