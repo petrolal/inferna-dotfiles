@@ -3,7 +3,7 @@
   "id": "denon.menu",
   "name": "Menu",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Desktop menu with a search-first layout",
   "kinds": [
     "menu",
@@ -20,7 +20,7 @@
     "category": "Compositor",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.menu"
+  "inferna": {
+    "clonedFrom": "inferna.menu"
   }
 }

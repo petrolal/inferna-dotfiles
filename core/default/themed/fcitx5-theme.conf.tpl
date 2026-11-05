@@ -1,8 +1,8 @@
 [Metadata]
-Name=Omarchy
+Name=Inferna
 Version=1
-Author=Omarchy
-Description=Generated from the current Omarchy theme
+Author=Inferna
+Description=Generated from the current Inferna theme
 ScaleWithDPI=True
 
 [InputPanel]

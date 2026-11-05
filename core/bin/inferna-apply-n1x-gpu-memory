@@ -23,7 +23,7 @@ set -euo pipefail
 # 230 MiB with a 5120x2160@120 monitor, and drawing a 5K display up to about
 # 700 MiB below the top of it, so 4 GiB leaves it room.
 
-var="${OMARCHY_EFIVARS:-/sys/firmware/efi/efivars}/EXPOSED_DISP_FRM-4b086294-0740-4f71-a7b5-85a329c7ec5f"
+var="${INFERNA_EFIVARS:-/sys/firmware/efi/efivars}/EXPOSED_DISP_FRM-4b086294-0740-4f71-a7b5-85a329c7ec5f"
 # What the firmware ships between the size and the last byte.
 layouts=(
   "00 00 00 20 00 00 00 00 00 00 00 00 01 00 00 00"

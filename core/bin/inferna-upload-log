@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Upload logs to logs.omarchy.org
+# inferna:summary=Upload logs to logs.inferna.org
 # inferna:args=<log-file>
 # inferna:hidden=true
 
@@ -59,13 +59,13 @@ same_or_prefix_log() {
 case "$LOG_TYPE" in
 install)
   # In the live ISO before reboot, the target system is mounted at /mnt so the
-  # omarchy install log lives at /mnt/var/log/inferna-install.log. On the
+  # inferna install log lives at /mnt/var/log/inferna-install.log. On the
   # installed system it's at /var/log/inferna-install.log. Prefer whichever
   # exists, with /mnt taking precedence (only present in the ISO context, and
   # there it's the right one).
   ARCHINSTALL_LOG="/var/log/archinstall/install.log"
-  LIVE_OMARCHY_LOG="/var/log/inferna-install.log"
-  TARGET_OMARCHY_LOG="/mnt/var/log/inferna-install.log"
+  LIVE_INFERNA_LOG="/var/log/inferna-install.log"
+  TARGET_INFERNA_LOG="/mnt/var/log/inferna-install.log"
 
   cat "$SYSTEM_INFO" >"$TEMP_LOG"
   if [[ -s $ARCHINSTALL_LOG ]]; then
@@ -73,18 +73,18 @@ install)
     cat "$ARCHINSTALL_LOG" >>"$TEMP_LOG"
   fi
 
-  if [[ -s $LIVE_OMARCHY_LOG ]]; then
-    printf '\n========================================\nOMARCHY INSTALL LOG (%s)\n========================================\n\n' "$LIVE_OMARCHY_LOG" >>"$TEMP_LOG"
-    cat "$LIVE_OMARCHY_LOG" >>"$TEMP_LOG"
+  if [[ -s $LIVE_INFERNA_LOG ]]; then
+    printf '\n========================================\nINFERNA INSTALL LOG (%s)\n========================================\n\n' "$LIVE_INFERNA_LOG" >>"$TEMP_LOG"
+    cat "$LIVE_INFERNA_LOG" >>"$TEMP_LOG"
   fi
 
-  if [[ -s $TARGET_OMARCHY_LOG ]] && ! same_or_prefix_log "$LIVE_OMARCHY_LOG" "$TARGET_OMARCHY_LOG"; then
-    printf '\n========================================\nTARGET OMARCHY INSTALL LOG (%s)\n========================================\n\n' "$TARGET_OMARCHY_LOG" >>"$TEMP_LOG"
-    cat "$TARGET_OMARCHY_LOG" >>"$TEMP_LOG"
+  if [[ -s $TARGET_INFERNA_LOG ]] && ! same_or_prefix_log "$LIVE_INFERNA_LOG" "$TARGET_INFERNA_LOG"; then
+    printf '\n========================================\nTARGET INFERNA INSTALL LOG (%s)\n========================================\n\n' "$TARGET_INFERNA_LOG" >>"$TEMP_LOG"
+    cat "$TARGET_INFERNA_LOG" >>"$TEMP_LOG"
   fi
 
-  if [[ ! -s $LIVE_OMARCHY_LOG && ! -s $TARGET_OMARCHY_LOG ]]; then
-    echo "Warning: omarchy install log not found (looked at /var/log and /mnt/var/log)" >&2
+  if [[ ! -s $LIVE_INFERNA_LOG && ! -s $TARGET_INFERNA_LOG ]]; then
+    echo "Warning: inferna install log not found (looked at /var/log and /mnt/var/log)" >&2
   fi
 
   if [[ ! -s $TEMP_LOG ]]; then
@@ -92,7 +92,7 @@ install)
     exit 1
   fi
 
-  echo "Uploading installation log to logs.omarchy.org..."
+  echo "Uploading installation log to logs.inferna.org..."
   ;;
 
 this-boot)
@@ -105,7 +105,7 @@ this-boot)
     exit 1
   fi
 
-  echo "Uploading current boot logs to logs.omarchy.org..."
+  echo "Uploading current boot logs to logs.inferna.org..."
   ;;
 
 last-boot)
@@ -118,7 +118,7 @@ last-boot)
     exit 1
   fi
 
-  echo "Uploading previous boot logs to logs.omarchy.org..."
+  echo "Uploading previous boot logs to logs.inferna.org..."
   ;;
 
 installed|system-info)
@@ -137,7 +137,7 @@ installed|system-info)
     exit 1
   fi
 
-  echo "Uploading system information to logs.omarchy.org..."
+  echo "Uploading system information to logs.inferna.org..."
   ;;
 
 *)

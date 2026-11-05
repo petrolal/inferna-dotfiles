@@ -1,11 +1,1 @@
-[Trigger]
-Operation = Upgrade
-Type = Package
-Target = *
-
-[Action]
-Description = Checking Omarchy update entrypoint...
-When = PreTransaction
-Depends = omarchy
-Exec = /usr/bin/omarchy-update-pacman-guard
-AbortOnFail
+00-inferna-update-guard.hook

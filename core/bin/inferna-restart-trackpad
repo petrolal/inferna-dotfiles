@@ -20,7 +20,7 @@ is_touchpad() {
 echo "Releasing the trackpad in Hyprland..."
 inferna-toggle-input-device touchpad cycle
 
-driver="${OMARCHY_I2C_HID_DRIVER_PATH:-/sys/bus/i2c/drivers/i2c_hid_acpi}"
+driver="${INFERNA_I2C_HID_DRIVER_PATH:-/sys/bus/i2c/drivers/i2c_hid_acpi}"
 
 for dev in "$driver"/i2c-*; do
   [[ -e $dev ]] || continue

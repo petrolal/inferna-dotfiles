@@ -1,5 +1,5 @@
 -- Dictation keys are bound only once the chosen backend's own program is
--- installed (Omarchy ships every adapter), so a selected backend that was
+-- installed (Inferna ships every adapter), so a selected backend that was
 -- removed doesn't hold Right Alt (AltGr) or Alt + Space for nothing.
 -- Personal bindings.lua dictation keys use the same check.
 function o.dictation_installed()

@@ -25,7 +25,7 @@ fi
 # process could edit and then trigger a privileged bring-up of — a file-swap
 # path to root. Do not move it back under $HOME.
 
-RUNTIME_DIR="${OMARCHY_WINDOWS_DIR:-/var/lib/omarchy/windows}"
+RUNTIME_DIR="${INFERNA_WINDOWS_DIR:-/var/lib/inferna/windows}"
 COMPOSE_FILE="$RUNTIME_DIR/docker-compose.yml"
 LEGACY_COMPOSE_FILE="$HOME/.config/windows/docker-compose.yml"
 # The guest password lives in the root-owned compose (readable by root and the
@@ -188,7 +188,7 @@ resolve_caller() {
   # A direct, non-root development invocation with a non-standard runtime has
   # no privilege boundary and may use its current HOME (which also keeps these
   # functions testable). Production always uses the account database value.
-  if ((EUID != 0)) && [[ $RUNTIME_DIR != /var/lib/omarchy/windows ]]; then
+  if ((EUID != 0)) && [[ $RUNTIME_DIR != /var/lib/inferna/windows ]]; then
     CALLER_HOME=${HOME:-$CALLER_HOME}
   fi
   canonical=$(realpath -e -- "$CALLER_HOME" 2>/dev/null) || return 1
@@ -241,7 +241,7 @@ boundary_owner() {
   # Production boundaries remain root-owned even when a docker-group user runs
   # the read-only bring-up checks directly. A non-standard runtime is supported
   # only for unprivileged tests/development and is owned by that caller.
-  if ((EUID == 0)) || [[ $RUNTIME_DIR == /var/lib/omarchy/windows ]]; then
+  if ((EUID == 0)) || [[ $RUNTIME_DIR == /var/lib/inferna/windows ]]; then
     printf '0'
   else
     printf '%s' "$CALLER_UID"
@@ -279,7 +279,7 @@ prepare_runtime_tree() {
   local owner probe runtime_parent
   owner=$(boundary_owner)
   if ((EUID == 0)); then
-    [[ $RUNTIME_DIR == /var/lib/omarchy/windows ]] || {
+    [[ $RUNTIME_DIR == /var/lib/inferna/windows ]] || {
       echo "inferna-windows-vm: refusing a non-standard privileged runtime path" >&2
       return 1
     }
@@ -299,7 +299,7 @@ prepare_runtime_tree() {
 
   runtime_parent=$(dirname -- "$RUNTIME_DIR")
   if ((EUID == 0)) && [[ ! -e $runtime_parent && ! -L $runtime_parent ]]; then
-    [[ $runtime_parent == /var/lib/omarchy ]] || return 1
+    [[ $runtime_parent == /var/lib/inferna ]] || return 1
     assert_boundary_dir /var/lib 0 || return 1
     install -d -o root -g root -m 0755 -- "$runtime_parent" || return 1
   fi

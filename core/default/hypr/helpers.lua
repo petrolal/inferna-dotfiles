@@ -61,8 +61,8 @@ local shell_shortcuts = nil
 local function shell_shortcut_registered(name)
   if not shell_shortcuts then
     shell_shortcuts = {}
-    local shortcut_path = (paths.inferna_path or paths.omarchy_path) .. "/default/inferna/shortcuts"
-    local file = io.open(shortcut_path, "r") or io.open((paths.omarchy_path or paths.inferna_path) .. "/default/omarchy/shortcuts", "r")
+    local shortcut_path = (paths.inferna_path or paths.inferna_path) .. "/default/inferna/shortcuts"
+    local file = io.open(shortcut_path, "r") or io.open((paths.inferna_path or paths.inferna_path) .. "/default/inferna/shortcuts", "r")
     if file then
       for line in file:lines() do
         local kind, target = line:match("^(%a+)%s+(%S+)%s*$")
@@ -95,8 +95,8 @@ local function command_from(value, description)
 
   if value.inferna then
     return "inferna-launch-" .. value.inferna
-  elseif value.omarchy then
-    return "inferna-launch-" .. value.omarchy
+  elseif value.inferna then
+    return "inferna-launch-" .. value.inferna
   elseif value.menu then
     return shell_dispatcher("menu", value.menu, "inferna-menu toggle " .. shell_quote(value.menu))
   elseif value.panel then
@@ -134,8 +134,8 @@ function o.preinstalled_bindings_enabled()
   if _G.inferna_preinstalled_bindings ~= nil then
     return _G.inferna_preinstalled_bindings == true
   end
-  if _G.omarchy_preinstalled_bindings ~= nil then
-    return _G.omarchy_preinstalled_bindings == true
+  if _G.inferna_preinstalled_bindings ~= nil then
+    return _G.inferna_preinstalled_bindings == true
   end
 
   return not file_exists((os.getenv("HOME") or "") .. "/.local/state/inferna/preinstalls-removed")
@@ -279,8 +279,8 @@ end
 
 -- Whether this session gets default/hypr/software-rendering.lua's lighter look:
 -- it renders on the CPU (llvmpipe or softpipe), as
--- omarchy-hyprland-software-rendering marks it once Hyprland is up, and the user
--- hasn't turned animations back on there with omarchy-toggle-animations.
+-- inferna-hyprland-software-rendering marks it once Hyprland is up, and the user
+-- hasn't turned animations back on there with inferna-toggle-animations.
 function o.software_rendering_defaults()
   local runtime = os.getenv("XDG_RUNTIME_DIR")
   local signature = os.getenv("HYPRLAND_INSTANCE_SIGNATURE")
@@ -288,7 +288,7 @@ function o.software_rendering_defaults()
     return false
   end
 
-  return file_exists(runtime .. "/hypr/" .. signature .. "/omarchy-software-rendering")
+  return file_exists(runtime .. "/hypr/" .. signature .. "/inferna-software-rendering")
     and not file_exists(paths.home .. "/.local/state/inferna/toggles/animations-without-gpu")
 end
 
@@ -343,7 +343,7 @@ function o.window(match, rules)
   end
 end
 
--- Opt a window in to Omarchy's standard active/inactive transparency. The tag
+-- Opt a window in to Inferna's standard active/inactive transparency. The tag
 -- lets Appearance > Windows > Window Opacity turn these windows opaque or glassy.
 function o.transparent_window(match, opacity)
   o.window(match, { opacity = opacity or "0.985 0.96", tag = "+transparent-window" })

@@ -39,7 +39,7 @@ if (( status == 0 )); then
   printf '%s\n' "$renderer" >"$marker"
 
   if inferna-toggle-enabled animations-without-gpu; then
-    logger -t omarchy "Hyprland renders on the CPU ($renderer); animations stay on, as Appearance turned them back on."
+    logger -t inferna "Hyprland renders on the CPU ($renderer); animations stay on, as Appearance turned them back on."
   else
     hyprctl reload >/dev/null
 
@@ -55,9 +55,9 @@ if (( status == 0 )); then
     done
 
     if (( unread )); then
-      logger -t omarchy -p user.debug "Hyprland renders on the CPU ($renderer), but its animations, blur or shadows setting couldn't be read after the reload."
+      logger -t inferna -p user.debug "Hyprland renders on the CPU ($renderer), but its animations, blur or shadows setting couldn't be read after the reload."
     elif (( ${#kept[@]} == 0 )); then
-      logger -t omarchy "Hyprland renders on the CPU ($renderer), so animations, blur and shadows are off for this session."
+      logger -t inferna "Hyprland renders on the CPU ($renderer), so animations, blur and shadows are off for this session."
       # The notice shows once per machine, and not where animations were
       # already off by choice (a VM install turns them off); the journal line
       # above repeats at every login. The shell serves notifications and comes
@@ -70,14 +70,14 @@ if (( status == 0 )); then
           mkdir -p "${noticed%/*}"
           touch "$noticed"
         else
-          logger -t omarchy -p user.debug "No notification server after 15s, so the software-rendering notice went unshown."
+          logger -t inferna -p user.debug "No notification server after 15s, so the software-rendering notice went unshown."
         fi
       fi
     else
       kept_list=${kept[*]}
-      logger -t omarchy "Hyprland renders on the CPU ($renderer); keeping the ${kept_list// / and } ~/.config/hypr turns on."
+      logger -t inferna "Hyprland renders on the CPU ($renderer); keeping the ${kept_list// / and } ~/.config/hypr turns on."
     fi
   fi
 elif (( status == 2 )); then
-  logger -t omarchy -p user.debug "Couldn't read Hyprland's GL renderer after $(( attempt - 1 )) tries, so its animations stay as configured."
+  logger -t inferna -p user.debug "Couldn't read Hyprland's GL renderer after $(( attempt - 1 )) tries, so its animations stay as configured."
 fi

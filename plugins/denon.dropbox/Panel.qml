@@ -1,4 +1,4 @@
-// Pebble Shell: Omarchy's Dropbox panel as a rail drawer (shared denon.bar
+// Pebble Shell: Inferna's Dropbox panel as a rail drawer (shared denon.bar
 // panels: PopupPanel host, glass hero and section labels).
 import "../denon.bar/panels" as Motion
 import QtQuick
@@ -13,11 +13,11 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.dropbox"
-  ipcTarget: "omarchy.dropbox"
+  moduleName: "inferna.dropbox"
+  ipcTarget: "inferna.dropbox"
   manageIpc: false
 
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   property string focusSection: "login"
   property int fileIndex: 0
   property bool cursorActive: false
@@ -150,7 +150,7 @@ Panel {
   Service {
     id: dropbox
     settings: root.settings
-    omarchyPath: root.omarchyPath
+    infernaPath: root.infernaPath
   }
 
   Connections {

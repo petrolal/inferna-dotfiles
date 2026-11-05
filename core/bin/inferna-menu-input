@@ -45,7 +45,7 @@ payload=$(perl -MEncode=decode -MJSON::PP=encode_json -e '
   print encode_json($payload)
 ' "$prompt" "$selection_file" "$done_file" "$menu_width")
 
-inferna-shell shell summon omarchy.menu "$payload" >/dev/null
+inferna-shell shell summon inferna.menu "$payload" >/dev/null
 
 while [[ ! -e $done_file ]]; do
   sleep 0.05

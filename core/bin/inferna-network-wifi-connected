@@ -10,7 +10,7 @@
 # queries that only feed that status line's SSID, signal and frequency (~65ms
 # against ~3ms here). Keep the two agreeing.
 
-net_class_path="${OMARCHY_NET_CLASS_PATH:-/sys/class/net}"
+net_class_path="${INFERNA_NET_CLASS_PATH:-/sys/class/net}"
 
 route=$(ip route get 1.1.1.1 2>/dev/null) || exit 1
 [[ $route =~ (^|[[:space:]])dev[[:space:]]+([^[:space:]]+) ]] || exit 1

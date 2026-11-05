@@ -3,8 +3,8 @@
 # inferna:summary=Returns true when the laptop lid is closed
 # inferna:hidden=true
 
-acpi_lid="${OMARCHY_ACPI_LID_PATH:-/proc/acpi/button/lid}"
-input_class="${OMARCHY_INPUT_CLASS_PATH:-/sys/class/input}"
+acpi_lid="${INFERNA_ACPI_LID_PATH:-/proc/acpi/button/lid}"
+input_class="${INFERNA_INPUT_CLASS_PATH:-/sys/class/input}"
 
 shopt -s nullglob
 acpi_states=("$acpi_lid"/*/state)

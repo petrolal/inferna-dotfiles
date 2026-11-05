@@ -9,7 +9,7 @@ import "ReminderFlowModel.js" as ReminderFlowModel
 Item {
   id: root
 
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   property var shell: null
   property var manifest: null
 
@@ -51,7 +51,7 @@ Item {
   function dismiss() {
     root.opened = false
     if (root.shell && typeof root.shell.hide === "function")
-      root.shell.hide((root.manifest && root.manifest.id) || "omarchy.reminders")
+      root.shell.hide((root.manifest && root.manifest.id) || "inferna.reminders")
   }
 
   function toggle() {
@@ -75,7 +75,7 @@ Item {
       }
 
       if (!nextMinutes) {
-        Quickshell.execDetached([root.omarchyPath + "/bin/inferna-notification-send", I18n.t("reminders.invalidTitle"), I18n.t("reminders.invalidBody")])
+        Quickshell.execDetached([root.infernaPath + "/bin/inferna-notification-send", I18n.t("reminders.invalidTitle"), I18n.t("reminders.invalidBody")])
         return
       }
 
@@ -87,7 +87,7 @@ Item {
     }
 
     if (root.step === "message") {
-      var args = [root.omarchyPath + "/bin/inferna-reminder"].concat(ReminderFlowModel.reminderArgs(root.minutes, selection))
+      var args = [root.infernaPath + "/bin/inferna-reminder"].concat(ReminderFlowModel.reminderArgs(root.minutes, selection))
       root.dismiss()
       Quickshell.execDetached(args)
     }

@@ -8,7 +8,7 @@ set -euo pipefail
 
 CLAUDE_SOURCE_PATH="$HOME/.local/state/inferna/current/theme/claude.json"
 CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-CLAUDE_THEME_PATH="$CLAUDE_CONFIG_DIR/themes/omarchy.json"
+CLAUDE_THEME_PATH="$CLAUDE_CONFIG_DIR/themes/inferna.json"
 CLAUDE_SETTINGS_PATH="$CLAUDE_CONFIG_DIR/settings.json"
 CLAUDE_ACTIVATE=0
 
@@ -51,12 +51,12 @@ write_setting_theme() {
 
   if [[ -f $CLAUDE_SETTINGS_PATH ]]; then
     tmp=$(mktemp "$CLAUDE_SETTINGS_PATH.XXXXXX")
-    jq '.theme = "custom:omarchy"' "$CLAUDE_SETTINGS_PATH" >"$tmp"
+    jq '.theme = "custom:inferna"' "$CLAUDE_SETTINGS_PATH" >"$tmp"
     mv "$tmp" "$CLAUDE_SETTINGS_PATH"
   else
     cat >"$CLAUDE_SETTINGS_PATH" <<EOF
 {
-  "theme": "custom:omarchy"
+  "theme": "custom:inferna"
 }
 EOF
   fi

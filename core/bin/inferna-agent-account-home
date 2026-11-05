@@ -8,7 +8,7 @@
 # a launch only sets CLAUDE_CONFIG_DIR / CODEX_HOME when there's somewhere
 # else to point it. Without a registry, no Python starts at all: this runs on
 # every `claude` and `codex` typed at a prompt.
-registry="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/accounts/${1:-}.json"
+registry="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/agents/accounts/${1:-}.json"
 
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
   echo "Usage: inferna-agent-account-home <claude|codex|grok>" >&2
@@ -17,7 +17,7 @@ fi
 
 # A running session pins its home, including an empty value for Main. Claude's
 # implicit default also selects ~/.claude.json, so Main must stay implicit.
-account_pin="OMARCHY_AGENT_${1^^}_HOME"
+account_pin="INFERNA_AGENT_${1^^}_HOME"
 if [[ -v $account_pin ]]; then
   printf '%s' "${!account_pin}"
 elif [[ -f $registry ]]; then

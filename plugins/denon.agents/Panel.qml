@@ -11,8 +11,8 @@ import qs.Ui
 
 Panel {
   id: root
-  moduleName: "omarchy.agents"
-  ipcTarget: "omarchy.agents"
+  moduleName: "inferna.agents"
+  ipcTarget: "inferna.agents"
   manageIpc: false
 
   readonly property color foreground: bar ? bar.foreground : Commons.Color.foreground

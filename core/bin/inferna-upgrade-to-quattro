@@ -52,7 +52,7 @@ valid_channel() {
 }
 
 # The channel the legacy install is already on, read the way
-# inferna-version-channel reads it. Order matters: mirror.omarchy.org is a
+# inferna-version-channel reads it. Order matters: mirror.inferna.org is a
 # substring of both of the others.
 detect_installed_channel() {
   [[ -f /etc/pacman.d/mirrorlist ]] || return 1
@@ -68,14 +68,14 @@ detect_installed_channel() {
   fi
 }
 
-channel_override="${OMARCHY_UPGRADE_CHANNEL:-}"
+channel_override="${INFERNA_UPGRADE_CHANNEL:-}"
 channel_override_cli=0
-target_user="${OMARCHY_INSTALL_USER:-}"
+target_user="${INFERNA_INSTALL_USER:-}"
 yes=0
 auto_reboot=0
 boot_cmdline_unsafe=0
 kernel_cmdline_root_checked=0
-use_dev_packages=${OMARCHY_UPGRADE_DEV:-0}
+use_dev_packages=${INFERNA_UPGRADE_DEV:-0}
 
 while (($#)); do
   case "$1" in
@@ -113,7 +113,7 @@ done
 case "$use_dev_packages" in
   1|true|yes|on) use_dev_packages=1 ;;
   0|false|no|off|"") use_dev_packages=0 ;;
-  *) fail "Invalid OMARCHY_UPGRADE_DEV value '$use_dev_packages'. Use 1/0, true/false, or pass --dev." ;;
+  *) fail "Invalid INFERNA_UPGRADE_DEV value '$use_dev_packages'. Use 1/0, true/false, or pass --dev." ;;
 esac
 
 # Land on the Quattro equivalent of wherever the machine already is, unless the
@@ -178,7 +178,7 @@ target_uid=$(id -u "$target_user")
 target_runtime_dir="/run/user/$target_uid"
 # User-local commands are needed only after dropping to the target user. Never
 # expose their search path to commands run through as_root.
-root_path=/usr/share/omarchy/bin:/usr/local/bin:/usr/bin:/bin
+root_path=/usr/share/inferna/bin:/usr/local/bin:/usr/bin:/bin
 package_path="$root_path:$target_home/.local/bin"
 
 as_root() {
@@ -216,12 +216,12 @@ run_as_user_session() {
 
 # Run an Inferna command as the user with the package-backed paths, without
 # assuming a live session. Extra NAME=VALUE args extend the environment.
-run_as_user_omarchy() {
+run_as_user_inferna() {
   run_as_user env \
     HOME="$target_home" \
     USER="$target_user" \
     LOGNAME="$target_user" \
-    INFERNA_PATH=/usr/share/omarchy \
+    INFERNA_PATH=/usr/share/inferna \
     PATH="$package_path" \
     "$@"
 }
@@ -406,28 +406,28 @@ configure_pacman_channel() {
   as_root cp -f /etc/pacman.conf "/etc/pacman.conf.inferna-upgrade-to-quattro.$backup_suffix.bak"
 
   # Replace the normal Inferna package repository. Dev package mode uses the
-  # edge channel and resolves inferna-dev / inferna-settings-dev from [omarchy].
+  # edge channel and resolves inferna-dev / inferna-settings-dev from [inferna].
   local tmp
 
   tmp=$(mktemp)
   awk -v server="$package_server" '
-    BEGIN { in_omarchy = 0; wrote = 0 }
-    /^[[:space:]]*\[omarchy\][[:space:]]*$/ {
+    BEGIN { in_inferna = 0; wrote = 0 }
+    /^[[:space:]]*\[inferna\][[:space:]]*$/ {
       if (!wrote) {
-        print "[omarchy]"
+        print "[inferna]"
         print "SigLevel = Optional TrustAll"
         print "Server = " server
         wrote = 1
       }
-      in_omarchy = 1
+      in_inferna = 1
       next
     }
-    /^[[:space:]]*\[/ { in_omarchy = 0 }
-    !in_omarchy { print }
+    /^[[:space:]]*\[/ { in_inferna = 0 }
+    !in_inferna { print }
     END {
       if (!wrote) {
         print ""
-        print "[omarchy]"
+        print "[inferna]"
         print "SigLevel = Optional TrustAll"
         print "Server = " server
       }
@@ -440,11 +440,11 @@ configure_pacman_channel() {
 install_keyrings() {
   log "Refreshing package databases and keyrings"
 
-  # Pre-quattro installs cached omarchy packages downloaded from the legacy
+  # Pre-quattro installs cached inferna packages downloaded from the legacy
   # repo. The quattro package server rebuilds some of them under the same
   # name and version with different bytes, so the cached copies fail the new
   # database's checksum and abort --noconfirm transactions as "corrupted".
-  as_root find /var/cache/pacman/pkg -maxdepth 1 -name 'omarchy-*' -delete 2>/dev/null || true
+  as_root find /var/cache/pacman/pkg -maxdepth 1 -name 'inferna-*' -delete 2>/dev/null || true
 
   # -Syy forces the database download. configure_pacman_channel just repointed
   # the mirrors, and a plain -Sy keeps the legacy database whenever the new
@@ -462,7 +462,7 @@ install_keyrings() {
 remove_legacy_installer_package() {
   if pacman -Q inferna-installer >/dev/null 2>&1; then
     log "Removing legacy inferna-installer package"
-    # The pre-quattro omarchy meta package may depend on inferna-installer. Ignore
+    # The pre-quattro inferna meta package may depend on inferna-installer. Ignore
     # that edge temporarily; the next transaction installs the Inferna quattro meta.
     as_root pacman -Rdd --noconfirm inferna-installer
   fi
@@ -513,10 +513,10 @@ normalize_limine_config() {
   as_root sed -i '/^interface_branding_color:/a interface_help_color: 9ece6a' /boot/limine.conf
 
   # Pre-quattro custom-UKI installs used <machine-id>_linux.efi. Inferna quattro uses the
-  # stable omarchy_linux.efi path generated by limine-entry-tool.
+  # stable inferna_linux.efi path generated by limine-entry-tool.
   machine_id=$(as_root cat /etc/machine-id 2>/dev/null || true)
   legacy_uki="/boot/EFI/Linux/${machine_id}_linux.efi"
-  if [[ -n $machine_id ]] && as_root test -f /boot/EFI/Linux/omarchy_linux.efi && as_root test -f "$legacy_uki"; then
+  if [[ -n $machine_id ]] && as_root test -f /boot/EFI/Linux/inferna_linux.efi && as_root test -f "$legacy_uki"; then
     as_root rm -f "$legacy_uki"
   fi
 }
@@ -677,7 +677,7 @@ verify_kernel_cmdline_root() {
       [[ -n $uki ]] || continue
       as_root objcopy -O binary --only-section=.cmdline "$uki" /dev/stdout 2>/dev/null |
         tr -d '\0' | grep -E '(^|[[:space:]])root=' >/dev/null || missing+=("$uki")
-    done < <(as_root find /boot/EFI/Linux -maxdepth 1 -name 'omarchy_linux*.efi' 2>/dev/null)
+    done < <(as_root find /boot/EFI/Linux -maxdepth 1 -name 'inferna_linux*.efi' 2>/dev/null)
   fi
 
   if ((${#missing[@]})); then
@@ -687,7 +687,7 @@ verify_kernel_cmdline_root() {
 }
 
 configure_snapper_policy() {
-  local snapper_config_script=/usr/share/omarchy/install/config/snapper.sh
+  local snapper_config_script=/usr/share/inferna/install/config/snapper.sh
 
   if ! as_root test -f "$snapper_config_script"; then
     warn "$snapper_config_script is unavailable; Snapper snapshot retention was not normalized."
@@ -695,26 +695,26 @@ configure_snapper_policy() {
   fi
 
   log "Configuring Inferna snapshot retention"
-  as_root env INFERNA_PATH=/usr/share/omarchy bash -euo pipefail "$snapper_config_script"
+  as_root env INFERNA_PATH=/usr/share/inferna bash -euo pipefail "$snapper_config_script"
 }
 
 configure_lock_authentication() {
   # The upgrade runs against whatever the channel currently ships, which can
   # still predate the rename of inferna-setup-lock to inferna-apply-lock.
   local apply_lock="" candidate
-  for candidate in /usr/share/omarchy/bin/omarchy-{apply,setup}-lock; do
+  for candidate in /usr/share/inferna/bin/inferna-{apply,setup}-lock; do
     if [[ -x $candidate ]]; then
       apply_lock=$candidate
       break
     fi
   done
 
-  [[ -n $apply_lock ]] || fail "Neither inferna-apply-lock nor inferna-setup-lock is available under /usr/share/omarchy/bin; lock screen authentication could not be configured."
+  [[ -n $apply_lock ]] || fail "Neither inferna-apply-lock nor inferna-setup-lock is available under /usr/share/inferna/bin; lock screen authentication could not be configured."
 
   log "Configuring lock screen authentication"
   as_root env \
-    OMARCHY_INSTALL_USER="$target_user" \
-    INFERNA_PATH=/usr/share/omarchy \
+    INFERNA_INSTALL_USER="$target_user" \
+    INFERNA_PATH=/usr/share/inferna \
     PATH="$root_path" \
     "$apply_lock"
 }
@@ -778,11 +778,11 @@ migrate_lazydocker_package() {
   fi
 }
 
-install_omarchy_quattro_packages() {
-  local omarchy_package=omarchy
+install_inferna_quattro_packages() {
+  local inferna_package=inferna
   local settings_package=inferna-settings
   if (( use_dev_packages )); then
-    omarchy_package=inferna-dev
+    inferna_package=inferna-dev
     settings_package=inferna-settings-dev
   fi
 
@@ -790,7 +790,7 @@ install_omarchy_quattro_packages() {
     inferna-keyring
     "$settings_package"
     inferna-nvim
-    "$omarchy_package"
+    "$inferna_package"
     fakeroot
     pacman-contrib
   )
@@ -801,7 +801,7 @@ install_omarchy_quattro_packages() {
   # --noconfirm answers "no" to conflict-removal prompts. --ask 4 preselects
   # removing the conflicting package, which is required for legacy packages like
   # ttf-jetbrains-mono-nerd -> ttf-jetbrains-mono-nerd-basic.
-  as_root env OMARCHY_UPDATE_PACMAN=1 pacman -Syu --needed --noconfirm --ask 4 --overwrite='*' "${core_packages[@]}"
+  as_root env INFERNA_UPDATE_PACMAN=1 pacman -Syu --needed --noconfirm --ask 4 --overwrite='*' "${core_packages[@]}"
   mark_packages_explicit "${core_packages[@]}"
 
   # The base list carries rtkit, which can make a running app realtime under the
@@ -809,26 +809,26 @@ install_omarchy_quattro_packages() {
   # repair raises those budgets, then installs rtkit itself. A released package
   # older than the repair has no rtkit in its base list either, so it skips it.
   if PATH="$root_path" command -v inferna-realtime-repair >/dev/null; then
-    as_root env INFERNA_PATH=/usr/share/omarchy PATH="$root_path" inferna-realtime-repair ||
+    as_root env INFERNA_PATH=/usr/share/inferna PATH="$root_path" inferna-realtime-repair ||
       fail "Could not install rtkit without killing running apps. Fix the error above and rerun the upgrade."
   else
     warn "This inferna package predates the realtime repair; skipping it."
   fi
 
-  if [[ -f /usr/share/omarchy/install/inferna-base.packages ]]; then
+  if [[ -f /usr/share/inferna/install/inferna-base.packages ]]; then
     log "Installing Inferna quattro default package set"
-    mapfile -t base_packages < <(sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' /usr/share/omarchy/install/inferna-base.packages)
+    mapfile -t base_packages < <(sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' /usr/share/inferna/install/inferna-base.packages)
     # Some base packages have no aarch64 build.
-    if [[ $(uname -m) != "x86_64" && -f /usr/share/omarchy/install/inferna-x86_64-only.packages ]]; then
+    if [[ $(uname -m) != "x86_64" && -f /usr/share/inferna/install/inferna-x86_64-only.packages ]]; then
       mapfile -t base_packages < <(printf '%s\n' "${base_packages[@]}" |
-        grep -vxF -f <(sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' /usr/share/omarchy/install/inferna-x86_64-only.packages))
+        grep -vxF -f <(sed -e 's/[[:space:]]*#.*$//' -e '/^[[:space:]]*$/d' /usr/share/inferna/install/inferna-x86_64-only.packages))
     fi
     if (( ${#base_packages[@]} )); then
       as_root pacman -S --needed --noconfirm --ask 4 --overwrite='*' "${base_packages[@]}"
       mark_packages_explicit "${base_packages[@]}"
     fi
   else
-    warn "/usr/share/omarchy/install/inferna-base.packages was not found; skipping default package set install."
+    warn "/usr/share/inferna/install/inferna-base.packages was not found; skipping default package set install."
   fi
 
   # Archinstall installs the audio application during fresh ISO installs, so
@@ -1005,15 +1005,15 @@ cleanup_legacy_user_paths() {
   run_as_user env TARGET_HOME="$target_home" BACKUP_SUFFIX="$backup_suffix" bash <<'USER_CLEANUP'
 set -euo pipefail
 local_bin="$TARGET_HOME/.local/bin"
-legacy_root="$TARGET_HOME/.local/share/omarchy"
+legacy_root="$TARGET_HOME/.local/share/inferna"
 legacy_bin="$legacy_root/bin/"
 if [[ -d $local_bin ]]; then
   shopt -s nullglob
-  for link in "$local_bin"/omarchy*; do
+  for link in "$local_bin"/inferna*; do
     [[ -L $link ]] || continue
     target=$(readlink "$link" || true)
     case "$target" in
-      "$legacy_bin"*|../share/omarchy/bin/*|*.local/share/omarchy/bin/*)
+      "$legacy_bin"*|../share/inferna/bin/*|*.local/share/inferna/bin/*)
         rm -f "$link"
         ;;
     esac
@@ -1023,7 +1023,7 @@ fi
 legacy_hypr_config_active() {
   local hyprland_conf="$TARGET_HOME/.config/hypr/hyprland.conf"
   [[ -f $hyprland_conf ]] || return 1
-  grep -q '\.local/share/omarchy/default/hypr' "$hyprland_conf"
+  grep -q '\.local/share/inferna/default/hypr' "$hyprland_conf"
 }
 
 populate_legacy_hypr_defaults() {
@@ -1041,7 +1041,7 @@ populate_legacy_hypr_defaults() {
     tmp_dir=$(mktemp -d)
     archive_dir="$tmp_dir/archive"
     mkdir -p "$archive_dir"
-    if curl -fsSL https://github.com/omacom/omarchy/archive/refs/heads/master.tar.gz | tar -xz -C "$archive_dir" &&
+    if curl -fsSL https://github.com/petrolal/dotfiles/archive/refs/heads/master.tar.gz | tar -xz -C "$archive_dir" &&
       [[ -d $archive_dir/inferna-master/default/hypr ]]; then
       cp -a "$archive_dir/inferna-master/default/hypr/." "$shim_hypr_dir/"
     fi
@@ -1051,10 +1051,10 @@ populate_legacy_hypr_defaults() {
   find "$shim_hypr_dir" -type f -name '*.conf' -print -quit | grep -q .
 }
 
-create_live_omarchy_overlay() {
+create_live_inferna_overlay() {
   local backup="$1" compat_root shim_hypr_dir entry base cleanup_hook
 
-  compat_root="$TARGET_HOME/.local/state/inferna/upgrade-to-quattro-live-omarchy"
+  compat_root="$TARGET_HOME/.local/state/inferna/upgrade-to-quattro-live-inferna"
   shim_hypr_dir="$TARGET_HOME/.local/state/inferna/upgrade-to-quattro-hypr-defaults"
 
   populate_legacy_hypr_defaults "$shim_hypr_dir" "$backup" || return 1
@@ -1063,13 +1063,13 @@ create_live_omarchy_overlay() {
   mkdir -p "$compat_root/default"
 
   shopt -s dotglob nullglob
-  for entry in /usr/share/omarchy/*; do
+  for entry in /usr/share/inferna/*; do
     [[ -e $entry ]] || continue
     base=$(basename "$entry")
     [[ $base == default ]] && continue
     ln -s "$entry" "$compat_root/$base"
   done
-  for entry in /usr/share/omarchy/default/*; do
+  for entry in /usr/share/inferna/default/*; do
     [[ -e $entry ]] || continue
     base=$(basename "$entry")
     [[ $base == hypr ]] && continue
@@ -1082,11 +1082,11 @@ create_live_omarchy_overlay() {
   cat >"$cleanup_hook" <<CLEANUP_HOOK
 #!/usr/bin/env bash
 set -euo pipefail
-legacy_root="\$HOME/.local/share/omarchy"
+legacy_root="\$HOME/.local/share/inferna"
 compat_root="$compat_root"
 shim_hypr_dir="$shim_hypr_dir"
 if [[ -L \$legacy_root && \$(readlink "\$legacy_root") == "\$compat_root" ]]; then
-  ln -sfn /usr/share/omarchy "\$legacy_root"
+  ln -sfn /usr/share/inferna "\$legacy_root"
 fi
 rm -rf "\$compat_root" "\$shim_hypr_dir"
 rm -f "\$0"
@@ -1096,13 +1096,13 @@ CLEANUP_HOOK
   printf '%s\n' "$compat_root"
 }
 
-# Existing terminals still have INFERNA_PATH=$HOME/.local/share/omarchy and
+# Existing terminals still have INFERNA_PATH=$HOME/.local/share/inferna and
 # often have $INFERNA_PATH/bin early in PATH. Make that stale path resolve to
 # the package-backed tree for the rest of the live session, while backing up
 # the old git checkout for inspection/rollback. If the live Hyprland session is
 # still using legacy ~/.config/hypr/*.conf files, keep those user files in place
 # and provide a temporary default/hypr/*.conf shim so reloads do not explode.
-if [[ -e /usr/share/omarchy ]]; then
+if [[ -e /usr/share/inferna ]]; then
   mkdir -p "$TARGET_HOME/.local/share"
   backup=""
   if [[ -L $legacy_root ]]; then
@@ -1113,14 +1113,14 @@ if [[ -e /usr/share/omarchy ]]; then
   fi
 
   if legacy_hypr_config_active; then
-    if compat_root=$(create_live_omarchy_overlay "$backup"); then
+    if compat_root=$(create_live_inferna_overlay "$backup"); then
       ln -sfn "$compat_root" "$legacy_root"
     else
-      echo "Warning: Could not prepare legacy Hyprland conf shim; linking ~/.local/share/omarchy directly to /usr/share/omarchy." >&2
-      ln -sfn /usr/share/omarchy "$legacy_root"
+      echo "Warning: Could not prepare legacy Hyprland conf shim; linking ~/.local/share/inferna directly to /usr/share/inferna." >&2
+      ln -sfn /usr/share/inferna "$legacy_root"
     fi
   else
-    ln -sfn /usr/share/omarchy "$legacy_root"
+    ln -sfn /usr/share/inferna "$legacy_root"
   fi
 fi
 USER_CLEANUP
@@ -1196,7 +1196,7 @@ run_as_user_wayland_session() {
     WAYLAND_DISPLAY="$wayland_display" \
     HYPRLAND_INSTANCE_SIGNATURE="$hyprland_signature" \
     XDG_SESSION_TYPE=wayland \
-    INFERNA_PATH=/usr/share/omarchy \
+    INFERNA_PATH=/usr/share/inferna \
     PATH="$package_path" \
     "$@"
 }
@@ -1249,7 +1249,7 @@ restore_hyprland_config_reload() {
   # cannot survive one, and Hyprland keeps the resulting error bar up until a
   # later clean reload that this script deliberately never performs. Callers
   # that reload during the swap are supposed to check
-  # OMARCHY_UPGRADE_TO_QUATTRO_LIVE, but one slipping through should not leave
+  # INFERNA_UPGRADE_TO_QUATTRO_LIVE, but one slipping through should not leave
   # an error bar on a finished upgrade. By now the shims have made the legacy
   # config resolve again, so clearing the overlay is safe.
   run_hyprctl_session seterror disable >/dev/null 2>&1 || true
@@ -1272,10 +1272,10 @@ run_post_upgrade_migrations() {
   local pending_status
 
   log "Running Inferna migrations"
-  if ! run_as_user_omarchy OMARCHY_UPGRADE_TO_QUATTRO_LIVE=1 inferna-migrate; then
+  if ! run_as_user_inferna INFERNA_UPGRADE_TO_QUATTRO_LIVE=1 inferna-migrate; then
     fail "Inferna migrations did not complete. Fix the error above and rerun the upgrade before rebooting."
   fi
-  if run_as_user_omarchy inferna-migrate --pending >/dev/null; then
+  if run_as_user_inferna inferna-migrate --pending >/dev/null; then
     fail "Inferna migrations are still pending. Rerun the upgrade before rebooting."
   else
     pending_status=$?
@@ -1287,10 +1287,10 @@ run_post_upgrade_migrations() {
 
 run_final_system_package_upgrade() {
   log "Checking for remaining system package updates"
-  as_root env OMARCHY_UPDATE_PACMAN=1 pacman -Syu --noconfirm --ask 4 \
+  as_root env INFERNA_UPDATE_PACMAN=1 pacman -Syu --noconfirm --ask 4 \
     --overwrite '/etc/docker/daemon.json' \
     --overwrite '/etc/gnupg/dirmngr.conf' \
-    --overwrite '/etc/mkinitcpio.conf.d/omarchy_hooks.conf' \
+    --overwrite '/etc/mkinitcpio.conf.d/inferna_hooks.conf' \
     --overwrite '/etc/mkinitcpio.conf.d/thunderbolt_module.conf' \
     --overwrite '/etc/modprobe.d/inferna-usb-autosuspend.conf' \
     --overwrite '/etc/sddm.conf.d/10-theme.conf' \
@@ -1310,22 +1310,22 @@ run_final_system_package_upgrade() {
     --overwrite '/etc/systemd/system.conf.d/20-inferna-nofile.conf' \
     --overwrite '/etc/systemd/user.conf.d/20-inferna-nofile.conf' \
     --overwrite '/usr/lib/systemd/system-sleep/unmount-fuse' \
-    --overwrite '/usr/share/plymouth/themes/omarchy/*' \
+    --overwrite '/usr/share/plymouth/themes/inferna/*' \
     --overwrite '/usr/share/sddm/hyprland.lua' \
-    --overwrite '/usr/share/sddm/themes/omarchy/*'
+    --overwrite '/usr/share/sddm/themes/inferna/*'
 }
 
 run_post_upgrade_update_steps() {
   local update_output update_status
 
   if PATH="$package_path" command -v inferna-update-aur-pkgs >/dev/null 2>&1; then
-    if ! run_as_user_omarchy inferna-update-aur-pkgs; then
+    if ! run_as_user_inferna inferna-update-aur-pkgs; then
       warn "Could not update AUR packages; running inferna-update after reboot may still update AUR packages."
     fi
   fi
 
   if PATH="$package_path" command -v inferna-update-mise >/dev/null 2>&1; then
-    if ! run_as_user_omarchy inferna-update-mise; then
+    if ! run_as_user_inferna inferna-update-mise; then
       warn "Could not update mise tools; running inferna-update after reboot may still update mise-managed tools."
     fi
   fi
@@ -1333,7 +1333,7 @@ run_post_upgrade_update_steps() {
   if PATH="$package_path" command -v inferna-update-available >/dev/null 2>&1; then
     log "Refreshing update indicator state"
     update_status=0
-    update_output=$(run_as_user_omarchy inferna-update-available 2>&1) || update_status=$?
+    update_output=$(run_as_user_inferna inferna-update-available 2>&1) || update_status=$?
 
     if (( update_status == 0 )); then
       warn "Updates are still available after the upgrade; run inferna-update after reboot:"
@@ -1353,7 +1353,7 @@ apply_firewall_defaults() {
   # copy this replaces had drifted: it never installed the ufw-docker rules, so
   # upgraded machines came up without the Docker firewall protections a fresh
   # install gets.
-  local firewall_script=/usr/share/omarchy/install/config/firewall.sh
+  local firewall_script=/usr/share/inferna/install/config/firewall.sh
 
   if ! command -v ufw >/dev/null 2>&1; then
     warn "ufw is not installed; skipping firewall defaults."
@@ -1366,7 +1366,7 @@ apply_firewall_defaults() {
   fi
 
   log "Applying Inferna firewall defaults"
-  as_root env INFERNA_PATH=/usr/share/omarchy PATH="$root_path" \
+  as_root env INFERNA_PATH=/usr/share/inferna PATH="$root_path" \
     bash -euo pipefail "$firewall_script" ||
     warn "Could not apply firewall defaults; run 'sudo bash $firewall_script' after reboot."
 }
@@ -1393,7 +1393,7 @@ should_enable_sddm_autologin() {
 
 apply_system_transition() {
   log "Applying Inferna quattro system transition"
-  [[ -d /usr/share/omarchy ]] || fail "/usr/share/omarchy was not installed."
+  [[ -d /usr/share/inferna ]] || fail "/usr/share/inferna was not installed."
 
   as_root install -d -m 0755 /usr/share/icons/Yaru/scalable/actions
   as_root ln -snf /usr/share/icons/Adwaita/symbolic/actions/go-previous-symbolic.svg \
@@ -1402,11 +1402,11 @@ apply_system_transition() {
     /usr/share/icons/Yaru/scalable/actions/go-next-symbolic.svg
   as_root gtk-update-icon-cache /usr/share/icons/Yaru >/dev/null 2>&1 || true
 
-  local browser_policy_helper=/usr/share/omarchy/install/helpers/browser-policy.sh
+  local browser_policy_helper=/usr/share/inferna/install/helpers/browser-policy.sh
   if ! as_root test -f "$browser_policy_helper"; then
     warn "$browser_policy_helper is unavailable; Chromium policy directories were not hardened."
   else
-    as_root env INFERNA_PATH=/usr/share/omarchy \
+    as_root env INFERNA_PATH=/usr/share/inferna \
       bash -euo pipefail -c '
         source "$INFERNA_PATH/install/helpers/browser-policy.sh"
         browser_policy_setup_dir /etc/chromium/policies/managed
@@ -1493,7 +1493,7 @@ EOF
     cat <<EOF | as_root tee /etc/sddm.conf.d/autologin.conf >/dev/null
 [Autologin]
 User=$autologin_user
-Session=omarchy.desktop
+Session=inferna.desktop
 EOF
   else
     as_root rm -f /etc/sddm.conf.d/autologin.conf
@@ -1504,7 +1504,7 @@ EOF
   # path; SDDM's state file records who logged in last.
   cat <<EOF | as_root tee /var/lib/sddm/state.conf >/dev/null
 [Last]
-Session=omarchy.desktop
+Session=inferna.desktop
 User=$target_user
 EOF
   as_root chown sddm:sddm /var/lib/sddm /var/lib/sddm/state.conf 2>/dev/null || true
@@ -1548,17 +1548,17 @@ EOF
 
 apply_user_transition() {
   log "Applying Inferna quattro user transition"
-  [[ -d /usr/share/omarchy ]] || fail "/usr/share/omarchy was not installed."
+  [[ -d /usr/share/inferna ]] || fail "/usr/share/inferna was not installed."
 
   run_as_user env \
     TARGET_HOME="$target_home" \
     BACKUP_SUFFIX="$backup_suffix" \
-    OMARCHY_UPGRADE_YES="$yes" \
-    OMARCHY_USER_NAME="${OMARCHY_USER_NAME:-}" \
-    OMARCHY_USER_EMAIL="${OMARCHY_USER_EMAIL:-}" \
+    INFERNA_UPGRADE_YES="$yes" \
+    INFERNA_USER_NAME="${INFERNA_USER_NAME:-}" \
+    INFERNA_USER_EMAIL="${INFERNA_USER_EMAIL:-}" \
     bash <<'USER_SETUP'
 set -euo pipefail
-root=/usr/share/omarchy
+root=/usr/share/inferna
 state_dir="$HOME/.local/state/inferna"
 mkdir -p "$state_dir" "$HOME/.config"
 
@@ -1619,13 +1619,13 @@ refresh	kitty/kitty.conf	ea3bc5e353f7312d774362310f7c511584efd6076c163b4cad1a9cc
 refresh	kitty/kitty.conf	8984216fe0c0d006b969a7494dd4aad79ac78e9d15bd7a82ccbf5f10eac48fa6
 refresh	lazygit/config.yml	e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 refresh	obsidian/user-flags.conf	6c00f4daeff2b018bda247151a8edee44115273f554cfda00909bc5e56a3ae85
-refresh	omarchy/hooks/battery-low.d/play-warning-sound.sample	9623f5534cd52f76a51cfbb4e8a0699a550bf7f0f5f2ff54a1c78534d907fdf1
-refresh	omarchy/hooks/font-set.d/show-font-notification.sample	d28090fd796b02fa799dcf7160e46ce9fc8d7a17b476ef87639d0b83a347dc37
-refresh	omarchy/hooks/post-boot.d/weather.sample	fe37567a09046f1e4fcff9a9c74e4a036270cdf6da73dcc5cd3aa617f9a7c2ba
-refresh	omarchy/hooks/post-update.d/show-update-notification.sample	7995adc93a0ac6cd1afcd7ed9ac6d0ff058751ce4df4594aa78855603a613815
-refresh	omarchy/hooks/theme-set.d/show-theme-notification.sample	b9d6754d95057bdb2f37595fd2f40055872118cb2f442bdc7b0b900317bac332
-refresh	omarchy/themed/alacritty.toml.tpl.sample	ea5889bf79e273aa9cf1e7a1b2916dae7751fc0dced2cd53af36a2ebeecb4f1e
-refresh	omarchy/themed/alacritty.toml.tpl.sample	a05d015227a406470b571d9d8f372eb8042df94b32cf746e71fd2f513c9880ac
+refresh	inferna/hooks/battery-low.d/play-warning-sound.sample	9623f5534cd52f76a51cfbb4e8a0699a550bf7f0f5f2ff54a1c78534d907fdf1
+refresh	inferna/hooks/font-set.d/show-font-notification.sample	d28090fd796b02fa799dcf7160e46ce9fc8d7a17b476ef87639d0b83a347dc37
+refresh	inferna/hooks/post-boot.d/weather.sample	fe37567a09046f1e4fcff9a9c74e4a036270cdf6da73dcc5cd3aa617f9a7c2ba
+refresh	inferna/hooks/post-update.d/show-update-notification.sample	7995adc93a0ac6cd1afcd7ed9ac6d0ff058751ce4df4594aa78855603a613815
+refresh	inferna/hooks/theme-set.d/show-theme-notification.sample	b9d6754d95057bdb2f37595fd2f40055872118cb2f442bdc7b0b900317bac332
+refresh	inferna/themed/alacritty.toml.tpl.sample	ea5889bf79e273aa9cf1e7a1b2916dae7751fc0dced2cd53af36a2ebeecb4f1e
+refresh	inferna/themed/alacritty.toml.tpl.sample	a05d015227a406470b571d9d8f372eb8042df94b32cf746e71fd2f513c9880ac
 refresh	opencode/opencode.json	3806450805c8661a729c46aea325826e9ee7d158d650c9d750f5d0a763ec2c03
 refresh	opencode/opencode.json	fb067af039252d48ef5b5c573a5e12c17357af4324b218aca5efa36f882846dd
 refresh	starship.toml	b17c9b5f096fc125e97050e359171c6011d6b3c7d7e9ac28f630e75b4d4bb9db
@@ -1645,13 +1645,13 @@ refresh	xournalpp/settings.xml	1c1a9efbf1b6dc7813bf3440fd5bf8409fc283e8d0192ca29
 # Legacy ~/.config path -> package-owned destination (where the file now lives):
 # environment.d/fcitx.conf -> /usr/lib/environment.d/10-inferna-fcitx.conf
 # fastfetch/config.jsonc -> /etc/fastfetch/config.jsonc
-# fontconfig/fonts.conf -> /usr/share/fontconfig/conf.avail/50-omarchy.conf
+# fontconfig/fonts.conf -> /usr/share/fontconfig/conf.avail/50-inferna.conf
 # mimeapps.list -> /usr/share/applications/mimeapps.list
 # systemd/user/bt-agent.service -> /usr/lib/systemd/user/bt-agent.service
 # systemd/user/inferna-recover-internal-monitor.service -> /usr/lib/systemd/user/inferna-recover-internal-monitor.service
 # systemd/user/inferna-sleep-lock.service -> /usr/lib/systemd/user/inferna-sleep-lock.service
-# uwsm/default -> /usr/share/omarchy/default/uwsm/default
-# uwsm/env -> /usr/share/uwsm/env.d/10-omarchy
+# uwsm/default -> /usr/share/inferna/default/uwsm/default
+# uwsm/env -> /usr/share/uwsm/env.d/10-inferna
 # xdg-terminals.list -> /usr/share/xdg-terminal-exec/hyprland-xdg-terminals.list
 retire	environment.d/fcitx.conf	faacbd703a8f797013968b235fec6289a9c921d3ec7b7f8b4e1cd24392f68b9c
 retire	environment.d/fcitx.conf	8b077b6ea2594dc1d4b57592a3bc62703df4959e86b93ea0fc488b6686309095
@@ -1744,9 +1744,9 @@ always_copy_config_files=(
   hypr/input.lua
   hypr/looknfeel.lua
   hypr/monitors.lua
-  omarchy/extensions/inferna-menu.jsonc
-  omarchy/hooks/pre-refresh-pacman.d/add-custom-repo.sample
-  omarchy/shell.json
+  inferna/extensions/inferna-menu.jsonc
+  inferna/hooks/pre-refresh-pacman.d/add-custom-repo.sample
+  inferna/shell.json
 )
 
 migrate_uwsm_env_customizations() {
@@ -1758,9 +1758,9 @@ migrate_uwsm_env_customizations() {
   awk '
     function omitted(reason) { print ": # inferna-upgrade omitted legacy Inferna " reason; next }
 
-    /^[[:space:]]*export[[:space:]]+INFERNA_PATH=\$HOME\/\.local\/share\/omarchy[[:space:]]*$/ { omitted("INFERNA_PATH") }
-    /^[[:space:]]*export[[:space:]]+INFERNA_PATH="\$\{INFERNA_PATH:-\/usr\/share\/omarchy\}"[[:space:]]*$/ { omitted("INFERNA_PATH") }
-    /^[[:space:]]*\[ -f \/etc\/omarchy\.conf \] && \. \/etc\/omarchy\.conf[[:space:]]*$/ { omitted("/etc/omarchy.conf source") }
+    /^[[:space:]]*export[[:space:]]+INFERNA_PATH=\$HOME\/\.local\/share\/inferna[[:space:]]*$/ { omitted("INFERNA_PATH") }
+    /^[[:space:]]*export[[:space:]]+INFERNA_PATH="\$\{INFERNA_PATH:-\/usr\/share\/inferna\}"[[:space:]]*$/ { omitted("INFERNA_PATH") }
+    /^[[:space:]]*\[ -f \/etc\/inferna\.conf \] && \. \/etc\/inferna\.conf[[:space:]]*$/ { omitted("/etc/inferna.conf source") }
     /^[[:space:]]*export[[:space:]]+PATH=\$INFERNA_PATH\/bin:\$PATH:\$HOME\/\.local\/bin[[:space:]]*$/ { omitted("PATH setup") }
     /^[[:space:]]*export[[:space:]]+PATH="\$INFERNA_PATH\/bin:\$PATH:\$HOME\/\.local\/bin"[[:space:]]*$/ { omitted("PATH setup") }
     /^[[:space:]]*source[[:space:]]+~\/\.config\/uwsm\/default[[:space:]]*$/ { omitted("uwsm/default source") }
@@ -1880,7 +1880,7 @@ repair_chromium_copy_url_extension_flags() {
 
   for file in "${flag_files[@]}"; do
     [[ -f $file ]] || continue
-    grep -qF '.local/share/omarchy/default/chromium/extensions/copy-url' "$file" || continue
+    grep -qF '.local/share/inferna/default/chromium/extensions/copy-url' "$file" || continue
 
     backup_config_file "$file"
     python3 - "$file" <<'CHROMIUM_FLAGS_PATCH_PY'
@@ -1888,11 +1888,11 @@ import sys
 from pathlib import Path
 
 path = Path(sys.argv[1])
-new_path = "/usr/share/omarchy/default/chromium/extensions/copy-url"
+new_path = "/usr/share/inferna/default/chromium/extensions/copy-url"
 legacy_paths = [
-    "~/.local/share/omarchy/default/chromium/extensions/copy-url",
-    "$HOME/.local/share/omarchy/default/chromium/extensions/copy-url",
-    str(Path.home() / ".local/share/omarchy/default/chromium/extensions/copy-url"),
+    "~/.local/share/inferna/default/chromium/extensions/copy-url",
+    "$HOME/.local/share/inferna/default/chromium/extensions/copy-url",
+    str(Path.home() / ".local/share/inferna/default/chromium/extensions/copy-url"),
 ]
 text = path.read_text()
 for legacy_path in legacy_paths:
@@ -1904,7 +1904,7 @@ CHROMIUM_FLAGS_PATCH_PY
 
 repair_sleep_lock_unit_override() {
   local unit="$HOME/.config/systemd/user/inferna-sleep-lock.service"
-  local legacy_exec='ExecStart=%h/.local/share/omarchy/bin/inferna-system-sleep-monitor'
+  local legacy_exec='ExecStart=%h/.local/share/inferna/bin/inferna-system-sleep-monitor'
   local current_exec='ExecStart=/usr/bin/inferna-system-sleep-monitor'
   local tmp
   [[ -f $unit ]] || return 0
@@ -1947,28 +1947,28 @@ install_bash_startup() {
 
   if [[ ! -e $bashrc && ! -L $bashrc ]] || is_known_bashrc_default "$bashrc"; then
     cp "$root/default/bashrc" "$bashrc"
-  elif grep -qxF 'source ~/.local/share/omarchy/default/bash/rc' "$bashrc" || grep -qxF 'source "$INFERNA_PATH/default/bash/rc"' "$bashrc"; then
+  elif grep -qxF 'source ~/.local/share/inferna/default/bash/rc' "$bashrc" || grep -qxF 'source "$INFERNA_PATH/default/bash/rc"' "$bashrc"; then
     python3 - "$bashrc" <<'BASHRC_PATCH_PY'
 import sys
 from pathlib import Path
 
 path = Path(sys.argv[1])
 text = path.read_text()
-new_block = '''# /etc/omarchy.conf is written by inferna-dev-link. When absent, force the
+new_block = '''# /etc/inferna.conf is written by inferna-dev-link. When absent, force the
 # package default instead of preserving a stale inherited dev-link value before
 # we decide which rc file to source.
-if [[ -f /etc/omarchy.conf ]]; then
-  source /etc/omarchy.conf
-  export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
+if [[ -f /etc/inferna.conf ]]; then
+  source /etc/inferna.conf
+  export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
 else
-  export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH=/usr/share/omarchy
+  export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH=/usr/share/inferna
 fi
 source "$INFERNA_PATH/default/bash/rc"
 '''
-text = text.replace('source ~/.local/share/omarchy/default/bash/rc\n', new_block)
-text = text.replace(': "${INFERNA_PATH:=/usr/share/omarchy}"\nsource "$INFERNA_PATH/default/bash/rc"\n', new_block)
+text = text.replace('source ~/.local/share/inferna/default/bash/rc\n', new_block)
+text = text.replace(': "${INFERNA_PATH:=/usr/share/inferna}"\nsource "$INFERNA_PATH/default/bash/rc"\n', new_block)
 path.write_text(text)
 BASHRC_PATCH_PY
   fi
@@ -2003,11 +2003,11 @@ repair_chromium_copy_url_extension_flags
 
 # Carry over user-added backgrounds from the legacy git checkout backup, then
 # remove old symlinks that pointed ~/.config/inferna/themes/* back into the
-# pre-quattro checkout. Inferna quattro reads stock themes from /usr/share/omarchy/themes.
-legacy_omarchy_backup="$HOME/.local/share/omarchy.inferna-upgrade-to-quattro.$BACKUP_SUFFIX.bak"
-if [[ -d $legacy_omarchy_backup/themes && -d $legacy_omarchy_backup/.git ]]; then
+# pre-quattro checkout. Inferna quattro reads stock themes from /usr/share/inferna/themes.
+legacy_inferna_backup="$HOME/.local/share/inferna.inferna-upgrade-to-quattro.$BACKUP_SUFFIX.bak"
+if [[ -d $legacy_inferna_backup/themes && -d $legacy_inferna_backup/.git ]]; then
   (
-    cd "$legacy_omarchy_backup"
+    cd "$legacy_inferna_backup"
     git ls-files -z --others -- 'themes/*/backgrounds/*' 2>/dev/null | while IFS= read -r -d '' bg_file; do
       theme_name=${bg_file#themes/}
       theme_name=${theme_name%%/*}
@@ -2055,11 +2055,11 @@ repair_sleep_lock_unit_override
 install_bash_startup
 
 mkdir -p "$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.pi/agent/skills"
-if [[ -d $root/default/agents/skills/omarchy ]]; then
-  ln -sfn "$root/default/agents/skills/omarchy" "$HOME/.agents/skills/omarchy"
-  ln -sfn "$root/default/agents/skills/omarchy" "$HOME/.claude/skills/omarchy"
-  ln -sfn "$root/default/agents/skills/omarchy" "$HOME/.codex/skills/omarchy"
-  ln -sfn "$root/default/agents/skills/omarchy" "$HOME/.pi/agent/skills/omarchy"
+if [[ -d $root/default/agents/skills/inferna ]]; then
+  ln -sfn "$root/default/agents/skills/inferna" "$HOME/.agents/skills/inferna"
+  ln -sfn "$root/default/agents/skills/inferna" "$HOME/.claude/skills/inferna"
+  ln -sfn "$root/default/agents/skills/inferna" "$HOME/.codex/skills/inferna"
+  ln -sfn "$root/default/agents/skills/inferna" "$HOME/.pi/agent/skills/inferna"
 fi
 
 mkdir -p "$HOME/.local/state/inferna/toggles/hypr"
@@ -2100,22 +2100,22 @@ for dir in Downloads Projects Pictures Videos; do
   grep -qxF "$bookmark" "$HOME/.config/gtk-3.0/bookmarks" || echo "$bookmark" >>"$HOME/.config/gtk-3.0/bookmarks"
 done
 
-if [[ -n ${OMARCHY_USER_NAME//[[:space:]]/} ]]; then
-  git config --global user.name "$OMARCHY_USER_NAME" || true
+if [[ -n ${INFERNA_USER_NAME//[[:space:]]/} ]]; then
+  git config --global user.name "$INFERNA_USER_NAME" || true
 fi
-if [[ -n ${OMARCHY_USER_EMAIL//[[:space:]]/} ]]; then
-  git config --global user.email "$OMARCHY_USER_EMAIL" || true
+if [[ -n ${INFERNA_USER_EMAIL//[[:space:]]/} ]]; then
+  git config --global user.email "$INFERNA_USER_EMAIL" || true
 fi
 if [[ ! -f $HOME/.XCompose ]]; then
   cat >"$HOME/.XCompose" <<EOF
 # Run inferna-restart-xcompose to apply changes
 
 # Include fast emoji access
-include "/usr/share/omarchy/default/xcompose"
+include "/usr/share/inferna/default/xcompose"
 
 # Identification
-<Multi_key> <space> <n> : "$OMARCHY_USER_NAME"
-<Multi_key> <space> <e> : "$OMARCHY_USER_EMAIL"
+<Multi_key> <space> <n> : "$INFERNA_USER_NAME"
+<Multi_key> <space> <e> : "$INFERNA_USER_EMAIL"
 EOF
 fi
 
@@ -2147,7 +2147,7 @@ text = path.read_text()
 replacements = {
   f"{home}/.config/inferna/current": f"{home}/.local/state/inferna/current",
   "~/.config/inferna/current": "~/.local/state/inferna/current",
-  "../omarchy/current": "../../.local/state/inferna/current",
+  "../inferna/current": "../../.local/state/inferna/current",
 }
 for old, new in replacements.items():
   text = text.replace(old, new)
@@ -2263,7 +2263,7 @@ for desktop in \
   Cliamp.desktop \
   blueberry.desktop \
   nvim.desktop \
-  omarchy.desktop \
+  inferna.desktop \
   org.pulseaudio.pavucontrol.desktop \
   vlc.desktop \
   wiremix.desktop; do
@@ -2410,14 +2410,14 @@ refresh_current_theme_after_upgrade() {
   runtime_dir="$target_runtime_dir"
   [[ -d $runtime_dir ]] || runtime_dir=/tmp
 
-  if ! run_as_user_omarchy \
+  if ! run_as_user_inferna \
     XDG_RUNTIME_DIR="$runtime_dir" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=$runtime_dir/bus" \
     XDG_CURRENT_DESKTOP=Hyprland \
     XDG_SESSION_DESKTOP=Hyprland \
     XDG_SESSION_TYPE=wayland \
     DESKTOP_SESSION=hyprland \
-    OMARCHY_THEME_HEADLESS=1 \
+    INFERNA_THEME_HEADLESS=1 \
     inferna-theme-set "$theme_name"; then
     warn "Could not refresh current theme '$theme_name'. Run 'inferna theme set \"$theme_name\"' after reboot if theme-dependent app config looks stale."
   fi
@@ -2427,11 +2427,11 @@ refresh_current_theme_after_upgrade() {
   # Headless theme refresh intentionally skips inferna-theme-set's live post
   # hooks because one of them runs `hyprctl reload`. Still poke terminal
   # emulators so the active upgrade terminal picks up generated theme files.
-  run_as_user_omarchy inferna-restart-terminal >/dev/null 2>&1 || true
+  run_as_user_inferna inferna-restart-terminal >/dev/null 2>&1 || true
 
   # apply_system_transition purged user-owned color.json. Headless theme-set
   # skipped inferna-theme-set-browser, so rewrite the colour here.
-  run_as_user_omarchy inferna-theme-set-browser >/dev/null 2>&1 ||
+  run_as_user_inferna inferna-theme-set-browser >/dev/null 2>&1 ||
     warn "Could not apply browser theme colour. Run 'inferna theme set \"$theme_name\"' after reboot if Chromium's theme looks stale."
 }
 
@@ -2450,7 +2450,7 @@ remove_legacy_installer_package
 remove_legacy_limine_configs
 remove_conflicting_legacy_packages
 preserve_kernel_cmdline_root
-install_omarchy_quattro_packages
+install_inferna_quattro_packages
 install_hardware_transition_packages
 normalize_limine_config
 verify_kernel_cmdline_root
@@ -2462,15 +2462,15 @@ cleanup_legacy_user_paths
 apply_system_transition
 apply_user_transition
 apply_user_hardware_transition
-run_as_user_omarchy inferna-refresh-applications ||
-  warn "Could not refresh application launchers; run 'omarchy refresh applications' after reboot."
-run_as_user_omarchy inferna-bar defaults ||
+run_as_user_inferna inferna-refresh-applications ||
+  warn "Could not refresh application launchers; run 'inferna refresh applications' after reboot."
+run_as_user_inferna inferna-bar defaults ||
   warn "Could not restore the default bar widgets; run 'inferna bar defaults' after reboot."
 cleanup_retired_services
 ensure_sleep_lock_service
 remove_retired_default_packages
 run_final_system_package_upgrade
-# This also retires the stock ~/.local/share/fonts/omarchy.ttf missed by the
+# This also retires the stock ~/.local/share/fonts/inferna.ttf missed by the
 # former ~/.config retirement entry, through migration 1788848726.
 run_post_upgrade_migrations
 run_post_upgrade_update_steps

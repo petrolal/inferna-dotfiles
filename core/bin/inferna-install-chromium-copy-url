@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-HOST_NAME="com.omarchy.copy_url"
+HOST_NAME="com.inferna.copy_url"
 HOST_PATH="$INFERNA_PATH/bin/inferna-chromium-copy-url-host"
 TEMPLATE="$INFERNA_PATH/default/chromium/native-messaging-hosts/$HOST_NAME.json"
 

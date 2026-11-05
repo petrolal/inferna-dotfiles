@@ -241,7 +241,7 @@ QtObject {
     onLoadFailed: root.loadShell("")
   }
   // Machine-level override, layered on top of whatever theme is active. This
-  // is where `omarchy display text size` writes `[font] base-size`. Watched so the
+  // is where `inferna display text size` writes `[font] base-size`. Watched so the
   // CLI takes effect live without restarting the shell; absent by default.
   property FileView userShellFile: FileView {
     id: userShellFile

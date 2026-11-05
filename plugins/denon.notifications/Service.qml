@@ -1,4 +1,4 @@
-// Notification service for the omarchy shell.
+// Notification service for the inferna shell.
 
 import QtQuick
 import QtQuick.Layouts
@@ -18,7 +18,7 @@ Item {
   // Injected by inferna-shell (the first-party service loader).
   property var shell: null
 
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   readonly property string home: Quickshell.env("HOME")
   // History + DND live under XDG_STATE_HOME: they're persistent user state
   // (the notifications received, the last-set DND preference), not
@@ -41,7 +41,7 @@ Item {
   // Corner radius is shared with the menu and shell panels.
   // It mirrors Hyprland's current decoration:rounding value.
   readonly property int cornerRadius: Style.cornerRadius
-  // Toasts are fixed to the top-right corner. They only clear the omarchy bar
+  // Toasts are fixed to the top-right corner. They only clear the inferna bar
   // when the bar occupies the top or right edge, so left/bottom bars do not
   // pull notification popups away from the expected top-right location.
   // Falls back to the bar's default size (26 horizontal / 28 vertical) when
@@ -150,7 +150,7 @@ Item {
   //     "Screenshot saved"). The user JUST did something — their feedback
   //     should show.
   //   - urgency=critical AND app_name=notify-send: bare-CLI emergency alerts.
-  //     Trusted because it's almost always omarchy or system shell scripts —
+  //     Trusted because it's almost always inferna or system shell scripts —
   //     chat apps set app_name to their brand (Discord/Slack/Vesktop), which
   //     falls outside this rule.
   function shouldBypassDnd(notification) {
@@ -166,7 +166,7 @@ Item {
   //   - app_name is "notify-send" (the CLI default — means the sender
   //     didn't bother declaring an identity, so it's almost certainly
   //     ephemeral test/feedback noise)
-  //   - app_name is "inferna-action" (Omarchy's own user-action toasts —
+  //   - app_name is "inferna-action" (Inferna's own user-action toasts —
   //     the user just triggered them)
   // Their toasts still land in history like any other once they've been on
   // screen; the distinction only decides whether a DND-silenced one is worth
@@ -378,7 +378,7 @@ Item {
     while (popupModel.count > 0) dismissPopup(0)
   }
 
-  // Run the popup's click action, then dismiss. Omarchy's own toasts carry the
+  // Run the popup's click action, then dismiss. Inferna's own toasts carry the
   // action as an argv vector in the `execArgv` role (see execArgvFromHints),
   // which the persistence files preserve, so restored toasts stay clickable.
   // Third-party clients register a libnotify action under the canonical
@@ -427,7 +427,7 @@ Item {
   function focusApp(entry) {
     if (!entry || !entry.app) return
     focusAppProc.command = [
-      service.omarchyPath + "/bin/inferna-hyprland-focus-app",
+      service.infernaPath + "/bin/inferna-hyprland-focus-app",
       String(entry.app)
     ]
     focusAppProc.running = true

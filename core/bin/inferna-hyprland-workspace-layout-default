@@ -7,7 +7,7 @@
 # Layout changes replace one notification instead of stacking a new one for
 # each press, so cycling through the layouts leaves a single, current one.
 notify_layout() {
-  local state="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layout-notification"
+  local state="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/workspace-layout-notification"
   local last id
   [[ -r $state ]] && read -r last <"$state"
   if id=$(inferna-notification-send -p -r "${last:-0}" -g 󱂬 "$1") && [[ $id =~ ^[0-9]+$ ]]; then
@@ -15,7 +15,7 @@ notify_layout() {
   fi
 }
 
-MODES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layouts"
+MODES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/workspace-layouts"
 DEFAULT_FILE="$MODES_DIR/default.lua"
 
 # Without a saved default, Hyprland's own layout is the default, which the
@@ -92,6 +92,6 @@ done
 printf 'o.workspace_mode({ default = "%s" })\n' "$1" >"$DEFAULT_FILE"
 
 inferna-restart-hyprctl
-inferna-shell -q omarchy.workspaces refresh
-inferna-shell -q omarchy.dock refresh
+inferna-shell -q inferna.workspaces refresh
+inferna-shell -q inferna.dock refresh
 notify_layout "$MESSAGE"

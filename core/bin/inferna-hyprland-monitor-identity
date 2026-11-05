@@ -16,7 +16,7 @@ if [[ -z $output ]]; then
   exit 1
 fi
 
-state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inferna"
 
 identity=$(awk -F'\t' -v connector="$output" '$2 == connector { print $3; exit }' "$state_dir/monitors/workspaces" 2>/dev/null)
 if [[ -z $identity ]]; then

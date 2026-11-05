@@ -11,7 +11,7 @@ Claude Code transcripts, Codex rollouts, DeepSeek Harness logs and MiniMax
 Code sessions, with the one rule each split follows.
 
 It ships with the agents panel the records feed, and a collector loads it
-from `$OMARCHY_PATH/shell/plugins/agents`. Nothing here prints a record, reads
+from `$INFERNA_PATH/shell/plugins/agents`. Nothing here prints a record, reads
 a credential, or talks to a service on its own.
 """
 
@@ -234,7 +234,7 @@ def age_below(stamp_seconds: float, limit_seconds: float) -> bool:
 
 
 def cache_root() -> Path:
-  root = Path(os.environ.get("XDG_CACHE_HOME") or (Path.home() / ".cache")) / "omarchy" / "agent-usage"
+  root = Path(os.environ.get("XDG_CACHE_HOME") or (Path.home() / ".cache")) / "inferna" / "agent-usage"
   root.mkdir(parents=True, exist_ok=True)
   return root
 
@@ -2656,7 +2656,7 @@ CODEX_REFRESH_SECONDS = 300
 def _codex_refresh_started(now: float) -> float:
   """When the refresh this collector runs in began, or `now` outside one."""
   try:
-    started = float(os.environ.get("OMARCHY_AGENT_USAGE_REFRESH_AT", ""))
+    started = float(os.environ.get("INFERNA_AGENT_USAGE_REFRESH_AT", ""))
   except ValueError:
     return now
   return started if now - CODEX_REFRESH_SECONDS <= started <= now else now
@@ -2685,7 +2685,7 @@ def codex_rollouts(cache_file: Path | None, reuse: bool = True, native: bool = F
   cached record cannot have grown a turn since, and one that grew is read on
   from where its record stopped; `reuse=False` reads them all again, but
   takes what another forced read wrote since this one or its refresh
-  (OMARCHY_AGENT_USAGE_REFRESH_AT) began, so the collectors one refresh
+  (INFERNA_AGENT_USAGE_REFRESH_AT) began, so the collectors one refresh
   forces read every rollout once between them, whenever each starts. A
   record keeps every turn whatever its provider, so the caller decides which
   providers and models are its own, and every caller shares the cache
@@ -2832,7 +2832,7 @@ def codex_config_urls() -> dict[str, str]:
 
 
 def codex_providers_path() -> Path:
-  return Path(os.environ.get("XDG_STATE_HOME") or (Path.home() / ".local" / "state")) / "omarchy" / "agents" / "local-codex-providers.json"
+  return Path(os.environ.get("XDG_STATE_HOME") or (Path.home() / ".local" / "state")) / "inferna" / "agents" / "local-codex-providers.json"
 
 
 def codex_provider_urls() -> dict[str, str]:
@@ -3765,19 +3765,19 @@ def cursor_token(auth_path: Path | None = None, state_db: Path | None = None) ->
 
 
 def registered_accounts(agent_id: str) -> list[dict[str, Any]]:
-  """The accounts `omarchy agent account` registered for the agent, read
+  """The accounts `inferna agent account` registered for the agent, read
   straight from its registry, each marked `active` and carrying the
   registry's `switch` settings. Only a registry holding a second account
   matters: with one, the record is exactly what it always was."""
   state = Path(os.environ.get("XDG_STATE_HOME") or (Path.home() / ".local" / "state"))
-  registry = read_json(state / "omarchy" / "agents" / "accounts" / f"{agent_id}.json")
+  registry = read_json(state / "inferna" / "agents" / "accounts" / f"{agent_id}.json")
   accounts = [a for a in registry.get("accounts") or [] if isinstance(a, dict) and a.get("id")]
   if len(accounts) < 2:
     return []
   active_id = registry.get("active") or accounts[0]["id"]
   if not any(a["id"] == active_id for a in accounts):
     active_id = accounts[0]["id"]
-  # The threshold reads as `omarchy agent account` reads it: a percentage
+  # The threshold reads as `inferna agent account` reads it: a percentage
   # held to 50-100, 95 when it isn't one.
   try:
     threshold = max(50, min(100, int(registry.get("threshold"))))

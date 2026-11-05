@@ -33,7 +33,7 @@ profile_available() {
   [[ " ${profiles[*]} " == *" $1 "* ]]
 }
 
-state_dir="${OMARCHY_POWERPROFILES_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/powerprofiles}"
+state_dir="${INFERNA_POWERPROFILES_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/inferna/powerprofiles}"
 state_file="$state_dir/$action"
 
 if [[ -n $requested_profile ]]; then

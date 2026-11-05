@@ -11,14 +11,14 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.audio"
-  ipcTarget: "omarchy.audio"
+  moduleName: "inferna.audio"
+  ipcTarget: "inferna.audio"
 
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property var source: Pipewire.defaultAudioSource
   readonly property var nodes: Pipewire.nodes ? Pipewire.nodes.values : []
   readonly property var mprisPlayers: Mpris.players ? Mpris.players.values : []
-  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("omarchy.media")
+  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("inferna.media")
   readonly property var activeMediaPlayer: mediaService ? mediaService.activePlayer : null
 
   // Nodes of a platform's audio processing, which are neither devices nor apps,
@@ -64,7 +64,7 @@ Panel {
       if (!n || !n.isStream || !isPlaybackStream(n)) continue
       // A tuning's output is a playback stream too, but it is the processing
       // itself rather than an application, so it does not belong in the list.
-      if (String(n.name || "").indexOf("omarchy_speaker_tuning") === 0) continue
+      if (String(n.name || "").indexOf("inferna_speaker_tuning") === 0) continue
       if (platformHides(n)) continue
       list.push(n)
     }
@@ -506,7 +506,7 @@ Panel {
 
   function showVolumeOsd(volume) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    bar.shell.summon("inferna.osd", JSON.stringify({
       icon: outputIcon(volume),
       value: Math.round(volume * 100)
     }))

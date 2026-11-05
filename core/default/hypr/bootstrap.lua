@@ -1,11 +1,11 @@
--- Hyprland bootstrap for Omarchy's Lua module path.
+-- Hyprland bootstrap for Inferna's Lua module path.
 
 local home = os.getenv("HOME")
 local reload_prefixes = {
   "default.hypr",
   "hypr",
   "inferna.current.theme",
-  "omarchy.current.theme",
+  "inferna.current.theme",
 }
 
 local function should_reload_module(module)
@@ -31,7 +31,7 @@ end
 
 -- Load generated state from ~/.local/state, user modules from ~/.config, and
 -- Inferna defaults from $INFERNA_PATH.
-local core_path = os.getenv("INFERNA_PATH") or os.getenv("OMARCHY_PATH") or "/usr/share/inferna"
+local core_path = os.getenv("INFERNA_PATH") or os.getenv("INFERNA_PATH") or "/usr/share/inferna"
 package.path = home
   .. "/.local/state/?.lua;"
   .. home

@@ -17,7 +17,7 @@ if [[ -d /run/systemd/system && ! -L /run/systemd/system ]]; then
 fi
 
 # LC_ALL passes through so callers that parse pacman's stderr can pin the locale.
-env_args=(OMARCHY_UPDATE_PACMAN=1)
+env_args=(INFERNA_UPDATE_PACMAN=1)
 if [[ -n ${LC_ALL:-} ]]; then
   env_args+=(LC_ALL="$LC_ALL")
 fi

@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-inferna-refresh-config omarchy/shell.json
+inferna-refresh-config inferna/shell.json
 inferna-bar defaults
 
 inferna-restart-shell

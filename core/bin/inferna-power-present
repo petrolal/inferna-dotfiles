@@ -2,7 +2,7 @@
 
 # inferna:summary=Returns true if external power is connected.
 
-power_supply_path="${OMARCHY_POWER_SUPPLY_PATH:-/sys/class/power_supply}"
+power_supply_path="${INFERNA_POWER_SUPPLY_PATH:-/sys/class/power_supply}"
 
 for supply in "$power_supply_path"/*; do
   [[ -r $supply/online && -r $supply/type ]] || continue

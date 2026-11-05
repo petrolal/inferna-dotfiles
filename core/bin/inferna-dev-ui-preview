@@ -17,4 +17,4 @@ else
   payload='{}'
 fi
 
-inferna-shell shell summon omarchy.dev-gallery "$payload"
+inferna-shell shell summon inferna.dev-gallery "$payload"

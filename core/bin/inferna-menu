@@ -5,7 +5,7 @@
 # inferna:examples=inferna menu | inferna menu toggle system | inferna menu summon appearance.theme | inferna menu refresh
 
 # Thin wrapper around the standard plugin IPC surface. The menu is the
-# first-party `omarchy.menu` plugin; routes are passed as JSON payload.
+# first-party `inferna.menu` plugin; routes are passed as JSON payload.
 
 set -euo pipefail
 
@@ -18,16 +18,16 @@ menu_payload() {
 
 case "$verb" in
   toggle)
-    exec inferna-shell shell toggle omarchy.menu "$(menu_payload "$route")"
+    exec inferna-shell shell toggle inferna.menu "$(menu_payload "$route")"
     ;;
   summon)
-    exec inferna-shell shell summon omarchy.menu "$(menu_payload "$route")"
+    exec inferna-shell shell summon inferna.menu "$(menu_payload "$route")"
     ;;
   close)
-    exec inferna-shell shell hide omarchy.menu
+    exec inferna-shell shell hide inferna.menu
     ;;
   refresh | ping)
-    exec inferna-shell shell call omarchy.menu "$verb" "{}"
+    exec inferna-shell shell call inferna.menu "$verb" "{}"
     ;;
   -h | --help | help)
     cat <<USAGE

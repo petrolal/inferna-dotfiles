@@ -41,7 +41,7 @@ jq -n '
         name: ($manifest.name // $manifest.id // ""),
         description: ($manifest.description // ""),
         kinds: ($manifest.kinds // []),
-        firstParty: (($manifest.id // "") | startswith("omarchy.")),
+        firstParty: (($manifest.id // "") | startswith("inferna.")),
         manifestPath: $manifestPath,
         sourceDir: $sourceDir,
         entryPoints: ($manifest.entryPoints // {}),

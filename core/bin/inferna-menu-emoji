@@ -3,4 +3,4 @@
 # inferna:group=menu
 # inferna:examples=inferna menu emoji
 
-inferna-shell shell toggle omarchy.emojis
+inferna-shell shell toggle inferna.emojis

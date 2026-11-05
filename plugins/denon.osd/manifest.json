@@ -11,7 +11,7 @@
   "entryPoints": {
     "panel": "Osd.qml"
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.osd"
+  "inferna": {
+    "clonedFrom": "inferna.osd"
   }
 }

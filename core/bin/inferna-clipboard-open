@@ -48,7 +48,7 @@ open_text() {
     exec inferna-launch-browser "$url"
   fi
 
-  open_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/clipboard-open"
+  open_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/clipboard-open"
   mkdir -p "$open_dir"
   open_file=$(mktemp --tmpdir="$open_dir" clipboard.XXXXXX.txt) || exit 1
   printf '%s' "$text" >"$open_file"

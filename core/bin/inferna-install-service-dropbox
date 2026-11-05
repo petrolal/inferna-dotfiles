@@ -7,7 +7,7 @@ echo "Installing all dependencies..."
 inferna-pkg-add dropbox dropbox-cli libappindicator python-gpgme nautilus-dropbox
 
 echo "Adding Dropbox to the bar..."
-inferna-plugin-enable omarchy.dropbox
+inferna-plugin-enable inferna.dropbox
 
 echo "Starting Dropbox..."
 uwsm-app -- dropbox-cli start &>/dev/null &

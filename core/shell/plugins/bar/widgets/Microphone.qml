@@ -6,7 +6,7 @@ import qs.Commons
 
 BarWidget {
   id: root
-  moduleName: "omarchy.microphone"
+  moduleName: "inferna.microphone"
 
 
   readonly property var source: Pipewire.defaultAudioSource
@@ -59,7 +59,7 @@ BarWidget {
     active: root.inUse
     tooltipText: root.muted ? I18n.t("bar.microphoneMuted") : (root.inUse ? I18n.t("bar.microphoneInUse") : I18n.t("bar.microphoneLive"))
     onPressed: function(b) {
-      if (b === Qt.MiddleButton) root.bar.run("inferna-shell shell toggle omarchy.audio")
+      if (b === Qt.MiddleButton) root.bar.run("inferna-shell shell toggle inferna.audio")
       else root.toggleMute()
     }
     onWheelMoved: function(delta) {

@@ -6,14 +6,14 @@
 
 set -euo pipefail
 
-locales_json=${OMARCHY_LOCALES_JSON:-$INFERNA_PATH/default/i18n/locales.json}
-language_file=${OMARCHY_LANGUAGE_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/language}
+locales_json=${INFERNA_LOCALES_JSON:-$INFERNA_PATH/default/i18n/locales.json}
+language_file=${INFERNA_LANGUAGE_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/inferna/language}
 
 # Root always writes the real file; the override is for unprivileged tests
 # (same convention as install/config/locale.sh).
 locale_gen=/etc/locale.gen
 if (( EUID != 0 )); then
-  locale_gen=${OMARCHY_LOCALE_GEN:-$locale_gen}
+  locale_gen=${INFERNA_LOCALE_GEN:-$locale_gen}
 fi
 
 known_language() {

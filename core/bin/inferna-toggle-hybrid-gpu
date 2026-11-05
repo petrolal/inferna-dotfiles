@@ -9,7 +9,7 @@ install_root_file() {
   local mode="$3"
   local stage
 
-  stage=$(sudo /usr/bin/mktemp -- "${destination%/*}/.${destination##*/}.omarchy.XXXXXX") || return 1
+  stage=$(sudo /usr/bin/mktemp -- "${destination%/*}/.${destination##*/}.inferna.XXXXXX") || return 1
   safe_stage_path "$stage" "$destination" || return 1
 
   if sudo /usr/bin/install -m "$mode" -o root -g root -T "$source" "$stage" &&
@@ -26,7 +26,7 @@ safe_stage_path() {
   local destination="$2"
   local prefix suffix
 
-  prefix="${destination%/*}/.${destination##*/}.omarchy."
+  prefix="${destination%/*}/.${destination##*/}.inferna."
   [[ $stage == "$prefix"* ]] || return 1
   suffix=${stage#"$prefix"}
   [[ $suffix =~ ^[[:alnum:]]{6}$ ]]

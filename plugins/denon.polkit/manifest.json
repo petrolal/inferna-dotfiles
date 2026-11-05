@@ -3,13 +3,13 @@
   "id": "denon.polkit",
   "name": "My Polkit Agent",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Theme-aware authentication dialog for privileged actions.",
-  "omarchy": {
+  "inferna": {
     "capabilities": [
       "authentication"
     ],
-    "clonedFrom": "omarchy.polkit"
+    "clonedFrom": "inferna.polkit"
   },
   "kinds": [
     "service"

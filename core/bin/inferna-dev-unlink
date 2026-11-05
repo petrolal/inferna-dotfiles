@@ -30,12 +30,12 @@ case "${1:-}" in
     cat <<USAGE
 Usage: inferna dev unlink [--no-reboot]
 
-Writes /etc/omarchy.conf so INFERNA_PATH resolves to /usr/share/omarchy
+Writes /etc/inferna.conf so INFERNA_PATH resolves to /usr/share/inferna
 after reboot. This intentionally does not rewrite the running Hyprland,
 systemd, shell, or app-launcher environment; reboot to make every layer agree.
 
 Removes $sudoers_file, the drop-in that pointed sudo
-at the checkout, so sudo goes back to the packaged omarchy-* immediately.
+at the checkout, so sudo goes back to the packaged inferna-* immediately.
 
 Use --no-reboot when another command will handle the reboot prompt.
 USAGE
@@ -47,10 +47,10 @@ USAGE
     ;;
 esac
 
-default_target="/usr/share/omarchy"
+default_target="/usr/share/inferna"
 
-printf 'export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="%s"\n' "$default_target" | sudo tee /etc/omarchy.conf >/dev/null
+printf 'export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="%s"\n' "$default_target" | sudo tee /etc/inferna.conf >/dev/null
 
 # inferna-dev-link prepended the checkout to sudo's secure_path. Drop it in the
 # same step that drops the checkout, or sudo keeps running a tree nothing else

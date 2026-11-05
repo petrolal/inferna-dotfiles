@@ -50,8 +50,8 @@ function isMinimizedWorkspace(name) {
 
 // A terminal app's window carries the app id its launcher gave the terminal,
 // which no desktop entry names as its class. The entry that passes that app id
-// claims it, and so does a terminal entry for the command Omarchy's TUI
-// launcher named it after (org.omarchy.nvim for nvim). Entries are
+// claims it, and so does a terminal entry for the command Inferna's TUI
+// launcher named it after (org.inferna.nvim for nvim). Entries are
 // { id, execString, command, runInTerminal }.
 function claimingEntryId(appId, entries) {
   var id = String(appId || "")
@@ -62,8 +62,8 @@ function claimingEntryId(appId, entries) {
     var words = String(list[i].execString || "").split(/\s+/)
     if (words.indexOf(flag) >= 0) return list[i].id
   }
-  if (id.indexOf("org.omarchy.") !== 0) return ""
-  var command = id.slice("org.omarchy.".length)
+  if (id.indexOf("org.inferna.") !== 0) return ""
+  var command = id.slice("org.inferna.".length)
   for (var j = 0; j < list.length; j++) {
     var program = String((list[j].command || [])[0] || "")
     if (list[j].runInTerminal && program.slice(program.lastIndexOf("/") + 1) === command) return list[j].id

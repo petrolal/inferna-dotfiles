@@ -13,8 +13,8 @@ Panel {
   // Glass surfaces: calm sentence-case taglines instead of tracked capitals.
   function glassSentence(v) { var t = String(v || ""); return t.length ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase() : t }
 
-  moduleName: "omarchy.monitor"
-  ipcTarget: "omarchy.monitor"
+  moduleName: "inferna.monitor"
+  ipcTarget: "inferna.monitor"
   manageIpc: false
 
   // manageIpc: false so this panel can own the single IpcHandler the target
@@ -255,7 +255,7 @@ Panel {
   }
 
   IpcHandler {
-    target: "omarchy.monitor"
+    target: "inferna.monitor"
 
     function brightness(percent: string): string { return root.brightnessIpc(percent) }
     function state(): string { return root.stateIpc() }
@@ -293,7 +293,7 @@ Panel {
 
   function showBrightnessOsd(percent) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    bar.shell.summon("inferna.osd", JSON.stringify({
       icon: "brightness",
       value: percent
     }))

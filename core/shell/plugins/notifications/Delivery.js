@@ -5,7 +5,7 @@
 
 var CRITICAL = 2
 
-// Omarchy's own action toasts and bare notify-send critical alerts get through
+// Inferna's own action toasts and bare notify-send critical alerts get through
 // Do Not Disturb. Critical alone is not enough: chat apps send
 // critical to force visibility, under their own app name.
 function bypassesQuiet(row) {
@@ -15,7 +15,7 @@ function bypassesQuiet(row) {
 }
 
 // The buttons a card offers, in the order it draws them and the number keys
-// count them: copying each code it found, then an Omarchy sender's --action
+// count them: copying each code it found, then an Inferna sender's --action
 // buttons, then the sender's own actions. A code's label is left to the card,
 // which translates it.
 function deeds(row, senderActions) {
@@ -51,10 +51,10 @@ function quietReason(row, doNotDisturb) {
 
 // A summary that opens with its own glyph ("󰂚  Silenced": one code point, two
 // spaces) already carries its mark, so the card drops the icon slot.
-// Omarchy's own marks (default/fonts/omarchy) sit at U+E900 and up, where the
+// Inferna's own marks (default/fonts/inferna) sit at U+E900 and up, where the
 // Nerd Font has devicons, so a glyph there must be drawn in the icon font by
 // name, as the menu does with iconFont, or it renders as a devicon.
-function omarchyGlyph(glyph) {
+function infernaGlyph(glyph) {
   var code = String(glyph || "").codePointAt(0)
   return code >= 0xe900 && code <= 0xe9ff
 }

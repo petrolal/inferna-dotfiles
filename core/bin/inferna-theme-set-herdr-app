@@ -17,7 +17,7 @@ esac
 
 source_path="$HOME/.local/state/inferna/current/theme/herdr-app.json"
 app_home="${HERDR_APP_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/herdr-app}"
-theme_path="$app_home/themes/omarchy.json"
+theme_path="$app_home/themes/inferna.json"
 
 # Do not create state for an app the person has never opened.
 if [[ ! -d $app_home ]]; then
@@ -80,7 +80,7 @@ fi
 # staging while it does; it selects whichever palette is current at that time.
 flock -u "$theme_lock"
 if (( activate == 1 )); then
-  if ! HERDR_APP_HOME="$app_home" herdr-app do app.theme --name omarchy; then
+  if ! HERDR_APP_HOME="$app_home" herdr-app do app.theme --name inferna; then
     echo "Inferna was published. Open Herdr and rerun with --activate to select it." >&2
     exit 1
   fi

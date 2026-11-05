@@ -1,4 +1,4 @@
-/* Omarchy Theme for Obsidian */
+/* Inferna Theme for Obsidian */
 
 .theme-dark, .theme-light {
   /* Core colors */

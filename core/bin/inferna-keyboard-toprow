@@ -17,10 +17,10 @@ set -euo pipefail
 # mediakeys: the top row sends the media keys, and Fn gives F1-F12.
 # fnkeys: the top row sends F1-F12, and Fn gives the media keys.
 
-modprobe_dir=${OMARCHY_MODPROBE_DIR:-/etc/modprobe.d}
-sys_module=${OMARCHY_SYS_MODULE:-/sys/module}
+modprobe_dir=${INFERNA_MODPROBE_DIR:-/etc/modprobe.d}
+sys_module=${INFERNA_SYS_MODULE:-/sys/module}
 conf="$modprobe_dir/inferna-toprow.conf"
-rebuild_pending=${OMARCHY_TOPROW_REBUILD_PENDING:-/var/lib/omarchy/toprow-rebuild-pending}
+rebuild_pending=${INFERNA_TOPROW_REBUILD_PENDING:-/var/lib/inferna/toprow-rebuild-pending}
 
 usage() {
   echo "Usage: inferna-keyboard-toprow [mediakeys|fnkeys] [--no-rebuild]" >&2

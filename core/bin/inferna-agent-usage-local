@@ -121,7 +121,7 @@ def model_name(raw):
 
 
 def config_path():
-  return config_home() / "omarchy" / "agents" / "local.json"
+  return config_home() / "inferna" / "agents" / "local.json"
 
 
 def configured_providers():
@@ -199,7 +199,7 @@ HARNESSES = ("hermes", "kimi", "qwen", "vibe")
 
 def harness(name):
   path = os.path.join((os.environ.get("INFERNA_PATH") or os.environ.get("INFERNA_PATH", "/usr/share/inferna")), "bin", f"inferna-agent-usage-{name}")
-  loader = importlib.machinery.SourceFileLoader(f"omarchy_agent_usage_{name}", path)
+  loader = importlib.machinery.SourceFileLoader(f"inferna_agent_usage_{name}", path)
   module = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
   loader.exec_module(module)
   return module

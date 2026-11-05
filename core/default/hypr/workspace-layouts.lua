@@ -1,4 +1,4 @@
--- Restore workspace layouts saved by omarchy-hyprland-workspace-layout-toggle.
+-- Restore workspace layouts saved by inferna-hyprland-workspace-layout-toggle.
 
 local paths = require("default.hypr.paths")
 local require_all = require("default.hypr.require_all")
@@ -7,7 +7,7 @@ local require_all = require("default.hypr.require_all")
 local workspace_modes = require("default.hypr.workspace-modes")
 
 local layouts_dir = paths.state_home .. "/inferna/workspace-layouts"
-local legacy_layouts_dir = paths.state_home .. "/omarchy/workspace-layouts"
+local legacy_layouts_dir = paths.state_home .. "/inferna/workspace-layouts"
 
 -- The directory is found through XDG_STATE_HOME but the files are loaded by
 -- module name, and bootstrap only puts ~/.local/state on the search path. A
@@ -16,7 +16,7 @@ local legacy_layouts_dir = paths.state_home .. "/omarchy/workspace-layouts"
 package.path = paths.state_home .. "/?.lua;" .. package.path
 
 require_all.files(layouts_dir, "inferna.workspace-layouts", { reload = true })
-require_all.files(legacy_layouts_dir, "omarchy.workspace-layouts", { reload = true })
+require_all.files(legacy_layouts_dir, "inferna.workspace-layouts", { reload = true })
 
 -- With every saved mode known, bring the open windows in line and set up what a
 -- floating workspace needs.

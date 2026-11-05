@@ -31,7 +31,7 @@ usage() {
 # Recognize a known option, in both `--flag value` and `--flag=value` forms.
 # Returns 1 for anything unrecognized so the caller can decide (headline, or a
 # hard error in option position).
-parse_omarchy_option() {
+parse_inferna_option() {
   local opt val nargs
   if [[ $1 == --?*=* ]]; then
     opt=${1%%=*}
@@ -95,7 +95,7 @@ parse_omarchy_option() {
 }
 
 while (($# > 0)); do
-  if parse_omarchy_option "$@"; then
+  if parse_inferna_option "$@"; then
     shift "$parsed_option_args"
   else
     break
@@ -167,7 +167,7 @@ while (($# > 0)); do
     shift
     with_args=("$@")
     break
-  elif parse_omarchy_option "$@"; then
+  elif parse_inferna_option "$@"; then
     shift "$parsed_option_args"
   else
     echo "Unknown option: $1" >&2

@@ -8,8 +8,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.weather"
-  ipcTarget: "omarchy.weather"
+  moduleName: "inferna.weather"
+  ipcTarget: "inferna.weather"
   manageIpc: false
 
   property var anchorItem: null
@@ -79,7 +79,7 @@ Panel {
   property var configuredLocationState: ({ name: "", latitude: null, longitude: null })
   readonly property string configuredLocation: configuredLocationState.name
 
-  // With nothing configured, where geo.omarchy.org places this network, in the
+  // With nothing configured, where geo.inferna.org places this network, in the
   // same shape. Kept when a later lookup fails.
   property var detectedLocationState: ({ name: "", latitude: null, longitude: null })
   property bool detectingLocation: false
@@ -88,7 +88,7 @@ Panel {
 
   // The query is the wttr.in path segment (coordinates when known, else the
   // encoded name); empty means wttr.in's own IP auto-detect, used only when
-  // geo.omarchy.org could not answer.
+  // geo.inferna.org could not answer.
   readonly property var locationState: Model.effectiveLocation(configuredLocationState, detectedLocationState)
   readonly property string locationQuery: Model.wttrLocationQuery(locationState.name, locationState.latitude, locationState.longitude)
 
@@ -172,7 +172,7 @@ Panel {
     // starve retries for the rest of the session.
     forecastRetries = 0
     dailyForecastRetries = 0
-    // Until geo.omarchy.org answers there is nothing to ask for: wait for it
+    // Until geo.inferna.org answers there is nothing to ask for: wait for it
     // rather than have wttr.in look this machine up. Its answer, or its
     // failure, refreshes again.
     if (detectingLocation && locationQuery === "") return
@@ -490,11 +490,11 @@ Panel {
     }
   }
 
-  // Omarchy's own lookup: city and coordinates from Cloudflare's view of
+  // Inferna's own lookup: city and coordinates from Cloudflare's view of
   // this network, in weather.json's shape.
   Process {
     id: locationProc
-    command: ["curl", "-fsS", "--max-time", "4", "https://geo.omarchy.org/"]
+    command: ["curl", "-fsS", "--max-time", "4", "https://geo.inferna.org/"]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {

@@ -43,7 +43,7 @@ if [[ -f $LAUNCHER ]]; then
   echo "Battle.net is already installed at $PREFIX."
   launched_installer=0
 else
-  cache_dir="$HOME/.cache/omarchy"
+  cache_dir="$HOME/.cache/inferna"
   mkdir -p "$cache_dir"
   installer="$cache_dir/Battle.net-Setup.exe"
 

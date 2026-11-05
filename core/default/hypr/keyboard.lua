@@ -29,7 +29,7 @@ function keyboard.selected()
   local paths = require("default.hypr.paths")
   local values = read_values(paths.config_home .. "/inferna/keyboard-layouts")
   if not values.XKBLAYOUT then
-    values = read_values(paths.config_home .. "/omarchy/keyboard-layouts")
+    values = read_values(paths.config_home .. "/inferna/keyboard-layouts")
   end
   if values.XKBLAYOUT then return values end
   return keyboard.installed()
@@ -47,7 +47,7 @@ local desktop_overrides = { kr = true, ["kr:kr104"] = true, la = true }
 
 function keyboard.installed()
   local values = keyboard.vconsole()
-  local override = (read_values("/etc/inferna/input-method").XKB_LAYOUT) or (read_values("/etc/omarchy/input-method").XKB_LAYOUT)
+  local override = (read_values("/etc/inferna/input-method").XKB_LAYOUT) or (read_values("/etc/inferna/input-method").XKB_LAYOUT)
   if desktop_overrides[override]
     and (values.XKBLAYOUT or "us") == "us"
     and (values.XKBVARIANT or "") == "" then

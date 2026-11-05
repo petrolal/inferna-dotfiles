@@ -49,7 +49,7 @@ Item {
     var suffix = details === undefined || details === null || details === "" ? "" : ": " + String(details)
     root.lastEventAt = nowIso()
     root.lastEvent = event + suffix
-    console.log("omarchy idle " + root.lastEventAt + " " + root.lastEvent)
+    console.log("inferna idle " + root.lastEventAt + " " + root.lastEvent)
   }
 
   function runProcess(process, label, command) {

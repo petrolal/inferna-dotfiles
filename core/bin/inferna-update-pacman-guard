@@ -5,13 +5,13 @@
 
 set -euo pipefail
 
-if [[ ${OMARCHY_UPDATE_PACMAN:-} == "1" || ${OMARCHY_ALLOW_DIRECT_PACMAN:-} == "1" ]]; then
+if [[ ${INFERNA_UPDATE_PACMAN:-} == "1" || ${INFERNA_ALLOW_DIRECT_PACMAN:-} == "1" ]]; then
   exit 0
 fi
 
 pacman_args=()
-if [[ -n ${OMARCHY_PACMAN_CMDLINE:-} ]]; then
-  read -r -a pacman_args <<<"$OMARCHY_PACMAN_CMDLINE"
+if [[ -n ${INFERNA_PACMAN_CMDLINE:-} ]]; then
+  read -r -a pacman_args <<<"$INFERNA_PACMAN_CMDLINE"
 elif [[ -r /proc/$PPID/cmdline ]]; then
   mapfile -d '' -t pacman_args <"/proc/$PPID/cmdline" || true
 fi
@@ -57,7 +57,7 @@ migrations, post-update hooks, shell update state, and restart checks together.
 
 If you really meant to bypass Inferna for this transaction, rerun pacman with:
 
-  sudo env OMARCHY_ALLOW_DIRECT_PACMAN=1 pacman -Syu
+  sudo env INFERNA_ALLOW_DIRECT_PACMAN=1 pacman -Syu
 
 MESSAGE
 

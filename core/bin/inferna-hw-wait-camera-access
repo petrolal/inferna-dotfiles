@@ -12,8 +12,8 @@
 # their cameras reach PipeWire through libcamera alone, while PipeWire's V4L2
 # monitor watches its devices and finds a webcam once access arrives.
 
-media_path=${OMARCHY_MEDIA_DEVICES_PATH:-/dev}
-tries=${OMARCHY_CAMERA_ACCESS_TRIES:-50}
+media_path=${INFERNA_MEDIA_DEVICES_PATH:-/dev}
+tries=${INFERNA_CAMERA_ACCESS_TRIES:-50}
 
 devices=()
 if inferna-hw-aarch64-qualcomm; then

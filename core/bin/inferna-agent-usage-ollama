@@ -68,7 +68,7 @@ AUTH_HELP_BAD_KEY = (
 
 
 def config_dir() -> Path:
-  return config_home() / "omarchy" / "agents"
+  return config_home() / "inferna" / "agents"
 
 
 def read_config() -> dict[str, Any]:

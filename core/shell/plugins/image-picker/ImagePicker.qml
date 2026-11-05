@@ -12,15 +12,15 @@ import "ImagePickerModel.js" as ImagePickerModel
 Item {
   id: root
 
-  // Injected by inferna-shell; defaults to the session OMARCHY_PATH.
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  // Injected by inferna-shell; defaults to the session INFERNA_PATH.
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   property string stateHome: Quickshell.env("HOME") + "/.local/state"
   property string userThemesPath: Quickshell.env("HOME") + "/.config/inferna/themes"
-  property string imageDirs: Quickshell.env("OMARCHY_IMAGE_SELECTOR_DIRS") || Quickshell.env("OMARCHY_IMAGE_SELECTOR_DIR") || Quickshell.env("OMARCHY_STOCK_BACKGROUNDS_DIR") || (stateHome + "/omarchy/current/theme/backgrounds")
+  property string imageDirs: Quickshell.env("INFERNA_IMAGE_SELECTOR_DIRS") || Quickshell.env("INFERNA_IMAGE_SELECTOR_DIR") || Quickshell.env("INFERNA_STOCK_BACKGROUNDS_DIR") || (stateHome + "/inferna/current/theme/backgrounds")
   property string imageRows: ""
   property string loadedImageRows: ""
-  property string selectionFile: Quickshell.env("OMARCHY_IMAGE_SELECTOR_SELECTION_FILE") || Quickshell.env("OMARCHY_BACKGROUND_SELECTION_FILE")
-  property string selectedImage: Quickshell.env("OMARCHY_IMAGE_SELECTOR_SELECTED")
+  property string selectionFile: Quickshell.env("INFERNA_IMAGE_SELECTOR_SELECTION_FILE") || Quickshell.env("INFERNA_BACKGROUND_SELECTION_FILE")
+  property string selectedImage: Quickshell.env("INFERNA_IMAGE_SELECTOR_SELECTED")
   property int selectedIndex: 0
   property bool imagesLoaded: false
   property bool opened: false
@@ -76,7 +76,7 @@ Item {
   }
 
   function scriptPath(name) {
-    return omarchyPath + "/shell/plugins/image-picker/" + name
+    return infernaPath + "/shell/plugins/image-picker/" + name
   }
 
   function focusPicker() {
@@ -455,7 +455,7 @@ Item {
 
   FileView {
     id: themeNameFile
-    path: root.stateHome + "/omarchy/current/theme.name"
+    path: root.stateHome + "/inferna/current/theme.name"
     watchChanges: true
     onFileChanged: reload()
   }
@@ -463,7 +463,7 @@ Item {
   Process {
     id: themeRowsProc
     property bool queued: false
-    command: [root.omarchyPath + "/bin/inferna-theme-switcher", "--print-rows"]
+    command: [root.infernaPath + "/bin/inferna-theme-switcher", "--print-rows"]
     stdout: StdioCollector {
       onStreamFinished: root.updateThemeRows(String(text || "").trim())
     }
@@ -494,7 +494,7 @@ Item {
 
   Process {
     id: stockThemesProc
-    command: ["find", root.omarchyPath + "/themes", "-mindepth", "1", "-maxdepth", "1", "-type", "d", "-printf", "%f\n"]
+    command: ["find", root.infernaPath + "/themes", "-mindepth", "1", "-maxdepth", "1", "-type", "d", "-printf", "%f\n"]
     stdout: StdioCollector {
       onStreamFinished: root.stockThemeNames = ImagePickerModel.parseThemeNames(String(text || ""))
     }

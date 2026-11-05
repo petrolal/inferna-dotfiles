@@ -4,14 +4,14 @@
 # inferna:name=
 # inferna:summary=Transcode pictures and videos for sharing
 # inferna:args=[--path path] [input] [format] [resolution]
-# inferna:examples=inferna transcode|omarchy transcode --path ~/Downloads|omarchy transcode ~/Videos/demo.mov mp4 1080p|omarchy transcode ~/Pictures/background.heic jpg medium
+# inferna:examples=inferna transcode|inferna transcode --path ~/Downloads|inferna transcode ~/Videos/demo.mov mp4 1080p|inferna transcode ~/Pictures/background.heic jpg medium
 
 set -euo pipefail
 
 usage() {
   cat <<'EOF'
 Usage:
-  omarchy transcode [--path path] [input] [format] [resolution]
+  inferna transcode [--path path] [input] [format] [resolution]
 
 With no input, pick a picture or video from ~/Pictures and ~/Videos,
 or only from --path when provided. Then pick the output format and resolution.

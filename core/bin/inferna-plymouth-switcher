@@ -2,7 +2,7 @@
 
 # inferna:summary=Open the Plymouth unlock screen switcher
 
-preview_dir="${XDG_CACHE_HOME:-$HOME/.cache}/omarchy/unlock-selector/previews"
+preview_dir="${XDG_CACHE_HOME:-$HOME/.cache}/inferna/unlock-selector/previews"
 
 rm -rf "$preview_dir"
 mkdir -p "$preview_dir"

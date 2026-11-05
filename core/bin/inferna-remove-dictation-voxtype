@@ -18,7 +18,7 @@ if inferna-cmd-present voxtype; then
   inferna-pkg-drop voxtype-bin
   rm -rf ~/.config/voxtype
   rm -rf ~/.local/share/voxtype
-  backend_config="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/defaults/dictation"
+  backend_config="${XDG_CONFIG_HOME:-$HOME/.config}/inferna/defaults/dictation"
   if [[ -f $backend_config && $(< "$backend_config") == "voxtype" ]]; then
     rm "$backend_config"
   fi

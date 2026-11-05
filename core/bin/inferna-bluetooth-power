@@ -16,7 +16,7 @@
 # Inferna path that turns Bluetooth on or off goes through here, because a plain
 # `bluetoothctl power on` fails outright while the block is set.
 
-POWER_WAIT_SECONDS=${OMARCHY_BLUETOOTH_POWER_WAIT_SECONDS:-2}
+POWER_WAIT_SECONDS=${INFERNA_BLUETOOTH_POWER_WAIT_SECONDS:-2}
 
 controllers() {
   timeout 2s bluetoothctl list 2>/dev/null | awk '{print $2}'

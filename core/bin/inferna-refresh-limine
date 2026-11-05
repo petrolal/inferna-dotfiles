@@ -5,7 +5,7 @@
 
 legacy_uki="/boot/EFI/Linux/$(cat /etc/machine-id)_linux.efi"
 
-if sudo test -f /boot/EFI/Linux/omarchy_linux.efi && sudo test -f "$legacy_uki"; then
+if sudo test -f /boot/EFI/Linux/inferna_linux.efi && sudo test -f "$legacy_uki"; then
   echo "Cleanup extra UKI"
   sudo rm -f "$legacy_uki"
 fi

@@ -3,7 +3,7 @@
 -- Hyprland rejects a second gesture on the same fingers and direction, so
 -- overriding one of these means unsetting it first:
 --   hl.gesture({ fingers = 3, direction = "up", action = "unset" })
--- Or turn them all off with omarchy_default_gestures = false in hyprland.lua.
+-- Or turn them all off with inferna_default_gestures = false in hyprland.lua.
 
 -- Swipe through workspaces, empty ones included. Workspace switches aren't
 -- animated, so the switch lands when the swipe ends rather than dragging the
@@ -15,7 +15,7 @@ hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(h
 hl.gesture({ fingers = 3, direction = "up", action = "special", workspace_name = "qconsole" })
 hl.gesture({ fingers = 3, direction = "down", action = function()
   local ok = pcall(function() hl.dispatch(hl.dsp.global("inferna:menu.root")) end)
-  if not ok then hl.dispatch(hl.dsp.global("omarchy:menu.root")) end
+  if not ok then hl.dispatch(hl.dsp.global("inferna:menu.root")) end
 end })
 
 -- Four fingers take the active window along to the neighbouring workspace.

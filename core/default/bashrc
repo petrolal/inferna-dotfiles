@@ -1,6 +1,6 @@
 # Inferna environment (INFERNA_PATH + PATH), needed even for non-interactive shells
 export INFERNA_PATH="${INFERNA_PATH:-$HOME/inferna-dotfiles/core}"
-export OMARCHY_PATH="$INFERNA_PATH"
+export INFERNA_PATH="$INFERNA_PATH"
 [[ -r "$INFERNA_PATH/default/bash/env-bootstrap" ]] && source "$INFERNA_PATH/default/bash/env-bootstrap"
 
 # If not running interactively, don't do anything else (leave this above the rc source)

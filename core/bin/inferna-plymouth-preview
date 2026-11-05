@@ -4,7 +4,7 @@
 # inferna:args=<background-hex> <text-hex> <path-to-logo.png> <output-path>
 # inferna:examples=inferna plymouth preview '#1d2021' '#ebdbb2' ~/.local/state/inferna/current/theme/plymouth/logo.png /tmp/plymouth-preview.png
 
-# Render a Plymouth login-screen preview PNG by compositing the staged omarchy
+# Render a Plymouth login-screen preview PNG by compositing the staged inferna
 # theme assets (recolored with the given text color) onto the background.
 
 if (( $# != 4 )); then

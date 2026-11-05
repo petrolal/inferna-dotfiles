@@ -12,7 +12,7 @@ import sys
 import time
 
 
-ROOT = Path(os.environ["OMARCHY_PATH"])
+ROOT = Path(os.environ["INFERNA_PATH"])
 PRESETS = json.loads((ROOT / "default/input-methods/presets.json").read_text())
 NON_LATIN = set("af am ara bd bg by et ge gr il in iq ir kg kh kz la lk mk mm mn mv np rs ru sy th tj ua".split())
 CONTROLLER = ["busctl", "--user", "call", "org.fcitx.Fcitx5", "/controller", "org.fcitx.Fcitx.Controller1"]
@@ -55,7 +55,7 @@ def atomic_write(path, text):
     return False
   path.parent.mkdir(parents=True, exist_ok=True)
   mode = path.stat().st_mode & 0o777 if path.exists() else 0o644
-  fd, temporary = tempfile.mkstemp(prefix=".omarchy-input-", dir=path.parent)
+  fd, temporary = tempfile.mkstemp(prefix=".inferna-input-", dir=path.parent)
   try:
     with os.fdopen(fd, "w") as file:
       file.write(text)
@@ -164,8 +164,8 @@ def transaction(config_home):
 
 
 def selection():
-  vconsole = values(read(Path(os.environ.get("OMARCHY_VCONSOLE", "/etc/vconsole.conf"))))
-  preference = values(read(Path(os.environ.get("OMARCHY_INPUT_SELECTION", "/etc/omarchy/input-method"))))
+  vconsole = values(read(Path(os.environ.get("INFERNA_VCONSOLE", "/etc/vconsole.conf"))))
+  preference = values(read(Path(os.environ.get("INFERNA_INPUT_SELECTION", "/etc/inferna/input-method"))))
   layout = vconsole.get("XKBLAYOUT", "us").split(",")[0] or "us"
   variant = vconsole.get("XKBVARIANT", "").split(",")[0]
   if preference.get("XKB_LAYOUT") in ("kr", "kr:kr104", "la") and vconsole.get("XKBLAYOUT", "us") == "us" and not variant:
@@ -216,7 +216,7 @@ FONT_VARIANTS = ("JP", "KR", "SC", "TC", "HK")
 
 
 def font_path(config_home):
-  return config_home / "fontconfig/conf.d/50-omarchy-input-method.conf"
+  return config_home / "fontconfig/conf.d/50-inferna-input-method.conf"
 
 
 def font_set(config_home, variant):
@@ -319,7 +319,7 @@ def configure_inner(args, config_home, running):
             if any(item[0] == method for item in available_methods()):
               new_items.append([method, engine_layout(method, layout)])
             else:
-              print(f"Finish input setup after login: omarchy setup input {method}", file=sys.stderr)
+              print(f"Finish input setup after login: inferna setup input {method}", file=sys.stderr)
           live_set(group, layout, new_items)
           if live_group()[1:] != (layout, new_items):
             live_set(group, old_layout, items)

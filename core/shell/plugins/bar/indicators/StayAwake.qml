@@ -5,7 +5,7 @@ import qs.Ui
 BarIndicator {
   id: root
 
-  readonly property var idleService: bar?.shell?.firstPartyServiceFor("omarchy.idle")
+  readonly property var idleService: bar?.shell?.firstPartyServiceFor("inferna.idle")
 
   active: idleService ? idleService.stayAwake : false
   // A mug without a saucer, which drew a line under the cup.

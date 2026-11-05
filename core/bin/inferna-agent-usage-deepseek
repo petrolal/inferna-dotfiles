@@ -232,7 +232,7 @@ def api_key() -> str:
 
 
 def read_config() -> dict[str, Any]:
-  return read_json(config_home() / "omarchy" / "agents" / "deepseek.json")
+  return read_json(config_home() / "inferna" / "agents" / "deepseek.json")
 
 
 # ----------------------------------------------------------------- balance

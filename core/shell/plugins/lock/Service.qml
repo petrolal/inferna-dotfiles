@@ -11,12 +11,12 @@ Item {
   id: root
 
   property var shell: null
-  property string omarchyPath: ""
+  property string infernaPath: ""
 
   readonly property string home: Quickshell.env("HOME")
   readonly property string stateHome: home + "/.local/state"
   readonly property string userName: Quickshell.env("USER") || Quickshell.env("LOGNAME")
-  readonly property string currentBackgroundLink: stateHome + "/omarchy/current/background"
+  readonly property string currentBackgroundLink: stateHome + "/inferna/current/background"
 
   property bool lockRequested: false
   property bool pendingSessionLock: false
@@ -187,7 +187,7 @@ Item {
   function logEvent(event) {
     lastEvent = event
     lastEventAt = new Date().toISOString()
-    console.log("omarchy lock " + lastEventAt + " " + event)
+    console.log("inferna lock " + lastEventAt + " " + event)
   }
 
   function resetAuthenticationState() {
@@ -710,7 +710,7 @@ Item {
   Process {
     id: posterProc
     property string sourcePath: ""
-    command: ["bash", Quickshell.env("OMARCHY_PATH") + "/shell/plugins/lock/poster.sh", sourcePath]
+    command: ["bash", Quickshell.env("INFERNA_PATH") + "/shell/plugins/lock/poster.sh", sourcePath]
     stdout: StdioCollector { id: posterOutput; waitForEnd: true }
     onExited: function(exitCode) {
       if (sourcePath !== root.backgroundPath) {

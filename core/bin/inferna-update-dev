@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-[[ $INFERNA_PATH != "/usr/share/omarchy" ]] || exit 0
+[[ $INFERNA_PATH != "/usr/share/inferna" ]] || exit 0
 
 if ! git -C "$INFERNA_PATH" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "Error: INFERNA_PATH is not a git checkout: $INFERNA_PATH" >&2

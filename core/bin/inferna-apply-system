@@ -11,7 +11,7 @@ set -euo pipefail
 usage() {
   cat <<USAGE
 Usage: inferna apply system --install-user USER [--first-install|--upgrade]
-       omarchy apply system --defer-provisioning --first-install
+       inferna apply system --defer-provisioning --first-install
 
 Runs root-owned Inferna system setup. The ISO calls this in the target chroot
 after packages are installed and the target user exists. It also calls
@@ -19,11 +19,11 @@ inferna-apply-hardware, so hardware setup cannot be accidentally skipped.
 
 --defer-provisioning runs without an install user: deferred-provisioning installs create the user at
 first boot, so scripts that grant group memberships record them in
-/var/lib/omarchy/provisioning/groups instead of calling usermod.
+/var/lib/inferna/provisioning/groups instead of calling usermod.
 USAGE
 }
 
-install_user="${OMARCHY_INSTALL_USER:-}"
+install_user="${INFERNA_INSTALL_USER:-}"
 first_install=0
 upgrade=0
 defer_provisioning=0
@@ -77,19 +77,19 @@ else
   fi
 fi
 
-export OMARCHY_INSTALL_USER="$install_user"
-export OMARCHY_FIRST_INSTALL="$first_install"
-export OMARCHY_UPGRADE="$upgrade"
-export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
-export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$INFERNA_PATH/install}"
-export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
+export INFERNA_INSTALL_USER="$install_user"
+export INFERNA_FIRST_INSTALL="$first_install"
+export INFERNA_UPGRADE="$upgrade"
+export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
+export INFERNA_INSTALL="${INFERNA_INSTALL:-$INFERNA_PATH/install}"
+export INFERNA_INSTALL_LOG_FILE="${INFERNA_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
 export PATH="$INFERNA_PATH/bin:$PATH"
 
-source "$OMARCHY_INSTALL/helpers/logging.sh"
+source "$INFERNA_INSTALL/helpers/logging.sh"
 start_install_log
 
-source "$OMARCHY_INSTALL/config/all.sh"
+source "$INFERNA_INSTALL/config/all.sh"
 
 if (( defer_provisioning )); then
   inferna-apply-hardware --defer-provisioning
@@ -97,7 +97,7 @@ else
   inferna-apply-hardware --install-user "$install_user"
 fi
 
-source "$OMARCHY_INSTALL/login/all.sh"
-source "$OMARCHY_INSTALL/post-install/all.sh"
+source "$INFERNA_INSTALL/login/all.sh"
+source "$INFERNA_INSTALL/post-install/all.sh"
 
 stop_install_log

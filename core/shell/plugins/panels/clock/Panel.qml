@@ -17,8 +17,8 @@ import "Model.js" as Model
 // anchor against.
 Panel {
   id: root
-  moduleName: "omarchy.clock"
-  ipcTarget: "omarchy.clock"
+  moduleName: "inferna.clock"
+  ipcTarget: "inferna.clock"
   manageIpc: false
 
   property var anchorItem: null
@@ -67,7 +67,7 @@ Panel {
   // convention. Clicking the grid's "W" heading writes the choice back to
   // shell.json.
   readonly property int weekStart: Model.normalizedWeekStart(setting("weekStartDay", null), labelLocale.firstDayOfWeek)
-  // Names and the default week start follow the Omarchy language rather than
+  // Names and the default week start follow the Inferna language rather than
   // the system locale, which only catches up at the next login.
   readonly property var labelLocale: Qt.locale(Commons.I18n.formatLocale)
   // Qt's MMMM is the genitive form ("октября"), right beside a day but not

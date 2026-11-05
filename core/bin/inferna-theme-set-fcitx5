@@ -7,9 +7,9 @@
 set -euo pipefail
 
 THEME_SOURCE="$HOME/.local/state/inferna/current/theme/fcitx5-theme.conf"
-THEME_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/fcitx5/themes/omarchy"
+THEME_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/fcitx5/themes/inferna"
 CLASSICUI_CONF="${XDG_CONFIG_HOME:-$HOME/.config}/fcitx5/conf/classicui.conf"
-PACKAGED_THEME="${OMARCHY_FCITX5_PACKAGED_THEME:-/usr/share/fcitx5/themes/default}"
+PACKAGED_THEME="${INFERNA_FCITX5_PACKAGED_THEME:-/usr/share/fcitx5/themes/default}"
 ACTIVATE=0
 
 usage() {
@@ -46,9 +46,9 @@ select_theme() {
   for key in Theme DarkTheme; do
     value=$(sed -n "s/^$key=//p" <<<"$updated" | tail -n 1)
     if [[ -z $value ]]; then
-      updated+="${updated:+$'\n'}$key=omarchy"
+      updated+="${updated:+$'\n'}$key=inferna"
     elif [[ $value == "default" || $value == "default-dark" ]]; then
-      updated=$(sed "s/^$key=.*/$key=omarchy/" <<<"$updated")
+      updated=$(sed "s/^$key=.*/$key=inferna/" <<<"$updated")
     fi
   done
 

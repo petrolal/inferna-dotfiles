@@ -3,7 +3,7 @@
 # inferna:summary=Configure the bar and its widget layout
 # inferna:group=bar
 # inferna:args=use <id> | reset | defaults | position [top|bottom|left|right] | background [opaque|glassy|none|cycle] | put <id> [placement] | move <id> [placement] | set <id> <key> <value> [--json] [placement] | get <id> <key>
-# inferna:examples=inferna bar use local.neon-bar | inferna bar put omarchy.keyboard-layout --after omarchy.clock | inferna bar move omarchy.weather --section centerBegin --index 0 | inferna bar set omarchy.clock format HH:mm
+# inferna:examples=inferna bar use local.neon-bar | inferna bar put inferna.keyboard-layout --after inferna.clock | inferna bar move inferna.weather --section centerBegin --index 0 | inferna bar set inferna.clock format HH:mm
 
 set -euo pipefail
 
@@ -52,10 +52,10 @@ already on the bar where it is, and falls back to the widget's usual spot when
 
 Examples:
   inferna bar use local.neon-bar
-  inferna bar put omarchy.keyboard-layout --after omarchy.clock
-  inferna bar move omarchy.media left
-  inferna bar move omarchy.weather --section centerBegin --index 0
-  inferna bar set omarchy.clock format HH:mm
+  inferna bar put inferna.keyboard-layout --after inferna.clock
+  inferna bar move inferna.media left
+  inferna bar move inferna.weather --section centerBegin --index 0
+  inferna bar set inferna.clock format HH:mm
 USAGE
 }
 
@@ -156,11 +156,11 @@ cmd_use() {
   [[ -n $plugin ]] || fail "bar option id is required"
   (( $# == 1 )) || fail "use takes a single bar option id"
   if [[ $plugin == "default" || $plugin == "built-in" ]]; then
-    plugin="omarchy.bar"
+    plugin="inferna.bar"
   fi
   bar_option_exists "$plugin" || fail "$plugin is not a known bar option; run 'inferna plugin list'"
 
-  if [[ $plugin == "omarchy.bar" ]]; then
+  if [[ $plugin == "inferna.bar" ]]; then
     commit "$NORMALIZE | del(.bar.id)"
   else
     commit "$NORMALIZE | .bar.id = \$plugin" --arg plugin "$plugin"
@@ -176,8 +176,8 @@ cmd_defaults() {
   for service in dropbox tailscale; do
     if "inferna-installed-service-$service"; then
       widget=$(jq -cn \
-        --arg id "omarchy.$service" \
-        --arg section "$(bar_widget_default_section "omarchy.$service")" \
+        --arg id "inferna.$service" \
+        --arg section "$(bar_widget_default_section "inferna.$service")" \
         '{id: $id, section: $section}')
       optional_widgets=$(jq -c --argjson widget "$widget" '. + [$widget]' <<<"$optional_widgets")
     fi
@@ -188,7 +188,7 @@ cmd_defaults() {
   commit "$NORMALIZE
     | .bar = \$defaults[0].bar
     | def entry_id: if type == \"object\" then (.id // \"\" | tostring) else tostring end;
-      def anchor_for(\$section): { left: \"omarchy.workspaces\", centerEnd: \"omarchy.weather\", right: \"omarchy.tray\" }[\$section];
+      def anchor_for(\$section): { left: \"inferna.workspaces\", centerEnd: \"inferna.weather\", right: \"inferna.tray\" }[\$section];
       reduce \$widgets[] as \$widget (.;
         .bar.layout |= map_values(if type == \"array\" then map(select(entry_id != \$widget.id)) end)
         | (.bar.layout[\$widget.section] | map(entry_id) | index(anchor_for(\$widget.section))) as \$anchor
@@ -276,7 +276,7 @@ cmd_transparent() {
 # follows the bar background, reloading Hyprland only when it changes. The
 # toggle sits where Hyprland reads it, under XDG_STATE_HOME.
 sync_glass() {
-  local dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
+  local dir="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/toggles/hypr"
   local flag="$dir/bar-glassy.lua"
 
   if [[ $(current_background) == "glassy" ]]; then
@@ -307,12 +307,12 @@ bar_widget_default_section() {
 # with the reply in PUT_RESULT, 1 when there was no definitive answer to act
 # on (no shell, or one that never settled). A 1 is carried on from: the caller
 # treats it as done, so a shell that cannot be asked must not fail the update
-# (omacom/omarchy#13301).
+# (omacom/inferna#13301).
 PUT_RESULT=""
 SHELL_ANSWERED=0
 ask_to_put() {
   local id="$1" placement="$2" attempt absent=0 timeouts=0
-  for (( attempt = 0; attempt < ${OMARCHY_SHELL_READY_ATTEMPTS:-50}; attempt++ )); do
+  for (( attempt = 0; attempt < ${INFERNA_SHELL_READY_ATTEMPTS:-50}; attempt++ )); do
     if PUT_RESULT=$(inferna-shell shell putBarWidget "$id" "$placement" 2>&1); then
       SHELL_ANSWERED=1
       [[ $PUT_RESULT == "not ready" ]] || return 0
@@ -328,7 +328,7 @@ ask_to_put() {
       if (( timeouts == 0 )); then
         echo "inferna-shell is not responding; asking again" >&2
       fi
-      if (( ++timeouts >= ${OMARCHY_SHELL_TIMEOUT_ATTEMPTS:-5} )); then
+      if (( ++timeouts >= ${INFERNA_SHELL_TIMEOUT_ATTEMPTS:-5} )); then
         break
       fi
     elif [[ $PUT_RESULT == *"is not running"* ]]; then
@@ -338,7 +338,7 @@ ask_to_put() {
       fi
       # A shell being spawned has no socket yet, and nothing says a launch is
       # under way, so give one a few seconds to turn up.
-      if (( ++absent >= ${OMARCHY_SHELL_ABSENT_ATTEMPTS:-30} )); then
+      if (( ++absent >= ${INFERNA_SHELL_ABSENT_ATTEMPTS:-30} )); then
         echo "inferna-shell is not running; $id was not put on the bar" >&2
         return 1
       fi
@@ -481,7 +481,7 @@ case "$command" in
     ;;
   reset)
     (( $# == 0 )) || fail "reset does not take arguments"
-    cmd_use omarchy.bar
+    cmd_use inferna.bar
     ;;
   defaults)
     cmd_defaults "$@"

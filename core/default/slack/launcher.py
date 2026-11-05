@@ -133,7 +133,7 @@ class Slack:
         self.loop.quit()
 
     def run(self, arguments):
-        self.start(arguments, name=os.environ['OMARCHY_PATH'] + '/bin/omarchy-launch-slack')
+        self.start(arguments, name=os.environ['INFERNA_PATH'] + '/bin/inferna-launch-slack')
         self.loop.run()
         return self.child.get_exit_status() if self.child.get_if_exited() else 128 + self.child.get_term_sig()
 

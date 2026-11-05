@@ -165,7 +165,7 @@ Panel {
   }
   Process {
     id: displayRead
-    command: ["sh", "-c", "echo bright=$(brightnessctl -m 2>/dev/null | head -1 | cut -d, -f4 | tr -d '%'); echo night=$(omarchy toggle nightlight --status 2>/dev/null | grep -o '\"enabled\":[a-z]*' | cut -d: -f2); echo ---; hyprctl -j monitors"]
+    command: ["sh", "-c", "echo bright=$(brightnessctl -m 2>/dev/null | head -1 | cut -d, -f4 | tr -d '%'); echo night=$(inferna toggle nightlight --status 2>/dev/null | grep -o '\"enabled\":[a-z]*' | cut -d: -f2); echo ---; hyprctl -j monitors"]
     stdout: StdioCollector {
       onStreamFinished: {
         var parts = String(text).split("---\n"), lines = (parts[0] || "").split("\n")
@@ -702,12 +702,12 @@ Panel {
             label: "Night light"
             sub: "Warmer screen for the evening"
             on: root.nightOn
-            onToggled: function(next) { root.nightOn = next; Quickshell.execDetached(["omarchy", "toggle", "nightlight"]) }
+            onToggled: function(next) { root.nightOn = next; Quickshell.execDetached(["inferna", "toggle", "nightlight"]) }
           }
           Caption {
             visible: root.page === "display"
             text: "Scale, resolution and arrangement  ›"
-            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: root.openFull("omarchy.monitor") }
+            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: root.openFull("inferna.monitor") }
           }
         }
       }

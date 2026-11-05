@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.tailscale",
+  "id": "inferna.tailscale",
   "name": "Tailscale",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "license": "MIT",
-  "description": "Tailscale status, connection switching, machine browsing, and quick copy actions in the Omarchy bar.",
+  "description": "Tailscale status, connection switching, machine browsing, and quick copy actions in the Inferna bar.",
   "kinds": [
     "bar-widget"
   ],

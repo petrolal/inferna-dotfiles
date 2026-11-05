@@ -6,7 +6,7 @@
 # inferna:examples=inferna screenrecord | inferna capture screenrecording --with-desktop-audio
 # inferna:aliases=inferna screenrecord
 #
-# Env: OMARCHY_SCREENRECORD_USE_PORTAL=true skips the built-in slurp picker and
+# Env: INFERNA_SCREENRECORD_USE_PORTAL=true skips the built-in slurp picker and
 # uses gpu-screen-recorder's xdg-desktop-portal capture backend instead. The
 # portal backend was originally added (PR #3401) for HDR-aware capture, support
 # for monitors driven by external GPUs, and window capture — enable it if any
@@ -14,7 +14,7 @@
 # DMA-BUF modifier import on some configurations, leaving recording unable to
 # start.
 #
-# Env: OMARCHY_SCREENRECORD_DEBUG=true appends the recorder's stderr (and the
+# Env: INFERNA_SCREENRECORD_DEBUG=true appends the recorder's stderr (and the
 # picker target it was launched with) to $XDG_RUNTIME_DIR/inferna-screenrecord.log
 # so users can attach a log when reporting capture failures.
 #
@@ -26,7 +26,7 @@
 # sink. Portal capture and --resolution are gpu-screen-recorder only.
 
 [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
-OUTPUT_DIR="${OMARCHY_SCREENRECORD_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}}"
+OUTPUT_DIR="${INFERNA_SCREENRECORD_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}}"
 
 DESKTOP_AUDIO="false"
 MICROPHONE_AUDIO="false"
@@ -45,7 +45,7 @@ STATUS="false"
 # the picked geometry, which is nobody else's business either. Fall back to
 # the state directory when there is no session runtime dir -- :-/tmp would put
 # both files back at the fixed names this comment describes.
-RUNTIME_DIR="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/omarchy}"
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/inferna}"
 RECORDING_FILE="$RUNTIME_DIR/inferna-screenrecord-filename"
 REGION_FILE="$RUNTIME_DIR/inferna-screenrecord-region"
 # The recorder's pid, so stop and status act on that process alone.
@@ -59,7 +59,7 @@ CANCEL_FILE="$RUNTIME_DIR/inferna-screenrecord-cancel"
 # How long a recorder may take to create its file, except through the portal,
 # whose picker waits on the user.
 READY_TIMEOUT_TICKS=75
-LOG_FILE=$([[ ${OMARCHY_SCREENRECORD_DEBUG:-false} == "true" ]] && echo "$RUNTIME_DIR/inferna-screenrecord.log" || echo "/dev/null")
+LOG_FILE=$([[ ${INFERNA_SCREENRECORD_DEBUG:-false} == "true" ]] && echo "$RUNTIME_DIR/inferna-screenrecord.log" || echo "/dev/null")
 
 for arg in "$@"; do
   case "$arg" in
@@ -202,20 +202,20 @@ wf_audio_device() {
   [[ $MICROPHONE_AUDIO == "true" ]] && source=$(pactl get-default-source 2>/dev/null)
 
   if [[ -n $sink && -n $source ]]; then
-    if m=$(pactl load-module module-null-sink sink_name=omarchy_screenrec sink_properties=device.description=omarchy_screenrec 2>/dev/null); then
+    if m=$(pactl load-module module-null-sink sink_name=inferna_screenrec sink_properties=device.description=inferna_screenrec 2>/dev/null); then
       echo "$m" >"$PA_MODULES_FILE"
-      if m=$(pactl load-module module-loopback source="${sink}.monitor" sink=omarchy_screenrec latency_msec=20 2>/dev/null); then
+      if m=$(pactl load-module module-loopback source="${sink}.monitor" sink=inferna_screenrec latency_msec=20 2>/dev/null); then
         echo "$m" >>"$PA_MODULES_FILE"
       else
         sink=""
       fi
-      if m=$(pactl load-module module-loopback source="$source" sink=omarchy_screenrec latency_msec=20 2>/dev/null); then
+      if m=$(pactl load-module module-loopback source="$source" sink=inferna_screenrec latency_msec=20 2>/dev/null); then
         echo "$m" >>"$PA_MODULES_FILE"
       else
         source=""
       fi
       if [[ -n $sink && -n $source ]]; then
-        echo "omarchy_screenrec.monitor"
+        echo "inferna_screenrec.monitor"
         return
       fi
       wf_audio_cleanup
@@ -310,7 +310,7 @@ start_screenrecording() {
   if [[ $FULLSCREEN == "true" ]]; then
     target="monitor:$(inferna-hyprland-monitor-focused)"
     capture_args=(-w "${target#monitor:}" -s "${RESOLUTION:-$(default_resolution)}")
-  elif [[ ${OMARCHY_SCREENRECORD_USE_PORTAL:-false} == "true" ]]; then
+  elif [[ ${INFERNA_SCREENRECORD_USE_PORTAL:-false} == "true" ]]; then
     target="portal"
     capture_args=(-w portal -s "${RESOLUTION:-$(default_resolution)}")
   else
@@ -506,7 +506,7 @@ recording_details() {
 }
 
 toggle_screenrecording_indicator() {
-  inferna-shell -q omarchy.indicators refresh
+  inferna-shell -q inferna.indicators refresh
 }
 
 screenrecording_active() {

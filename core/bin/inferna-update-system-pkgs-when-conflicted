@@ -18,7 +18,7 @@
 
 set -e
 
-[[ ${OMARCHY_UPDATE_CONFLICT:-} == 1 ]] || {
+[[ ${INFERNA_UPDATE_CONFLICT:-} == 1 ]] || {
   echo "inferna-update-system-pkgs-when-conflicted runs as part of inferna update" >&2
   exit 1
 }
@@ -29,7 +29,7 @@ errors=${1:?usage: inferna-update-system-pkgs-when-conflicted <pacman-error-repo
 # out of the directory it came from: SDDM reads every file in sddm.conf.d
 # whatever its extension, and systemd-sleep runs every executable in
 # system-sleep, so a copy left beside the original would still be live.
-replaced=${OMARCHY_REPLACED_DIR:-/var/lib/omarchy/replaced}
+replaced=${INFERNA_REPLACED_DIR:-/var/lib/inferna/replaced}
 
 # Anything moved that the upgrade didn't end up installing goes back, whether
 # the retry failed or the move loop itself was interrupted partway. Nothing here
@@ -71,13 +71,13 @@ if grep -q 'unresolvable package conflicts detected' "$errors"; then
   # ask; either way pacman would sit on a prompt nobody answers. An upgrade that
   # isn't running --noconfirm puts its questions on stderr and reads the answers
   # from stdin, so those are the two that have to be a terminal.
-  if [[ ${OMARCHY_UPDATE_UNATTENDED:-} == 1 || ! -t 0 || ! -t 2 ]]; then
+  if [[ ${INFERNA_UPDATE_UNATTENDED:-} == 1 || ! -t 0 || ! -t 2 ]]; then
     echo -e "\e[33m\nThis upgrade needs an answer. Run inferna update interactively to give it.\e[0m" >&2
     exit 1
   fi
 
   echo -e "\e[33m\nA package conflict stopped this upgrade. Running it again so you can answer:\e[0m"
-  OMARCHY_UPDATE_INTERACTIVE=1 inferna-update-system-pkgs
+  INFERNA_UPDATE_INTERACTIVE=1 inferna-update-system-pkgs
   exit 0
 fi
 
@@ -89,7 +89,7 @@ fi
 # x)" is not, so the end anchor takes only ours. -Qo re-checks the live database
 # before anything moves.
 mapfile -t leftovers < <(
-  grep -oP '^omarchy(-dev|-settings|-settings-dev)?: \K.+(?= exists in filesystem$)' "$errors" |
+  grep -oP '^inferna(-dev|-settings|-settings-dev)?: \K.+(?= exists in filesystem$)' "$errors" |
     while IFS= read -r path; do pacman -Qo "$path" &>/dev/null || echo "$path"; done
 )
 ((${#leftovers[@]})) || exit 1
@@ -119,7 +119,7 @@ for path in "${leftovers[@]}"; do
 done
 echo
 
-if OMARCHY_UPDATE_RETRY=1 inferna-update-system-pkgs; then
+if INFERNA_UPDATE_RETRY=1 inferna-update-system-pkgs; then
   moved=()
   exit 0
 fi

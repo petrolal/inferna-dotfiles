@@ -7,5 +7,5 @@ THEME_NAME_PATH="$HOME/.local/state/inferna/current/theme.name"
 # Installers and migrations refresh the theme and then read the app configs it
 # writes, so this waits for every retint rather than leaving some running.
 if [[ -f $THEME_NAME_PATH ]]; then
-  OMARCHY_THEME_WAIT=1 OMARCHY_THEME_SKIP_BACKGROUND=1 inferna-theme-set "$(cat $THEME_NAME_PATH)"
+  INFERNA_THEME_WAIT=1 INFERNA_THEME_SKIP_BACKGROUND=1 inferna-theme-set "$(cat $THEME_NAME_PATH)"
 fi

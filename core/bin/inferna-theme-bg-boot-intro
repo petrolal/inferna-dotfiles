@@ -6,10 +6,10 @@
 set -euo pipefail
 
 state_home="$HOME/.local/state"
-current_dir="$state_home/omarchy/current"
+current_dir="$state_home/inferna/current"
 current_background_link="$current_dir/background"
-marker="$state_home/omarchy/background-intro.session-id"
-toggle="$state_home/omarchy/toggles/background-intros-off"
+marker="$state_home/inferna/background-intro.session-id"
+toggle="$state_home/inferna/toggles/background-intros-off"
 video_extensions=(mp4 m4v mov webm mkv avi)
 
 resolve_intro() {
@@ -45,7 +45,7 @@ prepare_theme_intro() {
   [[ ! -f $toggle ]] && ! animations_off || return 0
   owe warm >/dev/null 2>&1 || return 0
   [[ $(cat "$current_dir/theme.name" 2>/dev/null) != "$theme" ]] || return 0
-  remembered=$(cat "$state_home/omarchy/theme-backgrounds/$theme" 2>/dev/null || true)
+  remembered=$(cat "$state_home/inferna/theme-backgrounds/$theme" 2>/dev/null || true)
   if [[ ${remembered%/*} == "$current_dir/theme/backgrounds" ]]; then
     name=${remembered##*/}
   elif [[ -f $remembered ]]; then
@@ -108,10 +108,10 @@ case ${1:-} in
 esac
 
 mkdir -p "$(dirname "$marker")"
-exec 9>"$state_home/omarchy/background-intro.lock"
+exec 9>"$state_home/inferna/background-intro.lock"
 flock 9
 
-session_id=${OMARCHY_SESSION_ID:-${HYPRLAND_INSTANCE_SIGNATURE:-}}
+session_id=${INFERNA_SESSION_ID:-${HYPRLAND_INSTANCE_SIGNATURE:-}}
 [[ -n $session_id ]] || exit 0
 if [[ -f $marker && $(<"$marker") == "$session_id" ]]; then
   exit 0

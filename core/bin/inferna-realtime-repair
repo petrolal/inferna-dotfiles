@@ -32,9 +32,9 @@
 # the caller stays pending until a run that has it, such as inferna update.
 # Anything it cannot inspect is a failure, never "nothing to do".
 
-proc_root=${OMARCHY_PROC_ROOT:-/proc}
-pending=${OMARCHY_REALTIME_REPAIR_PENDING:-/var/lib/omarchy/realtime-repair-pending}
-lock=${OMARCHY_REALTIME_REPAIR_LOCK:-/run/inferna-realtime-repair.lock}
+proc_root=${INFERNA_PROC_ROOT:-/proc}
+pending=${INFERNA_REALTIME_REPAIR_PENDING:-/var/lib/inferna/realtime-repair-pending}
+lock=${INFERNA_REALTIME_REPAIR_LOCK:-/run/inferna-realtime-repair.lock}
 
 fail() {
   echo "$1" >&2

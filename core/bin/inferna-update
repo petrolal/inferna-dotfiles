@@ -20,7 +20,7 @@ authorize_update() {
 
   local update_pid=$$
   (
-    [[ -z ${OMARCHY_UPDATE_LOCK_FD:-} ]] || exec {OMARCHY_UPDATE_LOCK_FD}>&-
+    [[ -z ${INFERNA_UPDATE_LOCK_FD:-} ]] || exec {INFERNA_UPDATE_LOCK_FD}>&-
     sleep_pid=""
     trap - EXIT HUP INT
     trap '[[ -z $sleep_pid ]] || kill "$sleep_pid" 2>/dev/null; exit 0' TERM
@@ -53,16 +53,16 @@ cleanup_update() {
   exit "$status"
 }
 
-if [[ -z ${OMARCHY_UPDATE_LOGGED:-} ]]; then
+if [[ -z ${INFERNA_UPDATE_LOGGED:-} ]]; then
   script_command=$(printf '%q ' "$0" "$@")
-  exec env OMARCHY_UPDATE_LOGGED=1 script -qefc "$script_command" "/tmp/inferna-update.log"
+  exec env INFERNA_UPDATE_LOGGED=1 script -qefc "$script_command" "/tmp/inferna-update.log"
 fi
 
 if ! inferna-update-lock held; then
   exec inferna-update-lock run "$0" "$@"
 fi
 
-trap 'echo ""; echo -e "\033[0;31mSomething went wrong during the update!\n\nPlease review the output above carefully, correct the error, and retry the update.\n\nIf you need assistance, get help from the community at https://omarchy.org/discord\033[0m"' ERR
+trap 'echo ""; echo -e "\033[0;31mSomething went wrong during the update!\n\nPlease review the output above carefully, correct the error, and retry the update.\n\nIf you need assistance, get help from the community at https://github.com/petrolal/dotfiles/discussions\033[0m"' ERR
 trap cleanup_update EXIT
 trap 'exit 129' HUP
 trap 'exit 130' INT
@@ -71,10 +71,10 @@ trap 'exit 143' TERM
 inferna-update-requires-free-space
 
 # -y skips the start confirmation and, unless the caller set
-# OMARCHY_UPDATE_UNATTENDED itself, suppresses Inferna confirmation prompts;
+# INFERNA_UPDATE_UNATTENDED itself, suppresses Inferna confirmation prompts;
 # sudo authorization is still required. Interactive review steps report and
 # move on instead of waiting.
-[[ ${1:-} != "-y" ]] || export OMARCHY_UPDATE_UNATTENDED=${OMARCHY_UPDATE_UNATTENDED:-1}
+[[ ${1:-} != "-y" ]] || export INFERNA_UPDATE_UNATTENDED=${INFERNA_UPDATE_UNATTENDED:-1}
 
 if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
   authorize_update
@@ -116,7 +116,7 @@ if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
   # The dev checkout was fast-forwarded and the full upgrade went through, so
   # there is no Inferna update left to show. Rechecking would download every
   # sync database again and refetch the checkout only to hear the same.
-  inferna-shell -q omarchy.system-update clear
+  inferna-shell -q inferna.system-update clear
 
   # Service restart helpers can need sudo. The reboot-only phase below
   # performs no privileged work.

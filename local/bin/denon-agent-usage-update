@@ -51,7 +51,7 @@ fi
 
 if (( want_claude )); then
   (
-    collector="${INFERNA_PATH:-${OMARCHY_PATH:-$HOME/inferna-dotfiles/core}}/bin/inferna-agent-usage-claude"
+    collector="${INFERNA_PATH:-$HOME/inferna-dotfiles/core}/bin/inferna-agent-usage-claude"
     if record=$("$collector" "${flags[@]}") && jq -e . >/dev/null 2>&1 <<<"$record"; then
       write_record claude "$(jq -c 'del(.resetCredits)' <<<"$record")"
     else

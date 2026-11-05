@@ -10,7 +10,7 @@ T3CODE_HOME="${T3CODE_HOME:-$HOME/.t3}"
 T3CODE_STATE_DIR="$T3CODE_HOME/userdata"
 # The filename is the theme id T3 Code shows and `t3 theme set` accepts, and
 # it stays stable while the colors change underneath on every theme switch.
-T3CODE_THEME_PATH="$T3CODE_STATE_DIR/themes/omarchy.json"
+T3CODE_THEME_PATH="$T3CODE_STATE_DIR/themes/inferna.json"
 
 [[ -f $T3CODE_SOURCE_PATH ]] || exit 0
 

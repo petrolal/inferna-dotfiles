@@ -5,7 +5,7 @@
 
 # inferna-plymouth-set installs the theme's unlock.png as a byte-for-byte
 # copy of logo.png, so matching it back identifies the current theme.
-installed_logo=/usr/share/plymouth/themes/omarchy/logo.png
+installed_logo=/usr/share/plymouth/themes/inferna/logo.png
 
 if cmp -s "$INFERNA_PATH/default/plymouth/logo.png" "$installed_logo"; then
   echo default

@@ -109,7 +109,7 @@ hl.layer_rule({
 -- only the cards themselves get blurred.
 hl.layer_rule({
   name = "denon-frosted-surfaces",
-  match = { namespace = "^((inferna|omarchy)-(menu|notifications|osd|polkit|clipboard|emojis|reminders|keyboard-panel|network-qr)|denon-bar-panel|softly)$" },
+  match = { namespace = "^(inferna-(menu|notifications|osd|polkit|clipboard|emojis|reminders|keyboard-panel|network-qr)|denon-bar-panel|softly)$" },
   blur = true,
   ignore_alpha = 0.5,
 })

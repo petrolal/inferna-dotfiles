@@ -7,7 +7,7 @@ local require_optional = require("default.hypr.require_optional")
 require("default.hypr.autostart")
 require("default.hypr.monitors")
 require("default.hypr.monitor-workspaces")
-if _G.inferna_default_bindings ~= false and _G.omarchy_default_bindings ~= false then
+if _G.inferna_default_bindings ~= false and _G.inferna_default_bindings ~= false then
   require("default.hypr.bindings.media")
   require("default.hypr.bindings.clipboard")
   require("default.hypr.bindings.input-method")
@@ -17,7 +17,7 @@ if _G.inferna_default_bindings ~= false and _G.omarchy_default_bindings ~= false
   require("default.hypr.bindings.dictation")
   require_optional.module("default.hypr.bindings.applications")
 end
-if _G.inferna_default_gestures ~= false and _G.omarchy_default_gestures ~= false then
+if _G.inferna_default_gestures ~= false and _G.inferna_default_gestures ~= false then
   require("default.hypr.gestures")
 end
 require("default.hypr.envs")
@@ -30,7 +30,7 @@ require("default.hypr.dictation-backend")
 
 -- Current theme overrides.
 require_optional.module("inferna.current.theme.hyprland")
-require_optional.module("omarchy.current.theme.hyprland")
+require_optional.module("inferna.current.theme.hyprland")
 
 -- Lighter defaults for a session that renders on the CPU, over the theme's.
 require("default.hypr.software-rendering")

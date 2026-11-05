@@ -3,7 +3,7 @@
   "id": "denon.weather",
   "name": "My Weather",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Weather pill with detail popup",
   "kinds": [
     "bar-widget"
@@ -18,7 +18,7 @@
     "allowMultiple": false,
     "settingsForm": "weatherSettings"
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.weather"
+  "inferna": {
+    "clonedFrom": "inferna.weather"
   }
 }

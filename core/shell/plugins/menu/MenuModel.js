@@ -420,9 +420,9 @@ function displayRow(items, itemOrder, checkedResults, disabledResults, entry, de
 // memo never survives to the expression after it.
 var GUARD_READERS = [
   "inferna-bar background",
-  "inferna-bar get omarchy.power showPercentage",
-  "inferna-bar get omarchy.clock format",
-  "inferna-bar get omarchy.clock verticalFormat",
+  "inferna-bar get inferna.power showPercentage",
+  "inferna-bar get inferna.clock format",
+  "inferna-bar get inferna.clock verticalFormat",
   "inferna-bar position",
   "inferna-channel-current",
   "inferna-default-agent",
@@ -482,39 +482,39 @@ function guardPackageSnapshot() {
     + " | awk '/^[A-Za-z]/ { provides = ($0 ~ /^Provides/); sub(/^[^:]*: /, \"\") }"
     + ' provides && $0 != "None" { n = split($0, p, " ");'
     + ' for (i = 1; i <= n; i++) { sub(/[<>=].*/, "", p[i]); print p[i] } }\' && echo /; } 2>/dev/null'
-  var stamp = 'stat -c "%d:%i:%.9Y:%.9Z" -- "$__omarchy_pkg_db/local" 2>/dev/null'
+  var stamp = 'stat -c "%d:%i:%.9Y:%.9Z" -- "$__inferna_pkg_db/local" 2>/dev/null'
 
-  return '__omarchy_pkg_db=${OMARCHY_PACMAN_DB_PATH:-$(pacman-conf DBPath 2>/dev/null)} || __omarchy_pkg_db=""\n'
-    + '__omarchy_pkg_db=${__omarchy_pkg_db%/}\n'
-    + '__omarchy_pkg_cache=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/inferna-menu-packages}\n'
-    + '__omarchy_pkg_stamp=""\n'
-    + '[[ -z $__omarchy_pkg_db ]] || __omarchy_pkg_stamp=$(' + stamp + ') || __omarchy_pkg_stamp=""\n'
-    + '__omarchy_pkg_names=()\n'
-    + 'if [[ -n $__omarchy_pkg_cache && -n $__omarchy_pkg_stamp ]]'
-    + ' && { IFS= read -r __omarchy_pkg_line && [[ $__omarchy_pkg_line == "$__omarchy_pkg_stamp" ]]'
-    + ' && mapfile -t __omarchy_pkg_names; } 2>/dev/null <"$__omarchy_pkg_cache"; then :\n'
+  return '__inferna_pkg_db=${INFERNA_PACMAN_DB_PATH:-$(pacman-conf DBPath 2>/dev/null)} || __inferna_pkg_db=""\n'
+    + '__inferna_pkg_db=${__inferna_pkg_db%/}\n'
+    + '__inferna_pkg_cache=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/inferna-menu-packages}\n'
+    + '__inferna_pkg_stamp=""\n'
+    + '[[ -z $__inferna_pkg_db ]] || __inferna_pkg_stamp=$(' + stamp + ') || __inferna_pkg_stamp=""\n'
+    + '__inferna_pkg_names=()\n'
+    + 'if [[ -n $__inferna_pkg_cache && -n $__inferna_pkg_stamp ]]'
+    + ' && { IFS= read -r __inferna_pkg_line && [[ $__inferna_pkg_line == "$__inferna_pkg_stamp" ]]'
+    + ' && mapfile -t __inferna_pkg_names; } 2>/dev/null <"$__inferna_pkg_cache"; then :\n'
     + 'else\n'
-    + '  __omarchy_pkg_names=()\n'
-    + '  [[ ! -e $__omarchy_pkg_db/db.lck ]] || __omarchy_pkg_stamp=""\n'
-    + '  mapfile -t __omarchy_pkg_names < <(' + build + ')\n'
-    + '  if ((${#__omarchy_pkg_names[@]})) && [[ ${__omarchy_pkg_names[-1]} == "/" ]]; then unset "__omarchy_pkg_names[-1]"; else __omarchy_pkg_stamp=""; fi\n'
-    + '  if [[ -n $__omarchy_pkg_cache && -n $__omarchy_pkg_stamp && ! -e $__omarchy_pkg_db/db.lck ]]'
-    + ' && [[ $(' + stamp + ') == "$__omarchy_pkg_stamp" ]]; then\n'
-    + '    { printf "%s\\n" "$__omarchy_pkg_stamp" "${__omarchy_pkg_names[@]}" >"$__omarchy_pkg_cache.$$"'
-    + ' && mv -f -- "$__omarchy_pkg_cache.$$" "$__omarchy_pkg_cache"; } 2>/dev/null'
-    + ' || rm -f -- "$__omarchy_pkg_cache.$$" 2>/dev/null || :\n'
+    + '  __inferna_pkg_names=()\n'
+    + '  [[ ! -e $__inferna_pkg_db/db.lck ]] || __inferna_pkg_stamp=""\n'
+    + '  mapfile -t __inferna_pkg_names < <(' + build + ')\n'
+    + '  if ((${#__inferna_pkg_names[@]})) && [[ ${__inferna_pkg_names[-1]} == "/" ]]; then unset "__inferna_pkg_names[-1]"; else __inferna_pkg_stamp=""; fi\n'
+    + '  if [[ -n $__inferna_pkg_cache && -n $__inferna_pkg_stamp && ! -e $__inferna_pkg_db/db.lck ]]'
+    + ' && [[ $(' + stamp + ') == "$__inferna_pkg_stamp" ]]; then\n'
+    + '    { printf "%s\\n" "$__inferna_pkg_stamp" "${__inferna_pkg_names[@]}" >"$__inferna_pkg_cache.$$"'
+    + ' && mv -f -- "$__inferna_pkg_cache.$$" "$__inferna_pkg_cache"; } 2>/dev/null'
+    + ' || rm -f -- "$__inferna_pkg_cache.$$" 2>/dev/null || :\n'
     + '  fi\n'
     + 'fi\n'
 }
 
 function guardHelpers() {
-  return 'declare -A __omarchy_pkgs=()\n'
+  return 'declare -A __inferna_pkgs=()\n'
     + guardPackageSnapshot()
-    + 'for __omarchy_pkg in "${__omarchy_pkg_names[@]}"; do __omarchy_pkgs[$__omarchy_pkg]=1; done\n'
-    + '__omarchy_pkg_has() { [[ -n ${__omarchy_pkgs[$1]-} ]] && return 0; '
+    + 'for __inferna_pkg in "${__inferna_pkg_names[@]}"; do __inferna_pkgs[$__inferna_pkg]=1; done\n'
+    + '__inferna_pkg_has() { [[ -n ${__inferna_pkgs[$1]-} ]] && return 0; '
     + '[[ $1 == *[\\<\\>=]* ]] && { pacman -Q "$1" &>/dev/null; return; }; return 1; }\n'
-    + 'inferna-pkg-present() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 1; done; return 0; }\n'
-    + 'inferna-pkg-missing() { local p; for p in "$@"; do __omarchy_pkg_has "$p" || return 0; done; return 1; }\n'
+    + 'inferna-pkg-present() { local p; for p in "$@"; do __inferna_pkg_has "$p" || return 1; done; return 0; }\n'
+    + 'inferna-pkg-missing() { local p; for p in "$@"; do __inferna_pkg_has "$p" || return 0; done; return 1; }\n'
     + 'inferna-cmd-present() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 1; done; return 0; }\n'
     + 'inferna-cmd-missing() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 0; done; return 1; }\n'
 }
@@ -539,8 +539,8 @@ function guardPrelude(guards) {
     // The guards arrive already substituted, so what marks a reader as wanted
     // is the slot standing in for it, not the call it replaced.
     if (guards.indexOf(guardReaderSlot(i)) < 0) continue
-    var value = "__omarchy_read_" + i
-    var fd = "__omarchy_read_fd_" + i
+    var value = "__inferna_read_" + i
+    var fd = "__inferna_read_fd_" + i
     start += "exec {" + fd + "}< <(" + GUARD_READERS[i] + " 2>/dev/null)\n"
     // `|| :` because read reports the EOF it stops at, and a login shell may
     // have turned on errexit.
@@ -553,7 +553,7 @@ function guardPrelude(guards) {
 }
 
 function guardReaderSlot(index) {
-  return "${__omarchy_read_" + index + "}"
+  return "${__inferna_read_" + index + "}"
 }
 
 function substituteGuardReaders(expression) {
@@ -610,11 +610,11 @@ function guardScript(items) {
     groups[group] = (groups[group] || "") + lines[j]
   }
 
-  var script = guardPrelude(lines.join("")) + "__omarchy_groups=()\n"
-  for (var k = 0; k < groups.length; k++) script += "{\n" + groups[k] + "} &\n__omarchy_groups+=($!)\n"
-  return script + "__omarchy_failed=0\n"
-    + 'for __omarchy_group in "${__omarchy_groups[@]}"; do wait "$__omarchy_group" || __omarchy_failed=1; done\n'
-    + "((__omarchy_failed == 0))\n"
+  var script = guardPrelude(lines.join("")) + "__inferna_groups=()\n"
+  for (var k = 0; k < groups.length; k++) script += "{\n" + groups[k] + "} &\n__inferna_groups+=($!)\n"
+  return script + "__inferna_failed=0\n"
+    + 'for __inferna_group in "${__inferna_groups[@]}"; do wait "$__inferna_group" || __inferna_failed=1; done\n'
+    + "((__inferna_failed == 0))\n"
 }
 
 // An action that only asks this shell to summon one of its own plugins can be

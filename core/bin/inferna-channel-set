@@ -17,7 +17,7 @@ fail() { echo "Error: $*" >&2; exit 1; }
 confirm_dev() {
   cat <<'WARNING'
 
-The dev channel links Inferna directly to a checkout of the source in ~/omarchy.
+The dev channel links Inferna directly to a checkout of the source in ~/inferna.
 It's exclusively intended for developers working on Inferna itself.
 
 WARNING
@@ -40,7 +40,7 @@ validate_dev_checkout() {
 # The dev channel refreshes pacman with the checkout's own tools. A checkout
 # without this machine's region profile would silently drop its repositories.
 validate_dev_region() {
-  local checkout="$1" region_file="${OMARCHY_REGION_FILE:-/etc/omarchy/region}" region=global
+  local checkout="$1" region_file="${INFERNA_REGION_FILE:-/etc/inferna/region}" region=global
 
   [[ -f $region_file ]] && region=$(<"$region_file")
   [[ $region == "global" ]] && return 0
@@ -50,7 +50,7 @@ validate_dev_region() {
   # dev later refreshes stable or rc with this checkout's tools.
   local profile="$checkout/default/regions/$region/pacman" fragment supported=true
   [[ -x $checkout/bin/inferna-apply-pacman ]] || supported=false
-  for fragment in omarchy-{stable,rc,edge}.prepend mirrorlist-{stable,rc,edge}.prepend; do
+  for fragment in inferna-{stable,rc,edge}.prepend mirrorlist-{stable,rc,edge}.prepend; do
     [[ -r $profile/$fragment ]] || supported=false
   done
   if ! $supported; then
@@ -62,10 +62,10 @@ link_dev_checkout() {
   local checkout="$1" required
   # Skip file contents only old history holds, like retired theme videos; git
   # fetches whatever a checkout needs when it needs it.
-  [[ -d $checkout/.git ]] || git clone --filter=blob:none https://github.com/omacom/omarchy.git "$checkout"
+  [[ -d $checkout/.git ]] || git clone --filter=blob:none https://github.com/petrolal/dotfiles.git "$checkout"
   validate_dev_region "$checkout"
 
-  # Check the destination before changing /etc/omarchy.conf or sudo's path.
+  # Check the destination before changing /etc/inferna.conf or sudo's path.
   # An existing checkout is not pulled automatically and may be too old.
   for required in bin/inferna-update bin/inferna-refresh-pacman; do
     if [[ ! -f $checkout/$required || ! -x $checkout/$required ]]; then
@@ -102,11 +102,11 @@ leaving_dev=0
 case "$channel" in
   stable)
     pacman_channel=stable
-    packages=(omarchy inferna-settings)
+    packages=(inferna inferna-settings)
     ;;
   rc)
     pacman_channel=rc
-    packages=(omarchy inferna-settings)
+    packages=(inferna inferna-settings)
     ;;
   edge)
     pacman_channel=edge
@@ -127,13 +127,13 @@ esac
 # anything changes (install/helpers/pacman.sh).
 source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform) || fail "Cannot tell this machine's platform; nothing changed."
-templates=$(omarchy_pacman_templates "$platform") || exit 1
+templates=$(inferna_pacman_templates "$platform") || exit 1
 [[ -f $templates/pacman-$pacman_channel.conf && -f $templates/mirrorlist-$pacman_channel ]] ||
   fail "Inferna has no $pacman_channel channel for $platform; nothing changed."
 
 if [[ $channel == "dev" ]]; then
   confirm_dev || { echo "Cancelled."; exit 0; }
-  dev_checkout="$HOME/omarchy"
+  dev_checkout="$HOME/inferna"
   validate_dev_checkout "$dev_checkout"
 fi
 
@@ -141,13 +141,13 @@ fi
 # to pick it back up rather than dying silently under set -e.
 trap 'echo -e "\nThe channel switch did not complete. Review the error above, then rerun: inferna-channel-set '"$channel"'" >&2' ERR
 
-if [[ -z $dev_checkout && $INFERNA_PATH != "/usr/share/omarchy" ]]; then
+if [[ -z $dev_checkout && $INFERNA_PATH != "/usr/share/inferna" ]]; then
   leaving_dev=1
 fi
 
 if [[ -n $dev_checkout ]]; then
   link_dev_checkout "$dev_checkout"
-  export OMARCHY_PATH="$INFERNA_PATH"
+  export INFERNA_PATH="$INFERNA_PATH"
 export INFERNA_PATH="$dev_checkout"
   export PATH="$INFERNA_PATH/bin:$PATH"
   inferna-state set reboot-required
@@ -155,9 +155,9 @@ fi
 
 inferna-refresh-pacman "$pacman_channel"
 # The refresh can have installed an older release without this tree's helpers,
-# so the swap calls pacman itself. --ask 4 accepts omarchy <-> inferna-dev
+# so the swap calls pacman itself. --ask 4 accepts inferna <-> inferna-dev
 # replacement prompts without file overwrites.
-sudo env OMARCHY_UPDATE_PACMAN=1 pacman -S --needed --noconfirm --ask 4 "${packages[@]}"
+sudo env INFERNA_UPDATE_PACMAN=1 pacman -S --needed --noconfirm --ask 4 "${packages[@]}"
 
 if [[ -z $dev_checkout ]]; then
   inferna-dev-unlink --no-reboot
@@ -172,10 +172,10 @@ if [[ -z $dev_checkout ]]; then
     export PATH=$path
     inferna-state set reboot-required
   fi
-  export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH=/usr/share/omarchy
+  export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH=/usr/share/inferna
 fi
 
 # The switch was already confirmed, but the user is still here: keep the
 # reboot prompt interactive.
-OMARCHY_UPDATE_UNATTENDED=0 "$INFERNA_PATH/bin/inferna-update" -y
+INFERNA_UPDATE_UNATTENDED=0 "$INFERNA_PATH/bin/inferna-update" -y

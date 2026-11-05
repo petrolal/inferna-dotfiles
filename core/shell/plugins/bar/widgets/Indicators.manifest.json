@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.indicators",
+  "id": "inferna.indicators",
   "name": "Indicators",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Manual state indicators",
   "kinds": [
     "bar-widget"
@@ -72,7 +72,7 @@
       }
     ]
   },
-  "omarchy": {
+  "inferna": {
     "clonePaths": [
       {
         "source": "../indicators",

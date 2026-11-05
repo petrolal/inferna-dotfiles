@@ -36,8 +36,8 @@ esac
 # The ISO writes this plain-text marker before target finalization. Missing
 # markers keep existing installations global; never source it as shell code.
 region=global
-if [[ -e $etc/omarchy/region ]]; then
-  region=$(<"$etc/omarchy/region")
+if [[ -e $etc/inferna/region ]]; then
+  region=$(<"$etc/inferna/region")
 fi
 case "$region" in
   global|cn) ;;
@@ -47,7 +47,7 @@ esac
 # Each platform has its own channel templates (install/helpers/pacman.sh).
 source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform)
-templates=$(omarchy_pacman_templates "$platform")
+templates=$(inferna_pacman_templates "$platform")
 if [[ ! -f $templates/pacman-$channel.conf || ! -f $templates/mirrorlist-$channel ]]; then
   echo "Inferna has no $channel channel for $platform." >&2
   exit 1
@@ -68,17 +68,17 @@ if [[ $region == "global" || $platform != "x86" ]]; then
   cp "$templates/mirrorlist-$channel" "$staging/mirrorlist"
 else
   profile="$INFERNA_PATH/default/regions/$region/pacman"
-  for fragment in "omarchy-$channel.prepend" "mirrorlist-$channel.prepend"; do
+  for fragment in "inferna-$channel.prepend" "mirrorlist-$channel.prepend"; do
     [[ -r $profile/$fragment ]] || { echo "Region $region lacks $profile/$fragment" >&2; exit 1; }
   done
   # pacman tries servers in order, so each regional mirror leads and the
-  # channel's own server stays as the fallback, for [omarchy] and for Arch.
-  awk -v fragment="$profile/omarchy-$channel.prepend" '
+  # channel's own server stays as the fallback, for [inferna] and for Arch.
+  awk -v fragment="$profile/inferna-$channel.prepend" '
     { print }
-    $0 == "[omarchy]" { while ((getline line < fragment) > 0) print line; found++ }
+    $0 == "[inferna]" { while ((getline line < fragment) > 0) print line; found++ }
     END { exit found == 1 ? 0 : 1 }
   ' "$templates/pacman-$channel.conf" > "$staging/pacman.conf" ||
-    { echo "pacman-$channel.conf has no single [omarchy] section" >&2; exit 1; }
+    { echo "pacman-$channel.conf has no single [inferna] section" >&2; exit 1; }
   cat "$profile/mirrorlist-$channel.prepend" "$templates/mirrorlist-$channel" > "$staging/mirrorlist"
 fi
 

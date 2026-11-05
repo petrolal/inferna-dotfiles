@@ -5,7 +5,7 @@
 # inferna:hidden=true
 
 # Runs once, early on the first boot after inferna-system-factory-reset, via
-# inferna-system-factory-reset-finish.service (armed by /var/lib/omarchy/provisioning/wipe-pending).
+# inferna-system-factory-reset-finish.service (armed by /var/lib/inferna/provisioning/wipe-pending).
 # Ordered before home.mount/var-log.mount so @home and @log can be dropped and
 # recreated as empty subvolumes instead of rm -rf'd file by file.
 #
@@ -17,7 +17,7 @@
 
 set -uo pipefail
 
-PROVISIONING_DIR=/var/lib/omarchy/provisioning
+PROVISIONING_DIR=/var/lib/inferna/provisioning
 TOP_MNT=/run/inferna-system-factory-reset-finish-top
 
 [[ -f $PROVISIONING_DIR/wipe-pending ]] || exit 0

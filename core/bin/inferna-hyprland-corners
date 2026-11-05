@@ -4,7 +4,7 @@
 # inferna:args=[theme|sharp|rounded]
 # inferna:examples=inferna hyprland corners | inferna hyprland corners rounded
 
-TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
+TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/toggles/hypr"
 
 # Sharp and rounded are toggle files loaded after every theme, so they override
 # the corners of whichever theme is current. Theme removes both.

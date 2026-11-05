@@ -6,8 +6,8 @@
 # inferna:examples=inferna screenshot | inferna capture screenshot region
 # inferna:aliases=inferna screenshot
 
-if [[ -n ${OMARCHY_SCREENSHOT_DIR:-} && -z ${OMASNAP_SCREENSHOT_DIR:-} ]]; then
-  export OMASNAP_SCREENSHOT_DIR="$OMARCHY_SCREENSHOT_DIR"
+if [[ -n ${INFERNA_SCREENSHOT_DIR:-} && -z ${OMASNAP_SCREENSHOT_DIR:-} ]]; then
+  export OMASNAP_SCREENSHOT_DIR="$INFERNA_SCREENSHOT_DIR"
 fi
 
 # --notify announces saved shots with Open and Edit buttons instead of a

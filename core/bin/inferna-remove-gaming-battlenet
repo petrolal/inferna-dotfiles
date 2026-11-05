@@ -12,7 +12,7 @@ sleep 1
 
 rm -rf "$PREFIX"
 rm -f "$HOME/.local/share/applications/battlenet.desktop"
-rm -f "$HOME/.cache/omarchy/Battle.net-Setup.exe"
+rm -f "$HOME/.cache/inferna/Battle.net-Setup.exe"
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 
 echo

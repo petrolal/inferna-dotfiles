@@ -1,5 +1,5 @@
-: "${INFERNA_PATH:=${OMARCHY_PATH:-$HOME/inferna-dotfiles/core}}"
-export OMARCHY_PATH="$INFERNA_PATH"
+: "${INFERNA_PATH:=${INFERNA_PATH:-$HOME/inferna-dotfiles/core}}"
+export INFERNA_PATH="$INFERNA_PATH"
 source "$INFERNA_PATH/default/bash/envs"
 source "$INFERNA_PATH/default/bash/shell"
 source "$INFERNA_PATH/default/bash/aliases"

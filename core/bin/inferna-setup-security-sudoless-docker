@@ -41,7 +41,7 @@ if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-
   echo ""
   # The migration reuses this command during 'inferna update' and defers the
   # reboot to inferna-update-restart, so it doesn't cut the update short.
-  if [[ -z ${OMARCHY_DEFER_REBOOT:-} ]] && gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n docker.rebootToApply)"; then
+  if [[ -z ${INFERNA_DEFER_REBOOT:-} ]] && gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n docker.rebootToApply)"; then
     inferna-system reboot
   fi
 else

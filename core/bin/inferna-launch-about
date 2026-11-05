@@ -10,10 +10,10 @@
 
 LOGO_FILE="$HOME/.config/inferna/branding/about.txt"
 FIT_FILE="$HOME/.local/state/inferna/windows/about.fit"
-OMARCHY_FASTFETCH_DIR=/etc/fastfetch
+INFERNA_FASTFETCH_DIR=/etc/fastfetch
 # Without a runtime directory there is nowhere private to put the translated
 # copy, so the untranslated config runs as it is.
-ABOUT_CONFIG=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/omarchy/about-fastfetch.jsonc}
+ABOUT_CONFIG=${XDG_RUNTIME_DIR:+$XDG_RUNTIME_DIR/inferna/about-fastfetch.jsonc}
 
 # The logo block in the fastfetch config. The fit below reproduces this layout to
 # size the window, and the sheen has to repaint the very cells fastfetch drew the
@@ -50,7 +50,7 @@ custom_fastfetch_config() {
   while IFS= read -r directory; do
     listed=true
     directory=${directory% (\*)}
-    [[ ${directory%/} == "$OMARCHY_FASTFETCH_DIR" ]] && return 1
+    [[ ${directory%/} == "$INFERNA_FASTFETCH_DIR" ]] && return 1
     [[ -f ${directory%/}/config.jsonc ]] && return 0
   done < <(fastfetch --list-config-paths 2>/dev/null)
 
@@ -104,7 +104,7 @@ write_about_config() {
         (.key | capture("^(?<icon>\\S+) (?<label>.+)$")) as $k
         | if $keys[$k.label] then .key = "\($k.icon) \($keys[$k.label])" else . end
       else . end
-    )' "$OMARCHY_FASTFETCH_DIR/config.jsonc" >"$ABOUT_CONFIG.new"
+    )' "$INFERNA_FASTFETCH_DIR/config.jsonc" >"$ABOUT_CONFIG.new"
   then
     mv "$ABOUT_CONFIG.new" "$ABOUT_CONFIG"
   else
@@ -148,9 +148,9 @@ remember_fit() {
 # starting size — where a Hyprland without the Lua API stays too.
 apply_size_rule() {
   local rule=""
-  (( $# == 2 )) && rule="omarchy_about_size_rule = hl.window_rule({ match = { class = \"org.omarchy.about\" }, size = { $1, $2 } })"
+  (( $# == 2 )) && rule="inferna_about_size_rule = hl.window_rule({ match = { class = \"org.inferna.about\" }, size = { $1, $2 } })"
 
-  hyprctl eval "if omarchy_about_size_rule then omarchy_about_size_rule:set_enabled(false) end; omarchy_about_size_rule = nil; $rule" >/dev/null 2>&1
+  hyprctl eval "if inferna_about_size_rule then inferna_about_size_rule:set_enabled(false) end; inferna_about_size_rule = nil; $rule" >/dev/null 2>&1
 }
 
 # Sized before the terminal is spawned, so the window maps at its final size.
@@ -219,7 +219,7 @@ fit_window() {
   local nudges=0 rows cols address width height shift_w shift_h target_w target_h
   while :; do
     read -r rows cols <<<"$(stty size)"
-    read -r address width height <<<"$(hyprctl clients -j | jq -r '.[] | select(.class == "org.omarchy.about") | "\(.address) \(.size[0]) \(.size[1])"')"
+    read -r address width height <<<"$(hyprctl clients -j | jq -r '.[] | select(.class == "org.inferna.about") | "\(.address) \(.size[0]) \(.size[1])"')"
     [[ -n ${address:-} ]] || return 1
     (( cols > 0 && rows > 0 && width > 0 && height > 0 )) || return 1
 
@@ -421,4 +421,4 @@ if [[ ${1:-} == "--render" ]]; then
 fi
 
 presize_window
-exec inferna-launch-or-focus-tui --app-id=org.omarchy.about inferna-launch-about --render
+exec inferna-launch-or-focus-tui --app-id=org.inferna.about inferna-launch-about --render

@@ -11,12 +11,12 @@ Item {
   id: root
 
   // Injected by inferna-shell when this plugin is summoned.
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   property var shell: null
   property var manifest: null
 
   // Plugin lifecycle hooks. The host calls open(payloadJson) after
-  // `inferna-shell shell summon omarchy.menu ...` and close() when hidden.
+  // `inferna-shell shell summon inferna.menu ...` and close() when hidden.
   property string pendingInitialMenu: "root"
 
   function open(payloadJson) {
@@ -53,7 +53,7 @@ Item {
   // JSONC menu definitions. The shell parses both at startup and merges
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
-  property string defaultMenuPath: omarchyPath + "/default/omarchy/inferna-menu.jsonc"
+  property string defaultMenuPath: infernaPath + "/default/inferna/inferna-menu.jsonc"
   property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Display language for the shipped rows. The code lives in
   // ~/.config/inferna/language; a missing file
@@ -62,7 +62,7 @@ Item {
   // user's own rows and retitles always win.
   property string language: "en"
   property var menuCatalog: ({})
-  readonly property string languagePath: Quickshell.env("INFERNA_LANGUAGE_FILE") || Quickshell.env("OMARCHY_LANGUAGE_FILE") || ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/inferna/language")
+  readonly property string languagePath: Quickshell.env("INFERNA_LANGUAGE_FILE") || Quickshell.env("INFERNA_LANGUAGE_FILE") || ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/inferna/language")
   property var defaultMenuItems: []
   property var userMenuItems: []
   // Whether each file has answered once, loaded or (the user's) missing. At
@@ -1008,7 +1008,7 @@ Item {
   // ----------------------------------------------------------- route surface
   //
   // The menu is opened through the standard plugin lifecycle:
-  // `inferna-shell shell summon omarchy.menu '{"menu":"system"}'`.
+  // `inferna-shell shell summon inferna.menu '{"menu":"system"}'`.
   // Callers may pass a real id (`system`, `setup.power`) or an alias declared
   // in JSONC (`power`, `reminder-set`). Unknown strings fall through to the
   // id-as-route behavior so misspellings still attempt to open the literal id.
@@ -1020,7 +1020,7 @@ Item {
     var id = root.resolveRoute(initialMenu)
     var entry = root.items[id]
     // If the resolved id is an action (i.e. the user invoked an alias for
-    // a leaf, e.g. `omarchy menu summon screenrecord-stop`), run it directly
+    // a leaf, e.g. `inferna menu summon screenrecord-stop`), run it directly
     // instead of opening an action with no children.
     if (entry && entry.kind === "action" && entry.action) {
       root.cancel()
@@ -1181,7 +1181,7 @@ Item {
 
   FileView {
     id: menuCatalogFile
-    path: root.omarchyPath + "/default/i18n/" + root.language + "/menu.json"
+    path: root.infernaPath + "/default/i18n/" + root.language + "/menu.json"
     watchChanges: true
     printErrors: false
     onLoaded: { root.menuCatalog = root.parseCatalog(text()); root.rebuildItemsFromSources(true) }

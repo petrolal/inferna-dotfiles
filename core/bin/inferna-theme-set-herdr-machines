@@ -24,7 +24,7 @@ flock 9
 
 # A theme that arrived from another machine stops here, so machines never echo it back.
 # The toggle is checked once the lock is held, so turning sync off also stops a queued run.
-if [[ -n $OMARCHY_THEME_SYNC_FROM ]] || ! inferna-toggle-enabled herdr-theme-sync; then
+if [[ -n $INFERNA_THEME_SYNC_FROM ]] || ! inferna-toggle-enabled herdr-theme-sync; then
   exit 0
 fi
 
@@ -58,7 +58,7 @@ read -r -d '' REMOTE_SCRIPT <<'EOF'
   read -r HYPRLAND_INSTANCE_SIGNATURE WAYLAND_DISPLAY <<<"$instance"
   export HYPRLAND_INSTANCE_SIGNATURE WAYLAND_DISPLAY
   export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-  export OMARCHY_THEME_SYNC_FROM="$from"
+  export INFERNA_THEME_SYNC_FROM="$from"
 
   if inferna theme set "$theme" >/dev/null 2>&1; then
     echo "set $theme"

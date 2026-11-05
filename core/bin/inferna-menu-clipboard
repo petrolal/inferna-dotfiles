@@ -3,4 +3,4 @@
 # inferna:group=menu
 # inferna:examples=inferna menu clipboard
 
-inferna-shell shell toggle omarchy.clipboard
+inferna-shell shell toggle inferna.clipboard

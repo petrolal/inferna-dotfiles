@@ -10,7 +10,7 @@ set -euo pipefail
 # rather than by deleting it. Skipping the file drops only Inferna's
 # declarations: the same tools declared in a project or the user's own config
 # still load, which a disable_tools entry would block as well.
-tools_config="${OMARCHY_MISE_CONFIG_PATH:-/etc/mise/conf.d/inferna-tools.toml}"
+tools_config="${INFERNA_MISE_CONFIG_PATH:-/etc/mise/conf.d/inferna-tools.toml}"
 
 # mise reads ignored_config_paths before any config file loads, so the setting
 # lives in miserc.toml, which `mise settings` does not edit. Only this exact

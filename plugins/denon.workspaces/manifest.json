@@ -3,7 +3,7 @@
   "id": "denon.workspaces",
   "name": "My Workspaces",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Workspace number indicators",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "Compositor",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.workspaces"
+  "inferna": {
+    "clonedFrom": "inferna.workspaces"
   }
 }

@@ -16,8 +16,8 @@ if [[ -d $inferna_path ]]; then
   exit 0
 fi
 
-# The edge channel installs inferna-dev instead of omarchy, so check both.
-for package in inferna-dev inferna omarchy; do
+# The edge channel installs inferna-dev instead of inferna, so check both.
+for package in inferna-dev inferna inferna; do
   version=$(pacman -Q "$package" 2>/dev/null | awk '{ print $2 }')
   [[ -n $version ]] && break
 done

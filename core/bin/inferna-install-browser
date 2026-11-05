@@ -8,7 +8,7 @@ set -e
 
 source "$INFERNA_PATH/install/helpers/browser-policy.sh"
 
-opt_path="${OMARCHY_OPT_PATH:-/opt}"
+opt_path="${INFERNA_OPT_PATH:-/opt}"
 
 setup_chromium_policy_directory() {
   browser_policy_setup_dir "$1"

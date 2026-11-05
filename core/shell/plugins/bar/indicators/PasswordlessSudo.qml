@@ -32,7 +32,7 @@ BarIndicator {
   Component.onCompleted: refresh()
 
   // No polling: each probe is a hardened script plus sudo calls that can log.
-  // inferna-sudo-passwordless refreshes omarchy.indicators on enable, disable
+  // inferna-sudo-passwordless refreshes inferna.indicators on enable, disable
   // and expiry instead.
   Connections {
     target: root.indicatorHost

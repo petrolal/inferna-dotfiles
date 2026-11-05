@@ -9,8 +9,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.monitor"
-  ipcTarget: "omarchy.monitor"
+  moduleName: "inferna.monitor"
+  ipcTarget: "inferna.monitor"
   manageIpc: false
 
   // manageIpc: false so this panel can own the single IpcHandler the target
@@ -28,7 +28,7 @@ Panel {
   property string externalMonitor: ""
   property string focusedMonitor: ""
   property bool internalEnabled: false
-  // Omarchy's mirror toggle is on, so Extend can turn it back off.
+  // Inferna's mirror toggle is on, so Extend can turn it back off.
   property bool mirrorManaged: false
   property string monitorScale: ""
   property string displaysJson: ""
@@ -364,7 +364,7 @@ Panel {
   }
 
   ShellIpc {
-    target: "omarchy.monitor"
+    target: "inferna.monitor"
 
     function brightness(percent: string): string { return root.brightnessIpc(percent) }
     function state(): string { return root.stateIpc() }
@@ -425,7 +425,7 @@ Panel {
 
   function showBrightnessOsd(percent) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    bar.shell.summon("inferna.osd", JSON.stringify({
       icon: "brightness",
       value: percent
     }))

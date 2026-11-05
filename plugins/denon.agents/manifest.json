@@ -3,9 +3,9 @@
   "id": "denon.agents",
   "name": "My Agents",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "license": "MIT",
-  "description": "Claude Code, Codex, and Fireworks usage, limits, and pace in a native Omarchy bar panel.",
+  "description": "Claude Code, Codex, and Fireworks usage, limits, and pace in a native Inferna bar panel.",
   "kinds": [
     "bar-widget"
   ],
@@ -84,7 +84,7 @@
       }
     ]
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.agents"
+  "inferna": {
+    "clonedFrom": "inferna.agents"
   }
 }

@@ -36,11 +36,11 @@ active_reminder_timers() {
 }
 
 refresh_indicator() {
-  inferna-shell -q omarchy.indicators refresh >/dev/null 2>&1 || true
+  inferna-shell -q inferna.indicators refresh >/dev/null 2>&1 || true
 }
 
 open_interactive() {
-  inferna-shell shell summon omarchy.reminders "{}"
+  inferna-shell shell summon inferna.reminders "{}"
 }
 
 show_reminders() {
@@ -192,7 +192,7 @@ if [[ -n $custom_message ]]; then
 fi
 
 systemd-run --user --quiet --collect --on-active="${minutes}m" --unit="$unit" \
-  bash -c 'inferna-notification-send -g 󰢌 "$(inferna-i18n reminder.title)" "$1"; rm -f "$2"; inferna-shell -q omarchy.indicators refresh >/dev/null 2>&1 || true' bash "$message" "$message_file"
+  bash -c 'inferna-notification-send -g 󰢌 "$(inferna-i18n reminder.title)" "$1"; rm -f "$2"; inferna-shell -q inferna.indicators refresh >/dev/null 2>&1 || true' bash "$message" "$message_file"
 
 refresh_indicator
 inferna-notification-send -g 󰢌 "$confirmation_title" "$confirmation"

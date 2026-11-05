@@ -3,7 +3,7 @@
 # inferna:summary=Prompt for required reboot or service restarts after updates
 # inferna:args=[--services-only|--reboot-only]
 
-kernel_modules_path="${OMARCHY_KERNEL_MODULES_PATH:-/usr/lib/modules}"
+kernel_modules_path="${INFERNA_KERNEL_MODULES_PATH:-/usr/lib/modules}"
 
 mode="${1:-all}"
 case "$mode" in
@@ -13,7 +13,7 @@ esac
 
 echo
 confirm_reboot() {
-  if [[ ${OMARCHY_UPDATE_UNATTENDED:-0} == "1" ]]; then
+  if [[ ${INFERNA_UPDATE_UNATTENDED:-0} == "1" ]]; then
     echo "$1 Run inferna-system reboot when ready."
   elif gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$1"; then
     inferna-system reboot

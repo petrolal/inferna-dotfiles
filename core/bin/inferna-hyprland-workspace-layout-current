@@ -10,7 +10,7 @@ else
   read -r WORKSPACE_ID TILED_LAYOUT < <(hyprctl activeworkspace -j | jq -r '"\(.id) \(.tiledLayout // "")"')
 fi
 
-MODES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layouts"
+MODES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/workspace-layouts"
 
 # Hyprland only reports the tiled layout, and floating is not one, so the mode is
 # read back from the file inferna-hyprland-workspace-layout-toggle wrote. Files

@@ -23,31 +23,31 @@ QtObject {
   property var _refresh: null
 
   function setIdleEnabled(value) {
-    if (serviceId === "omarchy.idle" && _setIdleEnabled) _setIdleEnabled(!!value)
+    if ((serviceId === "inferna.idle" || serviceId === "inferna.idle") && _setIdleEnabled) _setIdleEnabled(!!value)
   }
 
   function setNightlight(value) {
-    if (serviceId === "omarchy.nightlight" && _setNightlight) _setNightlight(!!value)
+    if ((serviceId === "inferna.nightlight" || serviceId === "inferna.nightlight") && _setNightlight) _setNightlight(!!value)
   }
 
   function setDoNotDisturb(value) {
-    if (serviceId === "omarchy.notifications" && _setDoNotDisturb) _setDoNotDisturb(!!value)
+    if ((serviceId === "inferna.notifications" || serviceId === "inferna.notifications") && _setDoNotDisturb) _setDoNotDisturb(!!value)
   }
 
   function runAction(action, showFeedback, playerId) {
-    if (serviceId === "omarchy.media" && _runAction)
+    if ((serviceId === "inferna.media" || serviceId === "inferna.media") && _runAction)
       _runAction(String(action || ""), !!showFeedback, String(playerId || ""))
   }
 
   function playerKey(player) {
-    return serviceId === "omarchy.media" && _playerKey ? _playerKey(player) : ""
+    return (serviceId === "inferna.media" || serviceId === "inferna.media") && _playerKey ? _playerKey(player) : ""
   }
 
   function selectPlayer(playerId) {
-    if (serviceId === "omarchy.media" && _selectPlayer) _selectPlayer(String(playerId || ""))
+    if ((serviceId === "inferna.media" || serviceId === "inferna.media") && _selectPlayer) _selectPlayer(String(playerId || ""))
   }
 
   function refresh() {
-    if (serviceId === "omarchy.remote-session" && _refresh) _refresh()
+    if (serviceId === "inferna.remote-session" && _refresh) _refresh()
   }
 }

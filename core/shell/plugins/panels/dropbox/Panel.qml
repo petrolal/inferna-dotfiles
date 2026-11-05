@@ -10,8 +10,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.dropbox"
-  ipcTarget: "omarchy.dropbox"
+  moduleName: "inferna.dropbox"
+  ipcTarget: "inferna.dropbox"
   manageIpc: false
 
   // Items inside the panel's lazily built content, null until it first
@@ -20,7 +20,7 @@ Panel {
   readonly property Item hero: panel.loadedContent ? panel.loadedContent.hero : null
   readonly property Item fileColumn: panel.loadedContent ? panel.loadedContent.fileColumn : null
 
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   property string focusSection: "login"
   property int fileIndex: 0
   property bool cursorActive: false
@@ -153,7 +153,7 @@ Panel {
   Service {
     id: dropbox
     settings: root.settings
-    omarchyPath: root.omarchyPath
+    infernaPath: root.infernaPath
   }
 
   Connections {

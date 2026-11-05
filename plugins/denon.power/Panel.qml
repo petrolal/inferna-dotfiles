@@ -13,8 +13,8 @@ Panel {
   // Glass surfaces: calm sentence-case taglines instead of tracked capitals.
   function glassSentence(v) { var t = String(v || ""); return t.length ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase() : t }
 
-  moduleName: "omarchy.power"
-  ipcTarget: "omarchy.power"
+  moduleName: "inferna.power"
+  ipcTarget: "inferna.power"
   // manageIpc: false so this panel can own the single IpcHandler the target
   // permits — needed for the togglePercentage method below.
   manageIpc: false
@@ -96,8 +96,8 @@ Panel {
   // Charging must be obvious at a glance: plugged in tints the bar icon and the
   // panel in the theme accent; actively charging adds a breathing icon, a
   // "Charging" badge and current flowing through the battery bar.
-  property bool previewCharging: false   // IPC: inferna-shell omarchy.power previewCharging
-  property bool previewLow: false         // IPC: inferna-shell omarchy.power previewLow
+  property bool previewCharging: false   // IPC: inferna-shell inferna.power previewCharging
+  property bool previewLow: false         // IPC: inferna-shell inferna.power previewLow
   readonly property bool pluggedIn: previewCharging || (batteryPresent && !UPower.onBattery)
   readonly property bool chargingNow: previewCharging || charging
   readonly property color chargeColor: Commons.Color.accent
@@ -218,7 +218,7 @@ Panel {
   }
 
   IpcHandler {
-    target: "omarchy.power"
+    target: "inferna.power"
 
     function open() { root.open() }
     function close() { root.close() }

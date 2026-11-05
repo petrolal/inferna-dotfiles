@@ -12,8 +12,8 @@ if [[ $1 == "--print-rows" ]]; then
 fi
 
 USER_THEMES_PATH="$HOME/.config/inferna/themes"
-OMARCHY_THEMES_PATH="$INFERNA_PATH/themes"
-CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/omarchy/theme-selector"
+INFERNA_THEMES_PATH="$INFERNA_PATH/themes"
+CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/inferna/theme-selector"
 preview_dir="$CACHE_PATH/previews"
 signature_file="$CACHE_PATH/signature"
 fast_signature_file="$CACHE_PATH/fast-signature"
@@ -54,7 +54,7 @@ add_theme_preview() {
 }
 
 fast_signature="v2"$'\n'
-for theme_dir in "$USER_THEMES_PATH" "$OMARCHY_THEMES_PATH"; do
+for theme_dir in "$USER_THEMES_PATH" "$INFERNA_THEMES_PATH"; do
   if [[ -d $theme_dir ]]; then
     fast_signature+="$theme_dir:$(stat -Lc '%Y' "$theme_dir")"$'\n'
 
@@ -66,7 +66,7 @@ done
 
 if [[ ! -f $fast_signature_file ]] || ! cmp -s "$fast_signature_file" <(printf '%s' "$fast_signature"); then
   theme_signature=""
-  for theme_dir in "$USER_THEMES_PATH" "$OMARCHY_THEMES_PATH"; do
+  for theme_dir in "$USER_THEMES_PATH" "$INFERNA_THEMES_PATH"; do
     if [[ -d $theme_dir ]]; then
       theme_signature+="$theme_dir:$(stat -Lc '%Y' "$theme_dir")"$'\n'
 
@@ -91,7 +91,7 @@ if [[ ! -f $fast_signature_file ]] || ! cmp -s "$fast_signature_file" <(printf '
     preview=$(find_preview "$theme_path")
 
     if [[ -z $preview ]]; then
-      preview=$(find_preview "$OMARCHY_THEMES_PATH/$theme_name")
+      preview=$(find_preview "$INFERNA_THEMES_PATH/$theme_name")
     fi
 
     add_theme_preview "$theme_name" "$preview"
@@ -101,7 +101,7 @@ if [[ ! -f $fast_signature_file ]] || ! cmp -s "$fast_signature_file" <(printf '
     theme_name=${theme_path##*/}
     preview=$(find_preview "$theme_path")
     add_theme_preview "$theme_name" "$preview"
-  done < <(find -L "$OMARCHY_THEMES_PATH" -mindepth 1 -maxdepth 1 -type d -print 2>/dev/null | sort)
+  done < <(find -L "$INFERNA_THEMES_PATH" -mindepth 1 -maxdepth 1 -type d -print 2>/dev/null | sort)
 
   printf '%s' "$theme_signature" >"$signature_file"
   printf '%s' "$fast_signature" >"$fast_signature_file"

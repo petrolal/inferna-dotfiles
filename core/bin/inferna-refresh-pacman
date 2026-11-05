@@ -16,14 +16,14 @@ if ! platform=$(inferna-hw-platform); then
   echo "Cannot tell this machine's platform. No repository configuration changed." >&2
   exit 1
 fi
-templates=$(omarchy_pacman_templates "$platform") || exit 1
+templates=$(inferna_pacman_templates "$platform") || exit 1
 if [[ -z $channel ]]; then
   channel=$(inferna-channel-current) || exit 1
   case "$channel" in
     stable | rc | edge) ;;
     # A linked checkout uses the edge packages, just like channel-set dev.
     dev) channel=edge ;;
-    unknown) channel=$(omarchy_pacman_default_channel "$platform") || exit 1 ;;
+    unknown) channel=$(inferna_pacman_default_channel "$platform") || exit 1 ;;
     *)
       echo "Cannot tell this machine's channel. No repository configuration changed." >&2
       exit 1
@@ -54,7 +54,7 @@ rm -rf "$rendered"
 # transaction below.
 inferna-hook pre-refresh-pacman
 
-# Stable and rc publish omarchy and inferna-settings; the -dev pair is edge's.
+# Stable and rc publish inferna and inferna-settings; the -dev pair is edge's.
 # A stable or rc repository can still list an old -dev build (stable's listed
 # 4.0.0.r1832 from August to October 2026), and -uu would move an edge machine
 # onto it here, before inferna-channel-set swaps the pair, and leave the

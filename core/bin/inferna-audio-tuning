@@ -31,7 +31,7 @@ stale_daemon="$config_home/pipewire/pipewire.conf.d/90-inferna-speaker-tuning.co
 stale_wireplumber="$config_home/wireplumber/wireplumber.conf.d/90-inferna-speaker-tuning.conf"
 stale_shared="$config_home/pipewire/filter-chain.conf.d/90-inferna-speaker-tuning.conf"
 
-sink_name=omarchy_speaker_tuning
+sink_name=inferna_speaker_tuning
 
 action="${1:-status}"
 force=0

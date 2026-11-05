@@ -9,7 +9,7 @@ Item {
   id: root
 
   property var shell: null
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
 
   readonly property int batteryThreshold: 10
   property string pendingPowerSource: ""

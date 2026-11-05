@@ -3,10 +3,10 @@
   "id": "denon.bar",
   "name": "Rounded Floating Bar",
   "version": "1.1.0",
-  "author": "Omarchy",
-  "description": "Floating pill-shaped status bar with Omarchy widgets",
-  "omarchy": {
-    "clonedFrom": "omarchy.bar"
+  "author": "Inferna",
+  "description": "Floating pill-shaped status bar with Inferna widgets",
+  "inferna": {
+    "clonedFrom": "inferna.bar"
   },
   "kinds": [
     "bar"

@@ -3,7 +3,7 @@
   "id": "denon.notifications",
   "name": "My Notifications",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Notification daemon, popups, DND, and history",
   "kinds": [
     "service"
@@ -12,7 +12,7 @@
   "entryPoints": {
     "service": "Service.qml"
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.notifications"
+  "inferna": {
+    "clonedFrom": "inferna.notifications"
   }
 }

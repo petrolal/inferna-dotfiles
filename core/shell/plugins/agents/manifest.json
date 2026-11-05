@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.agents",
+  "id": "inferna.agents",
   "name": "Agents",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "license": "MIT",
-  "description": "Usage, limits, pace, and prepaid balances for every AI agent and provider in a native Omarchy bar panel.",
+  "description": "Usage, limits, pace, and prepaid balances for every AI agent and provider in a native Inferna bar panel.",
   "kinds": ["bar-widget"],
   "activation": "on-demand",
   "entryPoints": {

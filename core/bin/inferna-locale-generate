@@ -19,11 +19,11 @@ fi
 
 # Root reads only the packaged registry and the real locale.gen; the
 # overrides are for unprivileged tests (same convention as inferna-language).
-registry=/usr/share/omarchy/default/i18n/locales.json
+registry=/usr/share/inferna/default/i18n/locales.json
 locale_gen=/etc/locale.gen
 if (( EUID != 0 )); then
-  registry=${OMARCHY_LOCALE_REGISTRY:-$registry}
-  locale_gen=${OMARCHY_LOCALE_GEN:-$locale_gen}
+  registry=${INFERNA_LOCALE_REGISTRY:-$registry}
+  locale_gen=${INFERNA_LOCALE_GEN:-$locale_gen}
 fi
 
 code=${1:-}

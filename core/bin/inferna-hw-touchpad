@@ -9,7 +9,7 @@ device=$(grep -iE -m1 'touchpad|trackpad' <<<"$mice")
 # so ask udev which mouse is one. The name alone can't say: some touchscreens'
 # mouse interfaces are called multi-touch too.
 if [[ -z $device ]]; then
-  input_class="${OMARCHY_INPUT_CLASS_PATH:-/sys/class/input}"
+  input_class="${INFERNA_INPUT_CLASS_PATH:-/sys/class/input}"
   for event in "$input_class"/event*; do
     [[ -r $event/device/name ]] || continue
     # Hyprland's name for a device: the kernel's, lowercased, with spaces,

@@ -11,8 +11,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.network"
-  ipcTarget: "omarchy.network"
+  moduleName: "inferna.network"
+  ipcTarget: "inferna.network"
   // manageIpc: false so this panel can own the single IpcHandler the target
   // permits — needed for the toggleNetwork method below.
   manageIpc: false
@@ -211,7 +211,7 @@ Panel {
   }
 
   ShellIpc {
-    target: "omarchy.network"
+    target: "inferna.network"
 
     function open() { root.open() }
     function close() { root.close() }
@@ -556,7 +556,7 @@ Panel {
     onTriggered: root.checkConnectivity()
   }
 
-  // The share card is its own panel plugin (omarchy.wifiqr) so a replacement
+  // The share card is its own panel plugin (inferna.wifiqr) so a replacement
   // design can take it over; summon() routes to whichever implementation is
   // enabled. The panel's own button pins the interface it is showing. The
   // IPC route forces self-detection instead: details polling stops while the
@@ -569,7 +569,7 @@ Panel {
       payload.iface = info.iface
       if (info.ssid) payload.ssid = info.ssid
     }
-    bar.shell.summon("omarchy.wifiqr", JSON.stringify(payload))
+    bar.shell.summon("inferna.wifiqr", JSON.stringify(payload))
   }
 
   function refresh(scanWifi) {
@@ -750,7 +750,7 @@ Panel {
     actionProc.running = true
   }
 
-  // The speed test is its own panel plugin (omarchy.speedtest) so a
+  // The speed test is its own panel plugin (inferna.speedtest) so a
   // replacement design can take it over; summon() routes to whichever
   // implementation is enabled. The payload names the connection when this
   // panel knows it; the plugin looks it up itself otherwise.
@@ -760,7 +760,7 @@ Panel {
     var connection = ""
     if (info.type === "wifi") connection = info.ssid || "Wi-Fi"
     else if (info.type === "ethernet") connection = Commons.I18n.t("network.ethernet")
-    bar.shell.summon("omarchy.speedtest", connection ? JSON.stringify({ connection: connection }) : "{}")
+    bar.shell.summon("inferna.speedtest", connection ? JSON.stringify({ connection: connection }) : "{}")
   }
 
   function dnsCommand(provider) {

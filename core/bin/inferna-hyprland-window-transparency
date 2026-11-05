@@ -4,7 +4,7 @@
 # inferna:args=[opaque|transparent|glassy]
 # inferna:examples=inferna hyprland window transparency | inferna hyprland window transparency glassy
 
-TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
+TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/toggles/hypr"
 
 # Opaque and glassy are toggle files loaded after every theme: opaque makes the
 # windows Inferna makes transparent solid, and glassy blurs what is behind any

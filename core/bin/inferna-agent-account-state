@@ -78,7 +78,7 @@ class AccountError(Exception):
 
 
 def state_root() -> Path:
-  return Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local" / "state") / "omarchy" / "agents"
+  return Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local" / "state") / "inferna" / "agents"
 
 
 def accounts_root() -> Path:

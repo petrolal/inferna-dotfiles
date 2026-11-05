@@ -2,9 +2,8 @@
 
 -- Inferna / Pebble Shell bootstrap path setup
 local dotfiles = os.getenv("INFERNA_DOTFILES") or (os.getenv("HOME") .. "/inferna-dotfiles")
-local inferna_core = os.getenv("INFERNA_PATH") or os.getenv("OMARCHY_PATH") or (dotfiles .. "/core")
+local inferna_core = os.getenv("INFERNA_PATH") or (dotfiles .. "/core")
 hl.env("INFERNA_PATH", inferna_core)
-hl.env("OMARCHY_PATH", inferna_core)
 dofile(inferna_core .. "/default/hypr/bootstrap.lua")
 
 -- Disable all Inferna default bindings. Add your own in hypr/bindings.lua.
@@ -43,7 +42,6 @@ require("default.hypr.toggles")
 -- Glass surfaces: summoned shell popups (polkit, clipboard, emojis) use the
 -- bar's sans instead of monospace. Takes effect on the next shell start.
 hl.env("INFERNA_MENU_FONT", "Adwaita Sans")
-hl.env("OMARCHY_MENU_FONT", "Adwaita Sans")
 
 do local p = os.getenv("HOME") .. "/.config/hypr/theme_studio_border.lua"; local f = io.open(p); if f then f:close(); dofile(p) end end  -- Theme Studio: window border colors (written by its panel)
 do local p = os.getenv("HOME") .. "/.config/hypr/recessed_windows.lua"; local f = io.open(p); if f then f:close(); dofile(p) end end  -- Depth: recessed/raised windows (written by its panel)

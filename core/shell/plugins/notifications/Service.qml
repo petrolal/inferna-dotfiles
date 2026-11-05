@@ -868,7 +868,7 @@ Item {
     return true
   }
 
-  // Whether a click does something of the card's own: Omarchy's --exec
+  // Whether a click does something of the card's own: Inferna's --exec
   // command, the sender's default action, the sender's own window, or a site
   // to go to. Focusing an app by its name alone does not count.
   function clickable(key) {
@@ -1066,7 +1066,7 @@ Item {
     Hyprland.dispatch('hl.dsp.focus({window = hl.get_window("address:' + win.address + '")})')
   }
 
-  // A click: Omarchy's own --exec command first, then the sender's default
+  // A click: Inferna's own --exec command first, then the sender's default
   // action, then its window, then its site.
   function activate(key, instant) {
     var at = rowIndexFor(key)

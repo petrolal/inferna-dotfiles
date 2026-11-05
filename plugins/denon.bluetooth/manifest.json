@@ -3,7 +3,7 @@
   "id": "denon.bluetooth",
   "name": "My Bluetooth",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Bluetooth device list with connect/disconnect",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "Network",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.bluetooth"
+  "inferna": {
+    "clonedFrom": "inferna.bluetooth"
   }
 }

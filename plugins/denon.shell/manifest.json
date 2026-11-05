@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "denon",
   "description": "Left rail and screen frame as one frosted surface (Pebble Shell)",
-  "omarchy": {
+  "inferna": {
     "clonedFrom": "denon.bar"
   },
   "kinds": [

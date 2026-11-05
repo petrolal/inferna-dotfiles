@@ -13,7 +13,7 @@ app=${1:-}
 [[ -n $app ]] || usage
 
 # Agent terminals notify as kitty/foot/etc. while their shared window class is
-# org.omarchy.agent, leaving the terminal name only in initialTitle. So match
+# org.inferna.agent, leaving the terminal name only in initialTitle. So match
 # by class first, then fall back to the launch-time title of agent windows.
 # Among several matches take the one focused last, which is also the window a
 # browser hands a new tab to.
@@ -24,7 +24,7 @@ address=$(
        sort_by(.focusHistoryID) |
        first(
          (.[] | select(matches(.class))),
-         (.[] | select(.initialClass == "org.omarchy.agent" and matches(.initialTitle)))
+         (.[] | select(.initialClass == "org.inferna.agent" and matches(.initialTitle)))
        ).address // empty'
 )
 

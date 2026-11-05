@@ -3,7 +3,7 @@
   "id": "denon.battery",
   "name": "My Battery",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Low battery warning service",
   "kinds": [
     "service"
@@ -11,7 +11,7 @@
   "entryPoints": {
     "service": "Service.qml"
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.battery"
+  "inferna": {
+    "clonedFrom": "inferna.battery"
   }
 }

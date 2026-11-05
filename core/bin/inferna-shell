@@ -2,7 +2,7 @@
 
 # inferna:summary=Send an IPC call to the running Inferna shell
 # inferna:args=[-q] <target> <method> [args...]
-# inferna:examples=inferna shell shell ping | inferna-shell shell toggle omarchy.menu '{"menu":"root"}'
+# inferna:examples=inferna shell shell ping | inferna-shell shell toggle inferna.menu '{"menu":"root"}'
 
 QUIET=0
 if [[ ${1:-} == "-q" ]]; then
@@ -29,15 +29,15 @@ Options:
 
 Examples:
   inferna-shell shell ping
-  inferna-shell -q omarchy.indicators refresh
+  inferna-shell -q inferna.indicators refresh
   inferna-shell shell listPlugins
-  inferna-shell shell toggle omarchy.menu '{"menu":"root"}'
+  inferna-shell shell toggle inferna.menu '{"menu":"root"}'
 USAGE
   exit 0
 fi
 
 if [[ -z ${INFERNA_PATH:-} ]]; then
-  export OMARCHY_PATH="$INFERNA_PATH"
+  export INFERNA_PATH="$INFERNA_PATH"
 export INFERNA_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
 fi
 [[ -f $INFERNA_PATH/shell/shell.qml ]] || fail "inferna-shell config not found: $INFERNA_PATH/shell/shell.qml"
@@ -81,7 +81,7 @@ if command -v socat >/dev/null 2>&1 && [[ -S $socket && $request != *$'\x1e'* &&
   # socat waits as long as the shell takes; the timeout alone bounds the call.
   # Its own errors land in the reply too, so a connection it could not make
   # is told apart from one that failed after the request went out.
-  reply=$(printf '%s\x1e' "$request" | timeout --kill-after=1s "${OMARCHY_SHELL_IPC_TIMEOUT:-2s}" socat -t 86400 - "UNIX-CONNECT:$socket" 2>&1)
+  reply=$(printf '%s\x1e' "$request" | timeout --kill-after=1s "${INFERNA_SHELL_IPC_TIMEOUT:-2s}" socat -t 86400 - "UNIX-CONNECT:$socket" 2>&1)
 
   # An answer counts only once its record separator arrived: a reply cut off
   # partway must not pass for the whole of it.
@@ -108,7 +108,7 @@ fi
 # The -- keeps function names that shadow qs subcommands (e.g. show) as
 # positionals. qs reports connection failures with a nonzero exit, but IPC-level
 # failures (unknown target/function, bad arguments) go to stdout with exit 0.
-ipc_timeout=${OMARCHY_SHELL_IPC_TIMEOUT:-2s}
+ipc_timeout=${INFERNA_SHELL_IPC_TIMEOUT:-2s}
 output=$(timeout --kill-after=1s "$ipc_timeout" qs ipc -n -p "$INFERNA_PATH/shell" call -- "$@" 2>/dev/null)
 ipc_status=$?
 

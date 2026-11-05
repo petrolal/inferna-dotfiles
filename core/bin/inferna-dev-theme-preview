@@ -8,7 +8,7 @@ set -o pipefail
 
 CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"
 USER_THEMES_PATH="$HOME/.config/inferna/themes"
-OMARCHY_THEMES_PATH="$INFERNA_PATH/themes"
+INFERNA_THEMES_PATH="$INFERNA_PATH/themes"
 
 COLOR_OUTPUT=1
 APPLY_OSC="auto"
@@ -76,15 +76,15 @@ resolve_colors_file() {
     theme_name=$(normalize_theme_name "$ref")
     if [[ -f $USER_THEMES_PATH/$theme_name/colors.toml ]]; then
       printf '%s/colors.toml' "$USER_THEMES_PATH/$theme_name"
-    elif [[ -f $OMARCHY_THEMES_PATH/$theme_name/colors.toml ]]; then
-      printf '%s/colors.toml' "$OMARCHY_THEMES_PATH/$theme_name"
+    elif [[ -f $INFERNA_THEMES_PATH/$theme_name/colors.toml ]]; then
+      printf '%s/colors.toml' "$INFERNA_THEMES_PATH/$theme_name"
     else
       return 1
     fi
   fi
 }
 
-omarchy_tool() {
+inferna_tool() {
   local tool="$1"
   shift
 
@@ -102,12 +102,12 @@ load_colors() {
 
   while IFS=$'\t' read -r key value; do
     resolved[$key]="$value"
-  done < <(omarchy_tool inferna-theme-color --file "$colors_file" --all)
+  done < <(inferna_tool inferna-theme-color --file "$colors_file" --all)
 
   # Preview the palette the theme itself defines, at canonically resolved values.
   while IFS=$'\t' read -r key value; do
     COLORS[$key]="${resolved[$key]:-}"
-  done < <(omarchy_tool inferna-theme-color --file "$colors_file" --raw)
+  done < <(inferna_tool inferna-theme-color --file "$colors_file" --raw)
 
   # Plus the core slots every theme resolves, so sparse and legacy themes
   # still render a complete preview.
@@ -186,7 +186,7 @@ apply_terminal_osc() {
       ;;
   esac
 
-  omarchy_tool inferna-theme-osc "$colors_file" || true
+  inferna_tool inferna-theme-osc "$colors_file" || true
 }
 
 swatch() {

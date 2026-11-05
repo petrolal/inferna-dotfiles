@@ -9,7 +9,7 @@ usage() {
   exit 2
 }
 
-proc_root=${OMARCHY_PROC_ROOT:-/proc}
+proc_root=${INFERNA_PROC_ROOT:-/proc}
 wanted=" "
 signal=""
 

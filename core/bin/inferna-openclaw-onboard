@@ -21,10 +21,10 @@ set -uo pipefail
 
 wizard=(openclaw onboard --flow quickstart --install-daemon --skip-ui)
 config=$HOME/.openclaw/openclaw.json
-settle_seconds=${OMARCHY_OPENCLAW_ONBOARD_SETTLE_SECONDS:-3}
+settle_seconds=${INFERNA_OPENCLAW_ONBOARD_SETTLE_SECONDS:-3}
 # Counted from the moment the config exists, i.e. once the wizard has applied
 # setup; the prompts before that take as long as the user takes.
-gateway_timeout=${OMARCHY_OPENCLAW_ONBOARD_GATEWAY_TIMEOUT:-180}
+gateway_timeout=${INFERNA_OPENCLAW_ONBOARD_GATEWAY_TIMEOUT:-180}
 
 # Probes never get the terminal. The wizard writes its config while prompts
 # remain, a probe of a gateway not yet up then hangs until the timeout, and

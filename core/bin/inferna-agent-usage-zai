@@ -117,7 +117,7 @@ def read_env_file(path: Path) -> dict[str, str]:
 
 
 def read_config() -> dict[str, Any]:
-  return read_json(config_home() / "omarchy" / "agents" / "zai.json")
+  return read_json(config_home() / "inferna" / "agents" / "zai.json")
 
 
 def pi_agent_dir() -> Path:

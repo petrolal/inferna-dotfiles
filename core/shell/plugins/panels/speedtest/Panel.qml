@@ -63,7 +63,7 @@ Item {
 
   function dismiss() {
     if (root.shell && typeof root.shell.hide === "function")
-      root.shell.hide((root.manifest && root.manifest.id) || "omarchy.speedtest")
+      root.shell.hide((root.manifest && root.manifest.id) || "inferna.speedtest")
     else close()
   }
 
@@ -193,7 +193,7 @@ Item {
     title: root.connectionName
     leftLabel: I18n.t("speedtest.download")
     rightLabel: I18n.t("speedtest.upload")
-    runAgainTooltip: I18n.t("speedtest.measureAgainVia").arg("speed.omarchy.org")
+    runAgainTooltip: I18n.t("speedtest.measureAgainVia").arg("speed.inferna.org")
     running: root.running
     leftValue: root.downloadValue
     rightValue: root.uploadValue

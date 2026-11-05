@@ -47,7 +47,7 @@ if (( EUID == 0 )); then
   export PATH=/usr/bin
   fixtures=""
 else
-  fixtures=${OMARCHY_PROC_ROOT:-}${OMARCHY_SYS_ROOT:-}${OMARCHY_IMAGE_ROOT:-}
+  fixtures=${INFERNA_PROC_ROOT:-}${INFERNA_SYS_ROOT:-}${INFERNA_IMAGE_ROOT:-}
 fi
 
 if [[ -z $fixtures ]]; then
@@ -55,16 +55,16 @@ if [[ -z $fixtures ]]; then
   sources=(/proc/device-tree/compatible /sys/firmware/devicetree/base/compatible)
   sys=/sys
   image_root=""
-  image_dir=/var/lib/omarchy/image
+  image_dir=/var/lib/inferna/image
   image_owner=0
 else
-  proc=${OMARCHY_PROC_ROOT:-}
+  proc=${INFERNA_PROC_ROOT:-}
   sources=()
-  [[ -z ${OMARCHY_PROC_ROOT:-} ]] || sources+=("$OMARCHY_PROC_ROOT/device-tree/compatible")
-  [[ -z ${OMARCHY_SYS_ROOT:-} ]] || sources+=("$OMARCHY_SYS_ROOT/firmware/devicetree/base/compatible")
-  sys=${OMARCHY_SYS_ROOT:-}
-  image_root=${OMARCHY_IMAGE_ROOT:-}
-  image_dir=${image_root:+$image_root/var/lib/omarchy/image}
+  [[ -z ${INFERNA_PROC_ROOT:-} ]] || sources+=("$INFERNA_PROC_ROOT/device-tree/compatible")
+  [[ -z ${INFERNA_SYS_ROOT:-} ]] || sources+=("$INFERNA_SYS_ROOT/firmware/devicetree/base/compatible")
+  sys=${INFERNA_SYS_ROOT:-}
+  image_root=${INFERNA_IMAGE_ROOT:-}
+  image_dir=${image_root:+$image_root/var/lib/inferna/image}
   image_owner=$EUID
 fi
 manifest=$image_dir/target

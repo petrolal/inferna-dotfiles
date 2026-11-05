@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-MSDM=${OMARCHY_MSDM_PATH:-/sys/firmware/acpi/tables/MSDM}
+MSDM=${INFERNA_MSDM_PATH:-/sys/firmware/acpi/tables/MSDM}
 
 if [[ ! -e $MSDM ]]; then
   echo "No Windows license key found in firmware." >&2

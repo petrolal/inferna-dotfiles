@@ -328,7 +328,7 @@ grok) home_env="GROK_HOME" ;;
 *) home_env="" ;;
 esac
 if [[ -n $home_env ]]; then
-  account_pin="OMARCHY_AGENT_${agent^^}_HOME"
+  account_pin="INFERNA_AGENT_${agent^^}_HOME"
   if [[ -v $account_pin && ${!home_env:-} == "${!account_pin}" ]]; then
     unset "$home_env"
   fi
@@ -344,7 +344,7 @@ fi
 if [[ $inline == "true" ]]; then
   exec "${command[@]}"
 else
-  # A fixed app-id rather than the default org.omarchy.<binary>, so every agent
+  # A fixed app-id rather than the default org.inferna.<binary>, so every agent
   # window shares one class for window rules and themes to single out.
-  exec inferna-launch-tui --app-id=org.omarchy.agent "${command[@]}"
+  exec inferna-launch-tui --app-id=org.inferna.agent "${command[@]}"
 fi

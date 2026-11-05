@@ -3,7 +3,7 @@
   "id": "denon.audio",
   "name": "My Audio",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Volume slider, output picker, per-app mixer",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "Audio",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.audio"
+  "inferna": {
+    "clonedFrom": "inferna.audio"
   }
 }

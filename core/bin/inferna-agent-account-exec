@@ -25,7 +25,7 @@ shift
 # Explicit provider homes still take precedence.
 if [[ -z ${!account_env:-} ]]; then
   account_home=$(inferna-agent-account-home "$provider")
-  export "OMARCHY_AGENT_${provider^^}_HOME=$account_home"
+  export "INFERNA_AGENT_${provider^^}_HOME=$account_home"
   if [[ -n $account_home ]]; then
     export "$account_env=$account_home"
   fi

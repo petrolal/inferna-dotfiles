@@ -45,7 +45,7 @@ copy_plugin() {
   done < <(jq -r '
     [
       (.entryPoints[] | {source: ., target: .}),
-      (.omarchy.clonePaths[]? | {source: .source, target: .target})
+      (.inferna.clonePaths[]? | {source: .source, target: .target})
     ] | unique_by(.target)[] | [.source, .target] | @tsv
   ' "$manifest")
 }
@@ -70,11 +70,11 @@ update_manifest() {
       else
         .
       end |
-      .omarchy = (
-        (if (.omarchy | type) == "object" then .omarchy else {} end) +
+      .inferna = (
+        (if (.inferna | type) == "object" then .inferna else {} end) +
         { clonedFrom: $sourceId }
       ) |
-      del(.omarchy.clonePaths)
+      del(.inferna.clonePaths)
     ' "$manifest" >"$manifest.tmp"
   mv "$manifest.tmp" "$manifest"
 }
@@ -128,7 +128,7 @@ source_info=$(inferna-plugin-catalog | jq -r --arg id "$source_id" '
 [[ -n $source_info ]] || fail "unknown built-in plugin: $source_id"
 IFS=$'\t' read -r source_dir source_manifest source_name <<<"$source_info"
 
-new_id="${USER:-$(id -un)}.${source_id#omarchy.}"
+new_id="${USER:-$(id -un)}.${source_id#inferna.}"
 display_name="My $source_name"
 target_dir="$PLUGINS_DIR/$new_id"
 [[ ! -e $target_dir && ! -L $target_dir ]] || fail "$target_dir already exists"

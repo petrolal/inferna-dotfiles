@@ -60,7 +60,7 @@ lock_ipc() {
   (( limit < remaining )) || limit=$remaining
   printf -v seconds '%d.%03d' $((limit / 1000)) $((limit % 1000))
 
-  OMARCHY_SHELL_IPC_TIMEOUT="$seconds" \
+  INFERNA_SHELL_IPC_TIMEOUT="$seconds" \
     timeout --kill-after=0.1s "$seconds" inferna-shell "$@"
 }
 

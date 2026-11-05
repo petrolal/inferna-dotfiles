@@ -4,7 +4,7 @@
 
 # Not every battery is called BAT*: Apple Silicon reports macsmc-battery and
 # some Framework and Chromebook firmware CMB0, so decide by type, not by name.
-power_supply_path="${OMARCHY_POWER_SUPPLY_PATH:-/sys/class/power_supply}"
+power_supply_path="${INFERNA_POWER_SUPPLY_PATH:-/sys/class/power_supply}"
 
 for bat in "$power_supply_path"/*; do
   [[ -r $bat/present && $(<"$bat/present") == "1" ]] || continue

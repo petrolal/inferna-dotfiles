@@ -28,8 +28,8 @@ while (($#)); do
   esac
 done
 
-INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
-STATE_DIR="${OMARCHY_MIGRATION_STATE:-$HOME/.local/state/inferna/migrations}"
+INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
+STATE_DIR="${INFERNA_MIGRATION_STATE:-$HOME/.local/state/inferna/migrations}"
 MIGRATIONS_DIR="$INFERNA_PATH/migrations"
 
 migration_entries() {

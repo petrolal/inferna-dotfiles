@@ -23,7 +23,7 @@
 #
 # Succeeds (exit 0) when sudo is needed, so it reads as `if inferna-sudo-docker`.
 
-DOCKER_SOCKET="${OMARCHY_DOCKER_SOCKET:-/var/run/docker.sock}"
+DOCKER_SOCKET="${INFERNA_DOCKER_SOCKET:-/var/run/docker.sock}"
 
 case "${1:-}" in
 --configured)

@@ -1,9 +1,9 @@
 (colors => {
-  const state = window.omarchySlackTheme ??= {};
+  const state = window.infernaSlackTheme ??= {};
   state.colors = colors;
   state.apply ??= () => {
     if (!state.runtime && window.rspackChunkGantryV2) {
-      window.rspackChunkGantryV2.push([["omarchy-theme"], {}, runtime => { state.runtime = runtime; }]);
+      window.rspackChunkGantryV2.push([["inferna-theme"], {}, runtime => { state.runtime = runtime; }]);
     }
     if (!state.runtime) return;
     if (!state.actions) {

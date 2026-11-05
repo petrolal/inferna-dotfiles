@@ -15,8 +15,8 @@ Panel {
   // Glass surfaces: calm sentence-case taglines instead of tracked capitals.
   function glassSentence(v) { var t = String(v || ""); return t.length ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase() : t }
 
-  moduleName: "omarchy.audio"
-  ipcTarget: "omarchy.audio"
+  moduleName: "inferna.audio"
+  ipcTarget: "inferna.audio"
 
   readonly property var sink: Pipewire.defaultAudioSink
   // Glass surfaces (direction A): device lists fold away behind a chip.
@@ -25,7 +25,7 @@ Panel {
   readonly property var source: Pipewire.defaultAudioSource
   readonly property var nodes: Pipewire.nodes ? Pipewire.nodes.values : []
   readonly property var mprisPlayers: Mpris.players ? Mpris.players.values : []
-  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("omarchy.media")
+  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("inferna.media")
   readonly property var activeMediaPlayer: mediaService ? mediaService.activePlayer : null
 
   readonly property var candidateSinks: {
@@ -457,7 +457,7 @@ Panel {
 
   function showVolumeOsd(volume) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    bar.shell.summon("inferna.osd", JSON.stringify({
       icon: outputIcon(volume),
       value: Math.round(volume * 100)
     }))

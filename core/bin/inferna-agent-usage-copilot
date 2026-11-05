@@ -103,7 +103,7 @@ def expand_path(value: str) -> Path:
 
 
 def read_config() -> dict[str, Any]:
-  return read_json(config_home() / "omarchy" / "agents" / "copilot.json")
+  return read_json(config_home() / "inferna" / "agents" / "copilot.json")
 
 
 TOKEN_KEYS = tuple(empty_bucket())

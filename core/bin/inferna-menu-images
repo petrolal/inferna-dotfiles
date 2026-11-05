@@ -108,7 +108,7 @@ if [[ -n $current_image ]]; then
   done
 fi
 
-cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/omarchy/image-selector
+cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/inferna/image-selector
 index_file="$cache_dir/index.tsv"
 rows=""
 mkdir -p "$cache_dir"

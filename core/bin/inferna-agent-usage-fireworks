@@ -241,7 +241,7 @@ def read_opencode_key(path: Path) -> str:
 
 
 def config_path() -> Path:
-  return config_home() / "omarchy" / "agents" / "fireworks.json"
+  return config_home() / "inferna" / "agents" / "fireworks.json"
 
 
 def read_config() -> dict[str, Any]:

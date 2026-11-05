@@ -3,7 +3,7 @@
   "id": "denon.network",
   "name": "My Network",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Wi-Fi list and connection state",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "Network",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.network"
+  "inferna": {
+    "clonedFrom": "inferna.network"
   }
 }

@@ -272,7 +272,7 @@ QtObject {
 
   // The concrete family `monospace` resolves to right now, e.g.
   // "JetBrainsMono Nerd Font". Bind `font.family` to `fontFamily` (so the
-  // alias path keeps working when the user runs `omarchy font set`), but
+  // alias path keeps working when the user runs `inferna font set`), but
   // read `resolvedFontFamily` when you want to *display* what's drawing.
   property string resolvedFontFamily: "monospace"
 
@@ -312,11 +312,11 @@ QtObject {
   }
 
   // The menu, polkit, emojis, and clipboard surfaces honor an
-  // OMARCHY_MENU_FONT override for users who want a different family on the
+  // INFERNA_MENU_FONT override for users who want a different family on the
   // summoned popups than on the bar. Resolved once at startup; an empty env
   // value falls back to the shared fontconfig alias.
   readonly property string menuFontFamily: {
-    var override = Quickshell.env("INFERNA_MENU_FONT") || Quickshell.env("OMARCHY_MENU_FONT")
+    var override = Quickshell.env("INFERNA_MENU_FONT") || Quickshell.env("INFERNA_MENU_FONT")
     return (override && override.length > 0) ? override : fontFamily
   }
 
@@ -357,7 +357,7 @@ QtObject {
     readonly property int statusSlot:     root.barToken("status-slot",     21)
   }
 
-  // Off with Hyprland's own animations, as `omarchy toggle animations` turns
+  // Off with Hyprland's own animations, as `inferna toggle animations` turns
   // them off for machines that render on the CPU. Every shell animation runs
   // for Style.duration(ms), which is then 0, so nothing is drawn in between.
   property bool reduceMotion: false
@@ -507,7 +507,7 @@ QtObject {
     }
   }
 
-  // Resolve the fontconfig alias to a concrete family name. `omarchy font
+  // Resolve the fontconfig alias to a concrete family name. `inferna font
   // set <name>` rewrites ~/.config/fontconfig/fonts.conf and restarts the
   // shell, but rerun on file change anyway so manual edits propagate too.
   function resolveFontFamily() {
@@ -546,7 +546,7 @@ QtObject {
     onTriggered: root.refresh()
   }
 
-  // `omarchy toggle window-gaps` creates/removes this flag file. Hyprland
+  // `inferna toggle window-gaps` creates/removes this flag file. Hyprland
   // reloads its config when sourced files change, then hyprctl reflects
   // the new effective value.
   property FileView windowNoGapsToggle: FileView {

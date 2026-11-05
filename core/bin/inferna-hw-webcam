@@ -6,9 +6,9 @@
 # recorded for each video node rather than opening the nodes with v4l2-ctl, which
 # powers up every camera on the bus just to answer a menu guard. Without a recorded
 # capture node (no udev database, as in a container) it falls back to asking them.
-v4l_class_path="${OMARCHY_V4L_CLASS_PATH:-/sys/class/video4linux}"
-udev_data_path="${OMARCHY_UDEV_DATA_PATH:-/run/udev/data}"
-dev_path="${OMARCHY_DEV_PATH:-/dev}"
+v4l_class_path="${INFERNA_V4L_CLASS_PATH:-/sys/class/video4linux}"
+udev_data_path="${INFERNA_UDEV_DATA_PATH:-/run/udev/data}"
+dev_path="${INFERNA_DEV_PATH:-/dev}"
 
 shopt -s nullglob
 nodes=("$v4l_class_path"/video*)

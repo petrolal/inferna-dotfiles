@@ -176,7 +176,7 @@ Item {
 
   PolkitAgent {
     id: polkitAgent
-    path: "/org/omarchy/PolkitAgent"
+    path: "/org/inferna/PolkitAgent"
 
     onAuthenticationRequestStarted: root.beginFlow()
     onIsActiveChanged: {
@@ -184,8 +184,8 @@ Item {
       else if (!root.closing) root.resetSnapshot()
     }
     onIsRegisteredChanged: {
-      if (isRegistered) console.log("omarchy polkit agent registered")
-      else console.warn("omarchy polkit agent is not registered; another agent may be running")
+      if (isRegistered) console.log("inferna polkit agent registered")
+      else console.warn("inferna polkit agent is not registered; another agent may be running")
     }
   }
 

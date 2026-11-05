@@ -10,7 +10,6 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 config="$HOME/.config"
 
 export INFERNA_PATH="${INFERNA_PATH:-$here/core}"
-export OMARCHY_PATH="${OMARCHY_PATH:-$INFERNA_PATH}"
 export PATH="$here/core/bin:$HOME/.local/bin:$PATH"
 
 mkdir -p "$HOME/.local/bin"
@@ -151,7 +150,7 @@ d["plugins"] = [p for p in d.get("plugins", []) if p.get("id") not in missing]
 for side, items in d.get("bar", {}).get("layout", {}).items():
     d["bar"]["layout"][side] = [w for w in items if w.get("id") not in missing]
 if "hello-lock" in missing:
-    d["disabledPlugins"] = [p for p in d.get("disabledPlugins", []) if p != "inferna.lock" and p != "omarchy.lock"]
+    d["disabledPlugins"] = [p for p in d.get("disabledPlugins", []) if p != "inferna.lock"]
 json.dump(d, open(path, "w"), indent=2)
 PY
 fi

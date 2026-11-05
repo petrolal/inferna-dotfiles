@@ -6,7 +6,7 @@
 
 # Saves the settings by the physical monitor rather than its connector, since a
 # dock renames connectors between plugs: one line per monitor in
-# $XDG_STATE_HOME/omarchy/monitors/settings, which default/hypr/monitor-settings.lua
+# $XDG_STATE_HOME/inferna/monitors/settings, which default/hypr/monitor-settings.lua
 # applies whenever the config loads or the monitor arrives. Each line holds the
 # mode, position, scale and transform, then the monitor's identity last; lines
 # saved before rotation was saved lack the transform. An empty MODE, POSITION
@@ -34,7 +34,7 @@ if [[ ! $output =~ ^[A-Za-z0-9._-]+$ || ! $scale =~ ^[0-9]+([.][0-9]+)?$ ]] ||
   exit 1
 fi
 
-settings="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/monitors/settings"
+settings="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/monitors/settings"
 identity=$(inferna-hyprland-monitor-identity "$output")
 
 mkdir -p "${settings%/*}"

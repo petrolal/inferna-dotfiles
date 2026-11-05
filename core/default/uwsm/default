@@ -7,8 +7,8 @@ export TERMINAL=xdg-terminal-exec
 # refuse to change the default browser, which breaks the browsers' own "Set as
 # default" buttons. Interactive shells get BROWSER from default/bash/envs instead.
 
-# Used by terminal programs to open files with the selected Omarchy default editor
-export EDITOR="omarchy-launch-editor --inline"
+# Used by terminal programs to open files with the selected Inferna default editor
+export EDITOR="inferna-launch-editor --inline"
 
 # Hyprland 0.57 asks rtkit for realtime scheduling, which caps its main thread
 # at 200 ms of CPU without a break. A single slow kernel call (a monitor probe,
@@ -21,4 +21,4 @@ export HYPRLAND_NO_RT=1
 # export OMASNAP_SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
 
 # Use a custom directory for screenrecordings (remember to make the directory!)
-# export OMARCHY_SCREENRECORD_DIR="$HOME/Videos/Screencasts"
+# export INFERNA_SCREENRECORD_DIR="$HOME/Videos/Screencasts"

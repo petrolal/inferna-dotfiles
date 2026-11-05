@@ -3,7 +3,7 @@
 # inferna:summary=Install herdr's status and session-restore integration for agents mise just installed
 # inferna:hidden=true
 
-# mise runs this as a postinstall hook (etc/mise/conf.d/omarchy.toml), naming the
+# mise runs this as a postinstall hook (etc/mise/conf.d/inferna.toml), naming the
 # tools it just installed in MISE_INSTALLED_TOOLS. Inferna's agents are lazy and
 # self-updating, so that is an agent's first use and every upgrade after it.
 # herdr only installs into a config directory the agent already made, and the

@@ -33,7 +33,7 @@ esac
 # has no list of its own.
 files=()
 for list in "${lists[@]}"; do
-  file="$INFERNA_PATH/install/omarchy-$list.packages"
+  file="$INFERNA_PATH/install/inferna-$list.packages"
   if [[ $list == "base" || -f $file ]]; then
     files+=("$file")
   fi

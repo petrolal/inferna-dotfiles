@@ -2,7 +2,7 @@
 
 # inferna:summary=Show, list, or set the kernel Limine boots by default
 # inferna:args=[get|list|set <kernel>]
-# inferna:examples=inferna kernel | inferna kernel list | inferna kernel set linux-omarchy
+# inferna:examples=inferna kernel | inferna kernel list | inferna kernel set linux-inferna
 # inferna:requires-sudo=true
 
 set -euo pipefail
@@ -11,13 +11,13 @@ set -euo pipefail
 # link may have put on sudo's secure_path. sudo and pkexec drop the caller's
 # environment, so the override only reaches root from root (the tests).
 if (( EUID == 0 )); then
-  export PATH=${OMARCHY_KERNEL_ROOT_PATH:-/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin}
+  export PATH=${INFERNA_KERNEL_ROOT_PATH:-/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin}
 fi
 
-LIMINE_CONF="${OMARCHY_KERNEL_LIMINE_CONF:-/etc/default/limine}"
-LIMINE_DROP_INS="${OMARCHY_KERNEL_LIMINE_DROP_INS:-/etc/limine-entry-tool.d}"
-MODULES_DIR="${OMARCHY_KERNEL_MODULES_DIR:-/usr/lib/modules}"
-LOCK_FILE="${OMARCHY_KERNEL_LOCK:-/run/lock/inferna-kernel.lock}"
+LIMINE_CONF="${INFERNA_KERNEL_LIMINE_CONF:-/etc/default/limine}"
+LIMINE_DROP_INS="${INFERNA_KERNEL_LIMINE_DROP_INS:-/etc/limine-entry-tool.d}"
+MODULES_DIR="${INFERNA_KERNEL_MODULES_DIR:-/usr/lib/modules}"
+LOCK_FILE="${INFERNA_KERNEL_LOCK:-/run/lock/inferna-kernel.lock}"
 
 usage() { echo "Usage: inferna-kernel [get|list|set <kernel>]"; }
 
@@ -81,7 +81,7 @@ write_boot_order() {
 }
 
 # The first installed kernel in the boot menu, read from the tree lines that
-# sit directly under an OS entry ("├─ linux-omarchy").
+# sit directly under an OS entry ("├─ linux-inferna").
 first_menu_kernel() {
   local entry
   local -a kernels entries
@@ -98,7 +98,7 @@ first_menu_kernel() {
 
 # Direct Boot has the firmware load one UKI and skip Limine, so reordering the
 # boot menu would change nothing that boots. Read as inferna-boot-direct does,
-# from efibootmgr directly, since root runs on a PATH without omarchy-*.
+# from efibootmgr directly, since root runs on a PATH without inferna-*.
 direct_boot_active() {
   efibootmgr 2>/dev/null | cut -f1 | grep -Eq '^Boot[0-9A-Fa-f]+\*[[:space:]]+Inferna[[:space:]]*$'
 }

@@ -10,4 +10,4 @@ inferna-toggle bar-off "${1:-toggle}"
 # quick succession, stranding the bar off screen until the shell restarts.
 # Nudge the bar to re-read the flag; quiet best-effort so the toggle still
 # works when the shell is not up.
-inferna-shell -q omarchy.bar syncHidden
+inferna-shell -q inferna.bar syncHidden

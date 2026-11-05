@@ -11,7 +11,7 @@ set -euo pipefail
 # where a bare helper resolves, and a dev link (etc/sudoers.d/inferna-dev-path)
 # prepends a user-writable checkout bin/ to it. Every helper this script calls
 # by bare name (dirname, install, tee, rm, nmcli, systemctl, awk) is a system
-# tool, never an omarchy-* command, so pin PATH to trusted system directories
+# tool, never an inferna-* command, so pin PATH to trusted system directories
 # and keep root from resolving one out of that checkout. The unprivileged
 # wrapper phase keeps the caller's PATH so it can still find sudo/pkexec.
 if (( EUID == 0 )); then

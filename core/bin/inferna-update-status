@@ -7,4 +7,4 @@
 # started by an older inferna-update: its pipeline was parsed before the
 # upgrade replaced it, and still calls this right after a full upgrade that
 # went through, so there is nothing left for the indicator to show.
-inferna-shell -q omarchy.system-update clear
+inferna-shell -q inferna.system-update clear

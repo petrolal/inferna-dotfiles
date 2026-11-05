@@ -23,12 +23,12 @@ unlink_package_link() {
 
 unlink_package_link "$HOME/.local/bin/superwhisper" /usr/bin/superwhisper
 unlink_package_link "$data_home/superwhisper/app/current" /opt/superwhisper
-unlink_package_link "$config_home/omarchy/plugins/superwhisper-panel" /opt/superwhisper/assets/inferna-plugin/superwhisper-panel
+unlink_package_link "$config_home/inferna/plugins/superwhisper-panel" /opt/superwhisper/assets/inferna-plugin/superwhisper-panel
 for agent in .agents .claude .codex .pi/agent; do
   unlink_package_link "$HOME/$agent/skills/superwhisper" /opt/superwhisper/assets/agent-skill/superwhisper
 done
 
-backend_config="$config_home/omarchy/defaults/dictation"
+backend_config="$config_home/inferna/defaults/dictation"
 if [[ -f $backend_config && $(< "$backend_config") == "superwhisper" ]]; then
   rm "$backend_config"
 fi

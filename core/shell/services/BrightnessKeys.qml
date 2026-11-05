@@ -57,7 +57,7 @@ Item {
     var max = readNumber(maxFile)
     if (!host || !(max > 0)) return
     var percent = Math.round(100 * readNumber(brightnessFile) / max)
-    host.summon("omarchy.osd", JSON.stringify({
+    host.summon("inferna.osd", JSON.stringify({
       icon: "brightness",
       message: "",
       value: String(percent),

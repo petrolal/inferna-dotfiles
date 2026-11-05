@@ -15,8 +15,8 @@ Panel {
   // Glass surfaces: calm sentence-case taglines instead of tracked capitals.
   function glassSentence(v) { var t = String(v || ""); return t.length ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase() : t }
 
-  moduleName: "omarchy.bluetooth"
-  ipcTarget: "omarchy.bluetooth"
+  moduleName: "inferna.bluetooth"
+  ipcTarget: "inferna.bluetooth"
   // manageIpc: false so this panel can own the single IpcHandler the target
   // permits — needed for the toggleBluetooth method below.
   manageIpc: false
@@ -643,7 +643,7 @@ Panel {
   }
 
   IpcHandler {
-    target: "omarchy.bluetooth"
+    target: "inferna.bluetooth"
 
     function open() { root.open() }
     function close() { root.close() }

@@ -217,7 +217,7 @@ Item {
 
   function showOsd(actionLabel, iconName, player) {
     if (!shell) return
-    shell.summon("omarchy.osd", JSON.stringify({
+    shell.summon("inferna.osd", JSON.stringify({
       icon: iconName || "media",
       message: osdMessage(player || activePlayer, actionLabel)
     }))
@@ -463,7 +463,7 @@ Item {
 
     // The payload inferna-osd builds, from the values just set: the node may
     // not report them back before the OSD draws.
-    shell.summon("omarchy.osd", JSON.stringify({
+    shell.summon("inferna.osd", JSON.stringify({
       icon: MediaModel.volumeOsdIcon(step.percent, step.muted),
       message: "",
       value: String(step.percent),

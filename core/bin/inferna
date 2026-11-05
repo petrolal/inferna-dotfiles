@@ -3,7 +3,6 @@
 set -o pipefail
 
 INFERNA_BIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-export OMARCHY_BIN_DIR="$INFERNA_BIN_DIR"
 export PATH="$INFERNA_BIN_DIR:$PATH"
 METADATA_SCAN_LIMIT=80
 
@@ -208,9 +207,9 @@ register_command() {
       break
     fi
 
-    if [[ $line =~ ^[[:space:]]*#[[:space:]]*(inferna|omarchy):([[:alnum:]_-]+)=(.*)$ ]]; then
-      metadata_key="${BASH_REMATCH[2]}"
-      metadata_value="${BASH_REMATCH[3]}"
+    if [[ $line =~ ^[[:space:]]*#[[:space:]]*inferna:([[:alnum:]_-]+)=(.*)$ ]]; then
+      metadata_key="${BASH_REMATCH[1]}"
+      metadata_value="${BASH_REMATCH[2]}"
       metadata_value="${metadata_value%$'\r'}"
       metadata_value="${metadata_value//$'\t'/ }"
 
@@ -251,7 +250,7 @@ register_command() {
       fallback_summary="${fallback_summary%$'\r'}"
       fallback_summary="${fallback_summary//$'\t'/ }"
 
-      if [[ -z $fallback_summary || $fallback_summary == omarchy:* || $fallback_summary == inferna:* ]]; then
+      if [[ -z $fallback_summary || $fallback_summary == inferna:* ]]; then
         fallback_summary=""
       fi
     fi
@@ -259,7 +258,6 @@ register_command() {
 
   local stem="$file_binary"
   stem="${stem#inferna-}"
-  stem="${stem#omarchy-}"
   local fallback_group="$stem"
   local fallback_name=""
   local fallback_route="inferna ${stem//-/ }"
@@ -339,7 +337,7 @@ load_commands() {
 
 }
 
-# Only a command whose route starts with "omarchy <first>" can resolve a route
+# Only a command whose route starts with "inferna <first>" can resolve a route
 # beginning with that word: one in the <first> group by filename or metadata, or
 # one with an alias under it. Loading just those resolves aliases and
 # metadata-moved routes without reading every header. A superset is harmless,
@@ -356,7 +354,7 @@ load_route_candidates() {
   done
   while IFS= read -r file; do
     seen["$file"]=1
-  done < <(grep -l -E -e "(inferna|omarchy):group=$first([^[:alnum:]_-]|$)" -e "(inferna|omarchy):alias(es)?=.*(inferna|omarchy)[[:space:]]+$first([[:space:]]|\||$)" "$INFERNA_BIN_DIR"/omarchy-* 2>/dev/null)
+  done < <(grep -l -E -e "inferna:group=$first([^[:alnum:]_-]|$)" -e "inferna:alias(es)?=.*inferna[[:space:]]+$first([[:space:]]|\||$)" "$INFERNA_BIN_DIR"/inferna-* 2>/dev/null)
 
   # The full load's own glob, so colliding routes register in the same order.
   for file in "$INFERNA_BIN_DIR"/inferna-*; do
@@ -415,8 +413,8 @@ command_requires_args() {
 }
 
 # A command whose documented arguments are all flags can't take a word, so a
-# word after it names something else: `omarchy agent account` is the account
-# commands, not an argument to omarchy-agent.
+# word after it names something else: `inferna agent account` is the account
+# commands, not an argument to inferna-agent.
 command_takes_only_flags() {
   local key="$1"
   local args="${COMMAND_ARGS[$key]}"

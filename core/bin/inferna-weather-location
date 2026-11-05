@@ -4,7 +4,7 @@
 #
 # State lives in ~/.local/state/inferna/settings/weather.json as
 # {"name": ..., "latitude": ..., "longitude": ...}. A missing file means the
-# location is auto-detected by geo.omarchy.org, which answers in this shape.
+# location is auto-detected by geo.inferna.org, which answers in this shape.
 # Coordinates make the weather panel exact; a hand-written {"name": "Malibu"}
 # alone works too.
 #

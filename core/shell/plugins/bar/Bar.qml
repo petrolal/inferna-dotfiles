@@ -14,8 +14,8 @@ import "BarModel.js" as BarModel
 Item {
   id: root
 
-  // The inferna-shell host injects omarchyPath from OMARCHY_PATH.
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  // The inferna-shell host injects infernaPath from INFERNA_PATH.
+  property string infernaPath: Quickshell.env("INFERNA_PATH")
   // Injected by the host shell so bar slots can resolve enabled widgets.
   property var barWidgetRegistry: fallbackBarWidgetRegistry
   // Read-only registry view for third-party full bars; the built-in bar does
@@ -44,7 +44,7 @@ Item {
   property bool barHidden: false
   property string home: Quickshell.env("HOME")
   property string stateHome: home + "/.local/state"
-  property string omarchyConfigDir: home + "/.config/inferna"
+  property string infernaConfigDir: home + "/.config/inferna"
   property var fallbackBarConfig: ({
     position: "top",
     background: "opaque",
@@ -930,7 +930,7 @@ Item {
     return monitor ? String(monitor.name || "") : ""
   }
 
-  // Resolve the live bar-widget instance for a plugin id (e.g. "omarchy.bluetooth").
+  // Resolve the live bar-widget instance for a plugin id (e.g. "inferna.bluetooth").
   // Only widgets that expose popup open/close methods count; plain indicators
   // (clock, workspaces, tray) return null. Used by shell.summon/toggle so
   // panel hotkeys route through the bar instead of a per-target IPC handler
@@ -1001,7 +1001,7 @@ Item {
   }
 
   function customModuleSource(entry) {
-    var source = BarModel.customModulePath(entry, home, omarchyConfigDir)
+    var source = BarModel.customModulePath(entry, home, infernaConfigDir)
     return source ? Util.fileUrl(source) : ""
   }
 
@@ -1555,7 +1555,7 @@ Item {
   // FileView also fires for any change in its path's parent directory, so watch
   // a path inside current/: every plugin writes to ~/.local/state/inferna.
   FileView {
-    path: root.stateHome + "/omarchy/current/theme"
+    path: root.stateHome + "/inferna/current/theme"
     watchChanges: true
     printErrors: false
     onFileChanged: root.scheduleTransparentForegroundRefresh()
@@ -1650,7 +1650,7 @@ Item {
   // shell restarts. `inferna-toggle-bar` nudges this after flipping the flag
   // so the probe re-reads it even when the watch has gone quiet.
   ShellIpc {
-    target: "omarchy.bar"
+    target: "inferna.bar"
 
     // Start rather than restart: a probe already in flight was launched by the
     // directory watch after the flag flipped, so its answer is current, and

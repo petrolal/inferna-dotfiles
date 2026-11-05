@@ -3,7 +3,7 @@
 # inferna:summary=Point Inferna at a local checkout after reboot
 # inferna:group=dev
 # inferna:args=<path-to-checkout> [--no-reboot]
-# inferna:examples=inferna dev link ~/omarchy
+# inferna:examples=inferna dev link ~/inferna
 
 set -euo pipefail
 
@@ -15,7 +15,7 @@ fi
 prompt_reboot=1
 
 # sudo resolves a bare command name against secure_path, never the caller's
-# PATH, so a dev-linked checkout is invisible to `sudo omarchy-*`: a command the
+# PATH, so a dev-linked checkout is invisible to `sudo inferna-*`: a command the
 # package does not ship yet fails outright, and one it does ship silently runs
 # the packaged copy while every unprivileged call runs the checkout. Prepending
 # the checkout's bin keeps root on the code being edited — the same trust the
@@ -27,7 +27,7 @@ if (( $# < 1 || $# > 2 )) || [[ $1 == "-h" || $1 == "--help" ]]; then
   cat <<USAGE
 Usage: inferna dev link <path-to-checkout> [--no-reboot]
 
-Writes /etc/omarchy.conf so INFERNA_PATH resolves to <path-to-checkout>
+Writes /etc/inferna.conf so INFERNA_PATH resolves to <path-to-checkout>
 after reboot. This intentionally does not rewrite the running Hyprland,
 systemd, shell, or app-launcher environment; reboot to make every layer agree.
 
@@ -37,11 +37,11 @@ themes/, applications/, config/. Files installed at fixed system paths
 creation) are NOT covered — for those, use inferna-dev-pkg-test to build
 and install the package from the checkout.
 
-The Plymouth and SDDM themes under /usr/share are the exception: omarchy
-plymouth set and omarchy refresh plymouth republish them from the checkout,
-reading this link's authorization out of the root-owned /etc/omarchy.conf.
+The Plymouth and SDDM themes under /usr/share are the exception: inferna
+plymouth set and inferna refresh plymouth republish them from the checkout,
+reading this link's authorization out of the root-owned /etc/inferna.conf.
 
-Also writes $sudoers_file so sudo resolves omarchy-*
+Also writes $sudoers_file so sudo resolves inferna-*
 from the checkout instead of the packaged copies. That part takes effect
 immediately, no reboot needed.
 
@@ -59,7 +59,7 @@ if (( $# == 2 )); then
   fi
 fi
 
-omarchy_conf_quote() {
+inferna_conf_quote() {
   local value="$1"
   value=${value//\\/\\\\}
   value=${value//\"/\\\"}
@@ -107,16 +107,16 @@ if ! visudo -cf "$staged_sudoers" >/dev/null; then
 fi
 
 {
-  printf 'export OMARCHY_PATH="$INFERNA_PATH"
+  printf 'export INFERNA_PATH="$INFERNA_PATH"
 export INFERNA_PATH='
-  omarchy_conf_quote "$target"
+  inferna_conf_quote "$target"
   printf '\n'
-} | sudo tee /etc/omarchy.conf >/dev/null
+} | sudo tee /etc/inferna.conf >/dev/null
 
 sudo install -Dm440 -o root -g root "$staged_sudoers" "$sudoers_file"
 
 echo "Pointed Inferna at $target"
-echo "sudo now resolves omarchy-* from $target/bin"
+echo "sudo now resolves inferna-* from $target/bin"
 echo
 
 if (( prompt_reboot )) && gum confirm "Reboot now to activate?"; then

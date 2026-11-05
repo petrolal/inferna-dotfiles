@@ -6,7 +6,7 @@
 # inferna:examples=inferna theme install git@github.com:example/inferna-example-theme.git
 
 if [[ -z $1 ]]; then
-  echo -e "\e[32mSee https://omarchy.org/themes/\n\e[0m"
+  echo -e "\e[32mSee https://github.com/petrolal/dotfiles\n\e[0m"
   REPO_URL=$(gum input --placeholder="$(inferna-i18n theme.repoPlaceholder)" --header="")
 else
   REPO_URL="$1"
@@ -29,7 +29,7 @@ THEMES_DIR="$HOME/.config/inferna/themes"
 # user's home, and leaving its prefix on names the theme after the whole URL.
 REPO_PATH="$REPO_URL"
 [[ $REPO_PATH != *"://"* && $REPO_PATH == *:* && ${REPO_PATH%%:*} != */* ]] && REPO_PATH="${REPO_PATH#*:}"
-THEME_NAME=$(basename -- "$REPO_PATH" .git | sed -E 's/^omarchy-//; s/-theme$//' | tr '[:upper:]' '[:lower:]')
+THEME_NAME=$(basename -- "$REPO_PATH" .git | sed -E 's/^inferna-//; s/-theme$//' | tr '[:upper:]' '[:lower:]')
 THEME_PATH="$THEMES_DIR/$THEME_NAME"
 
 # The name comes from the URL, is joined into a path that is about to be

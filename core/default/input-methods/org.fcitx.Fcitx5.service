@@ -1,5 +1,5 @@
-# Installed per-user so D-Bus activation uses the supervised Omarchy unit.
+# Installed per-user so D-Bus activation uses the supervised Inferna unit.
 [D-BUS Service]
 Name=org.fcitx.Fcitx5
 Exec=/usr/bin/fcitx5
-SystemdService=omarchy-fcitx5.service
+SystemdService=inferna-fcitx5.service

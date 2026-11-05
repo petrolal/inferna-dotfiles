@@ -4,7 +4,7 @@
 # inferna:group=network
 # inferna:args=[down|up]
 
-client=${OMARCHY_SPEEDTEST_BINARY:-/usr/lib/omarchy/speedtest}
+client=${INFERNA_SPEEDTEST_BINARY:-/usr/lib/inferna/speedtest}
 
 if (( $# != 1 )) || [[ $1 != "down" && $1 != "up" ]]; then
   echo "Usage: inferna-network-speedtest [down|up]" >&2
@@ -15,6 +15,6 @@ elif [[ ! -x $client ]]; then
 else
   # The client replaces this script, so the panel stopping it stops the
   # transfers, and checks it still belongs to the panel that started it.
-  export OMARCHY_SPEEDTEST_PARENT_PID=$PPID
+  export INFERNA_SPEEDTEST_PARENT_PID=$PPID
   exec "$client" "$1"
 fi

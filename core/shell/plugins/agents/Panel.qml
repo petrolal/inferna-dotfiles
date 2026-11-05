@@ -9,8 +9,8 @@ import "../panels/elsewhen/Model.js" as Reorder
 
 Panel {
   id: root
-  moduleName: "omarchy.agents"
-  ipcTarget: "omarchy.agents"
+  moduleName: "inferna.agents"
+  ipcTarget: "inferna.agents"
   manageIpc: false
 
   // Items inside the panel's lazily built content, null until it first
@@ -494,7 +494,7 @@ Panel {
   // browser (Grok), and an invitation to paste one back (Claude).
   function handleAddLine(line) {
     var text = String(line).replace(/\u001b\[[0-9;]*m/g, "")
-    var tagged = text.match(/^@@omarchy (status|done|error) (.*)$/)
+    var tagged = text.match(/^@@inferna (status|done|error) (.*)$/)
     if (tagged) {
       if (tagged[1] === "status") {
         addStatus = tagged[2]
@@ -525,11 +525,11 @@ Panel {
     Util.execArgv(addPrivate ? ["inferna-launch-browser", "--private", addUrl] : ["inferna-launch-browser", addUrl])
   }
 
-  // A few ways into making Omarchy your own, handed to the default agent.
+  // A few ways into making Inferna your own, handed to the default agent.
   readonly property var starterPrompts: [
-    { glyph: "󰏘", label: Commons.I18n.t("agents.theme"), prompt: "Make me a new Omarchy theme. Ask me what look or inspiration I have in mind, then build it following the Omarchy skill's theming guide and switch to it." },
-    { glyph: "󰐱", label: Commons.I18n.t("agents.plugin"), prompt: "Make me a new Omarchy shell plugin. Ask me what I'd like it to do, then build it following the Omarchy skill's plugin guide and enable it." },
-    { glyph: "󰣆", label: Commons.I18n.t("agents.app"), prompt: "Make me a new app for my Omarchy desktop. Ask me what it should do, then build it following the inferna-app skill and install it so it shows up in the app launcher." }
+    { glyph: "󰏘", label: Commons.I18n.t("agents.theme"), prompt: "Make me a new Inferna theme. Ask me what look or inspiration I have in mind, then build it following the Inferna skill's theming guide and switch to it." },
+    { glyph: "󰐱", label: Commons.I18n.t("agents.plugin"), prompt: "Make me a new Inferna shell plugin. Ask me what I'd like it to do, then build it following the Inferna skill's plugin guide and enable it." },
+    { glyph: "󰣆", label: Commons.I18n.t("agents.app"), prompt: "Make me a new app for my Inferna desktop. Ask me what it should do, then build it following the inferna-app skill and install it so it shows up in the app launcher." }
   ]
 
   function startPrompt(prompt) {

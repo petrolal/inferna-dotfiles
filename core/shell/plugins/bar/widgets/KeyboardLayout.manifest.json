@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.keyboard-layout",
+  "id": "inferna.keyboard-layout",
   "name": "Keyboard layout",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Current keyboard layout and input language, click cycles",
   "kinds": [
     "bar-widget"
@@ -18,7 +18,7 @@
     "defaultSection": "right",
     "allowMultiple": false
   },
-  "omarchy": {
+  "inferna": {
     "clonePaths": [
       {
         "source": "KeyboardLayoutModel.js",

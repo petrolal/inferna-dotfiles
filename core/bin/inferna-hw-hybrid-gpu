@@ -5,7 +5,7 @@
 # Count display controllers (PCI class 0x03) from the cached sysfs IDs rather
 # than lspci, which reads PCI config space and resumes a runtime-suspended
 # dGPU -- on every menu open, since the menu's Hybrid GPU row asks this.
-pci_devices_path="${OMARCHY_PCI_DEVICES_PATH:-/sys/bus/pci/devices}"
+pci_devices_path="${INFERNA_PCI_DEVICES_PATH:-/sys/bus/pci/devices}"
 
 multiple_gpus() {
   local device class count=0

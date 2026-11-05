@@ -4,7 +4,7 @@ o.window({ tag = "floating-window" }, { center = true })
 o.window({ tag = "floating-window" }, { size = { 875, 600 } })
 
 o.window(
-  "(org.inferna.btop|org.omarchy.btop|org.inferna.terminal|org.omarchy.terminal|org.inferna.bash|org.omarchy.bash|org.codeberg.dnkl.foot|org.gnome.NautilusPreviewer|org.gnome.Evince|Inferna|Omarchy|About|TUI.float|imv|mpv)",
+  "(org.inferna.btop|org.inferna.btop|org.inferna.terminal|org.inferna.terminal|org.inferna.bash|org.inferna.bash|org.codeberg.dnkl.foot|org.gnome.NautilusPreviewer|org.gnome.Evince|Inferna|Inferna|About|TUI.float|imv|mpv)",
   {
     tag = "+floating-window",
   }
@@ -23,9 +23,9 @@ o.window({
 -- This size only covers the first launch: inferna-launch-about measures the
 -- rendered content, remembers the size that hugs it, and applies that as its own
 -- rule before every later launch.
-o.window("(org.inferna.about|org.omarchy.about)", { float = true })
-o.window("(org.inferna.about|org.omarchy.about)", { center = true })
-o.window("(org.inferna.about|org.omarchy.about)", { size = { 920, 480 } })
+o.window("(org.inferna.about|org.inferna.about)", { float = true })
+o.window("(org.inferna.about|org.inferna.about)", { center = true })
+o.window("(org.inferna.about|org.inferna.about)", { size = { 920, 480 } })
 
 o.window("omacalc", { float = true })
 

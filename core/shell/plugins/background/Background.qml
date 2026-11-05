@@ -15,8 +15,8 @@ Item {
   property bool suspended: false
   readonly property string home: Quickshell.env("HOME")
   readonly property string stateHome: home + "/.local/state"
-  readonly property string currentBackgroundLink: stateHome + "/omarchy/current/background"
-  readonly property string currentThemeBackgrounds: stateHome + "/omarchy/current/theme/backgrounds"
+  readonly property string currentBackgroundLink: stateHome + "/inferna/current/background"
+  readonly property string currentThemeBackgrounds: stateHome + "/inferna/current/theme/backgrounds"
 
   property string currentBackground: ""
   property string displayedBackground: ""
@@ -259,8 +259,8 @@ Item {
 
     // A cloned background may not summon the picker in-process, so it takes
     // the IPC route instead.
-    if (!root.shell || !root.shell.summon("omarchy.image-picker", payload))
-      Util.execArgv(["inferna-shell", "shell", "summon", "omarchy.image-picker", payload])
+    if (!root.shell || !root.shell.summon("inferna.image-picker", payload))
+      Util.execArgv(["inferna-shell", "shell", "summon", "inferna.image-picker", payload])
   }
 
   // inferna-theme-bg-set tells this service of the new background itself. A

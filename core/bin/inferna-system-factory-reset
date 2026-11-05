@@ -30,12 +30,12 @@
 
 set -euo pipefail
 
-PROVISIONING_DIR=/var/lib/omarchy/provisioning
+PROVISIONING_DIR=/var/lib/inferna/provisioning
 PACKAGED_PATH=/usr/bin/inferna-system-factory-reset
 # sudo drops INFERNA_PATH from the environment, and inferna-i18n, which
 # supplies every line of the prompts below, needs it there.
-export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
+export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
 TOP_MNT=/run/inferna-system-factory-reset/top
 ESP_MNT=/run/inferna-system-factory-reset/esp
 NEXT_NAME=@inferna-reset-next
@@ -61,9 +61,9 @@ export PATH="$INFERNA_PATH/bin:$PATH"
 # The questions read in the language of the person who asked for the reset.
 # Elevation left their HOME behind, so their language file is found from the
 # account sudo names, never from a path the caller passed in.
-if [[ -n ${SUDO_USER:-} && -z ${OMARCHY_LANGUAGE_FILE:-} ]]; then
+if [[ -n ${SUDO_USER:-} && -z ${INFERNA_LANGUAGE_FILE:-} ]]; then
   caller_home=$(getent passwd "$SUDO_USER" | cut -d: -f6 || true)
-  [[ -n $caller_home ]] && export OMARCHY_LANGUAGE_FILE="$caller_home/.config/inferna/language"
+  [[ -n $caller_home ]] && export INFERNA_LANGUAGE_FILE="$caller_home/.config/inferna/language"
 fi
 
 log() {
@@ -309,14 +309,14 @@ stage_luks_rekey() {
 
   [[ $RESET_BOOT == "generic" ]] || return 0
 
-  install -d -m 755 "$next/etc/omarchy"
-  printf '%s' "$passphrase" >"$next/etc/omarchy/provisioning.key"
-  chmod 600 "$next/etc/omarchy/provisioning.key"
+  install -d -m 755 "$next/etc/inferna"
+  printf '%s' "$passphrase" >"$next/etc/inferna/provisioning.key"
+  chmod 600 "$next/etc/inferna/provisioning.key"
 
   install -d "$next/etc/limine-entry-tool.d" "$next/etc/mkinitcpio.conf.d"
-  echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/omarchy/provisioning.key"' \
+  echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/inferna/provisioning.key"' \
     >"$next/etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf"
-  echo 'FILES+=(/etc/omarchy/provisioning.key)' \
+  echo 'FILES+=(/etc/inferna/provisioning.key)' \
     >"$next/etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf"
 }
 
@@ -354,14 +354,14 @@ reset_limine_config() {
   local root="$1" esp="$2" old_id="$3" template="" candidate
   local conf="$root$esp/limine.conf"
 
-  for candidate in "$root/usr/share/omarchy/install/assets/limine/limine.conf" \
-                   "$root/usr/share/omarchy/default/limine/limine.conf"; do
+  for candidate in "$root/usr/share/inferna/install/assets/limine/limine.conf" \
+                   "$root/usr/share/inferna/default/limine/limine.conf"; do
     if [[ -f $candidate ]]; then
       template=$candidate
       break
     fi
   done
-  [[ -n $template ]] || fail "no limine.conf template in $root/usr/share/omarchy"
+  [[ -n $template ]] || fail "no limine.conf template in $root/usr/share/inferna"
 
   local machine_id
   machine_id=$(cat "$root/etc/machine-id" 2>/dev/null || true)
@@ -529,10 +529,10 @@ rebuild_next_boot() {
     # offset when it is absent, so a surviving one bakes the old swapfile's
     # offset into the rebuilt UKI and breaks resume.
     if [[ ! -f $next/swap/swapfile ]]; then
-      rm -f "$next/etc/mkinitcpio.conf.d/omarchy_resume.conf" \
+      rm -f "$next/etc/mkinitcpio.conf.d/inferna_resume.conf" \
         "$next/etc/limine-entry-tool.d/resume.conf"
     fi
-    if ! chroot "$next" env INFERNA_PATH=/usr/share/omarchy \
+    if ! chroot "$next" env INFERNA_PATH=/usr/share/inferna \
       /usr/bin/inferna-hibernation-setup --force --no-rebuild >>"$LOG_FILE" 2>&1; then
       fail "hibernation setup failed in the factory root (see $LOG_FILE)"
     fi
@@ -635,7 +635,7 @@ stage_full_reset() {
   [[ -d $next ]] && btrfs subvolume delete --recursive "$next" >/dev/null
   btrfs subvolume snapshot "$top/@factory" "$next" >>"$LOG_FILE"
 
-  local unit_src="$next/usr/share/omarchy/install/provisioning"
+  local unit_src="$next/usr/share/inferna/install/provisioning"
   [[ -f $unit_src/inferna-provision-owner.service && -x $next/usr/bin/inferna-provision-owner ]] ||
     fail "the factory snapshot predates provisioning support; cannot reset from it"
 

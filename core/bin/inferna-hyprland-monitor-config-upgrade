@@ -48,12 +48,12 @@ mapfile -t shipped_comments <<'LINES'
 -- hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1.6 })
 -- List current monitors and resolutions possible: hyprctl monitors all
 -- List current monitors and supported resolutions with: hyprctl monitors all
--- local omarchy_gdk_scale = 1
--- local omarchy_gdk_scale = 1.75
--- local omarchy_gdk_scale = 2
--- local omarchy_monitor_scale = 1
--- local omarchy_monitor_scale = 1.6
--- local omarchy_monitor_scale = "auto"
+-- local inferna_gdk_scale = 1
+-- local inferna_gdk_scale = 1.75
+-- local inferna_gdk_scale = 2
+-- local inferna_monitor_scale = 1
+-- local inferna_monitor_scale = 1.6
+-- local inferna_monitor_scale = "auto"
 -- Monitor scale is Hyprland's scale for the output. It sizes everything
 -- numbers, so use the nearest integer to the monitor scale, and restart an
 -- Optimized for retina-class 2x displays, like 13" 2.8K, 27" 5K, 32" 6K.
@@ -69,10 +69,10 @@ LINES
 
 # The template's defaults, each a local and the line using it, which go only
 # together: when the local holds Inferna's own value and no other line uses it.
-monitor_scale_default='local omarchy_monitor_scale = "auto"'
-monitor_scale_use='hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })'
-gdk_scale_default='local omarchy_gdk_scale = 2'
-gdk_scale_use='hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))'
+monitor_scale_default='local inferna_monitor_scale = "auto"'
+monitor_scale_use='hl.monitor({ output = "", mode = "preferred", position = "auto", scale = inferna_monitor_scale })'
+gdk_scale_default='local inferna_gdk_scale = 2'
+gdk_scale_use='hl.env("GDK_SCALE", tostring(inferna_gdk_scale))'
 
 # Defaults older templates set directly, matching Inferna's own.
 mapfile -t shipped_defaults <<'LINES'
@@ -96,10 +96,10 @@ used_elsewhere() {
 
 drop=("${shipped_comments[@]}" "${shipped_defaults[@]}")
 printf '%s\n' "${lines[@]}" | grep -Fxq -- "$monitor_scale_default" &&
-  ! used_elsewhere omarchy_monitor_scale "$monitor_scale_default" "$monitor_scale_use" &&
+  ! used_elsewhere inferna_monitor_scale "$monitor_scale_default" "$monitor_scale_use" &&
   drop+=("$monitor_scale_default" "$monitor_scale_use")
 printf '%s\n' "${lines[@]}" | grep -Fxq -- "$gdk_scale_default" &&
-  ! used_elsewhere omarchy_gdk_scale "$gdk_scale_default" "$gdk_scale_use" &&
+  ! used_elsewhere inferna_gdk_scale "$gdk_scale_default" "$gdk_scale_use" &&
   drop+=("$gdk_scale_default" "$gdk_scale_use")
 
 declare -A dropped_line

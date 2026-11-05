@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.dev-gallery",
+  "id": "inferna.dev-gallery",
   "name": "Dev gallery",
   "version": "1.0.0",
-  "author": "Omarchy",
-  "description": "Visual reference for inferna-shell common UI components. Summon with: inferna-shell shell summon omarchy.dev-gallery '{}' (or run: omarchy dev ui-preview).",
+  "author": "Inferna",
+  "description": "Visual reference for inferna-shell common UI components. Summon with: inferna-shell shell summon inferna.dev-gallery '{}' (or run: inferna dev ui-preview).",
   "kinds": [
     "panel"
   ],

@@ -8,7 +8,7 @@ set -uo pipefail
 
 # --check prints, per provider, whether adding one now would be its first
 # sign-in, an additional account, or not possible yet. --events is for the
-# agents panel: progress arrives as `@@omarchy <event> <detail>` lines mixed
+# agents panel: progress arrives as `@@inferna <event> <detail>` lines mixed
 # into the CLI's own output (which carries codes the panel shows), nothing
 # waits on a terminal, and the result also lands as a notification in case
 # the panel has closed.
@@ -70,7 +70,7 @@ label="${2:-}"
 
 say() {
   if [[ $events == "true" ]]; then
-    printf '@@omarchy status %s\n' "$*"
+    printf '@@inferna status %s\n' "$*"
   else
     echo "$*"
   fi
@@ -78,7 +78,7 @@ say() {
 
 finish() {
   if [[ $events == "true" ]]; then
-    printf '@@omarchy done %s\n' "$1"
+    printf '@@inferna done %s\n' "$1"
     inferna-notification-send -g 󰚩 "$1"
   else
     echo
@@ -88,7 +88,7 @@ finish() {
 
 fail() {
   if [[ $events == "true" ]]; then
-    printf '@@omarchy error %s\n' "$1"
+    printf '@@inferna error %s\n' "$1"
     inferna-notification-send -g 󰚩 -u critical "$(inferna-i18n agents.addFailed "$name")" "$1"
   else
     echo "$1" >&2
@@ -142,7 +142,7 @@ esac
 
 # The CLI's own home, whatever this shell has pointed it at.
 login() {
-  interruptible env -u CLAUDE_CONFIG_DIR -u CODEX_HOME -u GROK_HOME "OMARCHY_AGENT_${provider^^}_HOME=" "${login_command[@]}"
+  interruptible env -u CLAUDE_CONFIG_DIR -u CODEX_HOME -u GROK_HOME "INFERNA_AGENT_${provider^^}_HOME=" "${login_command[@]}"
 }
 
 # Signing an account that's already here in again, where it lives: the

@@ -10,7 +10,7 @@ if [[ -n ${1:-} && ! -d $1 ]]; then
   exit 2
 fi
 
-target_dir="${1:-${XDG_CACHE_HOME:-$HOME/.cache}/omarchy}"
+target_dir="${1:-${XDG_CACHE_HOME:-$HOME/.cache}/inferna}"
 phase_seconds=8
 parallel=4
 chunk_mb=4

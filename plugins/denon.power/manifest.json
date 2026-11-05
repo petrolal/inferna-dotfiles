@@ -3,7 +3,7 @@
   "id": "denon.power",
   "name": "My Power",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Battery, power profile, and system stats",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "System",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.power"
+  "inferna": {
+    "clonedFrom": "inferna.power"
   }
 }

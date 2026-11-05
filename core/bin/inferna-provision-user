@@ -61,20 +61,20 @@ if inferna-done check finalize-user && (( force == 0 )); then
   exit 0
 fi
 
-export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
-export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$INFERNA_PATH/install}"
-export OMARCHY_SETUP_CONTEXT="${OMARCHY_SETUP_CONTEXT:-runtime}"
+export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
+export INFERNA_INSTALL="${INFERNA_INSTALL:-$INFERNA_PATH/install}"
+export INFERNA_SETUP_CONTEXT="${INFERNA_SETUP_CONTEXT:-runtime}"
 export PATH="$INFERNA_PATH/bin:$PATH"
 
-if (( first_install )) && [[ $OMARCHY_SETUP_CONTEXT == "runtime" ]]; then
+if (( first_install )) && [[ $INFERNA_SETUP_CONTEXT == "runtime" ]]; then
   # The ISO chroot doesn't set a context; inferna-provision-owner runs first-install
-  # finalization too but with OMARCHY_SETUP_CONTEXT=provision-owner already set.
-  export OMARCHY_SETUP_CONTEXT=iso-chroot
+  # finalization too but with INFERNA_SETUP_CONTEXT=provision-owner already set.
+  export INFERNA_SETUP_CONTEXT=iso-chroot
 fi
 
-if [[ -n ${OMARCHY_INSTALL_LOG_FILE:-} && -f $OMARCHY_INSTALL/helpers/logging.sh ]]; then
-  source "$OMARCHY_INSTALL/helpers/logging.sh"
+if [[ -n ${INFERNA_INSTALL_LOG_FILE:-} && -f $INFERNA_INSTALL/helpers/logging.sh ]]; then
+  source "$INFERNA_INSTALL/helpers/logging.sh"
 else
   run_logged() {
     local script="$1"
@@ -83,7 +83,7 @@ else
 fi
 
 # Dev-aware skill symlinks. Cannot live in /etc/skel because INFERNA_PATH may
-# point at a dev checkout (omarchy dev link) where the target differs.
+# point at a dev checkout (inferna dev link) where the target differs.
 # Loops every skill directory, so shipping a new one needs no edit here.
 mkdir -p ~/.agents/skills ~/.claude/skills ~/.codex/skills ~/.pi/agent/skills ~/.gemini/config/skills ~/.hermes/skills
 for skill in "$INFERNA_PATH"/default/agents/skills/*/; do
@@ -123,7 +123,7 @@ for dir in Downloads Projects Pictures Videos; do
   grep -qxF "$bookmark" ~/.config/gtk-3.0/bookmarks || echo "$bookmark" >>~/.config/gtk-3.0/bookmarks
 done
 
-source "$OMARCHY_INSTALL/user/all.sh"
+source "$INFERNA_INSTALL/user/all.sh"
 
 inferna-refresh-applications
 env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser chromium.desktop

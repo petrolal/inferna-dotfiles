@@ -1,13 +1,13 @@
 local function cursor_theme(value)
-  if value and value ~= "" and value ~= "inferna-startup" and value ~= "omarchy-startup" then return value end
+  if value and value ~= "" and value ~= "inferna-startup" and value ~= "inferna-startup" then return value end
 end
 
 local function normal_theme(interrupted)
   local current = os.getenv("XCURSOR_THEME")
   local theme = cursor_theme(current)
   -- Only a lost preference needs recovering; an unset theme still means the default alias.
-  if theme or not (interrupted or current == "inferna-startup" or current == "omarchy-startup") then return theme or "default" end
-  theme = cursor_theme(os.getenv("INFERNA_STARTUP_CURSOR_THEME") or os.getenv("OMARCHY_STARTUP_CURSOR_THEME"))
+  if theme or not (interrupted or current == "inferna-startup" or current == "inferna-startup") then return theme or "default" end
+  theme = cursor_theme(os.getenv("INFERNA_STARTUP_CURSOR_THEME") or os.getenv("INFERNA_STARTUP_CURSOR_THEME"))
   if theme then return theme end
   local pipe = io.popen("gsettings get org.gnome.desktop.interface cursor-theme 2>/dev/null", "r")
   if pipe then
@@ -33,8 +33,8 @@ function inferna_startup_cursor_restore(loaded)
     inferna_startup_cursor_pending = false
     hl.env("INFERNA_STARTUP_CURSOR_SESSION", "")
     hl.env("INFERNA_STARTUP_CURSOR_THEME", "")
-    hl.env("OMARCHY_STARTUP_CURSOR_SESSION", "")
-    hl.env("OMARCHY_STARTUP_CURSOR_THEME", "")
+    hl.env("INFERNA_STARTUP_CURSOR_SESSION", "")
+    hl.env("INFERNA_STARTUP_CURSOR_THEME", "")
     hl.config({ cursor = cursor.config })
     if cursor.config.enable_hyprcursor and cursor.hyprcursor then
       hl.exec_cmd("hyprctl setcursor " .. o.shell_quote(cursor.hyprcursor) .. " " .. cursor.size)
@@ -52,7 +52,7 @@ function inferna_startup_cursor_restore(loaded)
       .. " && hyprctl eval " .. o.shell_quote(complete))
   end
 end
-omarchy_startup_cursor_restore = inferna_startup_cursor_restore
+inferna_startup_cursor_restore = inferna_startup_cursor_restore
 
 hl.on("config.reloaded", function()
   local recover = false
@@ -60,8 +60,8 @@ hl.on("config.reloaded", function()
     -- An ordinary reload must not hide the pointer, but an interrupted reveal survives.
     local cold = #hl.get_monitors() == 0
     local session = os.getenv("HYPRLAND_INSTANCE_SIGNATURE")
-    local interrupted = session and (os.getenv("INFERNA_STARTUP_CURSOR_SESSION") == session or os.getenv("OMARCHY_STARTUP_CURSOR_SESSION") == session)
-    recover = not cold and not interrupted and (os.getenv("XCURSOR_THEME") == "inferna-startup" or os.getenv("XCURSOR_THEME") == "omarchy-startup")
+    local interrupted = session and (os.getenv("INFERNA_STARTUP_CURSOR_SESSION") == session or os.getenv("INFERNA_STARTUP_CURSOR_SESSION") == session)
+    recover = not cold and not interrupted and (os.getenv("XCURSOR_THEME") == "inferna-startup" or os.getenv("XCURSOR_THEME") == "inferna-startup")
     inferna_startup_cursor_pending = cold or interrupted or recover
     if inferna_startup_cursor_pending then
       local hyprcursor = hl.get_config("cursor.enable_hyprcursor")
@@ -80,9 +80,9 @@ hl.on("config.reloaded", function()
       -- Compositor environment survives Lua reloads; a session id prevents stale inheritance.
       hl.env("INFERNA_STARTUP_CURSOR_THEME", inferna_startup_cursor.xcursor)
       hl.env("INFERNA_STARTUP_CURSOR_SESSION", os.getenv("HYPRLAND_INSTANCE_SIGNATURE"))
-      hl.env("OMARCHY_STARTUP_CURSOR_THEME", inferna_startup_cursor.xcursor)
-      hl.env("OMARCHY_STARTUP_CURSOR_SESSION", os.getenv("HYPRLAND_INSTANCE_SIGNATURE"))
-      local core_path = os.getenv("INFERNA_PATH") or os.getenv("OMARCHY_PATH")
+      hl.env("INFERNA_STARTUP_CURSOR_THEME", inferna_startup_cursor.xcursor)
+      hl.env("INFERNA_STARTUP_CURSOR_SESSION", os.getenv("HYPRLAND_INSTANCE_SIGNATURE"))
+      local core_path = os.getenv("INFERNA_PATH") or os.getenv("INFERNA_PATH")
       if cold and core_path then
         hl.env("XCURSOR_PATH", core_path .. "/default/hypr/cursors:" .. inferna_startup_cursor.path)
         hl.env("XCURSOR_THEME", "inferna-startup")

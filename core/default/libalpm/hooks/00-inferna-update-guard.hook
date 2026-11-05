@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Checking Inferna update entrypoint...
+When = PreTransaction
+Depends = inferna
+Exec = /usr/bin/inferna-update-pacman-guard
+AbortOnFail

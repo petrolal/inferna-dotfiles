@@ -14,7 +14,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Idempotent — already sourced by /etc/skel/.bashrc; re-source here so SSH and
 # other non-interactive non-login bash sessions still get INFERNA_PATH.
-bootstrap_path="${INFERNA_PATH:-${OMARCHY_PATH:-/usr/share/inferna}}/default/bash/env-bootstrap"
+bootstrap_path="${INFERNA_PATH:-${INFERNA_PATH:-/usr/share/inferna}}/default/bash/env-bootstrap"
 [ -r "$bootstrap_path" ] && . "$bootstrap_path"
 
 # /etc/profile.d/locale.sh is what puts /etc/locale.conf into the environment,

@@ -9,7 +9,7 @@
 # also make USB touchscreens) are left out to avoid nagging laptops with no
 # reader — those still match on the product string below when present.
 fingerprint_vendors=" 27c6 138a 06cb 08ff 1c7a 147e "
-usb_devices_path="${OMARCHY_USB_DEVICES_PATH:-/sys/bus/usb/devices}"
+usb_devices_path="${INFERNA_USB_DEVICES_PATH:-/sys/bus/usb/devices}"
 
 # A reader the kernel drives without USB (a Mac's Touch ID, behind its Secure
 # Enclave) is the platform's to name: each line of its fingerprint-readers file

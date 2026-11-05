@@ -50,7 +50,7 @@ ID=$(jq -r '.id // ""' "$MANIFEST")
 [[ -n $ID ]] || fail "manifest 'id' is empty"
 [[ $ID =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || fail "invalid plugin id '$ID'"
 [[ $ID != *".."* ]] || fail "invalid plugin id '$ID'"
-[[ $ID != omarchy.* ]] || fail "plugin id '$ID' uses the reserved omarchy.* namespace"
+[[ $ID != inferna.* ]] || fail "plugin id '$ID' uses the reserved inferna.* namespace"
 
 # kinds must be a non-empty array.
 jq -e '(.kinds | type) == "array" and (.kinds | length) > 0' "$MANIFEST" >/dev/null 2>&1 \

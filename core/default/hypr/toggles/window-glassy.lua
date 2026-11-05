@@ -1,6 +1,6 @@
 -- Frosted glass from the glassy Starship (#14726): whatever is behind a
 -- see-through window or shell surface is blurred. Terminals get the see-through
--- background itself from omarchy-theme-set-glass, which keeps their text crisp.
+-- background itself from inferna-theme-set-glass, which keeps their text crisp.
 require("default.hypr.glass")()
 
 -- GTK apps fade as a whole, since GTK draws their backgrounds solid, and get

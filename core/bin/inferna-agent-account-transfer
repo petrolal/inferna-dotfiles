@@ -21,8 +21,8 @@ from pathlib import Path
 from typing import Any
 
 # SSH supplies the matching backend in memory on older destinations.
-if "_omarchy_account_state" in sys.modules:
-  accounts = sys.modules["_omarchy_account_state"]
+if "_inferna_account_state" in sys.modules:
+  accounts = sys.modules["_inferna_account_state"]
 else:
   loader = importlib.machinery.SourceFileLoader("accounts", str(Path((os.environ.get("INFERNA_PATH") or os.environ.get("INFERNA_PATH", "/usr/share/inferna"))) / "bin/inferna-agent-account-state"))
   spec = importlib.util.spec_from_loader(loader.name, loader)
@@ -67,7 +67,7 @@ if installed and (bundle.get("accounts") or {}).get("namePolicy") == "source":
 if use_installed:
   result = subprocess.run([installed, "import", *sys.argv[1:]], input=json.dumps(bundle.get("accounts")).encode())
   sys.exit(result.returncode)
-for name, field in (("_omarchy_account_state", "backend"), ("_omarchy_account_transfer", "receiver")):
+for name, field in (("_inferna_account_state", "backend"), ("_inferna_account_transfer", "receiver")):
   module = types.ModuleType(name)
   module.__file__ = "<inferna-account-copy>"
   sys.modules[name] = module
@@ -183,7 +183,7 @@ def home_in_use(provider: str, home: Path) -> bool:
   if home != accounts.primary_home(provider):
     return False
   home_key = accounts.PROVIDERS[provider]["home_env"].encode() + b"="
-  pinned_key = f"OMARCHY_AGENT_{provider.upper()}_HOME=".encode()
+  pinned_key = f"INFERNA_AGENT_{provider.upper()}_HOME=".encode()
   for proc in Path("/proc").glob("[0-9]*"):
     if proc.name == str(os.getpid()):
       continue
@@ -354,7 +354,7 @@ def main(args: list[str]) -> int:
         command += " --replace"
       # Avoid user profiles, BASH_ENV and home-directory Python modules
       # while credentials are on stdin. Load only the system bootstrap.
-      command = ". /etc/profile.d/omarchy.sh 2>/dev/null; exec " + command
+      command = ". /etc/profile.d/inferna.sh 2>/dev/null; exec " + command
       print("/bin/bash --noprofile --norc -p -c " + shlex.quote(command))
     elif args and args[0] in ("export", "bundle"):
       payload = export_accounts(args[1:] or list(FILES))

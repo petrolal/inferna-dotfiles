@@ -11,7 +11,7 @@
 # again, and a theme that sets its own opacity keeps it.
 
 THEME_DIR="${1:-$HOME/.local/state/inferna/current/theme}"
-TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
+TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/toggles/hypr"
 GLASSY=false
 [[ -f $TOGGLES_DIR/window-glassy.lua ]] && GLASSY=true
 status=0

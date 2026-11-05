@@ -5,7 +5,7 @@
     "layout": {
       "center": [
         {
-          "id": "omarchy.keyboard-layout"
+          "id": "inferna.keyboard-layout"
         },
         {
           "format": "ddd, MMM d  ·  h:mm AP",
@@ -17,7 +17,7 @@
           "id": "denon.weather"
         },
         {
-          "id": "omarchy.system-update"
+          "id": "inferna.system-update"
         }
       ],
       "left": [
@@ -111,13 +111,7 @@
     "inferna.menu",
     "inferna.lock",
     "inferna.osd",
-    "inferna.polkit",
-    "omarchy.battery",
-    "omarchy.notifications",
-    "omarchy.menu",
-    "omarchy.lock",
-    "omarchy.osd",
-    "omarchy.polkit"
+    "inferna.polkit"
   ],
   "idle": {
     "lock": 300,

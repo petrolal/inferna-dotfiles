@@ -153,17 +153,17 @@ run_root_transaction() {
     }
 
     # A packaged tree must be root-owned. A development checkout is the one
-    # deliberate exception: omarchy dev link records its canonical path in a
-    # root-owned /etc/omarchy.conf. That is already an explicit decision to run
+    # deliberate exception: inferna dev link records its canonical path in a
+    # root-owned /etc/inferna.conf. That is already an explicit decision to run
     # privileged Inferna commands from user-editable code in the checkout, so
     # reading its packaged assets does not widen the development trust boundary.
     development_source=false
     source_root_uid=$(stat -c %u -- "$source_root")
     if (( source_root_uid != 0 )); then
-      omarchy_conf=/etc/omarchy.conf
-      failure_context="$source_root is user-owned and $omarchy_conf must contain its trusted dev-link authorization; run omarchy dev link to authorize it"
-      failure_hint="$source_root is user-owned; run omarchy dev link to authorize this development checkout, or omarchy dev unlink to use the packaged tree"
-      validate_trusted_configuration_file "$omarchy_conf"
+      inferna_conf=/etc/inferna.conf
+      failure_context="$source_root is user-owned and $inferna_conf must contain its trusted dev-link authorization; run inferna dev link to authorize it"
+      failure_hint="$source_root is user-owned; run inferna dev link to authorize this development checkout, or inferna dev unlink to use the packaged tree"
+      validate_trusted_configuration_file "$inferna_conf"
 
       # validate_trusted_configuration_file walks /etc up to / and leaves its own
       # subject behind in failure_context. Without restoring ours, a checkout
@@ -171,18 +171,18 @@ run_root_transaction() {
       # root-owned and not group- or world-writable" -- naming a directory that
       # passed, and sending the reader after a filesystem problem that is not
       # there.
-      failure_context="the dev-link authorization in $omarchy_conf, which must name $source_root"
+      failure_context="the dev-link authorization in $inferna_conf, which must name $source_root"
 
       quoted_source_root=$source_root
       quoted_source_root=${quoted_source_root//\\/\\\\}
       quoted_source_root=${quoted_source_root//\"/\\\"}
       quoted_source_root=${quoted_source_root//\$/\\\$}
       quoted_source_root=${quoted_source_root//\`/\\\`}
-      expected_config_line="export OMARCHY_PATH="$INFERNA_PATH"
+      expected_config_line="export INFERNA_PATH="$INFERNA_PATH"
 export INFERNA_PATH=\"$quoted_source_root\""
-      mapfile -t omarchy_config_lines <"$omarchy_conf"
-      (( ${#omarchy_config_lines[@]} == 1 ))
-      [[ ${omarchy_config_lines[0]} == "$expected_config_line" ]]
+      mapfile -t inferna_config_lines <"$inferna_conf"
+      (( ${#inferna_config_lines[@]} == 1 ))
+      [[ ${inferna_config_lines[0]} == "$expected_config_line" ]]
       development_source=true
       failure_hint=
     fi
@@ -192,15 +192,15 @@ export INFERNA_PATH=\"$quoted_source_root\""
       [[ $text_hex =~ ^[0-9a-fA-F]{6}$ ]]
     fi
 
-    theme_dir=/usr/share/plymouth/themes/omarchy
-    sddm_dir=/usr/share/sddm/themes/omarchy
+    theme_dir=/usr/share/plymouth/themes/inferna
+    sddm_dir=/usr/share/sddm/themes/inferna
     plymouth_theme_assets=(
       bullet.png
       entry.png
       lock.png
       logo.png
-      omarchy.plymouth
-      omarchy.script
+      inferna.plymouth
+      inferna.script
       preview-unlock.png
       progress_bar.png
       progress_box.png
@@ -286,18 +286,18 @@ export INFERNA_PATH=\"$quoted_source_root\""
       sed -i \
         -e "s/^Window.SetBackgroundTopColor.*/Window.SetBackgroundTopColor($bg_r, $bg_g, $bg_b);/" \
         -e "s/^Window.SetBackgroundBottomColor.*/Window.SetBackgroundBottomColor($bg_r, $bg_g, $bg_b);/" \
-        "$plymouth_stage/omarchy.script"
+        "$plymouth_stage/inferna.script"
 
       for asset in bullet.png entry.png lock.png progress_bar.png; do
         magick "$plymouth_stage/$asset" -channel RGB +level-colors "#$text_hex","#$text_hex" "$plymouth_stage/$asset"
       done
 
-      copy_trusted_file "$source_root/default/sddm/omarchy/Main.qml" "$sddm_stage/Main.qml"
+      copy_trusted_file "$source_root/default/sddm/inferna/Main.qml" "$sddm_stage/Main.qml"
       sed -i \
-        -e "s/#1a1b26/#__OMARCHY_SDDM_BG__/g" \
-        -e "s/#ffffff/#__OMARCHY_SDDM_TEXT__/g" \
-        -e "s/#__OMARCHY_SDDM_BG__/#$bg_hex/g" \
-        -e "s/#__OMARCHY_SDDM_TEXT__/#$text_hex/g" \
+        -e "s/#1a1b26/#__INFERNA_SDDM_BG__/g" \
+        -e "s/#ffffff/#__INFERNA_SDDM_TEXT__/g" \
+        -e "s/#__INFERNA_SDDM_BG__/#$bg_hex/g" \
+        -e "s/#__INFERNA_SDDM_TEXT__/#$text_hex/g" \
         "$sddm_stage/Main.qml"
 
       for asset in bullet.png entry.png lock.png; do
@@ -310,7 +310,7 @@ export INFERNA_PATH=\"$quoted_source_root\""
       find "$staging_dir" -type f -exec chmod 0600 -- {} +
     elif (( ${#sddm_assets[@]} )); then
       for asset in "${sddm_assets[@]}"; do
-        copy_trusted_file "$source_root/default/sddm/omarchy/$asset" "$sddm_stage/$asset"
+        copy_trusted_file "$source_root/default/sddm/inferna/$asset" "$sddm_stage/$asset"
       done
     fi
 
@@ -372,7 +372,7 @@ else
 fi
 
 if [[ $mode != "refresh-sddm" ]]; then
-  sudo plymouth-set-default-theme omarchy
+  sudo plymouth-set-default-theme inferna
 
   if inferna-cmd-present limine-mkinitcpio; then
     sudo limine-mkinitcpio

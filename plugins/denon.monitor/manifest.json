@@ -3,7 +3,7 @@
   "id": "denon.monitor",
   "name": "My Display",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Brightness slider and laptop display controls",
   "kinds": [
     "bar-widget"
@@ -17,7 +17,7 @@
     "category": "System",
     "allowMultiple": false
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.monitor"
+  "inferna": {
+    "clonedFrom": "inferna.monitor"
   }
 }

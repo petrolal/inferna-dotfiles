@@ -2,4 +2,4 @@
 
 # inferna:summary=Toggle the current weather panel
 
-inferna-shell shell toggle omarchy.weather
+inferna-shell shell toggle inferna.weather

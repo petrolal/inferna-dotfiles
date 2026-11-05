@@ -6,7 +6,7 @@ set -euo pipefail
 
 updates=()
 
-if [[ $INFERNA_PATH != "/usr/share/omarchy" ]]; then
+if [[ $INFERNA_PATH != "/usr/share/inferna" ]]; then
   upstream=$(git -C "$INFERNA_PATH" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)
   if [[ -n $upstream ]]; then
     GIT_TERMINAL_PROMPT=0 timeout 10 git -C "$INFERNA_PATH" fetch --quiet 2>/dev/null || true
@@ -23,8 +23,8 @@ fi
 package=""
 if pacman -Qq inferna-dev >/dev/null 2>&1; then
   package=inferna-dev
-elif pacman -Qq omarchy >/dev/null 2>&1; then
-  package=omarchy
+elif pacman -Qq inferna >/dev/null 2>&1; then
+  package=inferna
 fi
 
 if [[ -n $package ]]; then

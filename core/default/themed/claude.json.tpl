@@ -1,5 +1,5 @@
 {
-  "name": "Omarchy",
+  "name": "Inferna",
   "base": "{{ theme_type }}",
   "overrides": {
     "claude": "{{ accent }}",

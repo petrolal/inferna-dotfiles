@@ -7,14 +7,14 @@
 
 set -euo pipefail
 
-OMARCHY_BIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+INFERNA_BIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 REPEAT=5
 KEEP_CACHE=false
 
 show_help() {
   cat <<'EOF'
 Usage:
-  omarchy dev benchmark theme switcher [--repeat=<count>] [--keep-cache]
+  inferna dev benchmark theme switcher [--repeat=<count>] [--keep-cache]
 
 Measure the non-interactive parts of the theme switcher:
 - theme preview index build (inferna-theme-switcher before UI handoff)
@@ -125,28 +125,28 @@ chmod +x "$stub_bin/inferna-menu-images"
 benchmark_env=(
   env
   "XDG_CACHE_HOME=$benchmark_cache"
-  "PATH=$stub_bin:$OMARCHY_BIN_DIR:$PATH"
+  "PATH=$stub_bin:$INFERNA_BIN_DIR:$PATH"
 )
 
 thumbnail_env=(
   env
   "XDG_CACHE_HOME=$thumbnail_cache"
-  "PATH=$stub_bin:$OMARCHY_BIN_DIR:$PATH"
+  "PATH=$stub_bin:$INFERNA_BIN_DIR:$PATH"
 )
 
-preview_dir="$benchmark_cache/omarchy/theme-selector/previews"
-thumbnail_preview_dir="$thumbnail_cache/omarchy/theme-selector/previews"
+preview_dir="$benchmark_cache/inferna/theme-selector/previews"
+thumbnail_preview_dir="$thumbnail_cache/inferna/theme-selector/previews"
 
 build_theme_index() {
-  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/inferna-theme-switcher"
+  "${benchmark_env[@]}" "$INFERNA_BIN_DIR/inferna-theme-switcher"
 }
 
 prepare_selector_lazy() {
-  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/inferna-menu-images" --prepare-only --lazy-thumbnails --show-labels --filterable "$preview_dir"
+  "${benchmark_env[@]}" "$INFERNA_BIN_DIR/inferna-menu-images" --prepare-only --lazy-thumbnails --show-labels --filterable "$preview_dir"
 }
 
 prepare_image_cache() {
-  "${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/inferna-menu-images" --cache-only "$thumbnail_preview_dir"
+  "${thumbnail_env[@]}" "$INFERNA_BIN_DIR/inferna-menu-images" --cache-only "$thumbnail_preview_dir"
 }
 
 printf 'Theme switcher benchmark (%d warm runs each)\n\n' "$REPEAT"
@@ -154,7 +154,7 @@ printf '%-34s %s ms\n' "theme index cold" "$(format_ms "$(measure_once build_the
 run_case "theme index warm" build_theme_index
 printf '%-34s %s ms\n' "selector prep cold (lazy)" "$(format_ms "$(measure_once prepare_selector_lazy)")"
 run_case "selector prep warm (lazy)" prepare_selector_lazy
-"${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/inferna-theme-switcher" >/dev/null
+"${thumbnail_env[@]}" "$INFERNA_BIN_DIR/inferna-theme-switcher" >/dev/null
 printf '%-34s %s ms\n' "thumbnail cache cold" "$(format_ms "$(measure_once prepare_image_cache)")"
 run_case "thumbnail cache warm" prepare_image_cache
 

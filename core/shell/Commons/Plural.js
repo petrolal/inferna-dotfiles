@@ -1,4 +1,4 @@
-// CLDR cardinal plural categories for whole counts, per Omarchy language
+// CLDR cardinal plural categories for whole counts, per Inferna language
 // code. A plural catalog entry is an object keyed by these categories
 // ({ "one": "%1 file", "other": "%1 files" }); every language needs "other",
 // plus whichever categories its counts can reach. default/i18n/plural.jq

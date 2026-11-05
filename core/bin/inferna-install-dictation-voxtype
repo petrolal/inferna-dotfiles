@@ -5,7 +5,7 @@
 
 set -e
 
-voxtype_lib_path="${OMARCHY_VOXTYPE_LIB_PATH:-/usr/lib/voxtype}"
+voxtype_lib_path="${INFERNA_VOXTYPE_LIB_PATH:-/usr/lib/voxtype}"
 
 if inferna-cmd-missing voxtype; then
   if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n dictation.installVoxtype)"; then

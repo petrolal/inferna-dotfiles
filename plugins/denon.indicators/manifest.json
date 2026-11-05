@@ -3,7 +3,7 @@
   "id": "denon.indicators",
   "name": "My Indicators",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "description": "Manual state indicators",
   "kinds": [
     "bar-widget"
@@ -67,7 +67,7 @@
       }
     ]
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.indicators"
+  "inferna": {
+    "clonedFrom": "inferna.indicators"
   }
 }

@@ -74,10 +74,10 @@ if (( EUID == 0 )); then
   detect=(/usr/bin/env -i PATH="$fixed_path" "${detect[@]}")
   root=""
 else
-  root=${OMARCHY_LIFECYCLE_ROOT:-}
+  root=${INFERNA_LIFECYCLE_ROOT:-}
   root=${root%/}
   if [[ -n $root && $root != /* ]]; then
-    echo "Error: OMARCHY_LIFECYCLE_ROOT must be an absolute path" >&2
+    echo "Error: INFERNA_LIFECYCLE_ROOT must be an absolute path" >&2
     exit 1
   fi
 fi
@@ -106,12 +106,12 @@ fi
 case $platform:$operation in
   aarch64-apple:setup-system | aarch64-apple:setup-user | aarch64-apple:post-install | aarch64-apple:pre-remove | \
     aarch64-apple:enable-fingerprint | aarch64-apple:disable-fingerprint)
-    implementation=/usr/lib/omarchy/mac
+    implementation=/usr/lib/inferna/mac
     package=inferna-mac
     required=()
     ;;
   aarch64-apple:*)
-    implementation=/usr/lib/omarchy/mac-boot
+    implementation=/usr/lib/inferna/mac-boot
     package=inferna-mac-boot
     required=(
       provision-prepare provision-commit provision-verify

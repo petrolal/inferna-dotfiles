@@ -5,7 +5,7 @@ import "../denon.bar/panels" as Motion
 
 BarWidget {
   id: root
-  moduleName: "omarchy.weather"
+  moduleName: "inferna.weather"
 
   function injectPanel() {
     var target = panelLoader.item

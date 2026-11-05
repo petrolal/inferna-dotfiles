@@ -1,4 +1,4 @@
--- Shared path constants for Omarchy's Hyprland Lua modules.
+-- Shared path constants for Inferna's Hyprland Lua modules.
 -- Lua files loaded with require() have separate local scopes, so modules that
 -- need these paths import this table instead of repeating os.getenv() lookups.
 
@@ -14,12 +14,12 @@ local function env_or(name, fallback)
   return value
 end
 
-local inferna_core = env_or("INFERNA_PATH", env_or("OMARCHY_PATH", "/usr/share/inferna"))
+local inferna_core = env_or("INFERNA_PATH", env_or("INFERNA_PATH", "/usr/share/inferna"))
 
 return {
   home = home,
   config_home = env_or("XDG_CONFIG_HOME", home .. "/.config"),
   state_home = env_or("XDG_STATE_HOME", home .. "/.local/state"),
   inferna_path = inferna_core,
-  omarchy_path = inferna_core,
+  inferna_path = inferna_core,
 }

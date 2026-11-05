@@ -37,7 +37,7 @@ fi
 cat > "$LOG_FILE" <<EOF
 Date: $(date)
 Hostname: $(hostname)
-Inferna Package: $(pacman -Q inferna-dev 2>/dev/null || pacman -Q omarchy 2>/dev/null || echo "unknown")
+Inferna Package: $(pacman -Q inferna-dev 2>/dev/null || pacman -Q inferna 2>/dev/null || echo "unknown")
 
 =========================================
 SYSTEM INFORMATION
@@ -74,7 +74,7 @@ ACTION=$(gum choose "${OPTIONS[@]}")
 
 case "$ACTION" in
   "Upload log")
-    echo "Uploading debug log to logs.omarchy.org..."
+    echo "Uploading debug log to logs.inferna.org..."
     URL=$(curl -sf -F "file=@$LOG_FILE" -Fexpires=24 https://logs.omarchy.org/)
     if (( $? == 0 )) && [[ -n $URL ]]; then
       echo "✓ Log uploaded successfully!"

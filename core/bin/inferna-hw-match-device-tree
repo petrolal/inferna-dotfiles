@@ -11,10 +11,10 @@ LC_ALL=C
 # name. Unprivileged tests fake the device tree with the fixture roots
 # inferna-hw-platform reads; root reads only the live one.
 sources=(/proc/device-tree/compatible /sys/firmware/devicetree/base/compatible)
-if (( EUID != 0 )) && [[ -n ${OMARCHY_PROC_ROOT:-}${OMARCHY_SYS_ROOT:-}${OMARCHY_IMAGE_ROOT:-} ]]; then
+if (( EUID != 0 )) && [[ -n ${INFERNA_PROC_ROOT:-}${INFERNA_SYS_ROOT:-}${INFERNA_IMAGE_ROOT:-} ]]; then
   sources=()
-  [[ -z ${OMARCHY_PROC_ROOT:-} ]] || sources+=("$OMARCHY_PROC_ROOT/device-tree/compatible")
-  [[ -z ${OMARCHY_SYS_ROOT:-} ]] || sources+=("$OMARCHY_SYS_ROOT/firmware/devicetree/base/compatible")
+  [[ -z ${INFERNA_PROC_ROOT:-} ]] || sources+=("$INFERNA_PROC_ROOT/device-tree/compatible")
+  [[ -z ${INFERNA_SYS_ROOT:-} ]] || sources+=("$INFERNA_SYS_ROOT/firmware/devicetree/base/compatible")
 fi
 
 # The first one that can be read answers, since both name the same tree.

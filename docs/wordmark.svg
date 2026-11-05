@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="130" viewBox="0 0 700 130" role="img" aria-label="My Omarchy Dotfiles">
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="130" viewBox="0 0 700 130" role="img" aria-label="Inferna Dotfiles">
   <style>
     .title { fill: #1F2328; }
     .sub { fill: #59636E; }
@@ -7,6 +7,6 @@
       .sub { fill: #9198A1; }
     }
   </style>
-  <text class="title" x="350" y="70" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="60" font-weight="700" letter-spacing="-2">My Omarchy Dotfiles</text>
+  <text class="title" x="350" y="70" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="60" font-weight="700" letter-spacing="-2">Inferna Dotfiles</text>
   <text class="sub" x="350" y="108" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19">One frosted surface for the whole desktop.</text>
 </svg>

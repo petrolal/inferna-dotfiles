@@ -47,7 +47,7 @@ Item {
 
   function dismiss() {
     if (shell && typeof shell.hide === "function")
-      shell.hide((manifest && manifest.id) || "omarchy.disk-speedtest")
+      shell.hide((manifest && manifest.id) || "inferna.disk-speedtest")
     else close()
   }
 

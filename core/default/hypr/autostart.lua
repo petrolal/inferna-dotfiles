@@ -2,8 +2,8 @@ require("default.hypr.startup-cursor")
 
 hl.on("hyprland.start", function()
   -- Applications inherit the user's cursor; only the compositor starts blank.
-  local cursor_pending = inferna_startup_cursor_pending or omarchy_startup_cursor_pending
-  local cursor = inferna_startup_cursor or omarchy_startup_cursor
+  local cursor_pending = inferna_startup_cursor_pending or inferna_startup_cursor_pending
+  local cursor = inferna_startup_cursor or inferna_startup_cursor
   if cursor_pending and cursor then
     hl.env("XCURSOR_PATH", cursor.path)
     hl.env("XCURSOR_THEME", cursor.xcursor)

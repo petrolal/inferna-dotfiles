@@ -249,8 +249,8 @@ keep_main() {
   if [[ -n $main_commit && $main_commit != "$release_commit" && $main_commit != "$(git -C "$runtime" rev-parse --verify refs/remotes/origin/main 2>/dev/null)" ]]; then
     # A run that stopped after this point keeps it again on the next try; one
     # branch at that commit is enough.
-    if [[ -z $(git -C "$runtime" for-each-ref --points-at "$main_commit" 'refs/heads/main-before-omarchy-*') ]]; then
-      kept="main-before-omarchy-$(date +%s)"
+    if [[ -z $(git -C "$runtime" for-each-ref --points-at "$main_commit" 'refs/heads/main-before-inferna-*') ]]; then
+      kept="main-before-inferna-$(date +%s)"
       git -C "$runtime" branch "$kept" "$main_commit"
       echo "Kept what Hermes main pointed at as the branch $kept; main now starts at the packaged release."
     fi

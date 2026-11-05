@@ -8,7 +8,7 @@ CLAMSHELL_FLAG="$TOGGLES_DIR/internal-monitor-clamshell.lua"
 MANUAL_DISABLE_FLAG="$TOGGLES_DIR/internal-monitor-disable.lua"
 SCALE_STATE="$TOGGLES_DIR/internal-monitor-scale"
 MONITOR_LUA="$HOME/.config/hypr/monitors.lua"
-MONITOR_SETTINGS="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/monitors/settings"
+MONITOR_SETTINGS="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/monitors/settings"
 
 INTERNAL=$(inferna-hyprland-monitor-laptop)
 
@@ -53,7 +53,7 @@ lua_local_value() {
 }
 
 # A quoted capture is a Lua string and stands for itself; a bare word may instead
-# name a local the rule refers to, as the shipped scale = omarchy_monitor_scale
+# name a local the rule refers to, as the shipped scale = inferna_monitor_scale
 # does. A bare word naming no local is left alone to fail validation.
 lua_scalar() {
   local value="$1" resolved
@@ -105,7 +105,7 @@ monitor_rules() {
 
 # monitors.lua can switch the panel's choices off, leaving itself in charge.
 panel_settings_off() {
-  monitor_rules | grep -Eq '^[[:space:]]*omarchy_monitor_panel_settings[[:space:]]*=[[:space:]]*false'
+  monitor_rules | grep -Eq '^[[:space:]]*inferna_monitor_panel_settings[[:space:]]*=[[:space:]]*false'
 }
 
 monitor_rule_regex() {
@@ -158,7 +158,7 @@ configured_monitor_scale() {
   # which is the scale Inferna has always applied for that config.
   [[ -n $scale ]] || scale=$(configured_monitor_value "" scale)
   # No rule carries a scale at all: fall back to Inferna's own knob.
-  [[ -n $scale ]] || scale=$(lua_local_value omarchy_monitor_scale)
+  [[ -n $scale ]] || scale=$(lua_local_value inferna_monitor_scale)
 
   printf '%s\n' "$scale"
 }

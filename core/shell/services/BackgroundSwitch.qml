@@ -16,7 +16,7 @@ Item {
   readonly property var backgroundService: intro ? intro.backgroundService : null
   readonly property string home: Quickshell.env("HOME")
   readonly property string backgroundLink: home + "/.local/state/inferna/current/background"
-  readonly property string transitionCache: home + "/.cache/omarchy/background-transitions"
+  readonly property string transitionCache: home + "/.cache/inferna/background-transitions"
   readonly property string themeSetLock: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/inferna-theme-set.lock"
 
   // The change in progress, named by its cover's token.

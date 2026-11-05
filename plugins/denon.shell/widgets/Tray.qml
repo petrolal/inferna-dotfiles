@@ -11,7 +11,7 @@ import "TrayModel.js" as TrayModel
 
 BarWidget {
   id: root
-  moduleName: "omarchy.tray"
+  moduleName: "inferna.tray"
 
   property bool expanded: false
   property bool managePopupOpen: false
@@ -37,7 +37,7 @@ BarWidget {
 
   // Submenu drill-down state. QsMenuEntry.display() renders a *platform* menu,
   // which Quickshell refuses unless the shell root sets `//@ pragma
-  // UseQApplication` - omarchy's shell.qml does not, so every submenu click was
+  // UseQApplication` - inferna's shell.qml does not, so every submenu click was
   // a silent no-op ("Cannot display PlatformMenuEntry as quickshell was not
   // started in QApplication mode" in the shell log) and apps whose whole UI is
   // submenus, e.g. radiotray-ng's station list, were unusable. QsMenuEntry
@@ -163,9 +163,9 @@ BarWidget {
     return "drawer"
   }
 
-  function ownedByOmarchy(item) {
+  function ownedByInferna(item) {
     var layout = root.bar && root.bar.layoutConfig ? root.bar.layoutConfig : null
-    return TrayModel.ownedByOmarchy(item, layout)
+    return TrayModel.ownedByInferna(item, layout)
   }
 
   function bucket(category) {
@@ -174,7 +174,7 @@ BarWidget {
     for (var i = 0; i < values.length; i++) {
       var item = values[i]
       if (item.status === Status.Passive) continue
-      if (ownedByOmarchy(item)) continue
+      if (ownedByInferna(item)) continue
       if (category === "all") {
         result.push(item)
         continue
@@ -186,7 +186,7 @@ BarWidget {
 
   function persistTrayState(pinned, hidden) {
     if (!root.bar || !root.bar.shell || typeof root.bar.shell.updateEntryInline !== "function") return
-    var id = root.moduleName || "omarchy.tray"
+    var id = root.moduleName || "inferna.tray"
     root.bar.shell.updateEntryInline(id, { id: id, pinned: pinned, hidden: hidden })
   }
 

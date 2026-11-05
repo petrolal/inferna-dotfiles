@@ -8,5 +8,5 @@ set -e
 
 timezone=$(timedatectl list-timezones | inferna-menu-select "$(inferna-i18n timezone.setTitle)" -- --width 520 --maxheight 520) || exit 1
 sudo timedatectl set-timezone "$timezone"
-inferna-shell -q omarchy.clock refresh
+inferna-shell -q inferna.clock refresh
 inferna-notification-send "$(inferna-i18n timezone.changed "$timezone")"

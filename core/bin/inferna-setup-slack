@@ -25,11 +25,11 @@ fi
 
 mkdir -p "${override%/*}" "$state"
 if [[ -f $override ]] && ! grep -qE '^Exec=inferna-launch-slack( |$)' "$override"; then
-  if [[ -e $override.before-omarchy ]]; then
-    echo "An earlier launcher backup already exists: $override.before-omarchy" >&2
+  if [[ -e $override.before-inferna ]]; then
+    echo "An earlier launcher backup already exists: $override.before-inferna" >&2
     exit 1
   fi
-  cp -a "$override" "$override.before-omarchy"
+  cp -a "$override" "$override.before-inferna"
 fi
 pending=$(mktemp "$override.XXXXXX")
 trap 'rm -f "$pending"' EXIT

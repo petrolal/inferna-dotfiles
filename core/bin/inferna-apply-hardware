@@ -11,21 +11,21 @@ set -euo pipefail
 usage() {
   cat <<USAGE
 Usage: inferna apply hardware --install-user USER
-       omarchy apply hardware --defer-provisioning
+       inferna apply hardware --defer-provisioning
 
 Runs idempotent hardware detection/setup for the installed machine. This is
 called by inferna-apply-system during ISO finalization and can be rerun later
 for diagnostics or after hardware/package updates.
 
 --defer-provisioning runs without an install user (deferred-provisioning installs create the user at
-first boot); group grants are recorded in /var/lib/omarchy/provisioning/groups.
+first boot); group grants are recorded in /var/lib/inferna/provisioning/groups.
 
-In an image build (/var/lib/omarchy/image/target exists) nothing runs here: every step is queued
+In an image build (/var/lib/inferna/image/target exists) nothing runs here: every step is queued
 for inferna-provision-hardware on the machine's first boot.
 USAGE
 }
 
-install_user="${OMARCHY_INSTALL_USER:-}"
+install_user="${INFERNA_INSTALL_USER:-}"
 defer_provisioning=0
 while (($#)); do
   case "$1" in
@@ -68,23 +68,23 @@ else
   fi
 fi
 
-export OMARCHY_INSTALL_USER="$install_user"
+export INFERNA_INSTALL_USER="$install_user"
 # Only inferna-provision-hardware runs steps as an image's first boot.
-unset OMARCHY_IMAGE_DEFERRED_HARDWARE
-export OMARCHY_PATH="$INFERNA_PATH"
-export INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
-export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$INFERNA_PATH/install}"
-export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
+unset INFERNA_IMAGE_DEFERRED_HARDWARE
+export INFERNA_PATH="$INFERNA_PATH"
+export INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
+export INFERNA_INSTALL="${INFERNA_INSTALL:-$INFERNA_PATH/install}"
+export INFERNA_INSTALL_LOG_FILE="${INFERNA_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
 export PATH="$INFERNA_PATH/bin:$PATH"
 
-source "$OMARCHY_INSTALL/helpers/logging.sh"
-source "$OMARCHY_INSTALL/helpers/image-target.sh"
+source "$INFERNA_INSTALL/helpers/logging.sh"
+source "$INFERNA_INSTALL/helpers/image-target.sh"
 
-omarchy_image_init
-omarchy_image_lock
-if omarchy_image_manifest_present; then
-  omarchy_image_read_manifest
-  omarchy_image_defer_hardware
+inferna_image_init
+inferna_image_lock
+if inferna_image_manifest_present; then
+  inferna_image_read_manifest
+  inferna_image_defer_hardware
 else
-  source "$OMARCHY_INSTALL/hardware/all.sh"
+  source "$INFERNA_INSTALL/hardware/all.sh"
 fi

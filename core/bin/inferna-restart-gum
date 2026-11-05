@@ -7,12 +7,12 @@
 # hl.env at login, but that environment is captured once and is not refreshed on
 # a theme switch, so anything launched from the session would otherwise inherit
 # the login-time theme's gum colors. Export the current values instead.
-_omarchy_gum_env="$HOME/.local/state/inferna/current/theme/gum_env.lua"
+_inferna_gum_env="$HOME/.local/state/inferna/current/theme/gum_env.lua"
 
-if [[ -f $_omarchy_gum_env ]]; then
-  while IFS=$'\t' read -r _omarchy_gum_key _omarchy_gum_value; do
-    [[ -n $_omarchy_gum_key && -n $_omarchy_gum_value ]] && export "$_omarchy_gum_key=$_omarchy_gum_value"
-  done < <(awk -F'"' '/hl\.env\("[A-Z0-9_]+", "[^"]+"\)/ { print $2 "\t" $4 }' "$_omarchy_gum_env")
+if [[ -f $_inferna_gum_env ]]; then
+  while IFS=$'\t' read -r _inferna_gum_key _inferna_gum_value; do
+    [[ -n $_inferna_gum_key && -n $_inferna_gum_value ]] && export "$_inferna_gum_key=$_inferna_gum_value"
+  done < <(awk -F'"' '/hl\.env\("[A-Z0-9_]+", "[^"]+"\)/ { print $2 "\t" $4 }' "$_inferna_gum_env")
 fi
 
-unset _omarchy_gum_env _omarchy_gum_key _omarchy_gum_value
+unset _inferna_gum_env _inferna_gum_key _inferna_gum_value

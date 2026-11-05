@@ -3,7 +3,7 @@
 # inferna:summary=Print the most likely display backlight device.
 # inferna:examples=inferna-hw-display
 
-backlight_path="${OMARCHY_BACKLIGHT_PATH:-/sys/class/backlight}"
+backlight_path="${INFERNA_BACKLIGHT_PATH:-/sys/class/backlight}"
 
 # The platform package may name backlights to skip and to prefer (see
 # docs/file-layout.md).

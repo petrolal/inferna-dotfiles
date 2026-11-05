@@ -11,11 +11,11 @@ fi
 
 security_entrypoint=$(/usr/bin/readlink -e -- "${BASH_SOURCE[0]}") || exit 126
 source "${security_entrypoint%/*}/inferna-security-functions" || exit 126
-omarchy_security_require_privileged_bash_startup || exit 126
+inferna_security_require_privileged_bash_startup || exit 126
 set -e
-omarchy_security_sanitize_bash_environment "$0" "$@"
-omarchy_security_require_source_root "$0"
-omarchy_security_install_signal_exit_traps
+inferna_security_sanitize_bash_environment "$0" "$@"
+inferna_security_require_source_root "$0"
+inferna_security_install_signal_exit_traps
 export PATH="$INFERNA_PATH/bin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 stay_awake_state="$HOME/.local/state/inferna/indicators/stay-awake"
@@ -103,7 +103,7 @@ initialize_state_boundary() {
     read -r tmp_owner tmp_mode < <(stat -Lc '%u %a' -- /tmp) || fail_state_boundary
     [[ $canonical_tmp == "/tmp" && $tmp_owner == "0" && $tmp_mode == "1777" ]] || fail_state_boundary
 
-    state_base="/tmp/omarchy-$caller_uid"
+    state_base="/tmp/inferna-$caller_uid"
     ensure_private_directory "$state_base" || fail_state_boundary
   fi
 
@@ -498,7 +498,7 @@ start_locked() {
 
   if (( EUID == 0 )); then
     (
-      [[ -z ${OMARCHY_UPDATE_LOCK_FD:-} ]] || exec {OMARCHY_UPDATE_LOCK_FD}>&-
+      [[ -z ${INFERNA_UPDATE_LOCK_FD:-} ]] || exec {INFERNA_UPDATE_LOCK_FD}>&-
       exec {state_lock_fd}>&-
       exec "${hold_command[@]}"
     ) &
@@ -509,7 +509,7 @@ start_locked() {
     sudo_options=(-b)
     [[ -t 0 ]] || sudo_options=(-n -b)
     if ! (
-      [[ -z ${OMARCHY_UPDATE_LOCK_FD:-} ]] || exec {OMARCHY_UPDATE_LOCK_FD}>&-
+      [[ -z ${INFERNA_UPDATE_LOCK_FD:-} ]] || exec {INFERNA_UPDATE_LOCK_FD}>&-
       exec {state_lock_fd}>&-
       exec /usr/bin/sudo "${sudo_options[@]}" -- "${hold_command[@]}"
     ); then
@@ -517,7 +517,7 @@ start_locked() {
     fi
   else
     (
-      [[ -z ${OMARCHY_UPDATE_LOCK_FD:-} ]] || exec {OMARCHY_UPDATE_LOCK_FD}>&-
+      [[ -z ${INFERNA_UPDATE_LOCK_FD:-} ]] || exec {INFERNA_UPDATE_LOCK_FD}>&-
       exec {state_lock_fd}>&-
       exec /usr/bin/pkexec "${hold_command[@]}"
     ) &

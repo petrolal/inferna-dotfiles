@@ -3,9 +3,9 @@
   "id": "denon.dropbox",
   "name": "My Dropbox",
   "version": "1.0.0",
-  "author": "Omarchy",
+  "author": "Inferna",
   "license": "MIT",
-  "description": "Dropbox status, storage usage, login, and recent synced files in the Omarchy bar.",
+  "description": "Dropbox status, storage usage, login, and recent synced files in the Inferna bar.",
   "kinds": [
     "bar-widget"
   ],
@@ -33,7 +33,7 @@
       }
     ]
   },
-  "omarchy": {
-    "clonedFrom": "omarchy.dropbox"
+  "inferna": {
+    "clonedFrom": "inferna.dropbox"
   }
 }

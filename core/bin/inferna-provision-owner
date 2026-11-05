@@ -4,7 +4,7 @@
 # inferna:requires-sudo=true
 # inferna:hidden=true
 
-# Runs on tty1 via inferna-provision-owner.service when /var/lib/omarchy/provisioning/pending
+# Runs on tty1 via inferna-provision-owner.service when /var/lib/inferna/provisioning/pending
 # exists — the state a deferred-provisioning ISO install or inferna-system-factory-reset leaves
 # behind. Asks for the user (the configurator's Step 2), creates it with the
 # groups system setup recorded, finalizes it offline, re-keys LUKS from the
@@ -15,8 +15,8 @@
 
 set -euo pipefail
 
-PROVISIONING_DIR=/var/lib/omarchy/provisioning
-INFERNA_PATH="${INFERNA_PATH:-/usr/share/omarchy}"
+PROVISIONING_DIR=/var/lib/inferna/provisioning
+INFERNA_PATH="${INFERNA_PATH:-/usr/share/inferna}"
 LOG_FILE=/var/log/inferna-provision-owner.log
 
 if (( EUID != 0 )); then
@@ -46,7 +46,7 @@ source "$INFERNA_PATH/install/provisioning/setup-form.sh"
 
 # Unlike a fresh install target, this machine already has accounts; a pinned
 # resume (below) bypasses the prompt entirely.
-omarchy_username_taken() { getent passwd "$1" >/dev/null; }
+inferna_username_taken() { getent passwd "$1" >/dev/null; }
 
 LOGO_PATH="$INFERNA_PATH/logo.txt"
 LOGO_WIDTH=$(awk '{ if (length > max) max = length } END { print max+0 }' "$LOGO_PATH" 2>/dev/null || echo 0)
@@ -523,7 +523,7 @@ keyboard_form() {
 
   while true; do
     step "Let's setup your keyboard..."
-    omarchy_prompt_keyboard && status=0 || status=$?
+    inferna_prompt_keyboard && status=0 || status=$?
     if ((status == 0)); then
       apply_keyboard "$keyboard" && break
       if ((++failures >= 3)); then
@@ -536,7 +536,7 @@ keyboard_form() {
     fi
 
     # Esc means "back", and nothing precedes the first screen, so re-ask.
-    ((status == OMARCHY_FORM_BACK)) && continue
+    ((status == INFERNA_FORM_BACK)) && continue
 
     # Ctrl+C is the way out of a screen the owner cannot get past. Rebooting is
     # safe but not an escape from setup: this service runs again at next boot,
@@ -545,7 +545,7 @@ keyboard_form() {
     confirm_reboot && exec systemctl reboot
   done
 
-  omarchy_persist_input_selection
+  inferna_persist_input_selection
 }
 
 confirm_reboot() {
@@ -637,18 +637,18 @@ user_form() {
     say "Continuing setup for user: $username"
     echo
   else
-    omarchy_prompt_username || return $?
+    inferna_prompt_username || return $?
   fi
 
-  omarchy_prompt_password || return $?
+  inferna_prompt_password || return $?
 
   # Hostname and timezone are deferred to first boot with the rest of the user
-  # step: the deferred install seeds neutral placeholders (omarchy/UTC) and the
+  # step: the deferred install seeds neutral placeholders (inferna/UTC) and the
   # owner overwrites them here.
-  omarchy_prompt_hostname || return $?
+  inferna_prompt_hostname || return $?
 
   step "Let's set your timezone..."
-  omarchy_prompt_timezone || return $?
+  inferna_prompt_timezone || return $?
 }
 
 confirm_form() {
@@ -658,7 +658,7 @@ confirm_form() {
 Keyboard,${keyboard_label:-English (US)}
 Username,$username
 Password,$(printf "%${#password}s" | tr ' ' '*')
-Hostname,${hostname:-omarchy}
+Hostname,${hostname:-inferna}
 Timezone,${timezone:-UTC}" |
     gum table -s "," -p | sed "s/^/${PADDING_LEFT_SPACES}/"
 
@@ -667,7 +667,7 @@ Timezone,${timezone:-UTC}" |
 }
 
 # Groups recorded by inferna-apply-system's scripts at install time
-# (/var/lib/omarchy/provisioning/groups), filtered to groups that exist on this system.
+# (/var/lib/inferna/provisioning/groups), filtered to groups that exist on this system.
 user_groups() {
   local groups="wheel" group
   if [[ -f $PROVISIONING_DIR/groups ]]; then
@@ -737,7 +737,7 @@ create_user() {
 
   # deferred-provisioning installs skip archinstall's create_users, which is what normally
   # uncomments %wheel in /etc/sudoers. Always write the drop-in: detecting an
-  # existing grant is error-prone (omarchy ships narrow %wheel NOPASSWD rules
+  # existing grant is error-prone (inferna ships narrow %wheel NOPASSWD rules
   # for specific commands), and a duplicate grant is harmless.
   echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-inferna-wheel
   chmod 440 /etc/sudoers.d/00-inferna-wheel
@@ -762,13 +762,13 @@ install_authorized_keys() {
 
 configure_login() {
   mkdir -p /var/lib/sddm
-  printf '[Last]\nSession=omarchy.desktop\nUser=%s\n' "$username" >/var/lib/sddm/state.conf
+  printf '[Last]\nSession=inferna.desktop\nUser=%s\n' "$username" >/var/lib/sddm/state.conf
   chown -R sddm:sddm /var/lib/sddm 2>/dev/null || true
 
   # Autologin straight into the desktop after first-boot setup — the owner just
   # authenticated in the form, so we don't make them retype at SDDM.
   mkdir -p /etc/sddm.conf.d
-  printf '[Autologin]\nUser=%s\nSession=omarchy.desktop\n' "$username" >/etc/sddm.conf.d/autologin.conf
+  printf '[Autologin]\nUser=%s\nSession=inferna.desktop\n' "$username" >/etc/sddm.conf.d/autologin.conf
 
   # Encrypted installs keep autologin permanently (the LUKS prompt is the auth
   # boundary). Unencrypted installs autologin only this first boot, then a
@@ -833,8 +833,8 @@ configure_timezone() {
 # region, Hong Kong, Macau and Taiwan are always World, and any other timezone
 # keeps the media's region.
 configure_region() {
-  local defaults=${OMARCHY_FORM_DEFAULTS:-/etc/omarchy/form-defaults} marker=${OMARCHY_REGION_FILE:-/etc/omarchy/region}
-  local pacman_conf=${OMARCHY_PACMAN_CONF:-/etc/pacman.conf} key value fallback="" region current=global profile channel
+  local defaults=${INFERNA_FORM_DEFAULTS:-/etc/inferna/form-defaults} marker=${INFERNA_REGION_FILE:-/etc/inferna/region}
+  local pacman_conf=${INFERNA_PACMAN_CONF:-/etc/pacman.conf} key value fallback="" region current=global profile channel
   [[ -r $defaults && -n ${timezone:-} ]] || return 0
   while IFS='=' read -r key value; do
     [[ $key == "REGION" ]] && fallback=$value
@@ -859,7 +859,7 @@ configure_region() {
   # Re-render pacman for the region with the channel this machine installed.
   channel=$(sed -n 's|^Server = https://pkgs\.omarchy\.[a-z]*/\([a-z]*\)/.*|\1|p' "$pacman_conf" | head -1)
   if [[ -n $channel && -x $INFERNA_PATH/bin/inferna-apply-pacman ]]; then
-    "$INFERNA_PATH/bin/inferna-apply-pacman" "$channel" "${OMARCHY_REGION_TARGET:-/}" 2>&1 || true
+    "$INFERNA_PATH/bin/inferna-apply-pacman" "$channel" "${INFERNA_REGION_TARGET:-/}" 2>&1 || true
   fi
 }
 
@@ -885,17 +885,17 @@ finalize_user() {
     LOGNAME="$username" \
     SHELL="${shell:-/bin/bash}" \
     INFERNA_PATH="$INFERNA_PATH" \
-    OMARCHY_INSTALL="$INFERNA_PATH/install" \
-    OMARCHY_SETUP_CONTEXT=provision-owner \
-    OMARCHY_INSTALL_LOG_FILE="$LOG_FILE" \
-    OMARCHY_LOG_TO_STDOUT=1 \
+    INFERNA_INSTALL="$INFERNA_PATH/install" \
+    INFERNA_SETUP_CONTEXT=provision-owner \
+    INFERNA_INSTALL_LOG_FILE="$LOG_FILE" \
+    INFERNA_LOG_TO_STDOUT=1 \
     "$INFERNA_PATH/bin/inferna-provision-user" --force --first-install
 }
 
 # During the provisioning window the staged key rides in the UKI's initramfs,
 # named on the kernel cmdline, so boot unlocks unattended.
 PROVISIONING_UNLOCK_FILES=(
-  /etc/omarchy/provisioning.key
+  /etc/inferna/provisioning.key
   /etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf
   /etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf
 )
@@ -922,10 +922,10 @@ limine_auto_unlock_drop() {
   # retried for the boot entries.
   if [[ -f $PROVISIONING_DIR/luks-key ]]; then
     log_step "limine-update failed during re-key; restoring auto-unlock for retry"
-    install -Dm600 "$PROVISIONING_DIR/luks-key" /etc/omarchy/provisioning.key
-    echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/omarchy/provisioning.key"' \
+    install -Dm600 "$PROVISIONING_DIR/luks-key" /etc/inferna/provisioning.key
+    echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/inferna/provisioning.key"' \
       >/etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf
-    echo 'FILES+=(/etc/omarchy/provisioning.key)' >/etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf
+    echo 'FILES+=(/etc/inferna/provisioning.key)' >/etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf
   else
     log_step "limine-update failed during re-key; the staged key is gone, so no auto-unlock is restored"
   fi
@@ -1113,7 +1113,7 @@ run_provisioning() {
   install_authorized_keys
   configure_login
 
-  log_step "setting hostname to ${hostname:-omarchy}"
+  log_step "setting hostname to ${hostname:-inferna}"
   configure_hostname
 
   log_step "setting timezone to ${timezone:-UTC}"
@@ -1183,7 +1183,7 @@ run_setup() {
     if ((status != 0)); then
       # Esc unwinds to the keyboard step. Ctrl+C is the only other way out of a
       # prompt, and it offers the reboot instead of returning a value.
-      ((status == OMARCHY_FORM_SIGNAL)) && confirm_reboot && exec systemctl reboot
+      ((status == INFERNA_FORM_SIGNAL)) && confirm_reboot && exec systemctl reboot
       continue
     fi
     confirm_form || continue

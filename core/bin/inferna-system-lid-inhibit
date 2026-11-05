@@ -15,8 +15,8 @@
 # every event.
 
 UNIT="inferna-lid-inhibit.service"
-drm_path="${OMARCHY_DRM_PATH:-/sys/class/drm}"
-cgroup_path="${OMARCHY_CGROUP_PATH:-/proc/self/cgroup}"
+drm_path="${INFERNA_DRM_PATH:-/sys/class/drm}"
+cgroup_path="${INFERNA_CGROUP_PATH:-/proc/self/cgroup}"
 
 # Connected connectors of the external types logind does not count, by the name
 # Hyprland gives them (card2-USB-2 is USB-2). DVI-A and Composite are on its

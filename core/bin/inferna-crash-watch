@@ -16,10 +16,10 @@ readonly CRASH_GLYPH=$'\U000f16a1'
 
 # Crash loops dump core repeatedly, so announce each program at most once a
 # window.
-readonly dedupe_seconds=${OMARCHY_CRASH_DEDUPE_SECONDS:-60}
+readonly dedupe_seconds=${INFERNA_CRASH_DEDUPE_SECONDS:-60}
 
 # Extended regex of process names never worth announcing.
-readonly ignore_pattern=${OMARCHY_CRASH_IGNORE:-}
+readonly ignore_pattern=${INFERNA_CRASH_IGNORE:-}
 
 declare -A last_notified
 

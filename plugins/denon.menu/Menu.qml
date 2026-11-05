@@ -14,12 +14,12 @@ Item {
   id: root
 
   // Injected by inferna-shell when this plugin is summoned.
-  property string omarchyPath: Quickshell.env("INFERNA_PATH") || Quickshell.env("OMARCHY_PATH")
+  property string infernaPath: Quickshell.env("INFERNA_PATH") || Quickshell.env("INFERNA_PATH")
   property var shell: null
   property var manifest: null
 
   // Plugin lifecycle hooks. The host calls open(payloadJson) after
-  // `inferna-shell shell summon omarchy.menu ...` and close() when hidden.
+  // `inferna-shell shell summon inferna.menu ...` and close() when hidden.
   property string pendingInitialMenu: "root"
 
   function open(payloadJson) {
@@ -61,7 +61,7 @@ Item {
   // JSONC menu definitions. The shell parses both at startup and merges
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
-  property string defaultMenuPath: omarchyPath + "/default/inferna/inferna-menu.jsonc"
+  property string defaultMenuPath: infernaPath + "/default/inferna/inferna-menu.jsonc"
   property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Menu title. Set "root": { "title": "YOUR NAME" } in the extension file above.
   readonly property string brandName: (root.item("root") && root.item("root").title) ? root.item("root").title : "INFERNA"
@@ -101,7 +101,7 @@ Item {
   Loader {
     id: fallbackAppLibrary
     active: !root.sharedAppLibrary
-    source: root.omarchyPath + "/shell/services/AppLibrary.qml"
+    source: root.infernaPath + "/shell/services/AppLibrary.qml"
   }
 
   onAppLibraryChanged: {
@@ -890,7 +890,7 @@ Item {
   // ----------------------------------------------------------- route surface
   //
   // The menu is opened through the standard plugin lifecycle:
-  // `inferna-shell shell summon omarchy.menu '{"menu":"system"}'`.
+  // `inferna-shell shell summon inferna.menu '{"menu":"system"}'`.
   // Callers may pass a real id (`system`, `setup.power`) or an alias declared
   // in JSONC (`power`, `reminder-set`). Unknown strings fall through to the
   // id-as-route behavior so misspellings still attempt to open the literal id.
@@ -902,7 +902,7 @@ Item {
     var id = root.resolveRoute(initialMenu)
     var entry = root.items[id]
     // If the resolved id is an action (i.e. the user invoked an alias for
-    // a leaf, e.g. `omarchy menu summon screenrecord-stop`), run it directly
+    // a leaf, e.g. `inferna menu summon screenrecord-stop`), run it directly
     // instead of opening an action with no children.
     if (entry && entry.kind === "action" && entry.action) {
       root.cancel()

@@ -345,7 +345,7 @@ Item {
   }
 
   ShellIpc {
-    target: "omarchy.dock"
+    target: "inferna.dock"
 
     // The layout commands call this after changing a workspace's mode.
     function refresh(): void { root.refresh() }

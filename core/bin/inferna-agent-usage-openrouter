@@ -23,8 +23,8 @@ cover every machine and client, grouped by day and model. The /key response
 carries is_management_key, so a key that cannot do this fails visibly as
 403 and the collector falls back to tier 1 automatically.
 
-Refs: omacom/omarchy#8270 (pi on OpenRouter invisible in panel),
-omacom/omarchy#10330 (dedicated pi collector proposal).
+Refs: omacom/inferna#8270 (pi on OpenRouter invisible in panel),
+omacom/inferna#10330 (dedicated pi collector proposal).
 """
 
 from __future__ import annotations
@@ -97,7 +97,7 @@ def model_name(raw: Any) -> str:
 # ---------------------------------------------------------------- auth
 
 def read_config() -> dict[str, Any]:
-  return read_json(config_home() / "omarchy" / "agents" / "openrouter.json")
+  return read_json(config_home() / "inferna" / "agents" / "openrouter.json")
 
 
 def read_opencode_key(path: Path) -> str:

@@ -19,7 +19,7 @@ for arg in "$@"; do
   esac
 done
 
-usage_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
+usage_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/agents/usage"
 accounts=$(inferna-agent-account-state list $provider) || exit 1
 
 # Join each account with the limits its provider's usage record last saw. With

@@ -44,7 +44,7 @@ if [[ -n $boot_num ]]; then
 
   exit 0
 else
-  uki_file=$(sudo find /boot/EFI/Linux/ -name "omarchy*.efi" -printf "%f\n" 2>/dev/null | head -1)
+  uki_file=$(sudo find /boot/EFI/Linux/ -name "inferna*.efi" -printf "%f\n" 2>/dev/null | head -1)
 
   if [[ -z $uki_file ]]; then
     echo "Error: No Inferna UKI found in /boot/EFI/Linux/" >&2

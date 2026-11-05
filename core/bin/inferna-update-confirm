@@ -8,7 +8,7 @@ gum style --border normal --padding "1 2" \
   "• $(inferna-i18n update.cannotStop)" \
   "• $(inferna-i18n update.connectPower)" \
   "" \
-  "$(inferna-i18n update.whatsNew "https://github.com/omacom/omarchy/releases/latest")"
+  "$(inferna-i18n update.whatsNew "https://github.com/petrolal/dotfiles/releases/latest")"
 
 echo
 

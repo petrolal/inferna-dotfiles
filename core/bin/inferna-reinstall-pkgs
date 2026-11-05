@@ -11,7 +11,7 @@ set -e
 # Set the package repository to the platform's default channel
 source "$INFERNA_PATH/install/helpers/pacman.sh"
 platform=$(inferna-hw-platform)
-channel=$(omarchy_pacman_default_channel "$platform")
+channel=$(inferna_pacman_default_channel "$platform")
 inferna-refresh-pacman "$channel"
 
 # Downgrade any packages to that channel's setup
