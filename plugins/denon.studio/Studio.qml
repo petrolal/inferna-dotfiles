@@ -36,7 +36,7 @@ Panel {
   readonly property string home: Quickshell.env("HOME")
   readonly property string glassHelper: home + "/.local/share/omarchy-glass/control.py"
   readonly property string depthHelper: home + "/.local/share/omarchy-recess/control.py"
-  readonly property string tilesHelper: home + "/.config/omarchy/plugins/io.github.denonmaryland.tricky-tiles/helpers/control.py"
+  readonly property string tilesHelper: home + "/.config/inferna/plugins/io.github.denonmaryland.tricky-tiles/helpers/control.py"
 
   // ---------------------------------------------------------------- state
   property string page: "glass"

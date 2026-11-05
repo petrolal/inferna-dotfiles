@@ -6,7 +6,7 @@ import "Plural.js" as Plural
 import "Numbers.js" as Numbers
 
 // Display-language strings for the shell. The selected code lives in
-// ~/.config/omarchy/language (omarchy-language owns it); a missing file
+// ~/.config/inferna/language (omarchy-language owns it); a missing file
 // means English. Strings come from default/i18n/<code>/shell.json layered
 // over the English catalog, so a missing translation falls back to English
 // per string. Use as I18n.t("common.search"), with .arg(...) for %1 holes,

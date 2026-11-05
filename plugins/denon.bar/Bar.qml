@@ -45,7 +45,7 @@ Item {
   property bool barHidden: false
   property string home: Quickshell.env("HOME")
   property string stateHome: home + "/.local/state"
-  property string omarchyConfigDir: home + "/.config/omarchy"
+  property string omarchyConfigDir: home + "/.config/inferna"
   property var fallbackBarConfig: ({
     position: "top",
     transparent: false,
@@ -112,7 +112,7 @@ Item {
     : Qt.rgba(themeForeground.r, themeForeground.g, themeForeground.b, Math.min(1, (0.08 + 0.1 * recessAdapt) * lipScale))
 
   // Depth plugin link (personal; deliberately not part of the released
-  // plugin): the pills follow ~/.config/omarchy/recess.json. Recessed scales
+  // plugin): the pills follow ~/.config/inferna/recess.json. Recessed scales
   // the cut and lip by the active profile; Raised turns each pill into a
   // pebble. With Depth switched off the pills keep their original recess.
   property var depthSettings: ({})
@@ -141,7 +141,7 @@ Item {
   readonly property color pebbleShadow: Qt.rgba(0, 0, 0, Math.min(0.32, lightTheme ? 0.06 + 0.12 * pebbleHeight : 0.18 + 0.2 * pebbleHeight))
 
   FileView {
-    path: Quickshell.env("HOME") + "/.config/omarchy/recess.json"
+    path: Quickshell.env("HOME") + "/.config/inferna/recess.json"
     watchChanges: true
     printErrors: false
     onFileChanged: reload()
@@ -1271,11 +1271,11 @@ Item {
   Process {
     id: barHiddenProbe
     running: true
-    command: ["bash", "-c", "[[ -f $HOME/.local/state/omarchy/toggles/bar-off ]] && echo yes || echo no"]
+    command: ["bash", "-c", "[[ -f $HOME/.local/state/inferna/toggles/bar-off ]] && echo yes || echo no"]
     stdout: SplitParser { onRead: function(line) { root.barHidden = String(line).trim() === "yes" } }
   }
   FileView {
-    path: root.home + "/.local/state/omarchy/toggles"
+    path: root.home + "/.local/state/inferna/toggles"
     watchChanges: true
     printErrors: false
     onFileChanged: barHiddenProbe.running = true

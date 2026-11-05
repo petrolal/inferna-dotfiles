@@ -2,7 +2,7 @@
 
 # omarchy:summary=Refresh the current theme from its templates.
 
-THEME_NAME_PATH="$HOME/.local/state/omarchy/current/theme.name"
+THEME_NAME_PATH="$HOME/.local/state/inferna/current/theme.name"
 
 # Installers and migrations refresh the theme and then read the app configs it
 # writes, so this waits for every retint rather than leaving some running.

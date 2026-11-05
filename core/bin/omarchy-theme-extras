@@ -8,7 +8,7 @@
 # `.git` file is a worktree pointing elsewhere; neither is ours to pull.
 status=1
 
-for theme in ~/.config/omarchy/themes/*; do
+for theme in ~/.config/inferna/themes/*; do
   [[ ! -L $theme && -d $theme/.git ]] || continue
   echo "$theme"
   status=0

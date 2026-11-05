@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Run a named hook from ~/.config/omarchy/hooks/<name> and ~/.config/omarchy/hooks/<name>.d/.
+# omarchy:summary=Run a named hook from ~/.config/inferna/hooks/<name> and ~/.config/inferna/hooks/<name>.d/.
 # omarchy:args=[name] [args...]
 
 set -e
@@ -23,7 +23,7 @@ if [[ -z $HOOK || $HOOK == */* || $HOOK == "." || $HOOK == ".." ]]; then
   exit 2
 fi
 
-HOOK_PATH="$HOME/.config/omarchy/hooks/$1"
+HOOK_PATH="$HOME/.config/inferna/hooks/$1"
 HOOK_DIR="$HOOK_PATH.d"
 shift
 

@@ -72,7 +72,7 @@ echo "Matching T3 Code to the current theme..."
 mkdir -p "$T3CODE_STATE_DIR"
 
 # An updated user's current theme may have been staged before this template existed.
-if [[ ! -f $HOME/.local/state/omarchy/current/theme/t3code.json ]]; then
+if [[ ! -f $HOME/.local/state/inferna/current/theme/t3code.json ]]; then
   omarchy-theme-refresh
 fi
 

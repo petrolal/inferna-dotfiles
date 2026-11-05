@@ -22,7 +22,7 @@ use), asked with a token from COPILOT_QUOTA_TOKEN, GH_TOKEN, GITHUB_TOKEN, or
 failed check keeps the last answer, marked stale. An answer under 15 seconds
 old is reused rather than asked again (--force always asks), and `gh` is only
 run when GitHub is actually asked. Only when it can't be asked at all does a
-monthlyCredits budget from ~/.config/omarchy/agents/copilot.json give a local
+monthlyCredits budget from ~/.config/inferna/agents/copilot.json give a local
 estimate, labeled as one, of this machine's CLI spend:
 
   {

@@ -73,7 +73,7 @@ BarWidget {
   }
 
   FileView {
-    path: Quickshell.env("HOME") + "/.config/omarchy/recess.json"
+    path: Quickshell.env("HOME") + "/.config/inferna/recess.json"
     watchChanges: true
     printErrors: false
     onFileChanged: reload()

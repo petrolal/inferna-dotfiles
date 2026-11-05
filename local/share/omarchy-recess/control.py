@@ -10,9 +10,9 @@ import subprocess
 import tempfile
 
 HOME = Path.home()
-SETTINGS = HOME / '.config/omarchy/recess.json'
+SETTINGS = HOME / '.config/inferna/recess.json'
 LUA = HOME / '.config/hypr/recessed_windows.lua'
-STATE = HOME / '.local/state/omarchy-recess'
+STATE = HOME / '.local/state/inferna-recess'
 
 # Two styles share one set of slider keys:
 #   recessed: windows pressed into the screen (inner shade, dark top cut, lit lower lip)
@@ -47,7 +47,7 @@ DEFAULT_LOOK = dict(recessed='carved', raised='pebble')
 LUA_BODY = r'''
 -- Theme-following: shadows and the lower lip adapt to light and dark themes.
 local palette = ""
-local file = io.open(os.getenv("HOME") .. "/.local/state/omarchy/current/theme/colors.toml")
+local file = io.open(os.getenv("HOME") .. "/.local/state/inferna/current/theme/colors.toml")
 if file then palette = file:read("a"); file:close() end
 local mode = palette:match('mode%s*=%s*"(.-)"')
 local bg = palette:match('\nbackground%s*=%s*"#(%x%x%x%x%x%x)"') or palette:match('^background%s*=%s*"#(%x%x%x%x%x%x)"')
@@ -240,7 +240,7 @@ def render(v):
 def theme_profile():
     """'light' or 'dark' for the active theme, matching the Lua module's test."""
     try:
-        text = (HOME / '.local/state/omarchy/current/theme/colors.toml').read_text()
+        text = (HOME / '.local/state/inferna/current/theme/colors.toml').read_text()
     except OSError:
         return 'dark'
     mode = re.search(r'^mode\s*=\s*"(\w+)"', text, re.M)

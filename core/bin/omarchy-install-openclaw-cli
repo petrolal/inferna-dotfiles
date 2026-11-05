@@ -38,7 +38,7 @@ seed=/usr/share/openclaw
 # The services a run stopped, kept until a run completes: one that fails after
 # the stop leaves them stopped, and the next would take them for stopped by the
 # user.
-stopped_dir="$HOME/.local/state/omarchy/openclaw-stopped"
+stopped_dir="$HOME/.local/state/inferna/openclaw-stopped"
 
 # Usable means the command answers, not that the file is there: upstream's
 # wrapper execs the prefix's own Node, so a prefix missing either fails here.

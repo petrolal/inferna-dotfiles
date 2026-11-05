@@ -5,7 +5,7 @@
 
 source "$OMARCHY_PATH/install/helpers/browser-policy.sh"
 
-CHROMIUM_THEME=$HOME/.local/state/omarchy/current/theme/chromium.theme
+CHROMIUM_THEME=$HOME/.local/state/inferna/current/theme/chromium.theme
 THEME_HEX_COLOR=$BROWSER_POLICY_DEFAULT_COLOR
 
 if [[ -f $CHROMIUM_THEME ]]; then

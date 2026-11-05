@@ -29,7 +29,7 @@ while (($#)); do
 done
 
 OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
-STATE_DIR="${OMARCHY_MIGRATION_STATE:-$HOME/.local/state/omarchy/migrations}"
+STATE_DIR="${OMARCHY_MIGRATION_STATE:-$HOME/.local/state/inferna/migrations}"
 MIGRATIONS_DIR="$OMARCHY_PATH/migrations"
 
 migration_entries() {

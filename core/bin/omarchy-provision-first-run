@@ -36,7 +36,7 @@ while (($#)); do
   esac
 done
 
-state_dir=~/.local/state/omarchy
+state_dir=~/.local/state/inferna
 FIRST_RUN_DONE="first-run-user"
 if omarchy-done check "$FIRST_RUN_DONE" && (( force == 0 )); then
   echo "First-run already complete."

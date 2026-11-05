@@ -9,8 +9,8 @@
 
 set -euo pipefail
 
-HERMES_SOURCE_PATH="$HOME/.local/state/omarchy/current/theme/hermes.yaml"
-HERMES_THEME_NAME_PATH="$HOME/.local/state/omarchy/current/theme.name"
+HERMES_SOURCE_PATH="$HOME/.local/state/inferna/current/theme/hermes.yaml"
+HERMES_THEME_NAME_PATH="$HOME/.local/state/inferna/current/theme.name"
 HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
 HERMES_CONFIG_PATH="$HERMES_HOME/config.yaml"
 HERMES_SKIN_NAME="omarchy"

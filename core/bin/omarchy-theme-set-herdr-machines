@@ -28,7 +28,7 @@ if [[ -n $OMARCHY_THEME_SYNC_FROM ]] || ! omarchy-toggle-enabled herdr-theme-syn
   exit 0
 fi
 
-theme=$(cat "$HOME/.local/state/omarchy/current/theme.name" 2>/dev/null)
+theme=$(cat "$HOME/.local/state/inferna/current/theme.name" 2>/dev/null)
 control_dir="$XDG_RUNTIME_DIR/omarchy-theme-sync"
 mkdir -m 700 -p "$control_dir"
 
@@ -38,12 +38,12 @@ mkdir -m 700 -p "$control_dir"
 # Braces make bash read the whole script before running it, so nothing it runs can consume the rest.
 read -r -d '' REMOTE_SCRIPT <<'EOF'
 {
-  if [[ ! -f ~/.local/state/omarchy/toggles/herdr-theme-sync ]]; then
+  if [[ ! -f ~/.local/state/inferna/toggles/herdr-theme-sync ]]; then
     echo "theme sync is off"
     exit
   fi
 
-  if [[ $(cat ~/.local/state/omarchy/current/theme.name 2>/dev/null) == "$theme" ]]; then
+  if [[ $(cat ~/.local/state/inferna/current/theme.name 2>/dev/null) == "$theme" ]]; then
     echo "already on $theme"
     exit
   fi

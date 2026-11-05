@@ -39,7 +39,7 @@ if [[ $mode != "--services-only" ]]; then
 
   if [[ $kernel_updated == "true" ]]; then
     confirm_reboot "$(omarchy-i18n update.kernelReboot)"
-  elif [[ -f $HOME/.local/state/omarchy/reboot-required ]]; then
+  elif [[ -f $HOME/.local/state/inferna/reboot-required ]]; then
     confirm_reboot "$(omarchy-i18n update.rebootRequired)"
   fi
 
@@ -50,7 +50,7 @@ if [[ $mode != "--services-only" ]]; then
 fi
 
 if [[ $mode != "--reboot-only" ]]; then
-  for file in "$HOME"/.local/state/omarchy/restart-*-required; do
+  for file in "$HOME"/.local/state/inferna/restart-*-required; do
     if [[ -f $file ]]; then
       filename=$(basename "$file")
       service=$(echo "$filename" | sed 's/restart-\(.*\)-required/\1/')

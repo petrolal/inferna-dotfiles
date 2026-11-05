@@ -4,7 +4,7 @@
 # omarchy:args=<on|off|toggle|recover>
 
 TOGGLE="internal-monitor-mirror"
-TOGGLE_FLAG="$HOME/.local/state/omarchy/toggles/hypr/$TOGGLE.lua"
+TOGGLE_FLAG="$HOME/.local/state/inferna/toggles/hypr/$TOGGLE.lua"
 DISABLE_TOGGLE="internal-monitor-disable"
 
 INTERNAL=$(omarchy-hyprland-monitor-laptop)

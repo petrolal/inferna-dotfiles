@@ -203,7 +203,7 @@ QtObject {
   }
 
   // Re-derive `shellValues` from theme base + user override and push it to
-  // Style. User keys win, so a machine-level `~/.config/omarchy/shell.toml`
+  // Style. User keys win, so a machine-level `~/.config/inferna/shell.toml`
   // survives theme switches (which replace only themeShellValues).
   function mergeShell() {
     var merged = {}
@@ -245,7 +245,7 @@ QtObject {
   // CLI takes effect live without restarting the shell; absent by default.
   property FileView userShellFile: FileView {
     id: userShellFile
-    path: root.home + "/.config/omarchy/shell.toml"
+    path: root.home + "/.config/inferna/shell.toml"
     watchChanges: true
     printErrors: false
     onLoaded: root.loadUserShell(text())

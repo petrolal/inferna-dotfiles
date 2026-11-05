@@ -6,8 +6,8 @@
 
 set -o pipefail
 
-CURRENT_THEME_PATH="$HOME/.local/state/omarchy/current/theme"
-USER_THEMES_PATH="$HOME/.config/omarchy/themes"
+CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"
+USER_THEMES_PATH="$HOME/.config/inferna/themes"
 OMARCHY_THEMES_PATH="$OMARCHY_PATH/themes"
 
 COLOR_OUTPUT=1
@@ -20,7 +20,7 @@ usage() {
 Usage: omarchy-dev-theme-preview [theme-name|theme-dir|colors.toml] [--no-color] [--no-osc]
 
 Preview a theme palette in the terminal. Without an argument, previews the
-current theme from ~/.local/state/omarchy/current/theme/colors.toml.
+current theme from ~/.local/state/inferna/current/theme/colors.toml.
 
 When stdout is a terminal and color output is enabled, the preview also applies
 that theme's OSC palette to the current terminal only. Use --no-osc to suppress
@@ -413,8 +413,8 @@ mode="${COLORS[mode]:-dark}"
 
 theme_label="$THEME_REF"
 if [[ -z $theme_label ]]; then
-  if [[ -f $HOME/.local/state/omarchy/current/theme.name ]]; then
-    theme_label=$(<"$HOME/.local/state/omarchy/current/theme.name")
+  if [[ -f $HOME/.local/state/inferna/current/theme.name ]]; then
+    theme_label=$(<"$HOME/.local/state/inferna/current/theme.name")
   else
     theme_label="current"
   fi

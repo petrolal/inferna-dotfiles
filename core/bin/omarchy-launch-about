@@ -8,8 +8,8 @@
 # it instead of resizing after the first paint. Bash defers WINCH traps while read
 # blocks, so poll for size changes and re-render fastfetch whenever it is resized.
 
-LOGO_FILE="$HOME/.config/omarchy/branding/about.txt"
-FIT_FILE="$HOME/.local/state/omarchy/windows/about.fit"
+LOGO_FILE="$HOME/.config/inferna/branding/about.txt"
+FIT_FILE="$HOME/.local/state/inferna/windows/about.fit"
 OMARCHY_FASTFETCH_DIR=/etc/fastfetch
 # Without a runtime directory there is nowhere private to put the translated
 # copy, so the untranslated config runs as it is.

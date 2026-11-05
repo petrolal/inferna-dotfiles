@@ -22,7 +22,7 @@ Item {
 
   FileView {
     id: localModelFile
-    path: root.home + "/.local/state/omarchy/agent-local/status.json"
+    path: root.home + "/.local/state/inferna/agent-local/status.json"
     watchChanges: true
     printErrors: false
     onFileChanged: reload()
@@ -35,7 +35,7 @@ Item {
 
   FileView {
     id: localRecipesFile
-    path: root.home + "/.local/state/omarchy/agent-local/list.json"
+    path: root.home + "/.local/state/inferna/agent-local/list.json"
     watchChanges: true
     printErrors: false
     onFileChanged: reload()

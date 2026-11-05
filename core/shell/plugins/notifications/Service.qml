@@ -1162,11 +1162,11 @@ Item {
 
   // ------------------------------------------------------------- store
   //
-  // State, not cache, in ~/.local/state/omarchy/notifications/: live.json (on
+  // State, not cache, in ~/.local/state/inferna/notifications/: live.json (on
   // screen), history.json and quiet.json, formats in Store.js. Each file is
   // read once at startup and rewritten whole a moment after it changes, so a
   // burst of arrivals writes it once.
-  readonly property string stateDir: Quickshell.env("HOME") + "/.local/state/omarchy/notifications"
+  readonly property string stateDir: Quickshell.env("HOME") + "/.local/state/inferna/notifications"
   property bool storeReady: false
   property bool liveLoaded: false
   property bool historyLoaded: false

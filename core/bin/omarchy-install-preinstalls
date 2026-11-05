@@ -35,6 +35,6 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
 
   # Last, so a failure above leaves the opt-out intact rather than restoring
   # keybindings for apps that never came back
-  rm -f ~/.local/state/omarchy/preinstalls-removed
+  rm -f ~/.local/state/inferna/preinstalls-removed
   omarchy-restart-hyprctl
 fi

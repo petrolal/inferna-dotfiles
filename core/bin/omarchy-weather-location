@@ -2,7 +2,7 @@
 
 # omarchy:summary=Show or set the location used for weather reports
 #
-# State lives in ~/.local/state/omarchy/settings/weather.json as
+# State lives in ~/.local/state/inferna/settings/weather.json as
 # {"name": ..., "latitude": ..., "longitude": ...}. A missing file means the
 # location is auto-detected by geo.omarchy.org, which answers in this shape.
 # Coordinates make the weather panel exact; a hand-written {"name": "Malibu"}
@@ -13,7 +13,7 @@
 #   --set <name> [lat,lon]  store a location
 #   --clear             return to IP auto-detect
 
-LOC_FILE="$HOME/.local/state/omarchy/settings/weather.json"
+LOC_FILE="$HOME/.local/state/inferna/settings/weather.json"
 COORDS_PATTERN='^(-?[0-9]+(\.[0-9]+)?),(-?[0-9]+(\.[0-9]+)?)$'
 
 case "${1:-}" in

@@ -3,7 +3,7 @@
 # omarchy:summary=Launch the default editor selected via Omarchy defaults.
 # omarchy:args=[--inline] <path>
 
-default_editor="$HOME/.local/state/omarchy/defaults/editor"
+default_editor="$HOME/.local/state/inferna/defaults/editor"
 
 if [[ ${1:-} == "--inline" ]]; then
   inline=true

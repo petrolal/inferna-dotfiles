@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-toggle="$HOME/.local/state/omarchy/toggles/background-intros-off"
+toggle="$HOME/.local/state/inferna/toggles/background-intros-off"
 case ${1:-} in
   enable)
     rm -f "$toggle"

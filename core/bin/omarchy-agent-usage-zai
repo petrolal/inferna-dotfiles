@@ -54,10 +54,10 @@ from collectors import (  # noqa: E402
 AGENT_ID = "zai"
 AGENT_NAME = "Z.ai"
 AUTH_HELP_NO_KEY = (
-  "Set ZAI_API_KEY (or add ~/.config/omarchy/agents/zai.json) to show Coding Plan limits."
+  "Set ZAI_API_KEY (or add ~/.config/inferna/agents/zai.json) to show Coding Plan limits."
 )
 AUTH_HELP_BAD_KEY = (
-  "Z.ai rejected the saved API key. Update it in ~/.config/omarchy/agents/zai.json or ZAI_API_KEY."
+  "Z.ai rejected the saved API key. Update it in ~/.config/inferna/agents/zai.json or ZAI_API_KEY."
 )
 
 # Global (Z.ai) vs China (Zhipu / BigModel) split the same API under two hosts.

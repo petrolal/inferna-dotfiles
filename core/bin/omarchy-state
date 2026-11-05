@@ -4,7 +4,7 @@
 # omarchy:args=<set|clear> <state-name-or-pattern>
 # omarchy:hidden=true
 
-STATE_DIR="$HOME/.local/state/omarchy"
+STATE_DIR="$HOME/.local/state/inferna"
 mkdir -p "$STATE_DIR"
 
 COMMAND="$1"

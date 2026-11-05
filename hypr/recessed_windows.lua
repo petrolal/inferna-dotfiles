@@ -5,7 +5,7 @@ local S = { enabled = true, style = "recessed",
 
 -- Theme-following: shadows and the lower lip adapt to light and dark themes.
 local palette = ""
-local file = io.open(os.getenv("HOME") .. "/.local/state/omarchy/current/theme/colors.toml")
+local file = io.open(os.getenv("HOME") .. "/.local/state/inferna/current/theme/colors.toml")
 if file then palette = file:read("a"); file:close() end
 local mode = palette:match('mode%s*=%s*"(.-)"')
 local bg = palette:match('\nbackground%s*=%s*"#(%x%x%x%x%x%x)"') or palette:match('^background%s*=%s*"#(%x%x%x%x%x%x)"')

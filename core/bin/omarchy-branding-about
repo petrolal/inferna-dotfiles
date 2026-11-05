@@ -11,15 +11,15 @@ set -euo pipefail
 case "${1:-}" in
 image)
   image=$(omarchy-file-select --title "$(omarchy-i18n branding.pickAboutImage)" --extensions "png svg")
-  if omarchy-transcode-ascii "$image" ~/.config/omarchy/branding/about.txt --width 54 --height 26; then
+  if omarchy-transcode-ascii "$image" ~/.config/inferna/branding/about.txt --width 54 --height 26; then
     omarchy-launch-about >/dev/null 2>&1
   fi
   ;;
 text)
-  omarchy-launch-editor ~/.config/omarchy/branding/about.txt >/dev/null 2>&1 && omarchy-launch-about >/dev/null 2>&1
+  omarchy-launch-editor ~/.config/inferna/branding/about.txt >/dev/null 2>&1 && omarchy-launch-about >/dev/null 2>&1
   ;;
 reset)
-  cp "$OMARCHY_PATH/icon.txt" ~/.config/omarchy/branding/about.txt && omarchy-launch-about >/dev/null 2>&1
+  cp "$OMARCHY_PATH/icon.txt" ~/.config/inferna/branding/about.txt && omarchy-launch-about >/dev/null 2>&1
   ;;
 *)
   echo "Usage: omarchy-branding-about <image|text|reset>" >&2

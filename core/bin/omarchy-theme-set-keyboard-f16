@@ -3,7 +3,7 @@
 # omarchy:summary=Apply the current theme keyboard color to Framework Laptop 16 keyboards
 # omarchy:hidden=true
 
-FRAMEWORK16_THEME=$HOME/.local/state/omarchy/current/theme/keyboard.rgb
+FRAMEWORK16_THEME=$HOME/.local/state/inferna/current/theme/keyboard.rgb
 
 # QMK hue and saturation on a 0-255 scale. The floating-point steps follow
 # Python's colorsys.rgb_to_hsv, which this replaces to save starting Python on

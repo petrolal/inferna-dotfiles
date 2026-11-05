@@ -8,8 +8,8 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
   omarchy-webapp-remove-all
   omarchy-tui-remove-all
 
-  mkdir -p ~/.local/state/omarchy
-  touch ~/.local/state/omarchy/preinstalls-removed
+  mkdir -p ~/.local/state/inferna
+  touch ~/.local/state/inferna/preinstalls-removed
   omarchy-restart-hyprctl
 
   # Disable Omarchy's default mise tools for this user and retire their shims.

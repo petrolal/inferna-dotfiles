@@ -8,7 +8,7 @@ An account is a Claude Code, Codex, or Grok login Omarchy keeps a home for.
 The login you already have stays where the CLI put it (~/.claude, ~/.codex,
 ~/.grok) and
 is the primary account; added accounts get a home of their own under
-~/.local/state/omarchy/agents/accounts/<provider>/<id>/ that holds only that
+~/.local/state/inferna/agents/accounts/<provider>/<id>/ that holds only that
 account's credentials and links everything else back to the primary home, so
 conversation history, settings and skills stay one set across accounts.
 

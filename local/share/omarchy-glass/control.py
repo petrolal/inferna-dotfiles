@@ -12,16 +12,16 @@ import subprocess
 import tempfile
 
 HOME = Path.home()
-SETTINGS = HOME / '.config/omarchy/glass.json'
+SETTINGS = HOME / '.config/inferna/glass.json'
 LUA = HOME / '.config/hypr/glass.lua'
-STATE = HOME / '.local/state/omarchy-glass'
+STATE = HOME / '.local/state/inferna-glass'
 BASELINE = dict(enabled=True, light_readable=True, active=0.76, inactive=0.73, browser_active=0.84,
                 browser_inactive=0.80, noise=0.0, size=6, contrast=1.0,
                 brightness=1.0, vibrancy=0.1696)
 LIMITS = dict(active=(0.4, 1), inactive=(0.4, 1), browser_active=(0.4, 1),
               browser_inactive=(0.4, 1), size=(1, 12),
               contrast=(0.5, 1.5), brightness=(0.6, 1.2), vibrancy=(0, 0.5))
-USER_PRESETS = HOME / '.config/omarchy/glass-presets.json'
+USER_PRESETS = HOME / '.config/inferna/glass-presets.json'
 LOOK_KEYS = ('active', 'inactive', 'browser_active', 'browser_inactive',
              'size', 'contrast', 'brightness', 'vibrancy')
 
@@ -120,7 +120,7 @@ def atomic(path, text):
 def theme_mode():
     try:
         r = subprocess.run(['omarchy', 'theme', 'color', '--file',
-                            str(HOME / '.local/state/omarchy/current/theme/colors.toml'), 'mode'],
+                            str(HOME / '.local/state/inferna/current/theme/colors.toml'), 'mode'],
                            capture_output=True, text=True, timeout=10)
         return r.stdout.strip() if r.stdout.strip() in ('light', 'dark') else 'dark'
     except Exception:

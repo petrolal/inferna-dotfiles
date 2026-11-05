@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-T3CODE_SOURCE_PATH="$HOME/.local/state/omarchy/current/theme/t3code.json"
+T3CODE_SOURCE_PATH="$HOME/.local/state/inferna/current/theme/t3code.json"
 T3CODE_HOME="${T3CODE_HOME:-$HOME/.t3}"
 T3CODE_STATE_DIR="$T3CODE_HOME/userdata"
 # The filename is the theme id T3 Code shows and `t3 theme set` accepts, and

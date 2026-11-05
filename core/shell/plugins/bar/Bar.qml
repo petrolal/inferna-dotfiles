@@ -1553,7 +1553,7 @@ Item {
   }
 
   // FileView also fires for any change in its path's parent directory, so watch
-  // a path inside current/: every plugin writes to ~/.local/state/omarchy.
+  // a path inside current/: every plugin writes to ~/.local/state/inferna.
   FileView {
     path: root.stateHome + "/omarchy/current/theme"
     watchChanges: true
@@ -1635,11 +1635,11 @@ Item {
   Process {
     id: barHiddenProbe
     running: true
-    command: ["bash", "-c", "[[ -f $HOME/.local/state/omarchy/toggles/bar-off ]] && echo yes || echo no"]
+    command: ["bash", "-c", "[[ -f $HOME/.local/state/inferna/toggles/bar-off ]] && echo yes || echo no"]
     stdout: SplitParser { onRead: function(line) { root.barHidden = String(line).trim() === "yes" } }
   }
   FileView {
-    path: root.home + "/.local/state/omarchy/toggles"
+    path: root.home + "/.local/state/inferna/toggles"
     watchChanges: true
     printErrors: false
     onFileChanged: barHiddenProbe.running = true

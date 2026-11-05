@@ -132,7 +132,7 @@ function o.preinstalled_bindings_enabled()
     return _G.omarchy_preinstalled_bindings == true
   end
 
-  return not file_exists((os.getenv("HOME") or "") .. "/.local/state/omarchy/preinstalls-removed")
+  return not file_exists((os.getenv("HOME") or "") .. "/.local/state/inferna/preinstalls-removed")
 end
 
 function o.bind(keys, description, dispatcher, options)
@@ -283,7 +283,7 @@ function o.software_rendering_defaults()
   end
 
   return file_exists(runtime .. "/hypr/" .. signature .. "/omarchy-software-rendering")
-    and not file_exists(paths.home .. "/.local/state/omarchy/toggles/animations-without-gpu")
+    and not file_exists(paths.home .. "/.local/state/inferna/toggles/animations-without-gpu")
 end
 
 -- What makes apps float on their own account, so a floating workspace can

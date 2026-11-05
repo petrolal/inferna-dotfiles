@@ -414,7 +414,7 @@ local function theme_colors()
   local colors = {}
   -- omarchy-theme-set writes the current theme under ~/.local/state whatever
   -- XDG_STATE_HOME says, and Hyprland loads the theme's own config from there.
-  local file = io.open(paths.home .. "/.local/state/omarchy/current/theme/colors.toml", "r")
+  local file = io.open(paths.home .. "/.local/state/inferna/current/theme/colors.toml", "r")
 
   if file then
     for line in file:lines() do

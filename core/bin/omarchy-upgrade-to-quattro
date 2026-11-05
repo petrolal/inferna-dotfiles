@@ -1054,8 +1054,8 @@ populate_legacy_hypr_defaults() {
 create_live_omarchy_overlay() {
   local backup="$1" compat_root shim_hypr_dir entry base cleanup_hook
 
-  compat_root="$TARGET_HOME/.local/state/omarchy/upgrade-to-quattro-live-omarchy"
-  shim_hypr_dir="$TARGET_HOME/.local/state/omarchy/upgrade-to-quattro-hypr-defaults"
+  compat_root="$TARGET_HOME/.local/state/inferna/upgrade-to-quattro-live-omarchy"
+  shim_hypr_dir="$TARGET_HOME/.local/state/inferna/upgrade-to-quattro-hypr-defaults"
 
   populate_legacy_hypr_defaults "$shim_hypr_dir" "$backup" || return 1
 
@@ -1077,7 +1077,7 @@ create_live_omarchy_overlay() {
   done
   ln -s "$shim_hypr_dir" "$compat_root/default/hypr"
 
-  cleanup_hook="$TARGET_HOME/.config/omarchy/hooks/post-boot.d/cleanup-upgrade-to-quattro-live-shim"
+  cleanup_hook="$TARGET_HOME/.config/inferna/hooks/post-boot.d/cleanup-upgrade-to-quattro-live-shim"
   mkdir -p "$(dirname "$cleanup_hook")"
   cat >"$cleanup_hook" <<CLEANUP_HOOK
 #!/usr/bin/env bash
@@ -1559,7 +1559,7 @@ apply_user_transition() {
     bash <<'USER_SETUP'
 set -euo pipefail
 root=/usr/share/omarchy
-state_dir="$HOME/.local/state/omarchy"
+state_dir="$HOME/.local/state/inferna"
 mkdir -p "$state_dir" "$HOME/.config"
 
 file_sha256() {
@@ -2000,7 +2000,7 @@ copy_always_config_defaults
 repair_chromium_copy_url_extension_flags
 
 # Carry over user-added backgrounds from the legacy git checkout backup, then
-# remove old symlinks that pointed ~/.config/omarchy/themes/* back into the
+# remove old symlinks that pointed ~/.config/inferna/themes/* back into the
 # pre-quattro checkout. Omarchy quattro reads stock themes from /usr/share/omarchy/themes.
 legacy_omarchy_backup="$HOME/.local/share/omarchy.omarchy-upgrade-to-quattro.$BACKUP_SUFFIX.bak"
 if [[ -d $legacy_omarchy_backup/themes && -d $legacy_omarchy_backup/.git ]]; then
@@ -2009,13 +2009,13 @@ if [[ -d $legacy_omarchy_backup/themes && -d $legacy_omarchy_backup/.git ]]; the
     git ls-files -z --others -- 'themes/*/backgrounds/*' 2>/dev/null | while IFS= read -r -d '' bg_file; do
       theme_name=${bg_file#themes/}
       theme_name=${theme_name%%/*}
-      mkdir -p "$HOME/.config/omarchy/backgrounds/$theme_name"
-      mv "$bg_file" "$HOME/.config/omarchy/backgrounds/$theme_name/"
+      mkdir -p "$HOME/.config/inferna/backgrounds/$theme_name"
+      mv "$bg_file" "$HOME/.config/inferna/backgrounds/$theme_name/"
     done
   )
 fi
-if [[ -d $HOME/.config/omarchy/themes ]]; then
-  find "$HOME/.config/omarchy/themes" -mindepth 1 -maxdepth 1 -type l -delete
+if [[ -d $HOME/.config/inferna/themes ]]; then
+  find "$HOME/.config/inferna/themes" -mindepth 1 -maxdepth 1 -type l -delete
 fi
 
 # Retire legacy UI configs replaced by omarchy-shell. Hyprland .conf files are
@@ -2060,14 +2060,14 @@ if [[ -d $root/default/agents/skills/omarchy ]]; then
   ln -sfn "$root/default/agents/skills/omarchy" "$HOME/.pi/agent/skills/omarchy"
 fi
 
-mkdir -p "$HOME/.local/state/omarchy/toggles/hypr"
+mkdir -p "$HOME/.local/state/inferna/toggles/hypr"
 if [[ -f $root/default/hypr/toggles/flags.lua ]]; then
-  cp "$root/default/hypr/toggles/flags.lua" "$HOME/.local/state/omarchy/toggles/hypr/"
+  cp "$root/default/hypr/toggles/flags.lua" "$HOME/.local/state/inferna/toggles/hypr/"
 fi
-# Legacy Hyprland .conf entry points source ~/.local/state/omarchy/toggles/hypr/*.conf.
+# Legacy Hyprland .conf entry points source ~/.local/state/inferna/toggles/hypr/*.conf.
 # Keep an empty match around for the live pre-reboot session; quattro Lua ignores it.
 if [[ -f $HOME/.config/hypr/hyprland.conf ]]; then
-  : >"$HOME/.local/state/omarchy/toggles/hypr/flags.conf"
+  : >"$HOME/.local/state/inferna/toggles/hypr/flags.conf"
 fi
 
 mkdir -p "$HOME/.local/share/nautilus-python/extensions"
@@ -2077,9 +2077,9 @@ for extension in localsend.py transcode.py; do
   fi
 done
 
-mkdir -p "$HOME/.config/omarchy/branding"
-[[ -f $root/icon.txt ]] && cp "$root/icon.txt" "$HOME/.config/omarchy/branding/about.txt"
-[[ -f $root/logo.txt ]] && cp "$root/logo.txt" "$HOME/.config/omarchy/branding/screensaver.txt"
+mkdir -p "$HOME/.config/inferna/branding"
+[[ -f $root/icon.txt ]] && cp "$root/icon.txt" "$HOME/.config/inferna/branding/about.txt"
+[[ -f $root/logo.txt ]] && cp "$root/logo.txt" "$HOME/.config/inferna/branding/screensaver.txt"
 
 mkdir -p "$HOME/Downloads" "$HOME/Pictures" "$HOME/Videos" "$HOME/Projects" "$HOME/.config/gtk-3.0"
 if command -v xdg-user-dirs-update >/dev/null 2>&1; then
@@ -2117,11 +2117,11 @@ include "/usr/share/omarchy/default/xcompose"
 EOF
 fi
 
-mkdir -p "$HOME/.config/omarchy/themes" "$HOME/.config/btop/themes"
-legacy_current_dir="$HOME/.config/omarchy/current"
-current_state_dir="$HOME/.local/state/omarchy/current"
+mkdir -p "$HOME/.config/inferna/themes" "$HOME/.config/btop/themes"
+legacy_current_dir="$HOME/.config/inferna/current"
+current_state_dir="$HOME/.local/state/inferna/current"
 if [[ -e $legacy_current_dir || -L $legacy_current_dir ]]; then
-  mkdir -p "$HOME/.local/state/omarchy"
+  mkdir -p "$HOME/.local/state/inferna"
   if [[ ! -e $current_state_dir && ! -L $current_state_dir ]]; then
     mv "$legacy_current_dir" "$current_state_dir"
   else
@@ -2143,9 +2143,9 @@ path = Path(sys.argv[1])
 home = sys.argv[2]
 text = path.read_text()
 replacements = {
-  f"{home}/.config/omarchy/current": f"{home}/.local/state/omarchy/current",
-  "~/.config/omarchy/current": "~/.local/state/omarchy/current",
-  "../omarchy/current": "../../.local/state/omarchy/current",
+  f"{home}/.config/inferna/current": f"{home}/.local/state/inferna/current",
+  "~/.config/inferna/current": "~/.local/state/inferna/current",
+  "../omarchy/current": "../../.local/state/inferna/current",
 }
 for old, new in replacements.items():
   text = text.replace(old, new)
@@ -2161,13 +2161,13 @@ for file in \
   "$HOME/.config/kitty/kitty.conf"; do
   replace_legacy_current_path "$file"
 done
-ln -snf "$HOME/.local/state/omarchy/current/theme/btop.theme" "$HOME/.config/btop/themes/current.theme"
-if [[ ! -e $HOME/.local/state/omarchy/current/background && -d $HOME/.local/state/omarchy/current/theme/backgrounds ]]; then
-  background=$(find "$HOME/.local/state/omarchy/current/theme/backgrounds" -maxdepth 1 -type f \
+ln -snf "$HOME/.local/state/inferna/current/theme/btop.theme" "$HOME/.config/btop/themes/current.theme"
+if [[ ! -e $HOME/.local/state/inferna/current/background && -d $HOME/.local/state/inferna/current/theme/backgrounds ]]; then
+  background=$(find "$HOME/.local/state/inferna/current/theme/backgrounds" -maxdepth 1 -type f \
     \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \
        -o -iname '*.mp4' -o -iname '*.m4v' -o -iname '*.mov' -o -iname '*.webm' -o -iname '*.mkv' -o -iname '*.avi' \) \
     | sort | head -n1)
-  [[ -n ${background:-} ]] && ln -snf "$background" "$HOME/.local/state/omarchy/current/background"
+  [[ -n ${background:-} ]] && ln -snf "$background" "$HOME/.local/state/inferna/current/background"
 fi
 
 mkdir -p "$HOME/.config/wireplumber/wireplumber.conf.d"
@@ -2248,11 +2248,11 @@ rm -f \
   "$HOME/.config/systemd/user/swayosd-server.service" \
   "$HOME/.config/systemd/user/elephant.service"
 rm -f \
-  "$HOME/.local/state/omarchy/toggles/mako.ini" \
-  "$HOME/.local/state/omarchy/toggles/waybar-off" \
-  "$HOME/.local/state/omarchy/toggles/hyprlock.conf" \
-  "$HOME/.local/state/omarchy/toggles/lock.conf" \
-  "$HOME/.local/state/omarchy/toggles/hypr/rounded-corners.lua"
+  "$HOME/.local/state/inferna/toggles/mako.ini" \
+  "$HOME/.local/state/inferna/toggles/waybar-off" \
+  "$HOME/.local/state/inferna/toggles/hyprlock.conf" \
+  "$HOME/.local/state/inferna/toggles/lock.conf" \
+  "$HOME/.local/state/inferna/toggles/hypr/rounded-corners.lua"
 
 for desktop in \
   About.desktop \
@@ -2351,7 +2351,7 @@ hyprland_conf="$HOME/.config/hypr/hyprland.conf"
 # transition; only the theme hyprland.conf shim is needed here.
 grep -q 'current/theme/hyprland.conf' "$hyprland_conf" || exit 0
 
-theme_dir="$HOME/.local/state/omarchy/current/theme"
+theme_dir="$HOME/.local/state/inferna/current/theme"
 colors="$theme_dir/colors.toml"
 target="$theme_dir/hyprland.conf"
 mkdir -p "$theme_dir"
@@ -2380,10 +2380,10 @@ refresh_current_theme_after_upgrade() {
 
   theme_name=$(run_as_user env HOME="$target_home" bash -c '
     set -euo pipefail
-    theme_name_path="$HOME/.local/state/omarchy/current/theme.name"
-    current_theme_path="$HOME/.local/state/omarchy/current/theme"
-    legacy_theme_name_path="$HOME/.config/omarchy/current/theme.name"
-    legacy_current_theme_path="$HOME/.config/omarchy/current/theme"
+    theme_name_path="$HOME/.local/state/inferna/current/theme.name"
+    current_theme_path="$HOME/.local/state/inferna/current/theme"
+    legacy_theme_name_path="$HOME/.config/inferna/current/theme.name"
+    legacy_current_theme_path="$HOME/.config/inferna/current/theme"
 
     if [[ -f $theme_name_path ]]; then
       read -r theme_name <"$theme_name_path" || true

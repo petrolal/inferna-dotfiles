@@ -17,7 +17,7 @@
 # Theme mode precedence: `mode` key, legacy `theme_type` key, a light.mode
 # file beside the colors.toml, background luminance auto-detect, dark.
 
-COLORS_FILE="$HOME/.local/state/omarchy/current/theme/colors.toml"
+COLORS_FILE="$HOME/.local/state/inferna/current/theme/colors.toml"
 OUTPUT=""
 QUERY_KEY=""
 QUERY_FALLBACK=""

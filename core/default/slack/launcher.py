@@ -139,5 +139,5 @@ class Slack:
 
 
 if __name__ == '__main__':
-    directory = Path.home() / '.local/state/omarchy/slack'
+    directory = Path.home() / '.local/state/inferna/slack'
     sys.exit(Slack(directory).run(sys.argv[1:]))

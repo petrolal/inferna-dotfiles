@@ -13,7 +13,7 @@ provider collectors: a provider id another collector counts is never counted
 here, and the Codex collector's own `openai` rollouts never are either.
 
 A provider is self-hosted when it is a well-known local runtime, an id named
-in ~/.config/omarchy/agents/local.json, or a Codex model_providers entry whose
+in ~/.config/inferna/agents/local.json, or a Codex model_providers entry whose
 base_url is on a loopback, private, link-local or LAN address:
 
     {"providers": ["homelab", "my-gateway"]}

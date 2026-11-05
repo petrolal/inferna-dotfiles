@@ -25,7 +25,7 @@ esac
 # device. Names come from USB descriptors and must not be interpolated into
 # shell or Lua. The path is hardcoded to ~/.local/state like the sibling
 # toggle tools, so it keeps working when XDG_STATE_HOME diverges.
-NAME_FILE="$HOME/.local/state/omarchy/toggles/hypr/$KIND-disabled-name"
+NAME_FILE="$HOME/.local/state/inferna/toggles/hypr/$KIND-disabled-name"
 
 device="$("omarchy-hw-$KIND")"
 

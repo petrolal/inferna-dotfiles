@@ -62,7 +62,7 @@ export PATH="$OMARCHY_PATH/bin:$PATH"
 # account sudo names, never from a path the caller passed in.
 if [[ -n ${SUDO_USER:-} && -z ${OMARCHY_LANGUAGE_FILE:-} ]]; then
   caller_home=$(getent passwd "$SUDO_USER" | cut -d: -f6 || true)
-  [[ -n $caller_home ]] && export OMARCHY_LANGUAGE_FILE="$caller_home/.config/omarchy/language"
+  [[ -n $caller_home ]] && export OMARCHY_LANGUAGE_FILE="$caller_home/.config/inferna/language"
 fi
 
 log() {

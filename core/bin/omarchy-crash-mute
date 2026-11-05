@@ -9,7 +9,7 @@
 
 set -uo pipefail
 
-readonly MUTES="$HOME/.local/state/omarchy/toggles/crash-ignore"
+readonly MUTES="$HOME/.local/state/inferna/toggles/crash-ignore"
 
 usage() {
   echo "Usage: omarchy crash mute [--] [<program>] [on|off|toggle]" >&2

@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-PLUGINS_DIR="$HOME/.config/omarchy/plugins"
+PLUGINS_DIR="$HOME/.config/inferna/plugins"
 ASSUME_YES=0
 
 fail() {

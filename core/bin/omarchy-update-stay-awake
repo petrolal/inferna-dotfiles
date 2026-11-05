@@ -18,7 +18,7 @@ omarchy_security_require_source_root "$0"
 omarchy_security_install_signal_exit_traps
 export PATH="$OMARCHY_PATH/bin:/usr/bin:/usr/sbin:/bin:/sbin"
 
-stay_awake_state="$HOME/.local/state/omarchy/indicators/stay-awake"
+stay_awake_state="$HOME/.local/state/inferna/indicators/stay-awake"
 caller_uid=""
 state_base=""
 state_dir=""

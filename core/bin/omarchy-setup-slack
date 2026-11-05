@@ -11,13 +11,13 @@ fi
 
 [[ -f /usr/bin/slack ]] || { echo "Install Slack Desktop first." >&2; exit 1; }
 
-if [[ ! -f $HOME/.local/state/omarchy/current/theme/slack.json ]]; then
+if [[ ! -f $HOME/.local/state/inferna/current/theme/slack.json ]]; then
   omarchy-theme-refresh
 fi
 
 desktop="/usr/share/applications/slack.desktop"
 override="$HOME/.local/share/applications/slack.desktop"
-state="$HOME/.local/state/omarchy/slack"
+state="$HOME/.local/state/inferna/slack"
 if ! grep -qE '^Exec=(/usr/bin/)?slack( |$)' "$desktop"; then
   echo "Slack's desktop launcher has changed; refusing to replace it." >&2
   exit 1

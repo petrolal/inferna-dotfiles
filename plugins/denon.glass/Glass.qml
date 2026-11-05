@@ -11,7 +11,7 @@ import qs.Commons as Commons
 // Glass (direction G-A · Swatches): preset tiles that preview each look over the
 // current wallpaper, Windows/Texture sliders, and an "Unsaved changes · Update /
 // Save as new" bar. 20 built-in looks plus your own, stored by control.py in
-// ~/.config/omarchy/glass-presets.json.
+// ~/.config/inferna/glass-presets.json.
 Panel {
   id: root
   moduleName: "denon.glass"
@@ -23,7 +23,7 @@ Panel {
   readonly property color accent: Commons.Color.accent
   readonly property string family: bar ? bar.fontFamily : Style.font.family
   readonly property string helper: Quickshell.env("HOME") + "/.local/share/omarchy-glass/control.py"
-  readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/omarchy/current/background"
+  readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/inferna/current/background"
   property var values: ({enabled: true})
   property var presets: []
   property string presetId: ""

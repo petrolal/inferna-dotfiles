@@ -19,7 +19,7 @@ For shipped configs see /etc/skel (new users) and omarchy-reinstall-configs
 --first-install is used by the ISO in the target chroot. It marks shipped
 migrations complete for the freshly-created user.
 
-Idempotency marker: ~/.local/state/omarchy/done/finalize-user
+Idempotency marker: ~/.local/state/inferna/done/finalize-user
 USAGE
 }
 
@@ -53,7 +53,7 @@ while (($#)); do
   esac
 done
 
-state_dir="$HOME/.local/state/omarchy"
+state_dir="$HOME/.local/state/inferna"
 mkdir -p "$state_dir"
 
 if omarchy-done check finalize-user && (( force == 0 )); then

@@ -12,4 +12,4 @@ if [[ -f $override ]] && grep -qE '^Exec=omarchy-launch-slack( |$)' "$override";
   rm "$override"
   update-desktop-database "${override%/*}"
 fi
-rm -rf "$HOME/.local/state/omarchy/slack"
+rm -rf "$HOME/.local/state/inferna/slack"

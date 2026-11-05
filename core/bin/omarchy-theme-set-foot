@@ -3,8 +3,8 @@
 # omarchy:summary=Apply current Omarchy theme colors and background alpha to running Foot terminals
 # omarchy:hidden=true
 
-colors_toml=$HOME/.local/state/omarchy/current/theme/colors.toml
-foot_ini=$HOME/.local/state/omarchy/current/theme/foot.ini
+colors_toml=$HOME/.local/state/inferna/current/theme/colors.toml
+foot_ini=$HOME/.local/state/inferna/current/theme/foot.ini
 
 [[ -f $colors_toml ]] || exit 0
 

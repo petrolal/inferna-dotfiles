@@ -19,7 +19,7 @@ curl -fsSL --retry 3 https://releases.herdr.dev/app/install.sh -o "$installer"
 sh "$installer"
 
 # An updated user's current theme may have been staged before this template existed.
-if [[ ! -f $HOME/.local/state/omarchy/current/theme/herdr-app.json ]]; then
+if [[ ! -f $HOME/.local/state/inferna/current/theme/herdr-app.json ]]; then
   omarchy-theme-refresh
 fi
 

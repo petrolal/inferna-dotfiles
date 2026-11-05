@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-STATE_DIR="$HOME/.local/state/omarchy/windows"
+STATE_DIR="$HOME/.local/state/inferna/windows"
 
 usage() {
   echo "Usage: omarchy-hyprland-window-width save|restore" >&2

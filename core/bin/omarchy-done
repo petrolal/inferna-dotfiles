@@ -13,7 +13,7 @@ fi
 
 action=$1
 name=$2
-done_dir="$HOME/.local/state/omarchy/done"
+done_dir="$HOME/.local/state/inferna/done"
 marker="$done_dir/$name"
 
 if [[ $name == */* || $name == "." || $name == ".." ]]; then

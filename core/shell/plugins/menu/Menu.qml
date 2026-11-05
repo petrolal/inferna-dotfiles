@@ -1144,7 +1144,7 @@ Item {
   }
 
   // The JSONC sources are watched so live edits to the default file (or the
-  // user extension at ~/.config/omarchy/extensions/omarchy-menu.jsonc) take
+  // user extension at ~/.config/inferna/extensions/omarchy-menu.jsonc) take
   // effect without restarting the shell.
   FileView {
     id: defaultMenuFile

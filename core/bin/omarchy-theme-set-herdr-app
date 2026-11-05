@@ -15,7 +15,7 @@ case "${1:-}" in
 esac
 (( $# <= 1 )) || exit 1
 
-source_path="$HOME/.local/state/omarchy/current/theme/herdr-app.json"
+source_path="$HOME/.local/state/inferna/current/theme/herdr-app.json"
 app_home="${HERDR_APP_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/herdr-app}"
 theme_path="$app_home/themes/omarchy.json"
 

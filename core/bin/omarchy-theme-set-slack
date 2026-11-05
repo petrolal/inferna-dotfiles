@@ -5,8 +5,8 @@
 
 set -euo pipefail
 
-state="$HOME/.local/state/omarchy/slack"
-theme="$HOME/.local/state/omarchy/current/theme/slack.json"
+state="$HOME/.local/state/inferna/slack"
+theme="$HOME/.local/state/inferna/current/theme/slack.json"
 [[ -f $state/enabled && -f $theme ]] || exit 0
 
 pending=$(mktemp "$state/theme.XXXXXX")

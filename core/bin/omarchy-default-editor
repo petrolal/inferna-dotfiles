@@ -10,7 +10,7 @@ if [[ ${1:-} == "--install" ]]; then
   shift
 fi
 
-editor_file="$HOME/.local/state/omarchy/defaults/editor"
+editor_file="$HOME/.local/state/inferna/defaults/editor"
 
 if (($# == 0)); then
   if [[ -f $editor_file ]]; then

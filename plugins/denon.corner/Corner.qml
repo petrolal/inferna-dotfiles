@@ -79,7 +79,7 @@ Panel {
       "echo bt=$(bluetoothctl show 2>/dev/null | sed -n 's/.*Powered: //p' | head -1);" +
       "echo night=$(omarchy toggle nightlight --status 2>/dev/null | grep -o '\"enabled\":[a-z]*' | cut -d: -f2);" +
       "echo dnd=$(omarchy-shell notifications isDnd 2>/dev/null);" +
-      "echo awake=$(test -e \"$HOME/.local/state/omarchy/indicators/stay-awake\" && echo on || echo off);" +
+      "echo awake=$(test -e \"$HOME/.local/state/inferna/indicators/stay-awake\" && echo on || echo off);" +
       "echo profile=$(powerprofilesctl get 2>/dev/null);" +
       "echo bright=$(brightnessctl -m 2>/dev/null | head -1 | cut -d, -f4 | tr -d '%')"]
     stdout: StdioCollector {

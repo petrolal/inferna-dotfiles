@@ -15,7 +15,7 @@ Item {
   property var intro: null
   readonly property var backgroundService: intro ? intro.backgroundService : null
   readonly property string home: Quickshell.env("HOME")
-  readonly property string backgroundLink: home + "/.local/state/omarchy/current/background"
+  readonly property string backgroundLink: home + "/.local/state/inferna/current/background"
   readonly property string transitionCache: home + "/.cache/omarchy/background-transitions"
   readonly property string themeSetLock: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/omarchy-theme-set.lock"
 

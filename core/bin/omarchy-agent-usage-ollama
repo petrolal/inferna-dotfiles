@@ -57,7 +57,7 @@ BALANCE_ENDPOINT = "https://ollama.com/api/balance"
 ME_ENDPOINT = "https://ollama.com/api/me"
 AUTH_HELP_NO_KEY = "Set OLLAMA_API_KEY, or sign in to pi with an Ollama Cloud key, to show the account limits."
 AUTH_HELP_BAD_KEY = (
-  "Ollama Cloud rejected the API key. Update OLLAMA_API_KEY or ~/.config/omarchy/agents/ollama.json,"
+  "Ollama Cloud rejected the API key. Update OLLAMA_API_KEY or ~/.config/inferna/agents/ollama.json,"
   " or sign in to pi again. Local stats are still shown."
 )
 # GET /api/balance (docs.ollama.com/api/balance) answers a legacy plan with

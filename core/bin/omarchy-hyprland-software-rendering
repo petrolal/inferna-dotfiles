@@ -63,7 +63,7 @@ if (( status == 0 )); then
       # above repeats at every login. The shell serves notifications and comes
       # up slowly on the CPU, so wait for it. Not omarchy-action, as it's a
       # notice, not a confirmation: Do Not Disturb holds it.
-      noticed="$HOME/.local/state/omarchy/software-rendering-noticed"
+      noticed="$HOME/.local/state/inferna/software-rendering-noticed"
       if [[ ! -e $noticed ]] && ! omarchy-hyprland-toggle-enabled no-animations; then
         if omarchy-notification-wait 15; then
           omarchy-notification-send --app-name "Software Rendering" -g 󰘚 -u normal -t 30000 "$(omarchy-i18n animations.softwareRendering)" "$(omarchy-i18n animations.softwareRenderingBody)"

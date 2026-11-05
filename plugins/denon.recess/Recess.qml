@@ -13,7 +13,7 @@ import qs.Commons as Commons
 // light and a dark half, scaled by one Intensity groove; a live preview draws
 // the effect with the same maths Hyprland uses (recessed_windows.lua). Details
 // opens the four raw sliders. Each style keeps light and dark profiles;
-// settings live in ~/.config/omarchy/recess.json (control.py).
+// settings live in ~/.config/inferna/recess.json (control.py).
 Panel {
   id: root
   moduleName: "denon.recess"
@@ -26,7 +26,7 @@ Panel {
   readonly property string family: bar ? bar.fontFamily : Style.font.family
   readonly property string mono: "Adwaita Mono"
   readonly property string helper: Quickshell.env("HOME") + "/.local/share/omarchy-recess/control.py"
-  readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/omarchy/current/background"
+  readonly property string wallpaper: "file://" + Quickshell.env("HOME") + "/.local/state/inferna/current/background"
   property var values: ({enabled: true, style: "recessed", styles: {}})
   property var allLooks: ({})        // style -> look -> profile -> base sliders, from control.py
   readonly property string style: values.style === "raised" ? "raised" : "recessed"
