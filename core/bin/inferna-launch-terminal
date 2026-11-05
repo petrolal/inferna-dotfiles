@@ -12,15 +12,43 @@ fi
 dir="$(inferna-cmd-terminal-cwd "$pid" 2>/dev/null || echo "$HOME")"
 [[ -d "$dir" ]] || dir="$HOME"
 
-# Launch terminal (prefer kitty on NixOS if xdg-terminal-exec is unavailable)
 if command -v xdg-terminal-exec >/dev/null 2>&1; then
   exec setsid xdg-terminal-exec --dir="$dir" "$@"
+fi
+
+preferred_term=$(inferna-default-terminal 2>/dev/null || cat ~/.config/xdg-terminals.list 2>/dev/null | grep -v '^#' | head -n 1 | sed 's/\.desktop$//' | tr '[:upper:]' '[:lower:]')
+
+case "$preferred_term" in
+  foot)
+    if command -v foot >/dev/null 2>&1; then
+      exec setsid foot --working-directory="$dir" "$@"
+    fi
+    ;;
+  kitty)
+    if command -v kitty >/dev/null 2>&1; then
+      exec setsid kitty --directory="$dir" "$@"
+    fi
+    ;;
+  alacritty)
+    if command -v alacritty >/dev/null 2>&1; then
+      exec setsid alacritty --working-directory "$dir" "$@"
+    fi
+    ;;
+  ghostty)
+    if command -v ghostty >/dev/null 2>&1; then
+      exec setsid ghostty --working-directory="$dir" "$@"
+    fi
+    ;;
+esac
+
+if command -v foot >/dev/null 2>&1; then
+  exec setsid foot --working-directory="$dir" "$@"
 elif command -v kitty >/dev/null 2>&1; then
   exec setsid kitty --directory="$dir" "$@"
-elif command -v foot >/dev/null 2>&1; then
-  exec setsid foot --working-directory="$dir" "$@"
 elif command -v alacritty >/dev/null 2>&1; then
   exec setsid alacritty --working-directory "$dir" "$@"
+elif command -v ghostty >/dev/null 2>&1; then
+  exec setsid ghostty --working-directory "$dir" "$@"
 else
   exec setsid xterm -e "$@"
 fi

@@ -1,5 +1,63 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Temporary, backup and editor files
 *.bak*
 .*.bak*
 *.last-good
+*.swp
+*.swo
+*~
+.#*
+\#*#
+*.orig
+*.rej
+
+# Locks and temporary state
+*.tmp
+*.lock
+*.failed
+
+# Logs and runtime dumps
+*.log
+*.dump
+core
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.directory
+
+# IDEs and editors
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Nix build outputs & direnv
+result
+result-*
+.direnv/
+.envrc.local
+
+# Build artifacts & QML cache
+build/
+dist/
+*.qmlc
+*.jsc
+
+# Local scratch and cache
+.cache/
+scratch/
+tmp/

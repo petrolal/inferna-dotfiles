@@ -12,6 +12,9 @@ fi
 
 if (($# == 0)); then
   desktop_id=$(xdg-terminal-exec --print-id 2>/dev/null || true)
+  if [[ -z $desktop_id && -f ~/.config/xdg-terminals.list ]]; then
+    desktop_id=$(grep -v '^#' ~/.config/xdg-terminals.list 2>/dev/null | head -n 1)
+  fi
   desktop_id=${desktop_id%%:*}
   case "$desktop_id" in
   Alacritty.desktop) echo "alacritty" ;;

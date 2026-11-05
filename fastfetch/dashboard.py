@@ -74,8 +74,9 @@ pid=os.getpid()
 for _ in range(32):
     try:
         comm=Path(f'/proc/{pid}/comm').read_text().strip()
-        if comm in ('foot','footclient','kitty','alacritty','ghostty','wezterm-gui','konsole'):
-            terminal_name=comm; break
+        clean=comm.lstrip('.').removesuffix('-wrapped')
+        if clean in ('foot','footclient','kitty','alacritty','ghostty','wezterm-gui','konsole','xterm'):
+            terminal_name=clean; break
         status=Path(f'/proc/{pid}/status').read_text()
         pid=int(re.search(r'^PPid:\s+(\d+)',status,re.M).group(1))
         if pid<=1: break
@@ -87,6 +88,16 @@ if terminal_name in ('foot','footclient'):
         conf=(Path.home()/'.config/foot/foot.ini').read_text()
         font_label=re.search(r'^font=(.+)$',conf,re.M).group(1).replace(':size=',' / ')+'pt'
     except (OSError,AttributeError): pass
+elif terminal_name == 'kitty':
+    try:
+        conf=(Path.home()/'.config/kitty/kitty.conf').read_text()
+        fam = re.search(r'^\s*font_family\s+(.+)$', conf, re.M)
+        sz = re.search(r'^\s*font_size\s+([0-9.]+)', conf, re.M)
+        fam_str = fam.group(1).strip() if fam else 'JetBrainsMono Nerd Font'
+        sz_str = sz.group(1).strip() if sz else '10'
+        font_label = f"{fam_str} / {sz_str}pt"
+    except (OSError,AttributeError): pass
+
 
 desktop=[('Theme',name),('Compositor',wm.get('prettyName','')+' '+wm.get('version','')),('Terminal',terminal_label),('Font',font_label),('Shell',Path(os.environ.get('SHELL','bash')).name),('GTK',d('theme').get('theme2','')),('Icons',d('icons').get('icons2','')),('Cursor',d('cursor').get('theme',''))]
 network=[('Interface',net.get('name','offline')),('Receive',rate(net.get('rxBytes',0))),('Transmit',rate(net.get('txBytes',0))),('RX / TX drops',f"{net.get('rxDrops',0)} / {net.get('txDrops',0)}")]
