@@ -26,15 +26,6 @@ panel inferna.clock
 panel inferna.elsewhen
 panel inferna.network
 panel inferna.power
-panel inferna.clipboard
-panel inferna.emojis
-panel inferna.audio
-panel inferna.bluetooth
-panel inferna.monitor
-panel inferna.clock
-panel inferna.elsewhen
-panel inferna.network
-panel inferna.power
 audio raise
 audio lower
 audio mute-toggle

@@ -1654,19 +1654,6 @@ ShellRoot {
     }
   }
 
-  Variants {
-    model: shell.parseShortcuts(shortcutsFile.text())
-
-    GlobalShortcut {
-      required property var modelData
-
-      appid: "inferna"
-      name: modelData.name
-      description: modelData.kind === "audio" || modelData.kind === "brightness" ? (modelData.kind === "audio" ? "Volume " : "Brightness ") + modelData.target : (modelData.kind === "ipc" ? "Run " + modelData.target : "Toggle the " + modelData.target + " " + modelData.kind)
-      onPressed: shell.runShortcut(modelData)
-    }
-  }
-
   // ------------------------------------------------------------ IPC socket
   //
   // inferna-shell reaches the shell here first: a qs ipc client costs ~45ms

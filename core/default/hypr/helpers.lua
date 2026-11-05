@@ -61,8 +61,8 @@ local shell_shortcuts = nil
 local function shell_shortcut_registered(name)
   if not shell_shortcuts then
     shell_shortcuts = {}
-    local shortcut_path = (paths.inferna_path or paths.inferna_path) .. "/default/inferna/shortcuts"
-    local file = io.open(shortcut_path, "r") or io.open((paths.inferna_path or paths.inferna_path) .. "/default/inferna/shortcuts", "r")
+    local shortcut_path = paths.inferna_path .. "/default/inferna/shortcuts"
+    local file = io.open(shortcut_path, "r")
     if file then
       for line in file:lines() do
         local kind, target = line:match("^(%a+)%s+(%S+)%s*$")
@@ -94,8 +94,6 @@ local function command_from(value, description)
   end
 
   if value.inferna then
-    return "inferna-launch-" .. value.inferna
-  elseif value.inferna then
     return "inferna-launch-" .. value.inferna
   elseif value.menu then
     return shell_dispatcher("menu", value.menu, "inferna-menu toggle " .. shell_quote(value.menu))
@@ -131,9 +129,6 @@ local function command_from(value, description)
 end
 
 function o.preinstalled_bindings_enabled()
-  if _G.inferna_preinstalled_bindings ~= nil then
-    return _G.inferna_preinstalled_bindings == true
-  end
   if _G.inferna_preinstalled_bindings ~= nil then
     return _G.inferna_preinstalled_bindings == true
   end
