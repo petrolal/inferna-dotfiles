@@ -5,7 +5,7 @@
 hl.monitor({
     output   = "eDP-1",
     mode     = "preferred",
-    position = "auto-right",
+    position = "1920x0",
     scale    = 1,
 })
 
@@ -14,14 +14,6 @@ hl.monitor({
     output   = "HDMI-A-1",
     mode     = "preferred",
     position = "0x0",
-    scale    = 1,
-})
-
--- Fallback for any other display: auto-detect and place
-hl.monitor({
-    output   = "",
-    mode     = "preferred",
-    position = "auto",
     scale    = 1,
 })
 

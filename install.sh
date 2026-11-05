@@ -38,10 +38,9 @@ external=(
 
 if [[ "${1:-}" != "--yes" ]]; then
   cat <<EOF
-This will install Inferna Dotfiles into your home folder:
+This will symlink Inferna Dotfiles into your home folder:
   - 24 shell plugins       -> ~/.config/inferna/plugins/
   - bar layout             -> ~/.config/inferna/shell.json
-  - compat symlink         -> ~/.config/omarchy -> ~/.config/inferna
   - Hyprland look and keys -> ~/.config/hypr/ (monitors.lua is left alone)
   - fastfetch and foot     -> ~/.config/fastfetch/, ~/.config/foot/
   - helper scripts         -> ~/.local/share/, ~/.local/bin/
@@ -66,13 +65,13 @@ save() {
   cp -a "$dest" "$backup/$rel"
 }
 
-# Replace a file or folder with ours, after saving the original.
+# Symlink a file or folder from dotfiles into target, saving the original first.
 place() {
   local src="$1" dest="$2"
   save "$dest"
   rm -rf -- "$dest"
   mkdir -p "$(dirname "$dest")"
-  cp -a "$src" "$dest"
+  ln -sfn "$src" "$dest"
 }
 
 mkdir -p "$config/inferna/plugins"
@@ -135,7 +134,7 @@ for entry in "${external[@]}"; do
   if [[ -f "$config/inferna/plugins/$id/manifest.json" ]]; then
     continue
   fi
-  if ! omarchy plugin add "$repo" --enable --yes || [[ ! -f "$config/inferna/plugins/$id/manifest.json" ]]; then
+  if ! inferna plugin add "$repo" --enable --yes || [[ ! -f "$config/inferna/plugins/$id/manifest.json" ]]; then
     echo "  could not add $repo (try later: inferna plugin add $repo --enable)"
     missing+=("$id")
   fi
