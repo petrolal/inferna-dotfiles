@@ -1,1 +1,7 @@
-omarchy-update-time
+#!/usr/bin/env bash
+
+# omarchy:summary=Restart system time synchronization
+# omarchy:requires-sudo=true
+
+echo "Updating time..."
+sudo systemctl restart systemd-timesyncd

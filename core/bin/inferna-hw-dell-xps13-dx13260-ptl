@@ -1,1 +1,5 @@
-omarchy-hw-dell-xps13-dx13260-ptl
+#!/usr/bin/env bash
+
+# omarchy:summary=Match the Dell XPS 13 DX13260 with an Intel Panther Lake GPU.
+
+omarchy-hw-match "DX13260" && omarchy-hw-intel-ptl

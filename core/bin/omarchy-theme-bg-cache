@@ -1,10 +1,1 @@
-#!/usr/bin/env bash
-
-# omarchy:summary=Cache background switcher thumbnails for the current theme
-
-theme_name=$(cat "$HOME/.local/state/inferna/current/theme.name" 2>/dev/null)
-
-omarchy-menu-images \
-  --cache-only \
-  "$HOME/.local/state/inferna/current/theme/backgrounds" \
-  "$HOME/.config/inferna/backgrounds/$theme_name"
+inferna-theme-bg-cache

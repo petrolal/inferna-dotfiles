@@ -1,5 +1,1 @@
-#!/usr/bin/env bash
-
-# omarchy:summary=Launch Files
-
-exec setsid uwsm-app -- nautilus --new-window
+inferna-launch-nautilus

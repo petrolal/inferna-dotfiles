@@ -1,5 +1,1 @@
-#!/usr/bin/env bash
-
-# omarchy:summary=Toggle the current weather panel
-
-omarchy-shell shell toggle omarchy.weather
+inferna-notification-weather

@@ -1,1 +1,5 @@
-omarchy-notification-weather
+#!/usr/bin/env bash
+
+# omarchy:summary=Toggle the current weather panel
+
+omarchy-shell shell toggle omarchy.weather

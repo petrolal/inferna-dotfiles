@@ -1,1 +1,5 @@
-omarchy-restart-hyprsunset
+#!/usr/bin/env bash
+
+# omarchy:summary=Restart the hyprsunset service (used for blue light filtering/night light).
+
+omarchy-restart-app hyprsunset

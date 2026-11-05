@@ -1,1 +1,5 @@
-omarchy-notification-battery
+#!/usr/bin/env bash
+
+# omarchy:summary=Show the current battery status notification
+
+omarchy-notification-send -g 󰁹 -u low "$(omarchy-battery-status)"

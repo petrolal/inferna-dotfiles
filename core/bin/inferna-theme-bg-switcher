@@ -1,1 +1,14 @@
-omarchy-theme-bg-switcher
+#!/usr/bin/env bash
+
+# omarchy:summary=Open the Omarchy background switcher
+# omarchy:group=theme
+# omarchy:name=bg-switcher
+# omarchy:aliases=omarchy background
+
+theme_name=$(cat "$HOME/.local/state/inferna/current/theme.name" 2>/dev/null)
+current_background=$(readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null)
+
+omarchy-menu-images \
+  --selected "$current_background" \
+  "$HOME/.local/state/inferna/current/theme/backgrounds" \
+  "$HOME/.config/inferna/backgrounds/$theme_name"

@@ -1,6 +1,1 @@
-#!/usr/bin/env bash
-
-# omarchy:summary=Launch the Omarchy screensaver on every display.
-# omarchy:args=[force] [options]
-
-exec /usr/lib/omarchy-screensaver/omarchy-screensaver "$@"
+inferna-launch-screensaver

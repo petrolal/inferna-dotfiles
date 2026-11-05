@@ -1,1 +1,6 @@
-omarchy-hyprland-toggle-disabled
+#!/usr/bin/env bash
+
+# omarchy:summary=Check if a Hyprland toggle is currently disabled (missing).
+# omarchy:args=<flag-name>
+
+[[ ! -f "$HOME/.local/state/inferna/toggles/hypr/$1.lua" ]]

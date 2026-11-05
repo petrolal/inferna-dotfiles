@@ -1,1 +1,6 @@
-omarchy-menu-clipboard
+#!/usr/bin/env bash
+# omarchy:summary=Launch the clipboard manager
+# omarchy:group=menu
+# omarchy:examples=omarchy menu clipboard
+
+omarchy-shell shell toggle omarchy.clipboard
