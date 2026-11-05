@@ -8,7 +8,7 @@
           "id": "omarchy.keyboard-layout"
         },
         {
-          "format": "ddd, MMM d  \u00b7  h:mm AP",
+          "format": "ddd, MMM d  ·  h:mm AP",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "denon.clock",
           "verticalFormat": "h\nmm\nAP"
@@ -36,9 +36,6 @@
           ]
         },
         {
-          "id": "denon.studio"
-        },
-        {
           "id": "denon.glass",
           "studio": true
         },
@@ -53,6 +50,9 @@
         {
           "id": "denon.monitor",
           "studio": true
+        },
+        {
+          "id": "denon.studio"
         },
         {
           "id": "io.github.denonmaryland.theme-studio"
