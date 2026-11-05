@@ -2,7 +2,9 @@
 
 set -o pipefail
 
-INFERNA_BIN_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+real_bin="$(realpath "${BASH_SOURCE[0]}")"
+INFERNA_BIN_DIR="$(cd -- "$(dirname -- "$real_bin")" && pwd)"
+export INFERNA_PATH="${INFERNA_PATH:-$(cd "$INFERNA_BIN_DIR/.." && pwd)}"
 export PATH="$INFERNA_BIN_DIR:$PATH"
 METADATA_SCAN_LIMIT=80
 
