@@ -3,7 +3,19 @@
 # inferna:summary=List available themes
 # inferna:examples=inferna theme list | inferna theme set "Tokyo Night"
 
+if [[ -z ${INFERNA_PATH:-} ]]; then
+  export INFERNA_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
+fi
+
+list_themes() {
+  {
+    [[ -d "$HOME/.config/inferna/themes" ]] && find "$HOME/.config/inferna/themes/" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n'
+    find "$INFERNA_PATH/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
+  } | sort -u
+}
+
 {
-  [[ -d "$HOME/.config/inferna/themes" ]] && find "$HOME/.config/inferna/themes/" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n'
-  find "$INFERNA_PATH/themes/" -mindepth 1 -maxdepth 1 -type d -printf '%f\n'
-} | sort -u | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'
+  echo "inferno"
+  echo "inferna"
+  list_themes | grep -v -E '^(inferno|inferna)$'
+} | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'

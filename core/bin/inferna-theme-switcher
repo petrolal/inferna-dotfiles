@@ -11,6 +11,10 @@ if [[ $1 == "--print-rows" ]]; then
   shift
 fi
 
+if [[ -z ${INFERNA_PATH:-} ]]; then
+  export INFERNA_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
+fi
+
 USER_THEMES_PATH="$HOME/.config/inferna/themes"
 INFERNA_THEMES_PATH="$INFERNA_PATH/themes"
 CACHE_PATH="${XDG_CACHE_HOME:-$HOME/.cache}/inferna/theme-selector"
@@ -116,6 +120,7 @@ for extension in png jpg jpeg webp gif bmp mp4 m4v mov webm mkv avi; do
   fi
 done
 menu_args=(
+  --order-first "inferno inferna"
   --print-name
   --show-labels
   --filterable

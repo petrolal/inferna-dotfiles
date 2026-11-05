@@ -12,14 +12,23 @@ prepare_only=false
 preload=false
 cache_only=false
 print_rows=false
+order_first=""
 image_dirs=()
 
 usage() {
-  echo "Usage: inferna-menu-images [--selected <image>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>..."
+  echo "Usage: inferna-menu-images [--selected <image>] [--order-first <names>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>..."
 }
 
 while (( $# > 0 )); do
   case "$1" in
+    --order-first)
+      if (( $# < 2 )); then
+        usage >&2
+        exit 1
+      fi
+      order_first="$2"
+      shift 2
+      ;;
     --selected)
       if (( $# < 2 )); then
         usage >&2
@@ -113,7 +122,7 @@ index_file="$cache_dir/index.tsv"
 rows=""
 mkdir -p "$cache_dir"
 
-cache_key=$(printf '%s' "$image_dirs_env" | md5sum | cut -d ' ' -f 1)
+cache_key=$(printf '%s\n%s' "$image_dirs_env" "${order_first:-}" | md5sum | cut -d ' ' -f 1)
 rows_cache_file="$cache_dir/$cache_key.rows"
 rows_signature_file="$cache_dir/$cache_key.signature"
 rows_fast_signature_file="$cache_dir/$cache_key.fast-signature"
@@ -147,6 +156,34 @@ else
         -print0 2>/dev/null | sort -z)
     fi
   done
+
+  if [[ -n ${order_first:-} ]]; then
+    sorted_image_files=()
+    for name in $order_first; do
+      for img in "${image_files[@]}"; do
+        base="${img##*/}"
+        base_no_ext="${base%.*}"
+        if [[ $base_no_ext == "$name" ]]; then
+          sorted_image_files+=("$img")
+        fi
+      done
+    done
+    for img in "${image_files[@]}"; do
+      base="${img##*/}"
+      base_no_ext="${base%.*}"
+      is_prioritized=false
+      for name in $order_first; do
+        if [[ $base_no_ext == "$name" ]]; then
+          is_prioritized=true
+          break
+        fi
+      done
+      if [[ $is_prioritized == false ]]; then
+        sorted_image_files+=("$img")
+      fi
+    done
+    image_files=("${sorted_image_files[@]}")
+  fi
 fi
 
 is_video_path() {
@@ -182,9 +219,23 @@ generate_thumbnail() {
   if is_video_path "$image"; then
     # Videos are generated before the picker opens, so one unreadable or
     # stalled file must not hold it shut. A failed run drops the row.
-    thumbnail_command=(timeout -k 5 10 ffmpegthumbnailer -i "$image" -o "$tmp" -s 1536 -q 8)
+    if command -v ffmpegthumbnailer >/dev/null 2>&1; then
+      thumbnail_command=(timeout -k 5 10 ffmpegthumbnailer -i "$image" -o "$tmp" -s 1536 -q 8)
+    elif command -v ffmpeg >/dev/null 2>&1; then
+      thumbnail_command=(timeout -k 5 10 ffmpeg -y -ss 00:00:01 -i "$image" -vframes 1 -vf "scale=1536:864:force_original_aspect_ratio=increase,crop=1536:864" -q:v 2 "$tmp")
+    else
+      return 1
+    fi
   else
-    thumbnail_command=(env VIPS_CONCURRENCY=1 vipsthumbnail "$image" --size 1536x864 --smartcrop=centre --path "$tmp[Q=82,strip]")
+    if command -v vipsthumbnail >/dev/null 2>&1; then
+      thumbnail_command=(env VIPS_CONCURRENCY=1 vipsthumbnail "$image" --size 1536x864 --smartcrop=centre --path "$tmp[Q=82,strip]")
+    elif command -v magick >/dev/null 2>&1; then
+      thumbnail_command=(magick "$image" -resize 1536x864^ -gravity center -extent 1536x864 -quality 82 "$tmp")
+    elif command -v convert >/dev/null 2>&1; then
+      thumbnail_command=(convert "$image" -resize 1536x864^ -gravity center -extent 1536x864 -quality 82 "$tmp")
+    else
+      return 1
+    fi
   fi
 
   # Close the lock fd for the converter: an orphaned or hung child must not
