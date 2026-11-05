@@ -16,8 +16,8 @@ end
 
 -- Keep the desktop shortcut independent of Fcitx's custom switching keys.
 -- Read the live Fcitx group so setup works without a compositor reload.
-o.bind("SUPER + I", "Switch input language", "omarchy-input-method cycle")
-o.bind("SUPER + SHIFT + I", "Switch input language back", "omarchy-input-method cycle back")
+o.bind("SUPER + I", "Switch input language", "inferna-input-method cycle")
+o.bind("SUPER + SHIFT + I", "Switch input language back", "inferna-input-method cycle back")
 
 -- Pass the tmux/Herdr prefix through and return to direct input, so the next
 -- key reaches the multiplexer instead of the engine's composition.

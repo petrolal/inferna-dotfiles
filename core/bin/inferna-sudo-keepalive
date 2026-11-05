@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Prompt for sudo once and keep the credential alive in the background.
-# omarchy:requires-sudo=true
+# inferna:summary=Prompt for sudo once and keep the credential alive in the background.
+# inferna:requires-sudo=true
 
 sudo -v
 while true; do sudo -n true; sleep 60; done 2>/dev/null &

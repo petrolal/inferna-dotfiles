@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install RetroArch with the full libretro core set plus FBNeo and a ~/Games ROM directory.
+# inferna:summary=Install RetroArch with the full libretro core set plus FBNeo and a ~/Games ROM directory.
 
 set -e
 
 echo "Installing RetroArch..."
-omarchy-pkg-add \
+inferna-pkg-add \
   retroarch \
   retroarch-assets-glui retroarch-assets-ozone retroarch-assets-xmb \
   libretro-beetle-pce libretro-beetle-pce-fast libretro-beetle-psx libretro-beetle-psx-hw libretro-beetle-supergrafx \

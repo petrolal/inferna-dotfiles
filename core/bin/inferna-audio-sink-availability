@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print PulseAudio sink or source availability for the shell
-# omarchy:group=audio
-# omarchy:args=[sources]
+# inferna:summary=Print PulseAudio sink or source availability for the shell
+# inferna:group=audio
+# inferna:args=[sources]
 
 # With "sources", print source availability instead: a jack input such as a
 # headset microphone reports its port unavailable while nothing is plugged in.
@@ -19,7 +19,7 @@ fi
 # in the graph, but selecting the physical one would only bypass the tuning, so
 # report it unavailable and keep it out of the output list.
 fronted=""
-[[ $kind == sinks ]] && fronted="$(omarchy-audio-tuning fronted-sink 2>/dev/null || true)"
+[[ $kind == sinks ]] && fronted="$(inferna-audio-tuning fronted-sink 2>/dev/null || true)"
 
 LC_ALL=C pactl list "$kind" 2>/dev/null | awk -v fronted="$fronted" -v header="$header" '
   function emit_sink() {

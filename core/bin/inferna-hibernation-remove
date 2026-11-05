@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove hibernation setup including swap and boot resume settings
-# omarchy:requires-sudo=true
+# inferna:summary=Remove hibernation setup including swap and boot resume settings
+# inferna:requires-sudo=true
 
 MKINITCPIO_CONF="/etc/mkinitcpio.conf.d/omarchy_resume.conf"
 

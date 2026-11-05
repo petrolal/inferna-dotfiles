@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Reinstall all default Omarchy packages from the stable channel, or on Apple Silicon the edge channel
-# omarchy:requires-sudo=true
+# inferna:summary=Reinstall all default Omarchy packages from the stable channel, or on Apple Silicon the edge channel
+# inferna:requires-sudo=true
 
 set -e
 
@@ -10,16 +10,16 @@ set -e
 
 # Set the package repository to the platform's default channel
 source "$OMARCHY_PATH/install/helpers/pacman.sh"
-platform=$(omarchy-hw-platform)
+platform=$(inferna-hw-platform)
 channel=$(omarchy_pacman_default_channel "$platform")
-omarchy-refresh-pacman "$channel"
+inferna-refresh-pacman "$channel"
 
 # Downgrade any packages to that channel's setup
-omarchy-update-pacman -Suu --noconfirm
+inferna-update-pacman -Suu --noconfirm
 
 # Ensure this platform's default packages are installed
-default_packages=$(omarchy-pkg-defaults)
+default_packages=$(inferna-pkg-defaults)
 mapfile -t packages <<<"$default_packages"
 # --ask 4 accepts removing a stock package a default replaces, such as
-# power-profiles-daemon for omarchy-power-profiles-daemon.
-omarchy-update-pacman -Syu --noconfirm --ask 4 --needed "${packages[@]}"
+# power-profiles-daemon for inferna-power-profiles-daemon.
+inferna-update-pacman -Syu --noconfirm --ask 4 --needed "${packages[@]}"

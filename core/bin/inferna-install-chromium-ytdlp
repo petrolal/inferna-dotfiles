@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the native messaging host for the yt-dlp Chromium extension
+# inferna:summary=Install the native messaging host for the yt-dlp Chromium extension
 
 set -euo pipefail
 
 HOST_NAME="com.omarchy.ytdlp"
-HOST_PATH="$OMARCHY_PATH/bin/omarchy-chromium-ytdlp-host"
+HOST_PATH="$OMARCHY_PATH/bin/inferna-chromium-ytdlp-host"
 TEMPLATE="$OMARCHY_PATH/default/chromium/native-messaging-hosts/$HOST_NAME.json"
 
 # Chromium-based browser profile roots that use the NativeMessagingHosts layout.

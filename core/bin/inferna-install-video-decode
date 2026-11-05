@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Let mpv and Chromium decode video on the video chip of Snapdragon laptops
+# inferna:summary=Let mpv and Chromium decode video on the video chip of Snapdragon laptops
 
 set -euo pipefail
 
@@ -58,10 +58,10 @@ setup_chromium() {
     append_line "$conf" '--use-angle=gles-egl' || return
   fi
 
-  omarchy-chromium-add-feature AcceleratedVideoDecoder
+  inferna-chromium-add-feature AcceleratedVideoDecoder
 }
 
-if omarchy-hw-aarch64-qualcomm; then
+if inferna-hw-aarch64-qualcomm; then
   # A config that can't be written for one program doesn't hold back the other.
   # Running them under || turns set -e off inside, so each write returns its
   # own failure.

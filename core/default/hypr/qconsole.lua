@@ -26,7 +26,7 @@ local CONSOLE = "special:qconsole"
 -- when one is running, and on the usual one otherwise.
 hl.on("workspace.created", function(ws)
   if ws and ws.name == CONSOLE and ws.is_empty then
-    hl.exec_cmd("omarchy-agent --pick --prefer-local", { workspace = CONSOLE .. " silent" })
+    hl.exec_cmd("inferna-agent --pick --prefer-local", { workspace = CONSOLE .. " silent" })
   end
 end)
 

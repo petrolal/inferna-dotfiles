@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns a list of all the available power profiles on the system.
-# omarchy:args=[--active-state]
+# inferna:summary=Returns a list of all the available power profiles on the system.
+# inferna:args=[--active-state]
 
 if [[ ${1:-} != "" && ${1:-} != "--active-state" ]]; then
-  echo "Usage: omarchy-powerprofiles-list [--active-state]" >&2
+  echo "Usage: inferna-powerprofiles-list [--active-state]" >&2
   exit 1
 fi
 

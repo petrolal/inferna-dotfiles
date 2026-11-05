@@ -498,7 +498,7 @@ local function titlebars()
     { icon = "×", action = "hyprctl dispatch 'hl.dsp.window.close({ " .. window .. " })'" },
     { icon = "□", action = "hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = \"maximized\", action = \"toggle\", " .. window .. " })'" },
     -- Minimized windows wait in the dock, which brings them back.
-    { icon = "−", action = "omarchy-hyprland-window-minimize %WINDOW%" },
+    { icon = "−", action = "inferna-hyprland-window-minimize %WINDOW%" },
   }) do
     hl.plugin.hyprbars.add_button({
       bg_color = colors.titlebar,

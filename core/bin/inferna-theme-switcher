@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open the Omarchy theme switcher
+# inferna:summary=Open the Omarchy theme switcher
 
 print_rows=false
 
@@ -127,4 +127,4 @@ if [[ $print_rows == true ]]; then
   menu_args+=(--print-rows)
 fi
 
-exec omarchy-menu-images "${menu_args[@]}" "$preview_dir"
+exec inferna-menu-images "${menu_args[@]}" "$preview_dir"

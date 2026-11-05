@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Steam and all of its game libraries, configs, and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Steam and all of its game libraries, configs, and caches.
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-lifecycle-dispatch pre-remove steam
-omarchy-pkg-drop steam
+inferna-lifecycle-dispatch pre-remove steam
+inferna-pkg-drop steam
 
 rm -rf \
   "$HOME/.steam" \

@@ -26,7 +26,7 @@
 local paths = require("default.hypr.paths")
 
 local SLOTS = 10
-local STATE_DIR = paths.state_home .. "/omarchy/monitors"
+local STATE_DIR = paths.state_home .. "/inferna/monitors"
 local STATE_FILE = STATE_DIR .. "/workspaces"
 local MERGED_FILE = STATE_DIR .. "/workspaces-merged"
 

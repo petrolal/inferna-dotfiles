@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true if all of the named packages are installed on the system (or false if any of them are missing).
-# omarchy:args=<packages...>
+# inferna:summary=Returns true if all of the named packages are installed on the system (or false if any of them are missing).
+# inferna:args=<packages...>
 
 for pkg in "$@"; do
   if command -v "$pkg" &>/dev/null; then

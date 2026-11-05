@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Overwrite the user config for the Limine bootloader and rebuild it.
-# omarchy:requires-sudo=true
+# inferna:summary=Overwrite the user config for the Limine bootloader and rebuild it.
+# inferna:requires-sudo=true
 
 legacy_uki="/boot/EFI/Linux/$(cat /etc/machine-id)_linux.efi"
 

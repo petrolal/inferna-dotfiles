@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open the OpenClaw Control UI (or its terminal UI with --tui), onboarding or starting the gateway first when needed.
-# omarchy:args=[--tui [--message <text>]]
+# inferna:summary=Open the OpenClaw Control UI (or its terminal UI with --tui), onboarding or starting the gateway first when needed.
+# inferna:args=[--tui [--message <text>]]
 
 set -euo pipefail
 
@@ -19,20 +19,20 @@ fi
 # With the package installed and no openclaw command, the package became the
 # seed before this user's OpenClaw moved, as for one installed while waiting
 # for the seed by a route that never ran the migration again. --now sets it up.
-if ! omarchy-cmd-present openclaw && omarchy-pkg-present openclaw; then
+if ! inferna-cmd-present openclaw && inferna-pkg-present openclaw; then
   if [[ $tui == "true" ]]; then
     # The agent's terminal closes when this exits, so a failure waits to be read.
-    if ! omarchy-install-openclaw-cli --now; then
-      omarchy-show-done 1
+    if ! inferna-install-openclaw-cli --now; then
+      inferna-show-done 1
       exit 1
     fi
   else
-    exec omarchy-launch-floating-terminal-with-presentation 'omarchy-install-openclaw-cli --now && omarchy-launch-openclaw'
+    exec inferna-launch-floating-terminal-with-presentation 'inferna-install-openclaw-cli --now && inferna-launch-openclaw'
   fi
 fi
 
 # Onboarding is OpenClaw's own interactive wizard, run through
-# omarchy-openclaw-onboard so it stays in the terminal, installs the gateway
+# inferna-openclaw-onboard so it stays in the terminal, installs the gateway
 # as a user service, and returns (see that script for why bare `openclaw
 # onboard` does none of those as of 2026.9.1). The config check gates what
 # follows because the wizard's "Skip for now" also exits 0: only inference
@@ -41,15 +41,15 @@ fi
 if [[ ! -f $HOME/.openclaw/openclaw.json ]]; then
   if [[ $tui == "true" ]]; then
     # Already in a terminal, so the wizard runs right here.
-    omarchy-openclaw-onboard
+    inferna-openclaw-onboard
     [[ -f $HOME/.openclaw/openclaw.json ]] || exit 1
   else
     # The wizard needs a real terminal, and chaining the relaunch means
     # finishing it lands the user in the app. Single quotes so $HOME expands
     # in the spawned terminal.
     # shellcheck disable=SC2016
-    exec omarchy-launch-floating-terminal-with-presentation \
-      'omarchy-openclaw-onboard && [[ -f $HOME/.openclaw/openclaw.json ]] && omarchy-launch-openclaw'
+    exec inferna-launch-floating-terminal-with-presentation \
+      'inferna-openclaw-onboard && [[ -f $HOME/.openclaw/openclaw.json ]] && inferna-launch-openclaw'
   fi
 fi
 
@@ -87,7 +87,7 @@ fi
 
 if [[ -z ${url:-} ]]; then
   echo "OpenClaw's gateway did not come up. Check it with: openclaw gateway status" >&2
-  echo "If onboarding never finished, rerun it with: omarchy-openclaw-onboard" >&2
+  echo "If onboarding never finished, rerun it with: inferna-openclaw-onboard" >&2
   exit 1
 fi
 
@@ -103,4 +103,4 @@ fi
 # into the user journal. Accepted: the token is single-use with a ten-minute
 # expiry against a loopback-only gateway, and journal access already implies
 # access to ~/.openclaw itself.
-exec omarchy-launch-webapp "$url"
+exec inferna-launch-webapp "$url"

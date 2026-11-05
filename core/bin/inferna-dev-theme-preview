@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Preview an Omarchy theme palette in the terminal
-# omarchy:args=[theme-name|theme-dir|colors.toml] [--no-color] [--no-osc|--osc]
-# omarchy:examples=omarchy dev theme-preview | omarchy dev theme-preview tokyo-night | omarchy dev theme-preview themes/gruvbox/colors.toml --no-color --no-osc
+# inferna:summary=Preview an Omarchy theme palette in the terminal
+# inferna:args=[theme-name|theme-dir|colors.toml] [--no-color] [--no-osc|--osc]
+# inferna:examples=inferna dev theme-preview | inferna dev theme-preview tokyo-night | inferna dev theme-preview themes/gruvbox/colors.toml --no-color --no-osc
 
 set -o pipefail
 
@@ -17,7 +17,7 @@ declare -A COLORS
 
 usage() {
   cat <<'USAGE'
-Usage: omarchy-dev-theme-preview [theme-name|theme-dir|colors.toml] [--no-color] [--no-osc]
+Usage: inferna-dev-theme-preview [theme-name|theme-dir|colors.toml] [--no-color] [--no-osc]
 
 Preview a theme palette in the terminal. Without an argument, previews the
 current theme from ~/.local/state/inferna/current/theme/colors.toml.
@@ -102,12 +102,12 @@ load_colors() {
 
   while IFS=$'\t' read -r key value; do
     resolved[$key]="$value"
-  done < <(omarchy_tool omarchy-theme-color --file "$colors_file" --all)
+  done < <(omarchy_tool inferna-theme-color --file "$colors_file" --all)
 
   # Preview the palette the theme itself defines, at canonically resolved values.
   while IFS=$'\t' read -r key value; do
     COLORS[$key]="${resolved[$key]:-}"
-  done < <(omarchy_tool omarchy-theme-color --file "$colors_file" --raw)
+  done < <(omarchy_tool inferna-theme-color --file "$colors_file" --raw)
 
   # Plus the core slots every theme resolves, so sparse and legacy themes
   # still render a complete preview.
@@ -186,7 +186,7 @@ apply_terminal_osc() {
       ;;
   esac
 
-  omarchy_tool omarchy-theme-osc "$colors_file" || true
+  omarchy_tool inferna-theme-osc "$colors_file" || true
 }
 
 swatch() {

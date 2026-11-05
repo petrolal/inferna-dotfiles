@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle tiled fullscreen for the focused Hyprland window
+# inferna:summary=Toggle tiled fullscreen for the focused Hyprland window
 
 set -euo pipefail
 

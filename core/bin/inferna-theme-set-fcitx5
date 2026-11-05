@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy theme to the Fcitx candidate window
-# omarchy:args=[--activate]
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy theme to the Fcitx candidate window
+# inferna:args=[--activate]
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -13,7 +13,7 @@ PACKAGED_THEME="${OMARCHY_FCITX5_PACKAGED_THEME:-/usr/share/fcitx5/themes/defaul
 ACTIVATE=0
 
 usage() {
-  echo "Usage: omarchy-theme-set-fcitx5 [--activate]"
+  echo "Usage: inferna-theme-set-fcitx5 [--activate]"
 }
 
 for arg in "$@"; do
@@ -55,8 +55,8 @@ select_theme() {
   if [[ $updated != "$original" ]]; then
     # Write through a dotfiles symlink rather than replacing it.
     mkdir -p "${conf%/*}"
-    printf '%s\n' "$updated" >"$conf.omarchy-tmp"
-    mv "$conf.omarchy-tmp" "$conf"
+    printf '%s\n' "$updated" >"$conf.inferna-tmp"
+    mv "$conf.inferna-tmp" "$conf"
   fi
 }
 

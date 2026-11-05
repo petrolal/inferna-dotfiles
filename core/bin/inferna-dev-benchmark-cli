@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Measure Omarchy CLI response times
-# omarchy:args=[--repeat=<count>]
-# omarchy:examples=omarchy dev benchmark cli | omarchy dev benchmark cli --repeat=10
+# inferna:summary=Measure Omarchy CLI response times
+# inferna:args=[--repeat=<count>]
+# inferna:examples=inferna dev benchmark cli | inferna dev benchmark cli --repeat=10
 
 set -euo pipefail
 

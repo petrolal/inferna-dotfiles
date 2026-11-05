@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install VS Code and configure Omarchy defaults for secrets, updates, and theme
+# inferna:summary=Install VS Code and configure Omarchy defaults for secrets, updates, and theme
 
 echo "Installing VSCode..."
-omarchy-pkg-add visual-studio-code-bin
+inferna-pkg-add visual-studio-code-bin
 
 mkdir -p ~/.vscode ~/.config/Code/User
 
@@ -24,6 +24,6 @@ EOF
 printf '{\n  "update.mode": "none"\n}\n' > ~/.config/Code/User/settings.json
 
 # Apply Omarchy theme to VSCode
-omarchy-theme-set-vscode
+inferna-theme-set-vscode
 
 setsid uwsm-app -- gtk-launch code >/dev/null 2>&1 &

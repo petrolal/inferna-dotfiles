@@ -4,14 +4,14 @@ import json, os, re, shutil, subprocess, sys, tomllib
 from pathlib import Path
 from datetime import datetime
 ROOT=Path.home()/'.config/fastfetch'
-CURRENT=Path.home()/'.local/state/omarchy/current/theme'
+CURRENT=Path.home()/'.local/state/inferna/current/theme'
 try: theme=tomllib.loads((CURRENT/'colors.toml').read_text())
 except (OSError,ValueError): theme={}
 def brand_name():
     """Same name as the menu title: "root": {"title": ...} in Inferna's menu extension file."""
     for p in (
         Path.home() / '.config/inferna/extensions/inferna-menu.jsonc',
-        Path.home() / '.config/omarchy/extensions/omarchy-menu.jsonc',
+        Path.home() / '.config/inferna/extensions/inferna-menu.jsonc',
     ):
         try:
             if p.exists():
@@ -108,7 +108,7 @@ def stack(*cards):
     return lines
 logo_path=Path.home()/'.config/inferna/branding/about.txt'
 if not logo_path.exists():
-    logo_path=Path.home()/'.config/omarchy/branding/about.txt'
+    logo_path=Path.home()/'.config/inferna/branding/about.txt'
 logo=logo_path.read_text().splitlines() if logo_path.exists() else [BRAND]
 lw=max(map(len,logo)); gap=3
 print()

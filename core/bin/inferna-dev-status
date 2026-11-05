@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show the current Omarchy dev-link state
-# omarchy:group=dev
+# inferna:summary=Show the current Omarchy dev-link state
+# inferna:group=dev
 
 set -euo pipefail
 
 default_target="/usr/share/omarchy"
-sudoers_file="/etc/sudoers.d/omarchy-dev-path"
+sudoers_file="/etc/sudoers.d/inferna-dev-path"
 configured="$default_target"
 conf_present=0
 linked=0
@@ -36,7 +36,7 @@ sudo_bin_dir() {
     return
   fi
 
-  resolved=$(sudo -n bash -c 'type -P omarchy-dev-status' 2>/dev/null) || {
+  resolved=$(sudo -n bash -c 'type -P inferna-dev-status' 2>/dev/null) || {
     echo "not on sudo's PATH"
     return
   }

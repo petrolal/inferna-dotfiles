@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-# omarchy:summary=Detect whether Hyprland renders on the CPU (llvmpipe or softpipe) instead of a GPU
-# omarchy:args=[--print]
+# inferna:summary=Detect whether Hyprland renders on the CPU (llvmpipe or softpipe) instead of a GPU
+# inferna:args=[--print]
 """Exit 0 when the session's GL renderer is a software rasterizer, 1 when it
 is a GPU, and 2 when the renderer can't be read. --print also writes the GL
 renderer's name.
@@ -201,7 +201,7 @@ def gl_renderer(node):
 
 def main(argv):
     if argv not in ([], ["--print"]):
-        print("Usage: omarchy-hw-software-rendering [--print]", file=sys.stderr)
+        print("Usage: inferna-hw-software-rendering [--print]", file=sys.stderr)
         return 2
 
     nodes = compositor_nodes()

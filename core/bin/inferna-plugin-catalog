@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Emit every first-party and user plugin manifest as JSON
-# omarchy:group=plugin
-# omarchy:hidden=true
+# inferna:summary=Emit every first-party and user plugin manifest as JSON
+# inferna:group=plugin
+# inferna:hidden=true
 
 # Walks $OMARCHY_PATH/shell/plugins and ~/.config/inferna/plugins, reads every
 # manifest.json / *.manifest.json, and emits one JSON object per plugin with

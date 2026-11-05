@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open Voxtype AI model setup
+# inferna:summary=Open Voxtype AI model setup
 
 set -e
 
-omarchy-launch-floating-terminal-with-presentation "voxtype setup model"
-omarchy-restart-shell
+inferna-launch-floating-terminal-with-presentation "voxtype setup model"
+inferna-restart-shell

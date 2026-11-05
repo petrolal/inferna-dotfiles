@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Overwrite the user tmux config with the Omarchy default and reload tmux.
+# inferna:summary=Overwrite the user tmux config with the Omarchy default and reload tmux.
 
-omarchy-refresh-config tmux/tmux.conf
-omarchy-restart-tmux
+inferna-refresh-config tmux/tmux.conf
+inferna-restart-tmux

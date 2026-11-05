@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the OpenRouter usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the OpenRouter usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect OpenRouter usage into one display-ready JSON record.
 
 Tier 1 (any API key): key usage comes from GET /api/v1/key, and the balance

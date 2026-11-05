@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Save a monitor's scale, and optionally its mode, position and rotation, for that monitor
-# omarchy:args=OUTPUT SCALE [MODE] [POSITION] [TRANSFORM]
-# omarchy:hidden=true
+# inferna:summary=Save a monitor's scale, and optionally its mode, position and rotation, for that monitor
+# inferna:args=OUTPUT SCALE [MODE] [POSITION] [TRANSFORM]
+# inferna:hidden=true
 
 # Saves the settings by the physical monitor rather than its connector, since a
 # dock renames connectors between plugs: one line per monitor in
@@ -20,7 +20,7 @@ position="${4:-}"
 transform="${5:-}"
 
 if [[ -z $output || -z $scale ]]; then
-  echo "Usage: omarchy-hyprland-monitor-persist OUTPUT SCALE [MODE] [POSITION] [TRANSFORM]" >&2
+  echo "Usage: inferna-hyprland-monitor-persist OUTPUT SCALE [MODE] [POSITION] [TRANSFORM]" >&2
   exit 1
 fi
 
@@ -35,7 +35,7 @@ if [[ ! $output =~ ^[A-Za-z0-9._-]+$ || ! $scale =~ ^[0-9]+([.][0-9]+)?$ ]] ||
 fi
 
 settings="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/monitors/settings"
-identity=$(omarchy-hyprland-monitor-identity "$output")
+identity=$(inferna-hyprland-monitor-identity "$output")
 
 mkdir -p "${settings%/*}"
 touch "$settings"

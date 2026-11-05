@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open a config file in the user's editor and surface a toast
-# omarchy:args=<path>
-# omarchy:examples=omarchy launch config-editor ~/.config/hypr/hyprland.lua
+# inferna:summary=Open a config file in the user's editor and surface a toast
+# inferna:args=<path>
+# inferna:examples=inferna launch config-editor ~/.config/hypr/hyprland.lua
 
 path="${1-}"
 
 if [[ -z $path ]]; then
-  echo "Usage: omarchy-launch-config-editor <path>" >&2
+  echo "Usage: inferna-launch-config-editor <path>" >&2
   exit 1
 fi
 
-omarchy-notification-send -u low "$(omarchy-i18n config.editing)" "$path"
-exec omarchy-launch-editor "$path"
+inferna-notification-send -u low "$(inferna-i18n config.editing)" "$path"
+exec inferna-launch-editor "$path"

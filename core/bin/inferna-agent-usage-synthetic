@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Synthetic usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Synthetic usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Synthetic usage into one display-ready JSON record.
 
 Local stats come from pi/omp sessions and opencode messages that ran on the
@@ -227,7 +227,7 @@ def probe_quotas(key, base_url):
     headers={
       "Authorization": "Bearer " + key,
       "Accept": "application/json",
-      "User-Agent": "omarchy-agent-usage-synthetic/1.0",
+      "User-Agent": "inferna-agent-usage-synthetic/1.0",
     },
   )
   try:

@@ -1,5 +1,5 @@
 o.bind("SUPER + SPACE", "Omarchy menu", { menu = "root" })
-o.bind("SUPER + ALT + SPACE", "Apps", "omarchy-shell omarchy.dock apps")
+o.bind("SUPER + ALT + SPACE", "Apps", "inferna-shell omarchy.dock apps")
 o.bind("SUPER + CTRL + E", "Emojis", { panel = "omarchy.emojis" })
 o.bind("SUPER + CTRL + C", "Capture menu", { menu = "capture" })
 o.bind("SUPER + CTRL + O", "Toggle menu", { menu = "toggle" })
@@ -7,17 +7,17 @@ o.bind("SUPER + CTRL + H", "Hardware menu", { menu = "hardware" })
 o.bind("SUPER + SHIFT + code:201", "Omarchy menu", { menu = "root" })
 o.bind("SUPER + ESCAPE", "System menu", { menu = "system" })
 o.bind("XF86PowerOff", "Power menu", { menu = "system" }, { locked = true })
-o.bind("SUPER + K", "Keybindings", "omarchy-menu-keybindings")
-o.bind("SUPER + ALT + K", "Tmux keybindings", "omarchy-menu-tmux-keybindings")
-o.bind("SUPER + CTRL + K", "Herdr keybindings", "omarchy-menu-herdr-keybindings")
+o.bind("SUPER + K", "Keybindings", "inferna-menu-keybindings")
+o.bind("SUPER + ALT + K", "Tmux keybindings", "inferna-menu-tmux-keybindings")
+o.bind("SUPER + CTRL + K", "Herdr keybindings", "inferna-menu-herdr-keybindings")
 o.bind_toggle("SUPER + SHIFT + SPACE", "Toggle top bar", "bar")
 o.bind("SUPER + CTRL + SPACE", "Background switcher", { menu = "background" })
 o.bind("SUPER + CTRL + W", "Background switcher", { menu = "background" })
 o.bind("SUPER + SHIFT + CTRL + SPACE", "Theme menu", { menu = "theme" })
 o.bind("SUPER + CTRL + T", "Theme menu", { menu = "theme" })
-o.bind("SUPER + BACKSPACE", "Toggle transparency on a window", "omarchy-hyprland-window-transparency-toggle")
-o.bind("SUPER + SHIFT + BACKSPACE", "Toggle window gaps", "omarchy-hyprland-window-gaps-toggle")
-o.bind("SUPER + CTRL + BACKSPACE", "Toggle single-window square aspect", "omarchy-hyprland-window-single-square-aspect-toggle")
+o.bind("SUPER + BACKSPACE", "Toggle transparency on a window", "inferna-hyprland-window-transparency-toggle")
+o.bind("SUPER + SHIFT + BACKSPACE", "Toggle window gaps", "inferna-hyprland-window-gaps-toggle")
+o.bind("SUPER + CTRL + BACKSPACE", "Toggle single-window square aspect", "inferna-hyprland-window-single-square-aspect-toggle")
 o.bind_toggle("SUPER + CTRL + ALT + F", "Toggle full screen desktop", "fullscreen-desktop")
 
 -- xkbcommon names the comma keysym "comma"; the upper-case "COMMA" does not match.
@@ -29,23 +29,23 @@ o.bind("SUPER + SHIFT + ALT + comma", "Open notification history", { ipc = "noti
 o.bind_toggle("SUPER + CTRL + ALT + comma", "Toggle silencing notifications", "notification-silencing")
 
 o.bind_toggle("SUPER + CTRL + I", "Toggle locking on idle", "idle")
-o.bind("SUPER + CTRL + Delete", "Toggle laptop display", "omarchy-hyprland-monitor-internal toggle")
-o.bind("SUPER + CTRL + ALT + Delete", "Toggle laptop display mirroring", "omarchy-hyprland-monitor-internal-mirror toggle")
-o.bind("switch:on:Lid Switch", nil, "omarchy-system-lid-close", { locked = true })
-o.bind("switch:off:Lid Switch", nil, "omarchy-hyprland-monitor-clamshell", { locked = true })
+o.bind("SUPER + CTRL + Delete", "Toggle laptop display", "inferna-hyprland-monitor-internal toggle")
+o.bind("SUPER + CTRL + ALT + Delete", "Toggle laptop display mirroring", "inferna-hyprland-monitor-internal-mirror toggle")
+o.bind("switch:on:Lid Switch", nil, "inferna-system-lid-close", { locked = true })
+o.bind("switch:off:Lid Switch", nil, "inferna-hyprland-monitor-clamshell", { locked = true })
 -- Apple Silicon reports its lid through the SMC, under its own switch name.
-o.bind("switch:on:Apple SMC power/lid events", nil, "omarchy-system-lid-close", { locked = true })
-o.bind("switch:off:Apple SMC power/lid events", nil, "omarchy-hyprland-monitor-clamshell", { locked = true })
+o.bind("switch:on:Apple SMC power/lid events", nil, "inferna-system-lid-close", { locked = true })
+o.bind("switch:off:Apple SMC power/lid events", nil, "inferna-hyprland-monitor-clamshell", { locked = true })
 
-o.bind("PRINT", "Screenshot", "omarchy-capture-screenshot")
-o.bind("SUPER + CTRL + ALT + C", "Screenshot", "omarchy-capture-screenshot")
-o.bind("ALT + PRINT", "Screenrecording", "omarchy-capture-screenrecording --stop-recording || omarchy-menu toggle trigger.capture.screenrecord")
-o.bind("SUPER + ALT + code:34", "Make webcam overlay smaller", "omarchy-capture-webcam-resize smaller")
-o.bind("SUPER + ALT + code:35", "Make webcam overlay larger", "omarchy-capture-webcam-resize larger")
+o.bind("PRINT", "Screenshot", "inferna-capture-screenshot")
+o.bind("SUPER + CTRL + ALT + C", "Screenshot", "inferna-capture-screenshot")
+o.bind("ALT + PRINT", "Screenrecording", "inferna-capture-screenrecording --stop-recording || inferna-menu toggle trigger.capture.screenrecord")
+o.bind("SUPER + ALT + code:34", "Make webcam overlay smaller", "inferna-capture-webcam-resize smaller")
+o.bind("SUPER + ALT + code:35", "Make webcam overlay larger", "inferna-capture-webcam-resize larger")
 o.bind("SUPER + PRINT", "Color picker", "pkill hyprpicker || hyprpicker -a")
-o.bind("SUPER + CTRL + PRINT", "Extract text (OCR) from screenshot", "omarchy-capture-text")
+o.bind("SUPER + CTRL + PRINT", "Extract text (OCR) from screenshot", "inferna-capture-text")
 
--- Keyboard control for the slurp region picker (see omarchy-capture-region).
+-- Keyboard control for the slurp region picker (see inferna-capture-region).
 -- The binds are enabled exactly as long as a selection layer is on screen
 -- (slurp opens one per monitor), so they cannot leak or get stuck.
 -- They are disabled rather than unbound, since Hyprland's unbind() removes every
@@ -76,7 +76,7 @@ hl.on("layer.opened", function(layer)
     if selection_layers == 1 then
       for keys, mode in pairs(selection_keys) do
         if not selection_bind_alive(selection_binds[keys]) then
-          selection_binds[keys] = hl.bind(keys, hl.dsp.exec_cmd("omarchy-capture-region " .. mode))
+          selection_binds[keys] = hl.bind(keys, hl.dsp.exec_cmd("inferna-capture-region " .. mode))
         end
         selection_binds[keys]:set_enabled(true)
       end
@@ -99,17 +99,17 @@ end)
 
 o.bind("SUPER + CTRL + S", "Share", { menu = "share" })
 
-o.bind("SUPER + CTRL + PERIOD", "Transcode", "omarchy-transcode")
+o.bind("SUPER + CTRL + PERIOD", "Transcode", "inferna-transcode")
 
 o.bind("SUPER + CTRL + R", "Set reminder", { menu = "reminder-set" })
-o.bind("SUPER + CTRL + ALT + R", "Show reminders", "omarchy-reminder show")
-o.bind("SUPER + SHIFT + CTRL + R", "Clear reminders", "omarchy-reminder clear")
+o.bind("SUPER + CTRL + ALT + R", "Show reminders", "inferna-reminder show")
+o.bind("SUPER + SHIFT + CTRL + R", "Clear reminders", "inferna-reminder clear")
 
-o.bind("SUPER + CTRL + ALT + T", "Show time", "omarchy-notification-time")
-o.bind("SUPER + CTRL + ALT + B", "Show battery remaining", "omarchy-notification-battery")
-o.bind("SUPER + CTRL + ALT + W", "Toggle weather", "omarchy-notification-weather")
+o.bind("SUPER + CTRL + ALT + T", "Show time", "inferna-notification-time")
+o.bind("SUPER + CTRL + ALT + B", "Show battery remaining", "inferna-notification-battery")
+o.bind("SUPER + CTRL + ALT + W", "Toggle weather", "inferna-notification-weather")
 
-o.bind("SUPER + SHIFT + CTRL + A", "Agent", "omarchy-agent --pick")
+o.bind("SUPER + SHIFT + CTRL + A", "Agent", "inferna-agent --pick")
 o.bind("SUPER + CTRL + A", "Audio", { panel = "omarchy.audio" })
 o.bind("SUPER + CTRL + B", "Bluetooth", { panel = "omarchy.bluetooth" })
 o.bind("SUPER + CTRL + D", "Display", { panel = "omarchy.monitor" })
@@ -127,7 +127,7 @@ for panel = 1, 9 do
   o.bind(
     "SUPER + CTRL + code:" .. tostring(panel + 9),
     "Bar panel " .. panel,
-    "omarchy-shell -q shell togglePanelAt right " .. panel
+    "inferna-shell -q shell togglePanelAt right " .. panel
   )
 end
 
@@ -140,4 +140,4 @@ o.bind("SUPER + CTRL + ALT + Z", "Reset zoom", function()
   hl.config({ cursor = { zoom_factor = 1 } })
 end)
 
-o.bind("SUPER + CTRL + L", "Lock system", "omarchy-system-lock")
+o.bind("SUPER + CTRL + L", "Lock system", "inferna-system-lock")

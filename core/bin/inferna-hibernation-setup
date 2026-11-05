@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set up hibernation with swap and boot resume configuration
-# omarchy:requires-sudo=true
-# omarchy:args=[--force] [--no-rebuild]
+# inferna:summary=Set up hibernation with swap and boot resume configuration
+# inferna:requires-sudo=true
+# inferna:args=[--force] [--no-rebuild]
 
 FORCE=false
 NO_REBUILD=false
@@ -14,12 +14,12 @@ for arg in "$@"; do
 done
 
 # Resume is Limine-oriented and hibernate is unreliable on Asahi.
-if omarchy-hw-aarch64-apple; then
+if inferna-hw-aarch64-apple; then
   echo "Skipping hibernation setup (not supported on Apple Silicon)"
   exit 0
 fi
 
-if omarchy-sleep-disabled; then
+if inferna-sleep-disabled; then
   echo "Hibernation is turned off on this machine" >&2
   exit 0
 fi
@@ -32,7 +32,7 @@ fi
 # When --no-rebuild is set, the caller is responsible for the UKI rebuild
 # (e.g. running before limine-mkinitcpio-hook is installed during initial
 # install), so we only require limine-mkinitcpio when we'd invoke it ourselves.
-if ! $NO_REBUILD && omarchy-cmd-missing limine-mkinitcpio; then
+if ! $NO_REBUILD && inferna-cmd-missing limine-mkinitcpio; then
   echo "Skipping hibernation setup (requires Limine bootloader)"
   exit 0
 fi
@@ -133,7 +133,7 @@ rebuild_renamed_resume_device() {
   fi
 
   rm -f "$log"
-  echo "Could not rebuild the boot image with the renamed resume device; run omarchy-hibernation-setup again once that is fixed" >&2
+  echo "Could not rebuild the boot image with the renamed resume device; run inferna-hibernation-setup again once that is fixed" >&2
   return 1
 }
 
@@ -244,5 +244,5 @@ if ! $NO_REBUILD; then
 fi
 
 if ! $FORCE && ! $NO_REBUILD && gum confirm "Reboot to enable hibernation?"; then
-  omarchy-system reboot
+  inferna-system reboot
 fi

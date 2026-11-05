@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Display Hyprland keybindings defined in your configuration using an interactive search menu.
+# inferna:summary=Display Hyprland keybindings defined in your configuration using an interactive search menu.
 
 # Hyprland's Lua config provider currently reports Lua binds as dispatcher
 # __lua in `hyprctl binds`. Keep a lightweight source-derived cache so the
@@ -12,7 +12,7 @@ declare -A LUA_BIND_ARG_MAP
 # A platform package can name keys the way its keyboards print them: one
 # "<keysym> <name>" per line (on a MacBook, XF86MonBrightnessUp is F2), in the
 # fixed platform root, which no environment variable moves.
-key_names_file=/usr/share/omarchy-platform/key-names
+key_names_file=/usr/share/inferna-platform/key-names
 
 # The leading layout and variant, which Hyprland resolves bindings against.
 # Only names XKB could know pass, since they end up on a command line.
@@ -112,7 +112,7 @@ parse_keycodes() {
 build_lua_bind_cache() {
   local modmask description key dispatcher arg cache_key
 
-  omarchy-cmd-present lua || return 0
+  inferna-cmd-present lua || return 0
 
   while IFS=$'\t' read -r modmask description key dispatcher arg; do
     [[ -z $modmask || -z $description || -z $key ]] && continue
@@ -631,7 +631,7 @@ prioritize_entries() {
 # only touches the text after the arrow, so columns and dispatch hold.
 translate_binding_records() {
   local language catalog
-  language=$(omarchy-language 2>/dev/null) || language=en
+  language=$(inferna-language 2>/dev/null) || language=en
   catalog=$OMARCHY_PATH/default/i18n/$language/keybindings.json
   if [[ $language == "en" || ! -f $catalog ]]; then
     cat
@@ -684,8 +684,8 @@ keybindings_cache_key() {
   {
     printf 'v19\n'
     leading_keyboard
-    omarchy-language 2>/dev/null
-    cat "$OMARCHY_PATH/default/i18n/$(omarchy-language 2>/dev/null)/keybindings.json" 2>/dev/null
+    inferna-language 2>/dev/null
+    cat "$OMARCHY_PATH/default/i18n/$(inferna-language 2>/dev/null)/keybindings.json" 2>/dev/null
     hyprctl devices 2>/dev/null | grep -F 'active keymap:'
     cat "$key_names_file" 2>/dev/null
     hyprctl binds 2>/dev/null
@@ -813,7 +813,7 @@ if [[ $1 == "--print" || $1 == "-p" ]]; then
 else
   records=$(output_binding_records)
   selection=$(cut -f1 <<<"$records" |
-    omarchy-menu-select "$(omarchy-i18n keybindings.title)" -- --width 800 --height 500)
+    inferna-menu-select "$(inferna-i18n keybindings.title)" -- --width 800 --height 500)
 
   if [[ -n $selection ]]; then
     record=$(awk -F '\t' -v selection="$selection" '$1 == selection { print; exit }' <<<"$records")

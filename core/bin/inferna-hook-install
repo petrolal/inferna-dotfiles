@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install a hook into ~/.config/inferna/hooks/<type>.d/
-# omarchy:group=hook
-# omarchy:name=install
-# omarchy:args=<type> <file>
-# omarchy:examples=omarchy hook install post-update ~/my-hook
+# inferna:summary=Install a hook into ~/.config/inferna/hooks/<type>.d/
+# inferna:group=hook
+# inferna:name=install
+# inferna:args=<type> <file>
+# inferna:examples=inferna hook install post-update ~/my-hook
 
 set -e
 
 if (( $# != 2 )); then
-  echo "Usage: omarchy-hook-install <type> <file>"
+  echo "Usage: inferna-hook-install <type> <file>"
   exit 1
 fi
 
 HOOK_TYPE=$1
 HOOK_FILE=$2
 
-# Hook types are the same labels omarchy-hook runs (post-update, theme-set).
+# Hook types are the same labels inferna-hook runs (post-update, theme-set).
 # The type becomes a directory under the hooks directory. A slash would turn
 # it into directory levels. A bare `.` or `..` is a name the runner already
 # refuses, so installing under it would write a hook nothing can run. Refuse

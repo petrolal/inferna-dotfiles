@@ -6,7 +6,8 @@ local require_all = require("default.hypr.require_all")
 -- The saved files call o.workspace_mode, so it has to exist before they load.
 local workspace_modes = require("default.hypr.workspace-modes")
 
-local layouts_dir = paths.state_home .. "/omarchy/workspace-layouts"
+local layouts_dir = paths.state_home .. "/inferna/workspace-layouts"
+local legacy_layouts_dir = paths.state_home .. "/omarchy/workspace-layouts"
 
 -- The directory is found through XDG_STATE_HOME but the files are loaded by
 -- module name, and bootstrap only puts ~/.local/state on the search path. A
@@ -14,7 +15,8 @@ local layouts_dir = paths.state_home .. "/omarchy/workspace-layouts"
 -- them, or load same-named ones from under the home directory instead.
 package.path = paths.state_home .. "/?.lua;" .. package.path
 
-require_all.files(layouts_dir, "omarchy.workspace-layouts", { reload = true })
+require_all.files(layouts_dir, "inferna.workspace-layouts", { reload = true })
+require_all.files(legacy_layouts_dir, "omarchy.workspace-layouts", { reload = true })
 
 -- With every saved mode known, bring the open windows in line and set up what a
 -- floating workspace needs.

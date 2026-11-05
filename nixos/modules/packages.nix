@@ -126,15 +126,15 @@ let
     kitty
     ghostty
     alacritty
-    foot         # Omarchy terminal emulator
+    foot         # Inferna terminal emulator
     thunar  # standalone GTK file manager; no longer pulled in transitively now that desktopManager.xfce is gone
     grim         # Wayland screenshot capture, bound in config/hypr/hyprland.lua
     slurp        # region selection for grim
     wl-clipboard
-    brightnessctl # Monitor & keyboard brightness control for Omarchy corner & bindings
-    socat        # Fast IPC communication socket used by Omarchy shell
+    brightnessctl # Monitor & keyboard brightness control for Inferna corner & bindings
+    socat        # Fast IPC communication socket used by Inferna shell
     hyprsunset   # Nightlight shader & color temperature daemon
-    gum          # Charm TUI toolkit used by Omarchy CLI scripts
+    gum          # Charm TUI toolkit used by Inferna CLI scripts
     imagemagick  # Wallpaper blur, palette generation, and icon transcoding
     inotify-tools # File watcher used by plugins and theme services
     fzf          # Fuzzy finder CLI

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Select the keyboard layouts available for switching
+# inferna:summary=Select the keyboard layouts available for switching
 
 set -euo pipefail
 

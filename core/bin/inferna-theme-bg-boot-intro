@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Play the current background's matching theme intro
-# omarchy:hidden=true
+# inferna:summary=Play the current background's matching theme intro
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -102,7 +102,7 @@ case ${1:-} in
     exit 0
     ;;
   *)
-    echo "Usage: omarchy-theme-bg-boot-intro [--resolve-only [background]|--resolve-enabled [background]|--resolve-startup|--prepare-theme theme]" >&2
+    echo "Usage: inferna-theme-bg-boot-intro [--resolve-only [background]|--resolve-enabled [background]|--resolve-startup|--prepare-theme theme]" >&2
     exit 1
     ;;
 esac

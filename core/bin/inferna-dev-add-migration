@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Create a new Omarchy migration in the current source tree.
-# omarchy:args=[--no-edit]
+# inferna:summary=Create a new Omarchy migration in the current source tree.
+# inferna:args=[--no-edit]
 
 set -euo pipefail
 
@@ -14,16 +14,16 @@ while (($#)); do
       shift
       ;;
     system|user)
-      echo "omarchy-dev-add-migration: migration scopes are no longer used; creating a regular migration." >&2
+      echo "inferna-dev-add-migration: migration scopes are no longer used; creating a regular migration." >&2
       shift
       ;;
     -h|--help)
-      echo "Usage: omarchy-dev-add-migration [--no-edit]"
+      echo "Usage: inferna-dev-add-migration [--no-edit]"
       exit 0
       ;;
     *)
       echo "Unknown option: $1" >&2
-      echo "Usage: omarchy-dev-add-migration [--no-edit]" >&2
+      echo "Usage: inferna-dev-add-migration [--no-edit]" >&2
       exit 1
       ;;
   esac

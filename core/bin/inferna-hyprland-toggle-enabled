@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check if a Hyprland toggle is currently enabled.
-# omarchy:args=<flag-name>
+# inferna:summary=Check if a Hyprland toggle is currently enabled.
+# inferna:args=<flag-name>
 
 [[ -f "$HOME/.local/state/inferna/toggles/hypr/$1.lua" ]]

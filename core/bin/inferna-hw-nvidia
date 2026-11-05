@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Detect whether the computer has an NVIDIA GPU.
+# inferna:summary=Detect whether the computer has an NVIDIA GPU.
 
 # Read the cached sysfs IDs rather than lspci, which reads PCI config space and
 # resumes runtime-suspended GPUs.

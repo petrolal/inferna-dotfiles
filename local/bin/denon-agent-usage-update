@@ -6,7 +6,7 @@
 #  - Claude runs the upstream collector here, so claude.json is written once
 #    (the panel's file watcher can miss a second quick rewrite).
 # Same arguments as the upstream command.
-USAGE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
+USAGE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/inferna/agents/usage"
 HELPERS="$HOME/.local/share/denon-agent-usage"
 mkdir -p "$USAGE_DIR"
 flags=(); only=(); excepts=(); want_codex=1; want_claude=1; args=("$@")
@@ -36,12 +36,12 @@ for a in "${only[@]}"; do [[ $a != codex && $a != claude ]] && others+=("$a"); d
 if (( ${#only[@]} == 0 || ${#others[@]} > 0 )); then
   up=("${flags[@]}" --except codex --except claude)
   for e in "${excepts[@]}"; do up+=(--except "$e"); done
-  omarchy-agent-usage-update "${up[@]}" "${others[@]}" & pids+=($!)
+  inferna-agent-usage-update "${up[@]}" "${others[@]}" & pids+=($!)
 fi
 
 if (( want_codex )); then
   (
-    if record=$(/usr/bin/python3 "$HELPERS/codex-collector.py" "${flags[@]}") && jq -e . >/dev/null 2>&1 <<<"$record"; then
+    if record=$(python3 "$HELPERS/codex-collector.py" "${flags[@]}") && jq -e . >/dev/null 2>&1 <<<"$record"; then
       write_record codex "$record"
     else
       echo "denon-agent-usage-update: codex collector failed" >&2; exit 1
@@ -51,7 +51,7 @@ fi
 
 if (( want_claude )); then
   (
-    collector="${OMARCHY_PATH:-/usr/share/omarchy}/bin/omarchy-agent-usage-claude"
+    collector="${INFERNA_PATH:-${OMARCHY_PATH:-$HOME/inferna-dotfiles/core}}/bin/inferna-agent-usage-claude"
     if record=$("$collector" "${flags[@]}") && jq -e . >/dev/null 2>&1 <<<"$record"; then
       write_record claude "$(jq -c 'del(.resetCredits)' <<<"$record")"
     else

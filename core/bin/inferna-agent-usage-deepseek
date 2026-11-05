@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the DeepSeek usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the DeepSeek usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect DeepSeek usage into one display-ready JSON record.
 
 Local stats come from pi/omp session files whose assistant messages ran on the

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Record dictation with the configured backend
-# omarchy:args=<start|stop|toggle>
-# omarchy:examples=omarchy dictation start | omarchy dictation toggle
+# inferna:summary=Record dictation with the configured backend
+# inferna:args=<start|stop|toggle>
+# inferna:examples=inferna dictation start | inferna dictation toggle
 
 if (($# != 1)) || [[ $1 != "start" && $1 != "stop" && $1 != "toggle" ]]; then
-  echo "Usage: omarchy dictation <start|stop|toggle>" >&2
+  echo "Usage: inferna dictation <start|stop|toggle>" >&2
   exit 1
 fi
 
@@ -17,9 +17,9 @@ if ! flock -w 5 9; then
   exit 1
 fi
 
-backend=$(omarchy-default-dictation) || exit 1
-adapter="omarchy-dictation-$backend"
-if omarchy-cmd-missing "$adapter"; then
+backend=$(inferna-default-dictation) || exit 1
+adapter="inferna-dictation-$backend"
+if inferna-cmd-missing "$adapter"; then
   echo "The selected dictation backend ($backend) is not installed." >&2
   exit 1
 fi

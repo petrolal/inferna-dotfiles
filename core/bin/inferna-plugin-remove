@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove an installed shell plugin
-# omarchy:group=plugin
-# omarchy:args=[id] [--yes]
-# omarchy:alias=omarchy plugin rm
+# inferna:summary=Remove an installed shell plugin
+# inferna:group=plugin
+# inferna:args=[id] [--yes]
+# inferna:alias=inferna plugin rm
 
 set -euo pipefail
 
@@ -11,7 +11,7 @@ PLUGINS_DIR="$HOME/.config/inferna/plugins"
 ASSUME_YES=0
 
 fail() {
-  echo "omarchy-plugin-remove: $*" >&2
+  echo "inferna-plugin-remove: $*" >&2
   exit 1
 }
 
@@ -23,7 +23,7 @@ confirm() {
   local prompt="$1"
   (( ASSUME_YES )) && return 0
   if interactive; then
-    gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$prompt"
+    gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$prompt"
   else
     fail "refusing to continue without confirmation; pass --yes"
   fi
@@ -42,7 +42,7 @@ while (( $# > 0 )); do
     shift
     ;;
   -h | --help)
-    echo "Usage: omarchy plugin remove [id] [--yes]"
+    echo "Usage: inferna plugin remove [id] [--yes]"
     exit 0
     ;;
   -*)
@@ -63,7 +63,7 @@ if [[ -z $id ]]; then
   id=$(find "$PLUGINS_DIR" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) \
     ! -name '.*' -printf '%f\n' 2>/dev/null |
     sort |
-    gum choose --header="$(omarchy-i18n plugin.removeWhich)") || fail "cancelled"
+    gum choose --header="$(inferna-i18n plugin.removeWhich)") || fail "cancelled"
   [[ -n $id ]] || fail "nothing selected"
 fi
 valid_plugin_id "$id" || fail "invalid plugin id '$id'"
@@ -72,7 +72,7 @@ target="$PLUGINS_DIR/$id"
 [[ -e $target || -L $target ]] || fail "plugin '$id' is not installed"
 
 was_enabled=""
-shell_plugins=$(omarchy-shell shell listPlugins)
+shell_plugins=$(inferna-shell shell listPlugins)
 if [[ -n $shell_plugins ]]; then
   was_enabled=$(jq -r --arg id "$id" '
     .[] | select(.id == $id) | .enabled
@@ -85,15 +85,15 @@ if [[ -f $target/manifest.json ]]; then
 fi
 
 if [[ -L $target ]]; then
-  confirm "$(omarchy-i18n plugin.confirmUnlink "$id" "$(readlink "$target")")" || fail "aborted"
+  confirm "$(inferna-i18n plugin.confirmUnlink "$id" "$(readlink "$target")")" || fail "aborted"
 elif [[ -d $target/.git ]]; then
-  confirm "$(omarchy-i18n plugin.confirmDelete "$id")" || fail "aborted"
+  confirm "$(inferna-i18n plugin.confirmDelete "$id")" || fail "aborted"
 else
-  confirm "$(omarchy-i18n plugin.confirmRemove "$id")" || fail "aborted"
+  confirm "$(inferna-i18n plugin.confirmRemove "$id")" || fail "aborted"
 fi
 
 if [[ $was_enabled == "true" ]]; then
-  omarchy-shell shell setPluginEnabled "$id" false >/dev/null
+  inferna-shell shell setPluginEnabled "$id" false >/dev/null
 fi
 
 if [[ -L $target ]]; then
@@ -114,10 +114,10 @@ else
   echo "Removed $id. Backup at: $backup"
 fi
 
-omarchy-shell shell rescanPlugins >/dev/null
+inferna-shell shell rescanPlugins >/dev/null
 
 if [[ -n $cloned_from && $was_enabled == "true" ]]; then
   echo "Restored $cloned_from."
 elif [[ $was_enabled == "true" ]]; then
-  echo "Plugin was enabled and was unloaded from omarchy-shell."
+  echo "Plugin was enabled and was unloaded from inferna-shell."
 fi

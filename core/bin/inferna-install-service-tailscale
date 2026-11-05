@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the Tailscale mesh VPN service and a web app for the Tailscale Admin Console.
-# omarchy:requires-sudo=true
+# inferna:summary=Install the Tailscale mesh VPN service and a web app for the Tailscale Admin Console.
+# inferna:requires-sudo=true
 
 echo -e "\nInstalling Tailscale..."
-omarchy-pkg-add tailscale
+inferna-pkg-add tailscale
 
 echo -e "\nStarting Tailscale..."
 sudo systemctl enable --now tailscaled.service
@@ -14,9 +14,9 @@ echo -e "\nAllowing $USER to manage Tailscale..."
 sudo tailscale set --operator="$USER"
 
 echo -e "\nReceiving Taildrop files in $HOME/Downloads..."
-systemctl --user enable --now omarchy-tailscale-receive.service
+systemctl --user enable --now inferna-tailscale-receive.service
 
 echo -e "\nAdding Tailscale to the bar..."
-omarchy-plugin-enable omarchy.tailscale
+inferna-plugin-enable omarchy.tailscale
 
-omarchy-webapp-install "Tailscale" "https://login.tailscale.com/admin/machines" https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tailscale-light.png
+inferna-webapp-install "Tailscale" "https://login.tailscale.com/admin/machines" https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tailscale-light.png

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print drive information such as size, model, and mount details
-# omarchy:args=<drive>
+# inferna:summary=Print drive information such as size, model, and mount details
+# inferna:args=<drive>
 
 if (($# == 0)); then
-  echo "Usage: omarchy-drive-info [/dev/drive]"
+  echo "Usage: inferna-drive-info [/dev/drive]"
   exit 1
 else
   drive="$1"
@@ -23,7 +23,7 @@ size=$(lsblk -dno SIZE "$drive" 2>/dev/null | tr -d '[:space:]')
 
 # lsblk glues the unit to the number ("476.9G"); write the number with the
 # language's decimal separator and digits.
-if [[ $size =~ ^([0-9]+([.,][0-9]+)?)([A-Za-z]*)$ ]] && number=$(omarchy-i18n --number "${BASH_REMATCH[1]/,/.}"); then
+if [[ $size =~ ^([0-9]+([.,][0-9]+)?)([A-Za-z]*)$ ]] && number=$(inferna-i18n --number "${BASH_REMATCH[1]/,/.}"); then
   size="$number${BASH_REMATCH[3]}"
 fi
 

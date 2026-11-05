@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the default terminal used by xdg-terminal-exec
-# omarchy:args=[alacritty|foot|ghostty|kitty]
-# omarchy:examples=omarchy default terminal ghostty | omarchy default terminal kitty
+# inferna:summary=Set the default terminal used by xdg-terminal-exec
+# inferna:args=[alacritty|foot|ghostty|kitty]
+# inferna:examples=inferna default terminal ghostty | inferna default terminal kitty
 
 installing=false
 if [[ ${1:-} == "--install" ]]; then
@@ -29,16 +29,16 @@ foot) terminal="foot"; desktop_id="foot.desktop"; name="Foot"; glyph= ;;
 ghostty) terminal="ghostty"; desktop_id="com.mitchellh.ghostty.desktop"; name="Ghostty"; glyph= ;;
 kitty) terminal="kitty"; desktop_id="kitty.desktop"; name="Kitty"; glyph= ;;
 *)
-  echo "Usage: omarchy-default-terminal <alacritty|foot|ghostty|kitty>"
+  echo "Usage: inferna-default-terminal <alacritty|foot|ghostty|kitty>"
   exit 1
   ;;
 esac
 
-if omarchy-cmd-missing "$terminal"; then
+if inferna-cmd-missing "$terminal"; then
   if [[ $installing == "false" ]]; then
-    exec omarchy-launch-floating-terminal-with-presentation omarchy-default-terminal --install "$terminal"
+    exec inferna-launch-floating-terminal-with-presentation inferna-default-terminal --install "$terminal"
   else
-    omarchy-install-terminal "$terminal" || exit 1
+    inferna-install-terminal "$terminal" || exit 1
   fi
 fi
 
@@ -48,4 +48,4 @@ cat >~/.config/xdg-terminals.list <<EOF
 $desktop_id
 EOF
 
-omarchy-notification-send -g $glyph "$(omarchy-i18n default.terminalSet "$name")"
+inferna-notification-send -g $glyph "$(inferna-i18n default.terminalSet "$name")"

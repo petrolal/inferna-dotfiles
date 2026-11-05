@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:group=transcode
-# omarchy:name=
-# omarchy:summary=Transcode pictures and videos for sharing
-# omarchy:args=[--path path] [input] [format] [resolution]
-# omarchy:examples=omarchy transcode|omarchy transcode --path ~/Downloads|omarchy transcode ~/Videos/demo.mov mp4 1080p|omarchy transcode ~/Pictures/background.heic jpg medium
+# inferna:group=transcode
+# inferna:name=
+# inferna:summary=Transcode pictures and videos for sharing
+# inferna:args=[--path path] [input] [format] [resolution]
+# inferna:examples=inferna transcode|omarchy transcode --path ~/Downloads|omarchy transcode ~/Videos/demo.mov mp4 1080p|omarchy transcode ~/Pictures/background.heic jpg medium
 
 set -euo pipefail
 
@@ -166,7 +166,7 @@ main() {
   search_path="${search_path:-$HOME/Pictures:$HOME/Videos}"
 
   if [[ -z $input ]]; then
-    input=$(omarchy-menu-file "$(omarchy-i18n transcode.pickInput)" "$search_path" "jpg jpeg png webp gif heic avif mp4 mov m4v mkv webm avi")
+    input=$(inferna-menu-file "$(inferna-i18n transcode.pickInput)" "$search_path" "jpg jpeg png webp gif heic avif mp4 mov m4v mkv webm avi")
   fi
 
   [[ -n $input ]] || return 1
@@ -176,29 +176,29 @@ main() {
 
   if [[ -z $format ]]; then
     if [[ $type == "picture" ]]; then
-      format=$(omarchy-menu-select "$(omarchy-i18n transcode.selectFormat)" jpg png)
+      format=$(inferna-menu-select "$(inferna-i18n transcode.selectFormat)" jpg png)
     else
-      format=$(omarchy-menu-select "$(omarchy-i18n transcode.selectFormat)" mp4 gif)
+      format=$(inferna-menu-select "$(inferna-i18n transcode.selectFormat)" mp4 gif)
     fi
   fi
 
   # Picture qualities are words, so the menu shows them in the Omarchy language
   # and maps the pick back to the value the transcoder takes.
   local high medium low choice
-  high=$(omarchy-i18n transcode.qualityHigh)
-  medium=$(omarchy-i18n transcode.qualityMedium)
-  low=$(omarchy-i18n transcode.qualityLow)
+  high=$(inferna-i18n transcode.qualityHigh)
+  medium=$(inferna-i18n transcode.qualityMedium)
+  low=$(inferna-i18n transcode.qualityLow)
 
   if [[ -z $resolution ]]; then
     if [[ $type == "picture" ]]; then
-      choice=$(omarchy-menu-select "$(omarchy-i18n transcode.selectResolution)" "$high" "$medium" "$low")
+      choice=$(inferna-menu-select "$(inferna-i18n transcode.selectResolution)" "$high" "$medium" "$low")
       case $choice in
         "$high") resolution=high ;;
         "$medium") resolution=medium ;;
         "$low") resolution=low ;;
       esac
     else
-      resolution=$(omarchy-menu-select "$(omarchy-i18n transcode.selectResolution)" 4k 1080p 720p)
+      resolution=$(inferna-menu-select "$(inferna-i18n transcode.selectResolution)" 4k 1080p 720p)
     fi
   fi
 
@@ -212,14 +212,14 @@ main() {
   esac
 
   if [[ $type == "video" ]]; then
-    omarchy-notification-send -g  "$(omarchy-i18n transcode.working)" "$(omarchy-i18n transcode.workingBody "$(basename -- "$input")" "$format" "$resolution")"
+    inferna-notification-send -g  "$(inferna-i18n transcode.working)" "$(inferna-i18n transcode.workingBody "$(basename -- "$input")" "$format" "$resolution")"
     transcode_video "$input" "$format" "$resolution" "$output"
     copy_to_clipboard "$output"
-    omarchy-notification-send -g  "$(omarchy-i18n transcode.done "$resolution" "$format")" "$(omarchy-i18n transcode.saved)"
+    inferna-notification-send -g  "$(inferna-i18n transcode.done "$resolution" "$format")" "$(inferna-i18n transcode.saved)"
   else
     transcode_picture "$input" "$format" "$resolution" "$output"
     copy_to_clipboard "$output"
-    omarchy-notification-send -g  "$(omarchy-i18n transcode.done "$resolution_label" "$format")" "$(omarchy-i18n transcode.saved)"
+    inferna-notification-send -g  "$(inferna-i18n transcode.done "$resolution_label" "$format")" "$(inferna-i18n transcode.saved)"
   fi
 }
 

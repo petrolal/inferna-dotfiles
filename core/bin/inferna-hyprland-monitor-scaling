@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show, set, or adjust a Hyprland monitor's scaling (the focused one by default)
-# omarchy:args=[--monitor NAME] [up|down|SCALE]
-# omarchy:examples=omarchy hyprland monitor scaling | omarchy hyprland monitor scaling 1.6 | omarchy hyprland monitor scaling up | omarchy hyprland monitor scaling --monitor DP-2 2
+# inferna:summary=Show, set, or adjust a Hyprland monitor's scaling (the focused one by default)
+# inferna:args=[--monitor NAME] [up|down|SCALE]
+# inferna:examples=inferna hyprland monitor scaling | inferna hyprland monitor scaling 1.6 | inferna hyprland monitor scaling up | inferna hyprland monitor scaling --monitor DP-2 2
 
 SCALES=(1 1.25 1.6 2 3 4)
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy"
 SCALE_LOG="$STATE_DIR/monitors/scaling"
 
 usage() {
-  echo "Usage: omarchy-hyprland-monitor-scaling [--monitor NAME] [up|down|SCALE]"
+  echo "Usage: inferna-hyprland-monitor-scaling [--monitor NAME] [up|down|SCALE]"
 }
 
 # The monitor named with --monitor, else the focused one.
@@ -97,14 +97,14 @@ set_scale() {
 
   local mode="${width}x${height}@${refresh_rate}"
 
-  omarchy-hyprland-monitor-persist "$active_monitor" "$new_scale"
+  inferna-hyprland-monitor-persist "$active_monitor" "$new_scale"
 
   # Beside other monitors it keeps its place, and the layout applies the new
   # scale in the same step as closing up around its new size, so the two never
   # overlap. Alone, Hyprland places it.
   local others="$(hyprctl monitors -j | jq --arg name "$active_monitor" '[.[] | select(.name != $name)] | length')"
   if (( others > 0 )); then
-    omarchy-hyprland-monitor-layout --resized "$active_monitor" "${width}x${height}" "$current_scale" "${width}x${height}" "$new_scale" "$mode"
+    inferna-hyprland-monitor-layout --resized "$active_monitor" "${width}x${height}" "$current_scale" "${width}x${height}" "$new_scale" "$mode"
   else
     hyprctl eval "hl.monitor({ output = \"$active_monitor\", mode = \"$mode\", position = \"auto\", scale = $new_scale })" >/dev/null
   fi

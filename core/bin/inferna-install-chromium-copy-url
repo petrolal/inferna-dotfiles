@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the native messaging host for the Copy URL Chromium extension
+# inferna:summary=Install the native messaging host for the Copy URL Chromium extension
 
 set -euo pipefail
 
 HOST_NAME="com.omarchy.copy_url"
-HOST_PATH="$OMARCHY_PATH/bin/omarchy-chromium-copy-url-host"
+HOST_PATH="$OMARCHY_PATH/bin/inferna-chromium-copy-url-host"
 TEMPLATE="$OMARCHY_PATH/default/chromium/native-messaging-hosts/$HOST_NAME.json"
 
 browser_dirs=(

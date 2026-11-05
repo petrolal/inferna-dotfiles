@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Create a desktop launcher for a RetroArch game
-# omarchy:args=[core path-to-game]
-# omarchy:examples=omarchy games retro install snes9x ~/Games/roms/snes/game.sfc | omarchy-games-retro-install /usr/lib/libretro/mgba_libretro.so ~/Games/roms/gba/game.gba
+# inferna:summary=Create a desktop launcher for a RetroArch game
+# inferna:args=[core path-to-game]
+# inferna:examples=inferna games retro install snes9x ~/Games/roms/snes/game.sfc | inferna-games-retro-install /usr/lib/libretro/mgba_libretro.so ~/Games/roms/gba/game.gba
 
 set -e
 
 if (( $# == 0 )); then
-  mapfile -t cores < <(omarchy-games-retro-cores)
+  mapfile -t cores < <(inferna-games-retro-cores)
 
   if (( ${#cores[@]} == 0 )); then
-    omarchy-notification-send -g 󰯉 "$(omarchy-i18n games.noCores)" "/usr/lib/libretro"
+    inferna-notification-send -g 󰯉 "$(inferna-i18n games.noCores)" "/usr/lib/libretro"
     exit 1
   fi
 
-  core=$(omarchy-menu-select "$(omarchy-i18n games.corePrompt)" "${cores[@]}") || exit 0
+  core=$(inferna-menu-select "$(inferna-i18n games.corePrompt)" "${cores[@]}") || exit 0
   [[ -n $core ]] || exit 0
   core="${core##*(}"
   core="${core%)}"
 
-  game_path=$(omarchy-menu-file "$(omarchy-i18n games.pickGame)" "$HOME/Games/roms" "7z bin ccd chd cue dmg elf fds gb gba gbc iso lha m3u md n64 nds nes pbp sfc smc swc zip z64") || exit 0
+  game_path=$(inferna-menu-file "$(inferna-i18n games.pickGame)" "$HOME/Games/roms" "7z bin ccd chd cue dmg elf fds gb gba gbc iso lha m3u md n64 nds nes pbp sfc smc swc zip z64") || exit 0
   [[ -n $game_path ]] || exit 0
 elif (( $# == 2 )); then
   core="$1"
   game_path="$2"
 else
-  echo "Usage: omarchy-games-retro-install [core path-to-game]"
-  echo "Example: omarchy-games-retro-install snes9x ~/Games/roms/snes/game.sfc"
+  echo "Usage: inferna-games-retro-install [core path-to-game]"
+  echo "Example: inferna-games-retro-install snes9x ~/Games/roms/snes/game.sfc"
   exit 1
 fi
 
@@ -69,4 +69,4 @@ EOF
 chmod +x "$desktop_file"
 update-desktop-database "$desktop_dir" &>/dev/null || true
 
-omarchy-notification-send -g 󰯉 "$(omarchy-i18n games.installed "$game_name")" "$(omarchy-i18n games.startHint)"
+inferna-notification-send -g 󰯉 "$(inferna-i18n games.installed "$game_name")" "$(inferna-i18n games.startHint)"

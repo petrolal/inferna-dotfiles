@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print CPU and memory stats for the shell
-# omarchy:group=system
-# omarchy:args=[--bar-widget]
+# inferna:summary=Print CPU and memory stats for the shell
+# inferna:group=system
+# inferna:args=[--bar-widget]
 
 bar_widget_stats() {
   awk '
@@ -33,7 +33,7 @@ case "${1:-}" in
     exit
     ;;
   *)
-    echo "Usage: omarchy-system-stats [--bar-widget]" >&2
+    echo "Usage: inferna-system-stats [--bar-widget]" >&2
     exit 1
     ;;
 esac

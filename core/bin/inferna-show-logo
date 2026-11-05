@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Display the Omarchy logo in the terminal using green color.
+# inferna:summary=Display the Omarchy logo in the terminal using green color.
 
 clear
 echo -e "\033[32m"

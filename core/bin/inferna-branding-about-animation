@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Shared helpers for animating the About branding (source this, don't run it).
-# omarchy:group=branding
-# omarchy:name=about-animation
-# omarchy:hidden=true
+# inferna:summary=Shared helpers for animating the About branding (source this, don't run it).
+# inferna:group=branding
+# inferna:name=about-animation
+# inferna:hidden=true
 
 # The About branding's animation: a sheen, and the frames that make it. *When*
 # those frames are written stays with the caller, because that is inseparable

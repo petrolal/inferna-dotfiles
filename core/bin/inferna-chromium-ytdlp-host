@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Native messaging host: download the URL sent by the yt-dlp Chromium extension
-# omarchy:hidden=true
+# inferna:summary=Native messaging host: download the URL sent by the yt-dlp Chromium extension
+# inferna:hidden=true
 
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]}"
 
 # The browser launches us without Omarchy's environment, so locate the repo from
-# our own path when OMARCHY_PATH isn't already set. Export it — omarchy-shell (used
-# by omarchy-osd) needs it to find the running shell, and silently no-ops without it.
+# our own path when OMARCHY_PATH isn't already set. Export it — inferna-shell (used
+# by inferna-osd) needs it to find the running shell, and silently no-ops without it.
 export OMARCHY_PATH="${OMARCHY_PATH:-$(cd -- "$(dirname -- "$SCRIPT_PATH")/.." && pwd)}"
 
 # Make sure the Omarchy bin and yt-dlp are reachable when launched by the browser.
@@ -73,11 +73,11 @@ title_from_file() {
 # Drive the Quickshell OSD — a single overlay that updates in place (like the
 # volume/brightness bar), so download progress never stacks like notifications.
 osd_progress() {
-  omarchy-osd -i 󰇚 -p "$1" -d 8000 >/dev/null 2>&1 || true
+  inferna-osd -i 󰇚 -p "$1" -d 8000 >/dev/null 2>&1 || true
 }
 
 osd_close() {
-  omarchy-shell -q osd close >/dev/null 2>&1 || true
+  inferna-shell -q osd close >/dev/null 2>&1 || true
 }
 
 download_url() {
@@ -87,7 +87,7 @@ download_url() {
 
   # Don't show anything until yt-dlp confirms there's actually a video to grab.
   if ! yt-dlp --no-playlist --simulate --quiet --no-warnings --no-exec --no-exec-before-download -- "$url" >/dev/null 2>&1; then
-    omarchy-notification-send -u critical -g 󰅖 "$(omarchy-i18n download.none)" "$url"
+    inferna-notification-send -u critical -g 󰅖 "$(inferna-i18n download.none)" "$url"
     exit 0
   fi
 
@@ -149,10 +149,10 @@ download_url() {
     # Open plays it, Cut takes it into Omacut; clicking the card plays it too.
     # `--` keeps mpv from parsing a leading-dash filename as an option; the path
     # is one discrete --with argument, so it never reaches a shell.
-    omarchy-notification-send -g 󰄬 "$(omarchy-i18n download.complete)" "$title" \
+    inferna-notification-send -g 󰄬 "$(inferna-i18n download.complete)" "$title" \
       -t 10000 --image "${preview:-$filepath}" \
-      --action "$(omarchy-i18n download.open)" mpv -- \
-      --action "$(omarchy-i18n download.cut)" omacut \
+      --action "$(inferna-i18n download.open)" mpv -- \
+      --action "$(inferna-i18n download.cut)" omacut \
       --with "$filepath" || true
 
     # The shell loads the thumbnail into memory when the toast appears and never
@@ -163,7 +163,7 @@ download_url() {
       rm -f "$preview"
     ) &
   else
-    omarchy-notification-send -u critical -g 󰅖 "$(omarchy-i18n download.failed)" "$url"
+    inferna-notification-send -u critical -g 󰅖 "$(inferna-i18n download.failed)" "$url"
   fi
 
   exit 0

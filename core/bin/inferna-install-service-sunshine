@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Sunshine and open Moonlight streaming ports for LAN and Tailscale.
-# omarchy:requires-sudo=true
+# inferna:summary=Install Sunshine and open Moonlight streaming ports for LAN and Tailscale.
+# inferna:requires-sudo=true
 
 set -e
 
 TCP_PORTS=(47984 47989 48010)
 UDP_PORTS=(5353 47998 47999 48000 48002 48010)
 PRIVATE_CIDRS=(10.0.0.0/8 172.16.0.0/12 192.168.0.0/16)
-UFW_COMMENT="omarchy-sunshine"
+UFW_COMMENT="inferna-sunshine"
 SUNSHINE_ADMIN_APP="Sunshine Admin"
 SUNSHINE_ADMIN_URL="https://localhost:47990"
-SUNSHINE_ADMIN_EXEC="omarchy-launch-webapp $SUNSHINE_ADMIN_URL --ignore-certificate-errors"
+SUNSHINE_ADMIN_EXEC="inferna-launch-webapp $SUNSHINE_ADMIN_URL --ignore-certificate-errors"
 SUNSHINE_ICON_SOURCE="/usr/share/sunshine/web/images/logo-sunshine-45.png"
 HYPR_AUTOSTART_FILE="$HOME/.config/hypr/autostart.lua"
 HYPR_AUTOSTART_ENTRY='o.launch_on_start("sunshine")'
@@ -38,7 +38,7 @@ open_ufw_port_for_tailscale() {
 open_ufw_ports() {
   local port
 
-  if omarchy-cmd-missing ufw; then
+  if inferna-cmd-missing ufw; then
     echo "UFW is not installed; skipping Sunshine firewall rules."
     return
   fi
@@ -57,7 +57,7 @@ open_ufw_ports() {
 }
 
 install_admin_webapp() {
-  omarchy-webapp-install "$SUNSHINE_ADMIN_APP" "$SUNSHINE_ADMIN_URL" "$SUNSHINE_ICON_SOURCE" "$SUNSHINE_ADMIN_EXEC"
+  inferna-webapp-install "$SUNSHINE_ADMIN_APP" "$SUNSHINE_ADMIN_URL" "$SUNSHINE_ICON_SOURCE" "$SUNSHINE_ADMIN_EXEC"
 }
 
 enable_hyprland_autostart() {
@@ -70,7 +70,7 @@ enable_hyprland_autostart() {
 }
 
 echo "Installing Sunshine..."
-omarchy-pkg-add sunshine
+inferna-pkg-add sunshine
 systemctl --user enable --now sunshine
 
 echo "Opening Sunshine firewall ports..."

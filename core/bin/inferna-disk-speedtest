@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Measure live disk read and write speed
-# omarchy:args=[target-dir]
+# inferna:summary=Measure live disk read and write speed
+# inferna:args=[target-dir]
 
 set -e
 
 if [[ -n ${1:-} && ! -d $1 ]]; then
-  echo "Usage: omarchy-disk-speedtest [target-dir]" >&2
+  echo "Usage: inferna-disk-speedtest [target-dir]" >&2
   exit 2
 fi
 
@@ -70,7 +70,7 @@ trap 'exit 143' TERM INT
 # back to the page cache -- and it makes every rewrite land in place instead
 # of churning the extent allocator, which run-to-run reproducibility depends
 # on.
-chunk_file=$(mktemp /dev/shm/omarchy-disk-speedtest-XXXXXX.src)
+chunk_file=$(mktemp /dev/shm/inferna-disk-speedtest-XXXXXX.src)
 for (( i = 0; i < parallel; i++ )); do
   file=$(mktemp "$target_dir/disk-speedtest-XXXXXX.dat")
   chattr +C "$file" 2>/dev/null || true

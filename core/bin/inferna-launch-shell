@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the Omarchy shell with its log kept in the journal
-# omarchy:hidden=true
+# inferna:summary=Launch the Omarchy shell with its log kept in the journal
+# inferna:hidden=true
 
 # Quickshell only logs to its instance runtime dir (tmpfs), so when the shell
 # dies the idle/lock event trail is gone after a reboot. The journal keeps it
-# across sessions, bounded and timestamped, under the omarchy-shell tag.
+# across sessions, bounded and timestamped, under the inferna-shell tag.
 #
 # Backgrounded because bash defers a trap until a foreground command returns but
 # interrupts wait. systemd-cat execs, so the job is Quickshell itself.
@@ -28,7 +28,7 @@ run_shell() {
   local startup_background
   startup_background=$(readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null || readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null)
   OMARCHY_STARTUP_BACKGROUND="$startup_background" QS_DISABLE_FILE_WATCHER=1 QS_NO_RELOAD_POPUP=1 \
-    systemd-cat -t omarchy-shell -- quickshell -n -p "$core_path/shell" &
+    systemd-cat -t inferna-shell -- quickshell -n -p "$core_path/shell" &
   shell_pid=$!
 
   local status
@@ -60,7 +60,7 @@ compositor_alive() {
 # Quickshell relaunches itself from its signal handlers, but Qt leaves through
 # _exit() when the Wayland connection fails, raising no signal: no crash report,
 # no relaunch, no bar. Supervise those deaths. A clean exit is a deliberate stop
-# (omarchy-restart-shell starts its own replacement); a signal here means the
+# (inferna-restart-shell starts its own replacement); a signal here means the
 # session is going, and has to reach the shell the launcher used to exec.
 terminating=0
 shell_pid=""
@@ -94,10 +94,10 @@ while true; do
   fi
 
   if (( ++attempts > 5 )); then
-    logger -t omarchy-shell "Giving up on the Omarchy shell after $attempts relaunches in under a minute."
+    logger -t inferna-shell "Giving up on the Omarchy shell after $attempts relaunches in under a minute."
     exit 1
   fi
 
-  logger -t omarchy-shell "Omarchy shell exited with status $status; relaunching."
+  logger -t inferna-shell "Omarchy shell exited with status $status; relaunching."
   sleep 1
 done

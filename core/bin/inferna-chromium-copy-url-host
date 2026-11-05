@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Native messaging host: copy a Chromium tab URL to the clipboard
-# omarchy:hidden=true
+# inferna:summary=Native messaging host: copy a Chromium tab URL to the clipboard
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -18,7 +18,7 @@ copy_url() {
 
   [[ -n $url ]] || return 1
   printf '%s' "$url" | wl-copy --type text/plain
-  omarchy-notification-send -g 󰅍 "$(omarchy-i18n clipboard.urlCopied)"
+  inferna-notification-send -g 󰅍 "$(inferna-i18n clipboard.urlCopied)"
 }
 
 reply_copied() {

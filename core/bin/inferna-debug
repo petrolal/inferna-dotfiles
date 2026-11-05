@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print debugging information
-# omarchy:args=[--no-sudo] [--print]
-# omarchy:examples=omarchy debug --print --no-sudo
-# omarchy:requires-sudo=true
+# inferna:summary=Print debugging information
+# inferna:args=[--no-sudo] [--print]
+# inferna:examples=inferna debug --print --no-sudo
+# inferna:requires-sudo=true
 
 NO_SUDO=false
 PRINT_ONLY=false
@@ -20,13 +20,13 @@ while (( $# > 0 )); do
       ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: omarchy-debug [--no-sudo] [--print]"
+      echo "Usage: inferna-debug [--no-sudo] [--print]"
       exit 1
       ;;
   esac
 done
 
-LOG_FILE="/tmp/omarchy-debug.log"
+LOG_FILE="/tmp/inferna-debug.log"
 
 if [[ $NO_SUDO = "true" ]]; then
   DMESG_OUTPUT="(skipped - --no-sudo flag used)"
@@ -37,7 +37,7 @@ fi
 cat > "$LOG_FILE" <<EOF
 Date: $(date)
 Hostname: $(hostname)
-Omarchy Package: $(pacman -Q omarchy-dev 2>/dev/null || pacman -Q omarchy 2>/dev/null || echo "unknown")
+Omarchy Package: $(pacman -Q inferna-dev 2>/dev/null || pacman -Q omarchy 2>/dev/null || echo "unknown")
 
 =========================================
 SYSTEM INFORMATION
@@ -90,7 +90,7 @@ case "$ACTION" in
     less "$LOG_FILE"
     ;;
   "Save in current directory")
-    cp "$LOG_FILE" "./omarchy-debug.log"
-    echo "✓ Log saved to $(pwd)/omarchy-debug.log"
+    cp "$LOG_FILE" "./inferna-debug.log"
+    echo "✓ Log saved to $(pwd)/inferna-debug.log"
     ;;
 esac

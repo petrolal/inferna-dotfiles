@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy Pi theme
-# omarchy:args=[--activate]
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy Pi theme
+# inferna:args=[--activate]
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -10,12 +10,12 @@ CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"
 PI_SOURCE_PATH="$CURRENT_THEME_PATH/pi.json"
 PI_AGENT_DIR="$HOME/.pi/agent"
 PI_THEME_DIR="$PI_AGENT_DIR/themes"
-PI_THEME_PATH="$PI_THEME_DIR/omarchy-system.json"
+PI_THEME_PATH="$PI_THEME_DIR/inferna-system.json"
 PI_SETTINGS_PATH="$PI_AGENT_DIR/settings.json"
 PI_ACTIVATE=0
 
 usage() {
-  echo "Usage: omarchy-theme-set-pi [--activate]"
+  echo "Usage: inferna-theme-set-pi [--activate]"
 }
 
 for arg in "$@"; do
@@ -37,7 +37,7 @@ done
 if [[ ! -f $PI_SOURCE_PATH ]]; then
   if (( PI_ACTIVATE == 1 )); then
     echo "Pi theme source missing: $PI_SOURCE_PATH" >&2
-    echo "Run omarchy-theme-refresh after selecting an Omarchy theme." >&2
+    echo "Run inferna-theme-refresh after selecting an Omarchy theme." >&2
     exit 1
   fi
 
@@ -55,12 +55,12 @@ write_setting_theme() {
 
   if [[ -f $PI_SETTINGS_PATH ]]; then
     tmp=$(mktemp "$PI_SETTINGS_PATH.XXXXXX")
-    jq '.theme = "omarchy-system"' "$PI_SETTINGS_PATH" >"$tmp"
+    jq '.theme = "inferna-system"' "$PI_SETTINGS_PATH" >"$tmp"
     mv "$tmp" "$PI_SETTINGS_PATH"
   else
     cat >"$PI_SETTINGS_PATH" <<EOF
 {
-  "theme": "omarchy-system"
+  "theme": "inferna-system"
 }
 EOF
   fi

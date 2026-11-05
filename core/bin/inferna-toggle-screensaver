@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle screensaver availability
+# inferna:summary=Toggle screensaver availability
 
-omarchy-toggle screensaver-off
+inferna-toggle screensaver-off
 
-if omarchy-toggle-enabled screensaver-off; then
-  omarchy-notification-send -g 󱄄 "$(omarchy-i18n screensaver.disabled)"
+if inferna-toggle-enabled screensaver-off; then
+  inferna-notification-send -g 󱄄 "$(inferna-i18n screensaver.disabled)"
 else
-  omarchy-notification-send -g 󱄄 "$(omarchy-i18n screensaver.enabled)"
+  inferna-notification-send -g 󱄄 "$(inferna-i18n screensaver.enabled)"
 fi

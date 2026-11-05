@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List the user-installed themes that came from a git clone
-# omarchy:examples=omarchy theme extras
+# inferna:summary=List the user-installed themes that came from a git clone
+# inferna:examples=inferna theme extras
 
 # Exits nonzero when there are none, so a caller can ask whether any exist
 # without reading the list. A symlinked theme is someone's working copy and a

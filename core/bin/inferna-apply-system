@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply Omarchy system setup in the installed target
-# omarchy:group=apply
-# omarchy:requires-sudo=true
-# omarchy:examples=omarchy apply system --install-user dhh --first-install
-# omarchy:hidden=true
+# inferna:summary=Apply Omarchy system setup in the installed target
+# inferna:group=apply
+# inferna:requires-sudo=true
+# inferna:examples=inferna apply system --install-user dhh --first-install
+# inferna:hidden=true
 
 set -euo pipefail
 
 usage() {
   cat <<USAGE
-Usage: omarchy apply system --install-user USER [--first-install|--upgrade]
+Usage: inferna apply system --install-user USER [--first-install|--upgrade]
        omarchy apply system --defer-provisioning --first-install
 
 Runs root-owned Omarchy system setup. The ISO calls this in the target chroot
 after packages are installed and the target user exists. It also calls
-omarchy-apply-hardware, so hardware setup cannot be accidentally skipped.
+inferna-apply-hardware, so hardware setup cannot be accidentally skipped.
 
 --defer-provisioning runs without an install user: deferred-provisioning installs create the user at
 first boot, so scripts that grant group memberships record them in
@@ -59,7 +59,7 @@ while (($#)); do
 done
 
 if (( EUID != 0 )); then
-  echo "Error: omarchy-apply-system must run as root" >&2
+  echo "Error: inferna-apply-system must run as root" >&2
   exit 1
 fi
 
@@ -82,7 +82,7 @@ export OMARCHY_FIRST_INSTALL="$first_install"
 export OMARCHY_UPGRADE="$upgrade"
 export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
 export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$OMARCHY_PATH/install}"
-export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/omarchy-install.log}"
+export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 source "$OMARCHY_INSTALL/helpers/logging.sh"
@@ -91,9 +91,9 @@ start_install_log
 source "$OMARCHY_INSTALL/config/all.sh"
 
 if (( defer_provisioning )); then
-  omarchy-apply-hardware --defer-provisioning
+  inferna-apply-hardware --defer-provisioning
 else
-  omarchy-apply-hardware --install-user "$install_user"
+  inferna-apply-hardware --install-user "$install_user"
 fi
 
 source "$OMARCHY_INSTALL/login/all.sh"

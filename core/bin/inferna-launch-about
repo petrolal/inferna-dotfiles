@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the fastfetch TUI that gives information about the current system.
+# inferna:summary=Launch the fastfetch TUI that gives information about the current system.
 
 # The size that hugs the About content depends on the terminal font and the user's
 # logo, so it can only be measured from inside the terminal. We remember the size
@@ -35,7 +35,7 @@ POLL_SECONDS=0.5
 
 # fastfetch has no animation of its own, so the sheen is ours. It knows about a
 # logo and nothing about About, which is why it is a file of its own.
-source omarchy-branding-about-animation
+source inferna-branding-about-animation
 
 # A user's own fastfetch config can relocate or restyle the logo in ways this
 # measurement cannot see, so leave sizing to the float rule in that case. It can
@@ -88,12 +88,12 @@ write_about_config() {
   [[ -n $ABOUT_CONFIG ]] || return 0
 
   headings=$(jq -n \
-    --arg hardware "$(about_heading Hardware)" --arg hardware_to "$(about_heading "$(omarchy-i18n about.hardware)")" \
-    --arg software "$(about_heading Software)" --arg software_to "$(about_heading "$(omarchy-i18n about.software)")" \
-    --arg age "$(about_heading "Age / Uptime / Update")" --arg age_to "$(about_heading "$(omarchy-i18n about.ageUptimeUpdate)")" \
+    --arg hardware "$(about_heading Hardware)" --arg hardware_to "$(about_heading "$(inferna-i18n about.hardware)")" \
+    --arg software "$(about_heading Software)" --arg software_to "$(about_heading "$(inferna-i18n about.software)")" \
+    --arg age "$(about_heading "Age / Uptime / Update")" --arg age_to "$(about_heading "$(inferna-i18n about.ageUptimeUpdate)")" \
     '{($hardware): $hardware_to, ($software): $software_to, ($age): $age_to}')
   keys=$(jq -n \
-    --arg age "$(omarchy-i18n about.osAge)" --arg uptime "$(omarchy-i18n about.uptime)" --arg update "$(omarchy-i18n about.update)" \
+    --arg age "$(inferna-i18n about.osAge)" --arg uptime "$(inferna-i18n about.uptime)" --arg update "$(inferna-i18n about.update)" \
     '{"OS Age": $age, "Uptime": $uptime, "Update": $update}')
 
   mkdir -p "${ABOUT_CONFIG%/*}"
@@ -421,4 +421,4 @@ if [[ ${1:-} == "--render" ]]; then
 fi
 
 presize_window
-exec omarchy-launch-or-focus-tui --app-id=org.omarchy.about omarchy-launch-about --render
+exec inferna-launch-or-focus-tui --app-id=org.omarchy.about inferna-launch-about --render

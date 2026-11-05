@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Monitor sleep preparation and lock before suspend
-# omarchy:group=system
-# omarchy:hidden=true
+# inferna:summary=Monitor sleep preparation and lock before suspend
+# inferna:group=system
+# inferna:hidden=true
 
 consume_sleep_events() {
   local line sleep_lock
-  sleep_lock="$OMARCHY_PATH/bin/omarchy-system-sleep-lock"
+  sleep_lock="$OMARCHY_PATH/bin/inferna-system-sleep-lock"
 
   while IFS= read -r line; do
     if [[ $line == *"boolean true"* ]]; then
@@ -51,7 +51,7 @@ case ${1:-} in
     ;;
 esac
 
-sleep_monitor="$OMARCHY_PATH/bin/omarchy-system-sleep-monitor"
+sleep_monitor="$OMARCHY_PATH/bin/inferna-system-sleep-monitor"
 
 exec systemd-inhibit \
   --what=sleep \

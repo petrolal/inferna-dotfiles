@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove FIDO2 authentication from sudo and polkit
-# omarchy:requires-sudo=true
+# inferna:summary=Remove FIDO2 authentication from sudo and polkit
+# inferna:requires-sudo=true
 
 set -e
 
@@ -35,6 +35,6 @@ if [[ -e $authdir || -L $authdir ]]; then
 fi
 
 echo "Removing FIDO2 packages..."
-omarchy-pkg-drop libfido2 pam-u2f
+inferna-pkg-drop libfido2 pam-u2f
 
 echo -e "\e[32mFIDO2 authentication has been completely removed.\e[0m"

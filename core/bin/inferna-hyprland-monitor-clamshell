@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply clamshell display state to Hyprland monitors
-# omarchy:hidden=true
+# inferna:summary=Apply clamshell display state to Hyprland monitors
+# inferna:hidden=true
 
 TOGGLES_DIR="$HOME/.local/state/inferna/toggles/hypr"
 CLAMSHELL_FLAG="$TOGGLES_DIR/internal-monitor-clamshell.lua"
@@ -10,7 +10,7 @@ SCALE_STATE="$TOGGLES_DIR/internal-monitor-scale"
 MONITOR_LUA="$HOME/.config/hypr/monitors.lua"
 MONITOR_SETTINGS="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/monitors/settings"
 
-INTERNAL=$(omarchy-hyprland-monitor-laptop)
+INTERNAL=$(inferna-hyprland-monitor-laptop)
 
 # INTERNAL is written into generated Lua and hyprctl eval/dispatch below, so a
 # name that is not a plain connector string could execute on the next reload.
@@ -143,7 +143,7 @@ saved_internal_monitor_value() {
   *) return 0 ;;
   esac
 
-  identity=$(omarchy-hyprland-monitor-identity "$INTERNAL")
+  identity=$(inferna-hyprland-monitor-identity "$INTERNAL")
   # The identity is the last field: lines saved before rotation was saved lack
   # the transform before it.
   awk -F'\t' -v identity="$identity" -v field="$field" '$NF == identity { print $field; exit }' "$MONITOR_SETTINGS"
@@ -243,7 +243,7 @@ enable_internal_output() {
   # is physically connected and no other output is enabled: that is the unplug
   # this recovers from (#16307). Otherwise the choice to run elsewhere stands,
   # and this is reached every two seconds by the docked poll.
-  omarchy-hw-external-monitors || other_output_enabled || enable="disabled = false, "
+  inferna-hw-external-monitors || other_output_enabled || enable="disabled = false, "
   hyprctl eval "hl.monitor({ output = \"$INTERNAL\", ${enable}mode = \"$mode\", position = \"$position\", scale = $scale })" >/dev/null 2>&1 || true
 }
 
@@ -296,10 +296,10 @@ enable_internal() {
   fi
 
   if (( changed )); then
-    omarchy-restart-hyprctl
+    inferna-restart-hyprctl
   fi
 
-  [[ -f $MANUAL_DISABLE_FLAG ]] && omarchy-hyprland-monitor-external-active && return 0
+  [[ -f $MANUAL_DISABLE_FLAG ]] && inferna-hyprland-monitor-external-active && return 0
   sync_internal_scale
 
   if (( changed )); then
@@ -319,14 +319,14 @@ disable_internal() {
 
   if [[ ! -f $CLAMSHELL_FLAG ]] || [[ $(< "$CLAMSHELL_FLAG") != $config ]]; then
     printf '%s\n' "$config" >"$CLAMSHELL_FLAG"
-    omarchy-restart-hyprctl
+    inferna-restart-hyprctl
   fi
 }
 
-omarchy-hyprland-monitor-internal recover >/dev/null 2>&1 || true
-omarchy-hyprland-monitor-internal-mirror recover >/dev/null 2>&1 || true
+inferna-hyprland-monitor-internal recover >/dev/null 2>&1 || true
+inferna-hyprland-monitor-internal-mirror recover >/dev/null 2>&1 || true
 
-if omarchy-hw-clamshell && omarchy-hyprland-monitor-external-active; then
+if inferna-hw-clamshell && inferna-hyprland-monitor-external-active; then
   disable_internal
 else
   enable_internal

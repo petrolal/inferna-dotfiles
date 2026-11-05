@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Kimchi usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Kimchi usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Kimchi usage into one display-ready JSON record.
 
 The plan, prepaid credits, and spend budgets come from the gateway endpoints
@@ -156,7 +156,7 @@ def gateway():
 
 
 def get_json(url, key):
-  request = urllib.request.Request(url, headers={"Authorization": f"Bearer {key}", "Accept": "application/json", "User-Agent": "omarchy-agent-usage-kimchi"})
+  request = urllib.request.Request(url, headers={"Authorization": f"Bearer {key}", "Accept": "application/json", "User-Agent": "inferna-agent-usage-kimchi"})
   return open_json(request, timeout=8)
 
 

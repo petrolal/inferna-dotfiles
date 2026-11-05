@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Regenerate the AI agent usage data files
-# omarchy:args=[--force] [--limits-only] [--except <agent>] [agent...]
-# omarchy:examples=omarchy agent usage-update | omarchy agent usage-update claude | omarchy agent usage-update --except codex
+# inferna:summary=Regenerate the AI agent usage data files
+# inferna:args=[--force] [--limits-only] [--except <agent>] [agent...]
+# inferna:examples=inferna agent usage-update | inferna agent usage-update claude | inferna agent usage-update --except codex
 
-# Each omarchy-agent-usage-<agent> collector prints one display-ready JSON
+# Each inferna-agent-usage-<agent> collector prints one display-ready JSON
 # record; this writes them to ~/.local/state/inferna/agents/usage/ where the
 # agents panel watches them. Adding an agent is adding a collector — the
 # panel picks up any record that appears here.
@@ -43,7 +43,7 @@ collect() {
   local collector="$1" agent="$2"
   local record tmp
   if ! record=$("$collector" "${flags[@]}") || [[ -z $record ]] || ! jq -e . >/dev/null 2>&1 <<<"$record"; then
-    echo "omarchy-agent-usage-update: $agent collector failed" >&2
+    echo "inferna-agent-usage-update: $agent collector failed" >&2
     return 1
   fi
   tmp=$(mktemp "$USAGE_DIR/.$agent.XXXXXX")
@@ -55,7 +55,7 @@ collect() {
 # records name them from the registry, so bring it up to date first.
 accounts_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/accounts"
 if [[ -d $accounts_dir ]]; then
-  "$OMARCHY_PATH/bin/omarchy-agent-account-state" refresh
+  "$OMARCHY_PATH/bin/inferna-agent-account-state" refresh
 fi
 
 # Collectors forced together read the Codex rollouts they share once between
@@ -64,9 +64,9 @@ fi
 export OMARCHY_AGENT_USAGE_REFRESH_AT=${EPOCHREALTIME/,/.}
 
 pids=()
-for collector in "$OMARCHY_PATH"/bin/omarchy-agent-usage-*; do
+for collector in "$OMARCHY_PATH"/bin/inferna-agent-usage-*; do
   [[ -x $collector ]] || continue
-  agent="${collector##*/omarchy-agent-usage-}"
+  agent="${collector##*/inferna-agent-usage-}"
   [[ $agent == "update" ]] && continue
   wanted "$agent" || continue
   collect "$collector" "$agent" &
@@ -83,10 +83,10 @@ done
 # collected once more; the limits probes it repeats are still cached.
 for agent in claude codex grok; do
   if wanted "$agent" && [[ -f $accounts_dir/$agent.json ]]; then
-    switched=$("$OMARCHY_PATH/bin/omarchy-agent-account-state" autoswitch "$agent")
+    switched=$("$OMARCHY_PATH/bin/inferna-agent-account-state" autoswitch "$agent")
     if [[ -n $switched ]]; then
       flags=(--limits-only)
-      collect "$OMARCHY_PATH/bin/omarchy-agent-usage-$agent" "$agent" || status=1
+      collect "$OMARCHY_PATH/bin/inferna-agent-usage-$agent" "$agent" || status=1
     fi
   fi
 done

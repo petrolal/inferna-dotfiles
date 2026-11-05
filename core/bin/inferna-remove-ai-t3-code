@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove T3 Code along with its configuration and workspaces.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove T3 Code along with its configuration and workspaces.
+# inferna:requires-sudo=true
 
 set -e
 
 # Installs from before the AppImage came from these packages.
-omarchy-pkg-drop t3code-bin t3code-nightly-bin
+inferna-pkg-drop t3code-bin t3code-nightly-bin
 
 # A `t3` link to one of T3 Code's launchers would only dangle once it is gone.
 case $(readlink "$HOME/.local/bin/t3" || true) in

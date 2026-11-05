@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Finish the hardware setup an image build deferred to this machine
-# omarchy:requires-sudo=true
-# omarchy:hidden=true
+# inferna:summary=Finish the hardware setup an image build deferred to this machine
+# inferna:requires-sudo=true
+# inferna:hidden=true
 
-# Started by omarchy-provision-hardware.service on every boot while an image's
+# Started by inferna-provision-hardware.service on every boot while an image's
 # deferred steps remain (see install/helpers/image-target.sh), and safe to call
 # from a platform's own first boot as well: runs are serialised. The first run
 # retires the image's build manifest, so from then on this machine is itself.
@@ -27,7 +27,7 @@ if (( EUID == 0 )); then
   export OMARCHY_PATH=/usr/share/omarchy
   export PATH=/usr/share/omarchy/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
 elif [[ -z ${OMARCHY_IMAGE_ROOT:-} || -z ${OMARCHY_PATH:-} ]]; then
-  fail "omarchy-provision-hardware must run as root"
+  fail "inferna-provision-hardware must run as root"
 fi
 export OMARCHY_INSTALL=$OMARCHY_PATH/install
 export OMARCHY_INSTALL_USER=""
@@ -35,7 +35,7 @@ export OMARCHY_INSTALL_USER=""
 source "$OMARCHY_INSTALL/helpers/logging.sh"
 source "$OMARCHY_INSTALL/helpers/image-target.sh"
 omarchy_image_init
-export OMARCHY_INSTALL_LOG_FILE=$omarchy_image_root/var/log/omarchy-install.log
+export OMARCHY_INSTALL_LOG_FILE=$omarchy_image_root/var/log/inferna-install.log
 
 queue_present() {
   [[ -e $omarchy_image_queue || -L $omarchy_image_queue ]]
@@ -55,7 +55,7 @@ work_present || exit 0
 if omarchy_image_manifest_present; then
   omarchy_image_read_manifest || exit 1
   mv -f "$omarchy_image_manifest" "$omarchy_image_manifest.booted" || fail "could not retire $omarchy_image_manifest"
-  live_platform=$(omarchy-hw-platform) || live_platform=unknown
+  live_platform=$(inferna-hw-platform) || live_platform=unknown
   echo "First boot of an image built for $omarchy_image_platform, on $live_platform hardware"
 fi
 
@@ -141,7 +141,7 @@ done
 
 if [[ -e $omarchy_image_boot_rebuild || $(initramfs_inputs) != "$(<"$omarchy_image_initramfs_baseline")" ]]; then
   echo "Rebuilding the initramfs for the deferred hardware setup"
-  if omarchy-cmd-present limine-mkinitcpio; then
+  if inferna-cmd-present limine-mkinitcpio; then
     limine-mkinitcpio </dev/null >>"$OMARCHY_INSTALL_LOG_FILE" 2>&1
   else
     mkinitcpio -P </dev/null >>"$OMARCHY_INSTALL_LOG_FILE" 2>&1

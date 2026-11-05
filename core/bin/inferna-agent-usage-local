@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the self-hosted model usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the self-hosted model usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect self-hosted model usage into one display-ready JSON record.
 
 Every other collector counts what a subscription or a provider bills. This
@@ -198,7 +198,7 @@ HARNESSES = ("hermes", "kimi", "qwen", "vibe")
 
 
 def harness(name):
-  path = os.path.join(os.environ["OMARCHY_PATH"], "bin", f"omarchy-agent-usage-{name}")
+  path = os.path.join(os.environ["OMARCHY_PATH"], "bin", f"inferna-agent-usage-{name}")
   loader = importlib.machinery.SourceFileLoader(f"omarchy_agent_usage_{name}", path)
   module = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
   loader.exec_module(module)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true when clamshell mode is active
-# omarchy:hidden=true
+# inferna:summary=Returns true when clamshell mode is active
+# inferna:hidden=true
 
 # Clamshell = lid closed while driving one or more external monitors.
-omarchy-hw-laptop-closed && omarchy-hw-external-monitors
+inferna-hw-laptop-closed && inferna-hw-external-monitors

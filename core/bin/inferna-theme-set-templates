@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Generate themed config files from Omarchy templates
-# omarchy:hidden=true
+# inferna:summary=Generate themed config files from Omarchy templates
+# inferna:hidden=true
 
 TEMPLATES_DIR="$OMARCHY_PATH/default/themed"
 USER_TEMPLATES_DIR="$HOME/.config/inferna/themed"
@@ -438,7 +438,7 @@ if [[ -f $COLORS_FILE ]]; then
   # shades, mode/theme_type) is shared with every other colors.toml consumer.
   while IFS=$'\t' read -r key value; do
     THEME_COLORS[$key]="$value"
-  done < <(omarchy-theme-color --file "$COLORS_FILE" --all)
+  done < <(inferna-theme-color --file "$COLORS_FILE" --all)
 
   for key in "${!THEME_COLORS[@]}"; do
     add_template_value "$key" "${THEME_COLORS[$key]}"
@@ -451,4 +451,4 @@ if [[ -f $COLORS_FILE ]]; then
 fi
 
 apply_shell_section_overrides
-omarchy-theme-set-glass "$NEXT_THEME_DIR"
+inferna-theme-set-glass "$NEXT_THEME_DIR"

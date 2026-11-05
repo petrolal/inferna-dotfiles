@@ -14,9 +14,12 @@ local function env_or(name, fallback)
   return value
 end
 
+local inferna_core = env_or("INFERNA_PATH", env_or("OMARCHY_PATH", "/usr/share/inferna"))
+
 return {
   home = home,
   config_home = env_or("XDG_CONFIG_HOME", home .. "/.config"),
   state_home = env_or("XDG_STATE_HOME", home .. "/.local/state"),
-  omarchy_path = env_or("OMARCHY_PATH", "/usr/share/omarchy"),
+  inferna_path = inferna_core,
+  omarchy_path = inferna_core,
 }

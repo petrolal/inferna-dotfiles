@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Resize the active webcam recording overlay
-# omarchy:group=capture
-# omarchy:args=<smaller|larger|reset|small|medium|large>
-# omarchy:examples=omarchy capture webcam resize smaller | omarchy-capture-webcam-resize reset
+# inferna:summary=Resize the active webcam recording overlay
+# inferna:group=capture
+# inferna:args=<smaller|larger|reset|small|medium|large>
+# inferna:examples=inferna capture webcam resize smaller | inferna-capture-webcam-resize reset
 
 set -euo pipefail
 
 readonly MARGIN=40
-# Has to resolve to whatever omarchy-capture-screenrecording writes, fallback
+# Has to resolve to whatever inferna-capture-screenrecording writes, fallback
 # included, or a recording without a session runtime dir anchors the camera to
 # the whole monitor instead of the region it recorded.
-readonly REGION_FILE="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/omarchy}/omarchy-screenrecord-region"
+readonly REGION_FILE="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/omarchy}/inferna-screenrecord-region"
 
 usage() {
-  echo "Usage: omarchy-capture-webcam-resize <smaller|larger|reset|small|medium|large>" >&2
+  echo "Usage: inferna-capture-webcam-resize <smaller|larger|reset|small|medium|large>" >&2
   exit 1
 }
 

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Transcode an image into ASCII/Unicode art text
-# omarchy:group=transcode
-# omarchy:name=ascii
-# omarchy:args=<input-image.svg|png> <output-path> [--width <columns>] [--height <rows>] [--mode <braille|block>] [--threshold <percent>] [--invert]
-# omarchy:examples=omarchy transcode ascii ~/logo.svg /tmp/logo.txt | omarchy transcode ascii ~/logo.png ~/.config/inferna/branding/screensaver.txt --width 80
+# inferna:summary=Transcode an image into ASCII/Unicode art text
+# inferna:group=transcode
+# inferna:name=ascii
+# inferna:args=<input-image.svg|png> <output-path> [--width <columns>] [--height <rows>] [--mode <braille|block>] [--threshold <percent>] [--invert]
+# inferna:examples=inferna transcode ascii ~/logo.svg /tmp/logo.txt | inferna transcode ascii ~/logo.png ~/.config/inferna/branding/screensaver.txt --width 80
 
 set -o pipefail
 
 usage() {
   cat <<'EOF'
-Usage: omarchy-transcode-ascii <input-image.svg|png> <output-path> [options]
+Usage: inferna-transcode-ascii <input-image.svg|png> <output-path> [options]
 
 Transcodes an image into ASCII/Unicode art text.
 

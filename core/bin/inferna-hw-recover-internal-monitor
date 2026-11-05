@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Clear the internal-monitor-disable toggle if no external display is connected.
+# inferna:summary=Clear the internal-monitor-disable toggle if no external display is connected.
 
 TOGGLE="$HOME/.local/state/inferna/toggles/hypr/internal-monitor-disable.lua"
 
-if [[ -f $TOGGLE ]] && ! omarchy-hw-external-monitors; then
+if [[ -f $TOGGLE ]] && ! inferna-hw-external-monitors; then
   rm -f "$TOGGLE"
 fi

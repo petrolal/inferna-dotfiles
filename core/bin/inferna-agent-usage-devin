@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Devin usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Devin usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Devin usage into one display-ready JSON record.
 
 Token stats come from the Devin CLI session database at

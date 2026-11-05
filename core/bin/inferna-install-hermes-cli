@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Hermes Desktop for the default agent; its runtime provides the hermes command
-# omarchy:args=<--check|--now|--retire-mise>
-# omarchy:examples=omarchy install hermes cli --now | omarchy install hermes cli --check
-# omarchy:requires-sudo=true
+# inferna:summary=Install Hermes Desktop for the default agent; its runtime provides the hermes command
+# inferna:args=<--check|--now|--retire-mise>
+# inferna:examples=inferna install hermes cli --now | inferna install hermes cli --check
+# inferna:requires-sudo=true
 
 # There is one Hermes on a machine, and it is the desktop app's. hermes-desktop
 # ships upstream's installer and the release it was built from, and that
@@ -11,9 +11,9 @@
 # ~/.hermes with its own venv, which `hermes update` fast-forwards. The mise
 # build this replaced had no checkout, so nothing an update could move.
 # Choosing Hermes as the default agent therefore installs the app, the way
-# Install > AI does, short of opening its window; see omarchy-install-ai-hermes.
+# Install > AI does, short of opening its window; see inferna-install-ai-hermes.
 # Hermes is only ever installed through the app: --check asks whether the
-# app's Hermes is in and its command is what omarchy-agent would run, and
+# app's Hermes is in and its command is what inferna-agent would run, and
 # --now installs the app whatever else answered to hermes before, saving
 # whatever held the command's name aside before upstream's installer takes it.
 #
@@ -46,7 +46,7 @@ command_path="$HOME/.local/bin/hermes"
 # under the x86_64 name, which still counts rather than being seeded again.
 release_dir="$runtime/apps/desktop/release"
 native_app="$release_dir/linux-unpacked"
-if omarchy-hw-aarch64; then
+if inferna-hw-aarch64; then
   arm_app="$release_dir/linux-arm64-unpacked"
   if [[ -e $arm_app || -L $arm_app || ( ! -e $native_app && ! -L $native_app ) ]]; then
     native_app=$arm_app
@@ -57,7 +57,7 @@ fi
 # wrapper that merely mentions it is not mistaken for it, and the tool it
 # built. Running the wrapper built Hermes through mise, so it is never run to
 # find out whether Hermes is there.
-legacy_marker='# Written by omarchy-install-hermes-cli.'
+legacy_marker='# Written by inferna-install-hermes-cli.'
 legacy_tool='pipx:hermes-agent[extras=all]'
 
 legacy_stub() {
@@ -111,7 +111,7 @@ retire_mise() {
     return 0
   fi
   echo "Could not remove the Hermes that mise built. Finish by hand:" >&2
-  if omarchy-cmd-missing mise; then
+  if inferna-cmd-missing mise; then
     echo "  omarchy pkg add mise" >&2
   fi
   echo "  mise rm -g '$legacy_tool'" >&2
@@ -156,7 +156,7 @@ help_defines_flag() {
   grep -qE -- "$1(]|[[:space:]][[:upper:]]|[[:space:]]{2}|$)" <<<"$2"
 }
 
-# Probed for the flags omarchy-agent actually passes -- --query to seed the
+# Probed for the flags inferna-agent actually passes -- --query to seed the
 # session and --tui to keep it interactive -- rather than a marker standing in
 # for them.
 hermes_prompt_ready() {
@@ -176,7 +176,7 @@ ours() {
   [[ -f $command_path && ! -L $command_path ]] && grep -qF "$HERMES_HOME/" "$command_path"
 }
 
-# What omarchy-agent runs is whichever hermes is first on PATH, and Omarchy puts
+# What inferna-agent runs is whichever hermes is first on PATH, and Omarchy puts
 # mise's shims ahead of ~/.local/bin. So the command the probe vets has to be
 # the one PATH finds, or the agent is on a different Hermes than the one set
 # up. A PATH that finds none is not in the way: the theme unit asks from a
@@ -218,7 +218,7 @@ installed() {
   if legacy_owned; then
     return 1
   fi
-  omarchy-pkg-present hermes-desktop && ours && [[ -f $runtime/.hermes-bootstrap-complete ]] && native_app_complete && hermes_prompt_ready
+  inferna-pkg-present hermes-desktop && ours && [[ -f $runtime/.hermes-bootstrap-complete ]] && native_app_complete && hermes_prompt_ready
 }
 
 # Once a Hermes answers at the command's path, the environment the retired
@@ -233,7 +233,7 @@ settle_path() {
   fi
   if ! on_path; then
     echo "$command_path is ready, but 'hermes' on PATH is $(shadowing_hermes), which is what the default agent runs." >&2
-    echo "Remove or reorder it, then run omarchy-install-hermes-cli --now again." >&2
+    echo "Remove or reorder it, then run inferna-install-hermes-cli --now again." >&2
     return 1
   fi
 }
@@ -317,7 +317,7 @@ unshallow_runtime() {
       waited=$(( waited + 2 ))
     done
     if git_busy_in_runtime; then
-      echo "Hermes is still working in $runtime. Let it finish, then run omarchy-install-hermes-cli --now again." >&2
+      echo "Hermes is still working in $runtime. Let it finish, then run inferna-install-hermes-cli --now again." >&2
       return 1
     fi
     if [[ -e $lock && -n $(find "$lock" -mmin +1 2>/dev/null) ]]; then
@@ -330,7 +330,7 @@ unshallow_runtime() {
       sleep 2
     fi
   done
-  echo "Could not fetch the Hermes history from origin. Check the network, then run omarchy-install-hermes-cli --now again." >&2
+  echo "Could not fetch the Hermes history from origin. Check the network, then run inferna-install-hermes-cli --now again." >&2
   return 1
 }
 
@@ -350,7 +350,7 @@ case "$mode" in
   ;;
 --now) ;;
 *)
-  echo "Usage: omarchy-install-hermes-cli <--check|--now|--retire-mise>" >&2
+  echo "Usage: inferna-install-hermes-cli <--check|--now|--retire-mise>" >&2
   exit 1
   ;;
 esac
@@ -364,9 +364,9 @@ if installed; then
   exit 0
 fi
 
-if ! omarchy-pkg-present hermes-desktop; then
+if ! inferna-pkg-present hermes-desktop; then
   echo "Installing Hermes Desktop..."
-  omarchy-pkg-add hermes-desktop
+  inferna-pkg-add hermes-desktop
 fi
 
 if [[ ! -r /usr/share/hermes-desktop/install.sh || ! -r /usr/share/hermes-desktop/runtime.patch ]] ||
@@ -537,11 +537,11 @@ PY
   set_up=true
 fi
 
-# What omarchy-agent runs is the command, not the venv, so the command is what
+# What inferna-agent runs is the command, not the venv, so the command is what
 # has to answer for the seeded sessions.
 if ! hermes_prompt_ready; then
   echo "Hermes is installed at $runtime, but $command_path does not run the interactive seeded sessions Omarchy needs." >&2
-  echo "Update Hermes with 'hermes update', then run omarchy-install-hermes-cli --now again." >&2
+  echo "Update Hermes with 'hermes update', then run inferna-install-hermes-cli --now again." >&2
   exit 1
 fi
 
@@ -551,6 +551,6 @@ settle_path || exit 1
 # terminal and reports to the journal.
 if [[ $set_up == "true" ]]; then
   echo "Matching Hermes to the current theme once it is set up..."
-  systemctl --user stop omarchy-hermes-theme.service 2>/dev/null || true
-  systemd-run --user --quiet --collect --unit=omarchy-hermes-theme omarchy-theme-set-hermes --wait
+  systemctl --user stop inferna-hermes-theme.service 2>/dev/null || true
+  systemd-run --user --quiet --collect --unit=inferna-hermes-theme inferna-theme-set-hermes --wait
 fi

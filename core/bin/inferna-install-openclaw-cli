@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install OpenClaw for the default agent as the self-updating copy under ~/.openclaw
-# omarchy:args=<--check|--now>
-# omarchy:examples=omarchy install openclaw cli --now | omarchy install openclaw cli --check
-# omarchy:requires-sudo=true
+# inferna:summary=Install OpenClaw for the default agent as the self-updating copy under ~/.openclaw
+# inferna:args=<--check|--now>
+# inferna:examples=inferna install openclaw cli --now | inferna install openclaw cli --check
+# inferna:requires-sudo=true
 
 # There is one OpenClaw on a machine, and it is the one under ~/.openclaw that
 # upstream's install-cli.sh makes: a private Node and the package in a prefix
@@ -13,7 +13,7 @@
 # the runtime: the release Omarchy ships and the installer that came with it.
 # The CLI, the gateway service and the Install > AI web app all run this copy.
 #
-# Each mode is named outright, like omarchy-install-hermes-cli: the default
+# Each mode is named outright, like inferna-install-hermes-cli: the default
 # agent asks --check first and opens a terminal for --now only on a no.
 
 set -euo pipefail
@@ -54,7 +54,7 @@ command_ours() {
   [[ ! -e $command_path && ! -L $command_path ]] || [[ $(readlink -- "$command_path") == "$runtime_command" ]]
 }
 
-# What omarchy-agent, the web app and a terminal run is whichever openclaw their
+# What inferna-agent, the web app and a terminal run is whichever openclaw their
 # PATH finds first, and the order differs between them: the desktop puts mise's
 # shims first, a terminal adds mise's tools ahead of those, and omarchy update
 # runs migrations on a fixed system PATH without /usr/local/bin, the shims or
@@ -112,7 +112,7 @@ package_shadowed() {
   local found
   found=$(foreign_openclaw "$package_command") || return 1
   echo "Another openclaw is on PATH at $found, which Omarchy could run instead of $package_command." >&2
-  echo "Remove it, then run omarchy-install-openclaw-cli --now again." >&2
+  echo "Remove it, then run inferna-install-openclaw-cli --now again." >&2
 }
 
 package_in_the_way() {
@@ -123,7 +123,7 @@ package_in_the_way() {
 # The package counts too: without it --now has a pacman step to take, and
 # answering yes here would run that where no terminal can ask for a password.
 installed() {
-  omarchy-pkg-present openclaw && runtime_runs && on_path
+  inferna-pkg-present openclaw && runtime_runs && on_path
 }
 
 # A unit's ExecStart, as the program and the script it is handed: the first
@@ -237,7 +237,7 @@ settle_gateway() {
   gateway_serves && return 0
   echo "Repairing OpenClaw's state for $prefix..."
   if ! systemctl --user stop openclaw-gateway.service; then
-    echo "Could not stop the OpenClaw gateway service to repair it. Stop it, then run omarchy-install-openclaw-cli --now again." >&2
+    echo "Could not stop the OpenClaw gateway service to repair it. Stop it, then run inferna-install-openclaw-cli --now again." >&2
     return 1
   fi
   "$runtime_command" doctor --fix --non-interactive </dev/null || true
@@ -295,13 +295,13 @@ stopped_note() {
 
 case "$mode" in
 --check)
-  if omarchy-pkg-present openclaw && package_is_openclaw; then
+  if inferna-pkg-present openclaw && package_is_openclaw; then
     if moved_before || package_shadowed 2>/dev/null; then exit 1; else exit 0; fi
   fi
   if installed; then exit 0; else exit 1; fi
   ;;
 --now)
-  if omarchy-pkg-present openclaw && package_is_openclaw; then
+  if inferna-pkg-present openclaw && package_is_openclaw; then
     if moved_before; then
       package_in_the_way
       exit 1
@@ -311,7 +311,7 @@ case "$mode" in
   fi
   ;;
 *)
-  echo "Usage: omarchy-install-openclaw-cli <--check|--now>" >&2
+  echo "Usage: inferna-install-openclaw-cli <--check|--now>" >&2
   exit 1
   ;;
 esac
@@ -322,12 +322,12 @@ esac
 # tool run here uses, so the migration can tell them from a failed setup.
 users_own=79
 if ! command_ours; then
-  echo "$command_path is not the OpenClaw Omarchy set up. Move it aside, then run omarchy-install-openclaw-cli --now again." >&2
+  echo "$command_path is not the OpenClaw Omarchy set up. Move it aside, then run inferna-install-openclaw-cli --now again." >&2
   exit "$users_own"
 fi
 if ! path_clear; then
   echo "Another openclaw is on PATH at $(foreign_openclaw), which Omarchy could run instead of $runtime_command." >&2
-  echo "Remove it, then run omarchy-install-openclaw-cli --now again." >&2
+  echo "Remove it, then run inferna-install-openclaw-cli --now again." >&2
   exit "$users_own"
 fi
 
@@ -339,13 +339,13 @@ if ! runtime_runs; then
 fi
 if [[ $seeding == "true" ]] && foreign_gateway; then
   echo "The OpenClaw gateway service runs another OpenClaw, which setting one up in $prefix would take over." >&2
-  echo "Remove that gateway with 'openclaw gateway uninstall', then run omarchy-install-openclaw-cli --now again." >&2
+  echo "Remove that gateway with 'openclaw gateway uninstall', then run inferna-install-openclaw-cli --now again." >&2
   exit "$users_own"
 fi
 
-if ! omarchy-pkg-present openclaw; then
+if ! inferna-pkg-present openclaw; then
   echo "Installing OpenClaw..."
-  omarchy-pkg-add openclaw
+  inferna-pkg-add openclaw
 fi
 if package_is_openclaw; then
   if moved_before; then
@@ -436,6 +436,6 @@ done
 
 if ! on_path; then
   echo "$runtime_command is ready, but another openclaw is on PATH at $(foreign_openclaw), which Omarchy could run instead." >&2
-  echo "Remove it, then run omarchy-install-openclaw-cli --now again." >&2
+  echo "Remove it, then run inferna-install-openclaw-cli --now again." >&2
   exit 1
 fi

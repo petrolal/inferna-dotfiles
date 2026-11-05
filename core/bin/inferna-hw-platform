@@ -1,6 +1,6 @@
 #!/usr/bin/env bash -p
 
-# omarchy:summary=Print the hardware platform: x86, aarch64, aarch64-apple, aarch64-qualcomm, aarch64-n1x or aarch64-gb10.
+# inferna:summary=Print the hardware platform: x86, aarch64, aarch64-apple, aarch64-qualcomm, aarch64-n1x or aarch64-gb10.
 
 # Platform names are the CPU architecture, then the hardware family when it
 # needs handling of its own: x86, aarch64 (every ARM machine without one),

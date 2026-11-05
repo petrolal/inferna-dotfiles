@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Lock before suspend and wait for the session lock to become secure
-# omarchy:group=system
-# omarchy:hidden=true
+# inferna:summary=Lock before suspend and wait for the session lock to become secure
+# inferna:group=system
+# inferna:hidden=true
 
 # Overrunning the budget is the failure this whole path exists to prevent:
 # logind stops honouring the inhibitor and suspends mid-lock. Every call below
@@ -61,7 +61,7 @@ lock_ipc() {
   printf -v seconds '%d.%03d' $((limit / 1000)) $((limit % 1000))
 
   OMARCHY_SHELL_IPC_TIMEOUT="$seconds" \
-    timeout --kill-after=0.1s "$seconds" omarchy-shell "$@"
+    timeout --kill-after=0.1s "$seconds" inferna-shell "$@"
 }
 
 # The shell answers refusals on stdout with a zero exit, so the reply is the
@@ -70,7 +70,7 @@ lock_ipc() {
 # a request that may not have landed costs nothing to repeat.
 request_lock() {
   case $(lock_ipc "$lock_timeout_ms" lock lock 2>/dev/null) in
-    missing-pam) report_unsecured "no lock screen is configured" "$(omarchy-i18n lock.unlockedNoLockScreen)" ;;
+    missing-pam) report_unsecured "no lock screen is configured" "$(inferna-i18n lock.unlockedNoLockScreen)" ;;
   esac
 }
 
@@ -87,7 +87,7 @@ sync_clamshell() {
   # Lid transitions can temporarily stall Hyprland IPC. This is best-effort:
   # the lid binding and monitor watcher also reconcile clamshell state.
   timeout --kill-after=0.1s 0.4s \
-    omarchy-hyprland-monitor-clamshell >/dev/null 2>&1 || true
+    inferna-hyprland-monitor-clamshell >/dev/null 2>&1 || true
 }
 
 # logind suspends whether or not this wait succeeded, so a failure here means
@@ -95,11 +95,11 @@ sync_clamshell() {
 # anyone finds out, and it lands on the screen they unlock into. The journal
 # gets the reason in English ($1), the notification the user's language ($2).
 report_unsecured() {
-  printf 'omarchy-system-sleep-lock: suspending without a secure lock (%s)\n' \
+  printf 'inferna-system-sleep-lock: suspending without a secure lock (%s)\n' \
     "$1" >&2
 
-  omarchy-notification-send -u critical -g 󰌾 \
-    "$(omarchy-i18n lock.didNotLock)" \
+  inferna-notification-send -u critical -g 󰌾 \
+    "$(inferna-i18n lock.didNotLock)" \
     "$2" >/dev/null 2>&1 || true
 
   exit 1
@@ -122,4 +122,4 @@ while (( $(remaining_ms) > 0 )); do
   sleep "$poll_interval"
 done
 
-report_unsecured "the shell did not secure the session within ${budget_ms}ms" "$(omarchy-i18n lock.unlockedTimeout "$budget_ms")"
+report_unsecured "the shell did not secure the session within ${budget_ms}ms" "$(inferna-i18n lock.unlockedTimeout "$budget_ms")"

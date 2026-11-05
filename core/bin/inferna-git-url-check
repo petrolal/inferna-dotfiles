@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check that a git URL names a repository, not a transport helper
-# omarchy:args=<git-url>
-# omarchy:hidden=true
+# inferna:summary=Check that a git URL names a repository, not a transport helper
+# inferna:args=<git-url>
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -23,7 +23,7 @@ set -euo pipefail
 TRANSPORTS=(ssh git git+ssh ssh+git http https ftp ftps file)
 
 fail() {
-  echo "omarchy-git-url-check: $*" >&2
+  echo "inferna-git-url-check: $*" >&2
   exit 1
 }
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Heroic Games Launcher and its game libraries, configs, and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Heroic Games Launcher and its game libraries, configs, and caches.
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-pkg-drop heroic-games-launcher-bin
+inferna-pkg-drop heroic-games-launcher-bin
 
 rm -rf \
   "$HOME/.config/heroic" \

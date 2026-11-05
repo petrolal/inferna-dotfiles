@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch Files in the active terminal's current directory
+# inferna:summary=Launch Files in the active terminal's current directory
 
-exec setsid uwsm-app -- nautilus --new-window "$(omarchy-cmd-terminal-cwd)"
+exec setsid uwsm-app -- nautilus --new-window "$(inferna-cmd-terminal-cwd)"

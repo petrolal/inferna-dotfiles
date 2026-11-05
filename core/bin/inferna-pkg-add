@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Arch packages if they are missing
-# omarchy:args=<packages...>
-# omarchy:examples=omarchy pkg add jq ripgrep
-# omarchy:requires-sudo=true
+# inferna:summary=Install Arch packages if they are missing
+# inferna:args=<packages...>
+# inferna:examples=inferna pkg add jq ripgrep
+# inferna:requires-sudo=true
 
 if [[ -f /etc/NIXOS ]]; then
   echo -e "\e[34m[Inferna NixOS]\e[0m Installing packages for NixOS user profile: $*"
@@ -15,7 +15,7 @@ if [[ -f /etc/NIXOS ]]; then
   exit 0
 fi
 
-if omarchy-pkg-missing "$@"; then
+if inferna-pkg-missing "$@"; then
   if (( EUID == 0 )); then
     pacman -S --noconfirm --needed -- "$@" || exit 1
   else

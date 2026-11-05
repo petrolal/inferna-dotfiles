@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Export the current theme's gum styling into the environment
-# omarchy:hidden=true
+# inferna:summary=Export the current theme's gum styling into the environment
+# inferna:hidden=true
 
 # Meant to be sourced. gum_env.lua is fed into the compositor environment via
 # hl.env at login, but that environment is captured once and is not refreshed on

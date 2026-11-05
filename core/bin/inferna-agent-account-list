@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List Claude, Codex, and Grok subscription accounts and their limits
-# omarchy:args=[claude|codex|grok] [--json]
-# omarchy:examples=omarchy agent account list | omarchy agent account list claude --json
+# inferna:summary=List Claude, Codex, and Grok subscription accounts and their limits
+# inferna:args=[claude|codex|grok] [--json]
+# inferna:examples=inferna agent account list | inferna agent account list claude --json
 
 set -uo pipefail
 
@@ -13,14 +13,14 @@ for arg in "$@"; do
   claude | codex | grok) provider="$arg" ;;
   --json) json=true ;;
   *)
-    echo "Usage: omarchy-agent-account-list [claude|codex|grok] [--json]" >&2
+    echo "Usage: inferna-agent-account-list [claude|codex|grok] [--json]" >&2
     exit 1
     ;;
   esac
 done
 
 usage_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
-accounts=$(omarchy-agent-account-state list $provider) || exit 1
+accounts=$(inferna-agent-account-state list $provider) || exit 1
 
 # Join each account with the limits its provider's usage record last saw. With
 # a single account the collectors keep its limits at the record's top level.

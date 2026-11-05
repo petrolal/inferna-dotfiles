@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the default package set for this computer's platform, or for the named one: the base list plus its architecture's and platform's additions.
-# omarchy:args=[x86|aarch64|aarch64-apple|aarch64-qualcomm|aarch64-n1x|aarch64-gb10]
-# omarchy:hidden=true
+# inferna:summary=Print the default package set for this computer's platform, or for the named one: the base list plus its architecture's and platform's additions.
+# inferna:args=[x86|aarch64|aarch64-apple|aarch64-qualcomm|aarch64-n1x|aarch64-gb10]
+# inferna:hidden=true
 
 set -eo pipefail
 
 platform=${1:-}
 if [[ -z $platform ]]; then
-  platform=$(omarchy-hw-platform)
+  platform=$(inferna-hw-platform)
 fi
 
 # Image builders written before the platform names settled pass the old ones.
@@ -48,7 +48,7 @@ names() {
 if [[ $platform == "x86" ]]; then
   names "${files[@]}" | awk '!seen[$0]++'
 else
-  names "${files[@]}" | awk -v skips=<(names "$OMARCHY_PATH/install/omarchy-x86_64-only.packages") '
+  names "${files[@]}" | awk -v skips=<(names "$OMARCHY_PATH/install/inferna-x86_64-only.packages") '
     BEGIN { while ((getline name < skips) > 0) skip[name] = 1 }
     !skip[$0] && !seen[$0]++'
 fi

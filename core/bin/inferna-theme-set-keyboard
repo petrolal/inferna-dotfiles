@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply the current theme keyboard color to supported keyboards
-# omarchy:hidden=true
+# inferna:summary=Apply the current theme keyboard color to supported keyboards
+# inferna:hidden=true
 
-omarchy-theme-set-keyboard-asus-rog
-omarchy-theme-set-keyboard-f16
+inferna-theme-set-keyboard-asus-rog
+inferna-theme-set-keyboard-f16

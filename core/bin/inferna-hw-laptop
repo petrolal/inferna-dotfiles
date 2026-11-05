@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true when running on a laptop (has a lid or laptop chassis).
+# inferna:summary=Returns true when running on a laptop (has a lid or laptop chassis).
 
 acpi_lid="${OMARCHY_ACPI_LID_PATH:-/proc/acpi/button/lid}"
 input_class="${OMARCHY_INPUT_CLASS_PATH:-/sys/class/input}"

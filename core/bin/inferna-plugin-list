@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List discovered shell plugins
-# omarchy:group=plugin
-# omarchy:args=[--json]
+# inferna:summary=List discovered shell plugins
+# inferna:group=plugin
+# inferna:args=[--json]
 
 set -euo pipefail
 
@@ -14,18 +14,18 @@ while (( $# > 0 )); do
     json="true"
     ;;
   -h | --help)
-    echo "Usage: omarchy plugin list [--json]"
+    echo "Usage: inferna plugin list [--json]"
     exit 0
     ;;
   *)
-    echo "omarchy-plugin-list: unknown option: $1" >&2
+    echo "inferna-plugin-list: unknown option: $1" >&2
     exit 1
     ;;
   esac
   shift
 done
 
-plugins=$(omarchy-shell shell listPlugins)
+plugins=$(inferna-shell shell listPlugins)
 
 if [[ $json == "true" ]]; then
   printf '%s\n' "$plugins"

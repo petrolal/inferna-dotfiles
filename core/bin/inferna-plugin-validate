@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Validate a plugin folder against the Omarchy plugin manifest schema
-# omarchy:group=plugin
-# omarchy:args=<plugin-folder>
-# omarchy:examples=omarchy plugin validate ./my-plugin
+# inferna:summary=Validate a plugin folder against the Omarchy plugin manifest schema
+# inferna:group=plugin
+# inferna:args=<plugin-folder>
+# inferna:examples=inferna plugin validate ./my-plugin
 
 # Mirrors the checks in shell/services/PluginRegistry.qml so the CLI refuses to
 # install anything the running shell would silently reject (or worse, load
@@ -12,13 +12,13 @@
 set -o pipefail
 
 fail() {
-  echo "omarchy-plugin-validate: $*" >&2
+  echo "inferna-plugin-validate: $*" >&2
   exit 1
 }
 
 if [[ ${1:-} == -h || ${1:-} == --help ]]; then
   cat <<USAGE
-Usage: omarchy plugin validate <plugin-folder>
+Usage: inferna plugin validate <plugin-folder>
 
 Checks a plugin folder's manifest.json against the schema the shell enforces:
 schemaVersion, required fields, safe relative entry points that exist, an entry

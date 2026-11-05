@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install a Nerd Font package and switch the system to it
-# omarchy:args=<display-name> <package> <family>
-# omarchy:examples=omarchy install font 'Cascadia Mono' ttf-cascadia-mono-nerd 'CaskaydiaMono Nerd Font'
+# inferna:summary=Install a Nerd Font package and switch the system to it
+# inferna:args=<display-name> <package> <family>
+# inferna:examples=inferna install font 'Cascadia Mono' ttf-cascadia-mono-nerd 'CaskaydiaMono Nerd Font'
 
 name="${1-}"
 package="${2-}"
 family="${3-}"
 
 if [[ -z $name || -z $package || -z $family ]]; then
-  echo "Usage: omarchy-install-font <display-name> <package> <family>" >&2
+  echo "Usage: inferna-install-font <display-name> <package> <family>" >&2
   exit 1
 fi
 
@@ -17,5 +17,5 @@ printf -v install_message '%q' "Installing ${name}..."
 printf -v package_arg '%q' "$package"
 printf -v family_arg '%q' "$family"
 
-exec omarchy-launch-floating-terminal-with-presentation \
-  "echo ${install_message}; omarchy-pkg-add ${package_arg} && sleep 2 && omarchy-font-set ${family_arg}"
+exec inferna-launch-floating-terminal-with-presentation \
+  "echo ${install_message}; inferna-pkg-add ${package_arg} && sleep 2 && inferna-font-set ${family_arg}"

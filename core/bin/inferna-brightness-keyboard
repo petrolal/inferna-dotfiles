@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Adjust keyboard backlight brightness using available steps.
-# omarchy:args=[--no-osd] <up|down|cycle|off|restore>
+# inferna:summary=Adjust keyboard backlight brightness using available steps.
+# inferna:args=[--no-osd] <up|down|cycle|off|restore>
 
 no_osd=0
 if [[ ${1:-} == "--no-osd" ]]; then
@@ -27,7 +27,7 @@ fi
 
 # The level from before the first "off" since the last "restore", so the lock
 # blanking again after a resume cannot save its own 0 over it.
-saved="${XDG_RUNTIME_DIR:-/tmp}/omarchy-brightness-keyboard-$device"
+saved="${XDG_RUNTIME_DIR:-/tmp}/inferna-brightness-keyboard-$device"
 
 if [[ $direction == "off" || $direction == "restore" ]]; then
   # The lock runs blank and wake as separate processes that can overlap.
@@ -77,4 +77,4 @@ fi
 
 # Set the new brightness.
 brightnessctl -d "$device" set "$new_brightness" >/dev/null
-(( no_osd )) || omarchy-osd -i keyboard -p "$(( new_brightness * 100 / max_brightness ))"
+(( no_osd )) || inferna-osd -i keyboard -p "$(( new_brightness * 100 / max_brightness ))"

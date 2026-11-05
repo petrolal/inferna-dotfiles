@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the current working directory of the active terminal window
-# omarchy:args=[terminal-pid]
-# omarchy:hidden=true
+# inferna:summary=Print the current working directory of the active terminal window
+# inferna:args=[terminal-pid]
+# inferna:hidden=true
 
 terminal_pid=${1:-$(hyprctl activewindow | awk '/pid:/ {print $2}')}
-kitty_socket="$XDG_RUNTIME_DIR/omarchy-kitty-$terminal_pid"
+kitty_socket="$XDG_RUNTIME_DIR/inferna-kitty-$terminal_pid"
 cwd=""
 
 if [[ -S $kitty_socket ]]; then

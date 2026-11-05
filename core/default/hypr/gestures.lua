@@ -11,9 +11,12 @@
 hl.gesture({ fingers = 3, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ workspace = "r-1" })) end })
 hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ workspace = "r+1" })) end })
 
--- Push up for the AI console, and pull down for the Omarchy menu.
+-- Push up for the AI console, and pull down for the Inferna menu.
 hl.gesture({ fingers = 3, direction = "up", action = "special", workspace_name = "qconsole" })
-hl.gesture({ fingers = 3, direction = "down", action = function() hl.dispatch(hl.dsp.global("omarchy:menu.root")) end })
+hl.gesture({ fingers = 3, direction = "down", action = function()
+  local ok = pcall(function() hl.dispatch(hl.dsp.global("inferna:menu.root")) end)
+  if not ok then hl.dispatch(hl.dsp.global("omarchy:menu.root")) end
+end })
 
 -- Four fingers take the active window along to the neighbouring workspace.
 hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.window.move({ workspace = "r-1" })) end })

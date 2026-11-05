@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync Omarchy theme to all Obsidian vaults
-# omarchy:hidden=true
+# inferna:summary=Sync Omarchy theme to all Obsidian vaults
+# inferna:hidden=true
 
 CURRENT_THEME_DIR="$HOME/.local/state/inferna/current/theme"
 

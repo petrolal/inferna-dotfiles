@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy theme to T3 Code
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy theme to T3 Code
+# inferna:hidden=true
 
 set -euo pipefail
 

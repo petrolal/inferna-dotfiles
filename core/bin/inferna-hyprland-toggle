@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle permanent Hyprland flags by copying them into a directory that's sourced entirely.
-# omarchy:args=<flag-name> [on|off|toggle]
+# inferna:summary=Toggle permanent Hyprland flags by copying them into a directory that's sourced entirely.
+# inferna:args=<flag-name> [on|off|toggle]
 
 usage() {
-  echo "Usage: omarchy-hyprland-toggle <flag-name> [on|off|toggle]" >&2
+  echo "Usage: inferna-hyprland-toggle <flag-name> [on|off|toggle]" >&2
 }
 
 if (($# < 1)); then
@@ -51,4 +51,4 @@ case $ACTION in
     ;;
 esac
 
-omarchy-restart-hyprctl
+inferna-restart-hyprctl

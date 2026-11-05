@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Send an IPC call to the running Omarchy shell
-# omarchy:args=[-q] <target> <method> [args...]
-# omarchy:examples=omarchy shell shell ping | omarchy-shell shell toggle omarchy.menu '{"menu":"root"}'
+# inferna:summary=Send an IPC call to the running Omarchy shell
+# inferna:args=[-q] <target> <method> [args...]
+# inferna:examples=inferna shell shell ping | inferna-shell shell toggle omarchy.menu '{"menu":"root"}'
 
 QUIET=0
 if [[ ${1:-} == "-q" ]]; then
@@ -18,7 +18,7 @@ fail() {
 
 if (( $# == 0 )) || [[ $1 == "-h" || $1 == "--help" ]]; then
   cat <<USAGE
-Usage: omarchy-shell [-q] <target> <method> [args...]
+Usage: inferna-shell [-q] <target> <method> [args...]
 
 Forwards an IPC call to the running Omarchy shell. The shell is expected
 to already be running; this command does not start it.
@@ -28,10 +28,10 @@ Options:
       the shell, target, method, or arguments are unavailable.
 
 Examples:
-  omarchy-shell shell ping
-  omarchy-shell -q omarchy.indicators refresh
-  omarchy-shell shell listPlugins
-  omarchy-shell shell toggle omarchy.menu '{"menu":"root"}'
+  inferna-shell shell ping
+  inferna-shell -q omarchy.indicators refresh
+  inferna-shell shell listPlugins
+  inferna-shell shell toggle omarchy.menu '{"menu":"root"}'
 USAGE
   exit 0
 fi
@@ -39,10 +39,10 @@ fi
 if [[ -z ${OMARCHY_PATH:-} ]]; then
   export OMARCHY_PATH="${INFERNA_PATH:-$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)}"
 fi
-[[ -f $OMARCHY_PATH/shell/shell.qml ]] || fail "omarchy-shell config not found: $OMARCHY_PATH/shell/shell.qml"
+[[ -f $OMARCHY_PATH/shell/shell.qml ]] || fail "inferna-shell config not found: $OMARCHY_PATH/shell/shell.qml"
 
 # qs matches instances by display, and a caller from outside the session (an
-# ssh or TTY omarchy-restart-shell, and the migrations it runs for) has none,
+# ssh or TTY inferna-restart-shell, and the migrations it runs for) has none,
 # so recover it from the compositor socket. A display whose socket is gone is
 # no better: a second Hyprland session, say one started from a TTY, leaves its
 # own in the systemd user environment, and services started after it would
@@ -70,7 +70,7 @@ fi
 # Like qs ipc, the socket belongs to one shell, the one running this config on
 # this display, and the shell derives its name from the same two values.
 socket_id=$(printf '%s\n%s' "$OMARCHY_PATH/shell" "${WAYLAND_DISPLAY:-}" | md5sum)
-socket="${XDG_RUNTIME_DIR:-/run/user/$UID}/omarchy-shell-${socket_id:0:16}.sock"
+socket="${XDG_RUNTIME_DIR:-/run/user/$UID}/inferna-shell-${socket_id:0:16}.sock"
 request="$*"
 if command -v socat >/dev/null 2>&1 && [[ -S $socket && $request != *$'\x1e'* && $request != *$'\x1f'* ]]; then
   saved_ifs=$IFS
@@ -100,7 +100,7 @@ if command -v socat >/dev/null 2>&1 && [[ -S $socket && $request != *$'\x1e'* &&
   else
     # Out of time, cut off, or failed after the request went out: the call
     # may have run, so it is reported rather than retried.
-    fail "omarchy-shell is not responding"
+    fail "inferna-shell is not responding"
   fi
 fi
 
@@ -112,9 +112,9 @@ output=$(timeout --kill-after=1s "$ipc_timeout" qs ipc -n -p "$OMARCHY_PATH/shel
 ipc_status=$?
 
 if (( ipc_status == 124 || ipc_status == 137 )); then
-  fail "omarchy-shell is not responding"
+  fail "inferna-shell is not responding"
 elif (( ipc_status != 0 )); then
-  fail "omarchy-shell is not running"
+  fail "inferna-shell is not running"
 fi
 
 case $output in
@@ -124,7 +124,7 @@ case $output in
   # A starting shell answers on stdout and exits 0, so a ping reads it as up
   # and the next call's answer as a result. It is as unreachable as none.
   "Not ready to accept queries yet"*)
-    fail "omarchy-shell is not ready"
+    fail "inferna-shell is not ready"
     ;;
 esac
 

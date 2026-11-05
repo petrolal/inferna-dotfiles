@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Update system firmware using fwupd. Ensures the fwupd EFI binary is installed
-# omarchy:requires-sudo=true
+# inferna:summary=Update system firmware using fwupd. Ensures the fwupd EFI binary is installed
+# inferna:requires-sudo=true
 
 set -e
 echo -e "\e[32mUpdate Firmware\e[0m"
 
-if omarchy-cmd-missing fwupdmgr; then
-  omarchy-pkg-add fwupd
+if inferna-cmd-missing fwupdmgr; then
+  inferna-pkg-add fwupd
 fi
 
 if [[ -d /sys/firmware/efi ]] && [[ -f /usr/lib/fwupd/efi/fwupdx64.efi ]]; then

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove or uninstall the selected launcher entry
-# omarchy:args=<desktop-id> <name>
-# omarchy:hidden=true
-# omarchy:requires-sudo=true
+# inferna:summary=Remove or uninstall the selected launcher entry
+# inferna:args=<desktop-id> <name>
+# inferna:hidden=true
+# inferna:requires-sudo=true
 
 set -e
 
@@ -11,7 +11,7 @@ desktop_id="${1-}"
 entry_name="${2-}"
 
 if [[ -z $desktop_id ]]; then
-  echo "Usage: omarchy-remove-launcher-entry <desktop-id> <name>" >&2
+  echo "Usage: inferna-remove-launcher-entry <desktop-id> <name>" >&2
   exit 1
 fi
 
@@ -67,18 +67,18 @@ desktop_name="${desktop_file##*/}"
 desktop_name="${desktop_name%.desktop}"
 exec_line="$(sed -n 's/^Exec=//p' "$desktop_file" | head -1)"
 
-if [[ $exec_line =~ omarchy-launch-webapp|omarchy-webapp-handler ]]; then
-  OMARCHY_REMOVE_NOTIFY=false omarchy-webapp-remove "$desktop_name"
+if [[ $exec_line =~ inferna-launch-webapp|inferna-webapp-handler ]]; then
+  OMARCHY_REMOVE_NOTIFY=false inferna-webapp-remove "$desktop_name"
   exit 0
 fi
 
 if [[ $exec_line =~ (^|[[:space:]])(\$TERMINAL|xdg-terminal-exec)[[:space:]].*-e([[:space:]]|$) ]]; then
-  OMARCHY_REMOVE_NOTIFY=false omarchy-tui-remove "$desktop_name"
+  OMARCHY_REMOVE_NOTIFY=false inferna-tui-remove "$desktop_name"
   exit 0
 fi
 
-if [[ $desktop_file_name == "slack.desktop" && $exec_line =~ ^omarchy-launch-slack($|[[:space:]]) ]]; then
-  exec omarchy-launch-floating-terminal-with-presentation omarchy-remove-service-slack
+if [[ $desktop_file_name == "slack.desktop" && $exec_line =~ ^inferna-launch-slack($|[[:space:]]) ]]; then
+  exec inferna-launch-floating-terminal-with-presentation inferna-remove-service-slack
 fi
 
 if is_user_desktop_file; then
@@ -92,13 +92,13 @@ if package_name="$(pacman -Qqo "$desktop_file" 2>/dev/null | head -1)" && [[ -n 
   display_name="${entry_name:-$desktop_name}"
   quoted_package="$(printf '%q' "$package_name")"
   quoted_display="$(printf '%q' "$display_name")"
-  exec omarchy-launch-floating-terminal-with-presentation "echo Uninstalling $quoted_display...; sudo pacman -Rns $quoted_package"
+  exec inferna-launch-floating-terminal-with-presentation "echo Uninstalling $quoted_display...; sudo pacman -Rns $quoted_package"
 fi
 
-if omarchy-cmd-present flatpak && flatpak info "${desktop_file_name%.desktop}" >/dev/null 2>&1; then
+if inferna-cmd-present flatpak && flatpak info "${desktop_file_name%.desktop}" >/dev/null 2>&1; then
   flatpak_id="${desktop_file_name%.desktop}"
   quoted_flatpak="$(printf '%q' "$flatpak_id")"
-  exec omarchy-launch-floating-terminal-with-presentation "flatpak uninstall $quoted_flatpak"
+  exec inferna-launch-floating-terminal-with-presentation "flatpak uninstall $quoted_flatpak"
 fi
 
 echo "Don't know how to uninstall $desktop_file_name" >&2

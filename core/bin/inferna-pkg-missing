@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true if any of the named packages are missing from the system (or false if they're all there).
-# omarchy:args=<packages...>
+# inferna:summary=Returns true if any of the named packages are missing from the system (or false if they're all there).
+# inferna:args=<packages...>
 
 for pkg in "$@"; do
   if ! pacman -Q -- "$pkg" &>/dev/null; then

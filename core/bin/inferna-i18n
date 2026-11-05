@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print a user-facing string in the current language
-# omarchy:args=[--count <n>] <key> [args...] | --number <value>
-# omarchy:hidden=true
+# inferna:summary=Print a user-facing string in the current language
+# inferna:args=[--count <n>] <key> [args...] | --number <value>
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -10,7 +10,7 @@ set -euo pipefail
 # English catalog and finally to the key itself. Catalog entries carry
 # %1-style tokens (the same convention as the shell catalogs), substituted
 # from the remaining arguments, so translations may reorder them freely.
-# The language is read the same way omarchy-language reads it; anything
+# The language is read the same way inferna-language reads it; anything
 # unexpected means English, the default.
 #
 # --count picks the form of a plural entry ({"one": ..., "other": ...}) by
@@ -23,14 +23,14 @@ count=null
 number_only=0
 if [[ ${1:-} == "--number" ]]; then
   if [[ ! ${2:-} =~ ^-?[0-9]+([.][0-9]+)?$ ]]; then
-    echo "Usage: omarchy-i18n --number <value>" >&2
+    echo "Usage: inferna-i18n --number <value>" >&2
     exit 1
   fi
   number_only=1
   set -- __number "$2"
 elif [[ ${1:-} == "--count" ]]; then
   if [[ ! ${2:-} =~ ^-?[0-9]+$ ]]; then
-    echo "Usage: omarchy-i18n [--count <n>] <key> [args...]" >&2
+    echo "Usage: inferna-i18n [--count <n>] <key> [args...]" >&2
     exit 1
   fi
   count=$2
@@ -39,7 +39,7 @@ fi
 
 key=${1:-}
 if [[ -z $key ]]; then
-  echo "Usage: omarchy-i18n [--count <n>] <key> [args...]" >&2
+  echo "Usage: inferna-i18n [--count <n>] <key> [args...]" >&2
   exit 1
 fi
 shift

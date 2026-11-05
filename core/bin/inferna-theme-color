@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Resolve semantic colors from an Omarchy theme colors.toml
-# omarchy:args=[--file <colors.toml>] (--all | --raw | <key> [fallback])
-# omarchy:hidden=true
+# inferna:summary=Resolve semantic colors from an Omarchy theme colors.toml
+# inferna:args=[--file <colors.toml>] (--all | --raw | <key> [fallback])
+# inferna:hidden=true
 
 # Shared colors.toml parser/resolver. The alias/fallback cascade mirrors what
-# omarchy-theme-set-templates bakes into the generated configs at theme-set
+# inferna-theme-set-templates bakes into the generated configs at theme-set
 # time, so every consumer (templates, OSC sequences, tmux, GNOME, previews)
 # resolves the exact same palette.
 #
@@ -23,7 +23,7 @@ QUERY_KEY=""
 QUERY_FALLBACK=""
 
 usage() {
-  echo "Usage: omarchy-theme-color [--file <colors.toml>] (--all | --raw | <key> [fallback])"
+  echo "Usage: inferna-theme-color [--file <colors.toml>] (--all | --raw | <key> [fallback])"
 }
 
 while (( $# > 0 )); do
@@ -157,12 +157,12 @@ parse_colors_file() {
     # decimals, and bare words. Rejections are announced so a third-party theme
     # doesn't lose a key silently and leave a raw {{ placeholder }} behind.
     if [[ ! $key =~ ^[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-]+$ ]]; then
-      printf 'omarchy-theme-color: skipping key with unsupported characters\n' >&2
+      printf 'inferna-theme-color: skipping key with unsupported characters\n' >&2
       continue
     fi
 
     if [[ ! $value =~ ^[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#(),._+/%\ -]*$ ]]; then
-      printf 'omarchy-theme-color: skipping %s: unsupported characters in value\n' "$key" >&2
+      printf 'inferna-theme-color: skipping %s: unsupported characters in value\n' "$key" >&2
       continue
     fi
 

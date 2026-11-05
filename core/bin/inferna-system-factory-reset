@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Factory-reset this machine back to its freshly-installed state
-# omarchy:group=setup
-# omarchy:requires-sudo=true
-# omarchy:examples=sudo omarchy-system-factory-reset
+# inferna:summary=Factory-reset this machine back to its freshly-installed state
+# inferna:group=setup
+# inferna:requires-sudo=true
+# inferna:examples=sudo inferna-system-factory-reset
 
 # Returns the machine to provisioning state — fully installed, no user, first-boot
 # setup pending — the state you want before selling or handing the machine on.
@@ -14,12 +14,12 @@
 # installed from that ISO can be reset; a machine upgraded to Quattro from an
 # earlier version has no baseline to return to and is turned away.
 #
-# The heavy lifting happens on the next boot via omarchy-system-factory-reset-finish, staged
+# The heavy lifting happens on the next boot via inferna-system-factory-reset-finish, staged
 # here. On encrypted installs the LUKS volume is re-keyed to a throwaway
 # passphrase with an auto-unlock keyfile for the provisioning window; first-boot setup
 # re-keys it to the new owner's password and removes the keyfile. A platform
 # whose boot chain the Limine UKI path can't drive rebuilds, verifies and
-# unlocks it through omarchy-lifecycle-dispatch.
+# unlocks it through inferna-lifecycle-dispatch.
 #
 # Honest limitations:
 #  - On unencrypted disks this is deletion, not forensic erasure. fstrim helps
@@ -31,14 +31,14 @@
 set -euo pipefail
 
 PROVISIONING_DIR=/var/lib/omarchy/provisioning
-PACKAGED_PATH=/usr/bin/omarchy-system-factory-reset
-# sudo drops OMARCHY_PATH from the environment, and omarchy-i18n, which
+PACKAGED_PATH=/usr/bin/inferna-system-factory-reset
+# sudo drops OMARCHY_PATH from the environment, and inferna-i18n, which
 # supplies every line of the prompts below, needs it there.
 export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
-TOP_MNT=/run/omarchy-system-factory-reset/top
-ESP_MNT=/run/omarchy-system-factory-reset/esp
-NEXT_NAME=@omarchy-reset-next
-LOG_FILE=/var/log/omarchy-system-factory-reset.log
+TOP_MNT=/run/inferna-system-factory-reset/top
+ESP_MNT=/run/inferna-system-factory-reset/esp
+NEXT_NAME=@inferna-reset-next
+LOG_FILE=/var/log/inferna-system-factory-reset.log
 
 # Never replace a newer checkout reset with a different installed implementation.
 if ! /usr/bin/cmp -s -- "${BASH_SOURCE[0]}" "$PACKAGED_PATH"; then
@@ -83,7 +83,7 @@ root_is_btrfs_at() {
   [[ $(findmnt -no FSTYPE /) == btrfs ]] && findmnt -no OPTIONS / | grep -q "subvol=/@\(,\|$\)"
 }
 
-DISPATCH="$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch"
+DISPATCH="$OMARCHY_PATH/bin/inferna-lifecycle-dispatch"
 
 # A platform whose boot package implements the reset operations rebuilds,
 # verifies and unlocks the factory root's boot chain itself; everywhere else
@@ -210,19 +210,19 @@ trap cleanup EXIT
 
 confirm_reset() {
   echo
-  gum style --bold --foreground 1 "$(omarchy-i18n reset.question)"
+  gum style --bold --foreground 1 "$(inferna-i18n reset.question)"
   echo
-  gum style "$(omarchy-i18n reset.willErase)"
-  gum style "  • $(omarchy-i18n reset.eraseAccounts)"
-  gum style "  • $(omarchy-i18n reset.erasePackages)"
-  gum style "  • $(omarchy-i18n reset.eraseIdentity)"
+  gum style "$(inferna-i18n reset.willErase)"
+  gum style "  • $(inferna-i18n reset.eraseAccounts)"
+  gum style "  • $(inferna-i18n reset.erasePackages)"
+  gum style "  • $(inferna-i18n reset.eraseIdentity)"
   echo
-  gum style "$(omarchy-i18n reset.nextBoot)"
-  gum style --foreground 8 "$(omarchy-i18n reset.notSecureErase)"
+  gum style "$(inferna-i18n reset.nextBoot)"
+  gum style --foreground 8 "$(inferna-i18n reset.notSecureErase)"
   echo
 
   local typed
-  typed=$(gum input --placeholder "$(omarchy-i18n reset.typeToContinue reset)" --prompt "> ") || exit 1
+  typed=$(gum input --placeholder "$(inferna-i18n reset.typeToContinue reset)" --prompt "> ") || exit 1
   [[ $typed == "reset" ]] || fail "Reset not confirmed."
 }
 
@@ -281,14 +281,14 @@ stage_luks_rekey() {
   [[ -e $device ]] || fail "LUKS device $device not found"
 
   echo
-  gum style "$(omarchy-i18n reset.confirmPassphrase)"
+  gum style "$(inferna-i18n reset.confirmPassphrase)"
   local current
   while true; do
-    current=$(gum input --password --placeholder "$(omarchy-i18n reset.passphrasePlaceholder)" --prompt "$(omarchy-i18n reset.passphrasePrompt)") || exit 1
+    current=$(gum input --password --placeholder "$(inferna-i18n reset.passphrasePlaceholder)" --prompt "$(inferna-i18n reset.passphrasePrompt)") || exit 1
     if cryptsetup open --test-passphrase --token-type passphrase-only --key-file <(printf '%s' "$current") "$device" 2>/dev/null; then
       break
     fi
-    gum style --foreground 1 "$(omarchy-i18n reset.passphraseWrong "$device")"
+    gum style --foreground 1 "$(inferna-i18n reset.passphraseWrong "$device")"
   done
 
   passphrase=$(generate_passphrase)
@@ -314,25 +314,25 @@ stage_luks_rekey() {
 
   install -d "$next/etc/limine-entry-tool.d" "$next/etc/mkinitcpio.conf.d"
   echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/omarchy/provisioning.key"' \
-    >"$next/etc/limine-entry-tool.d/99-omarchy-provisioning-unlock.conf"
+    >"$next/etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf"
   echo 'FILES+=(/etc/omarchy/provisioning.key)' \
-    >"$next/etc/mkinitcpio.conf.d/99-omarchy-provisioning-key.conf"
+    >"$next/etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf"
 }
 
 install_provisioning_units() {
   local next="$1" unit_src="$2"
 
-  install -Dm644 "$unit_src/omarchy-provision-owner.service" \
-    "$next/etc/systemd/system/omarchy-provision-owner.service"
-  install -Dm644 "$unit_src/omarchy-system-factory-reset-finish.service" \
-    "$next/etc/systemd/system/omarchy-system-factory-reset-finish.service"
+  install -Dm644 "$unit_src/inferna-provision-owner.service" \
+    "$next/etc/systemd/system/inferna-provision-owner.service"
+  install -Dm644 "$unit_src/inferna-system-factory-reset-finish.service" \
+    "$next/etc/systemd/system/inferna-system-factory-reset-finish.service"
 
   install -d "$next/etc/systemd/system/multi-user.target.wants" \
     "$next/etc/systemd/system/sysinit.target.wants"
-  ln -sf /etc/systemd/system/omarchy-provision-owner.service \
-    "$next/etc/systemd/system/multi-user.target.wants/omarchy-provision-owner.service"
-  ln -sf /etc/systemd/system/omarchy-system-factory-reset-finish.service \
-    "$next/etc/systemd/system/sysinit.target.wants/omarchy-system-factory-reset-finish.service"
+  ln -sf /etc/systemd/system/inferna-provision-owner.service \
+    "$next/etc/systemd/system/multi-user.target.wants/inferna-provision-owner.service"
+  ln -sf /etc/systemd/system/inferna-system-factory-reset-finish.service \
+    "$next/etc/systemd/system/sysinit.target.wants/inferna-system-factory-reset-finish.service"
 }
 
 # Start the ESP's limine.conf settings over from the shipped template and
@@ -516,7 +516,7 @@ rebuild_next_boot() {
   # lived. Recreate it and refresh the resume offset before the UKI build
   # bakes the cmdline; the empty placeholder directory has to go first so the
   # subvolume can be recreated.
-  if [[ -x $next/usr/bin/omarchy-hibernation-setup ]] && grep -q "/swap/swapfile" "$next/etc/fstab"; then
+  if [[ -x $next/usr/bin/inferna-hibernation-setup ]] && grep -q "/swap/swapfile" "$next/etc/fstab"; then
     log "Recreating the hibernation swapfile in the factory system"
     if [[ -d $next/swap ]] && ! btrfs subvolume show "$next/swap" >/dev/null 2>&1; then
       rmdir "$next/swap" 2>/dev/null || true
@@ -532,7 +532,7 @@ rebuild_next_boot() {
         "$next/etc/limine-entry-tool.d/resume.conf"
     fi
     if ! chroot "$next" env OMARCHY_PATH=/usr/share/omarchy \
-      /usr/bin/omarchy-hibernation-setup --force --no-rebuild >>"$LOG_FILE" 2>&1; then
+      /usr/bin/inferna-hibernation-setup --force --no-rebuild >>"$LOG_FILE" 2>&1; then
       fail "hibernation setup failed in the factory root (see $LOG_FILE)"
     fi
     [[ -f $next/swap/swapfile ]] ||
@@ -545,7 +545,7 @@ rebuild_next_boot() {
 
   # From here until the factory root takes over, the cleanup trap restores
   # this copy of the ESP's boot files on any failure.
-  esp_backup=$(mktemp -d /var/tmp/omarchy-system-factory-reset-esp.XXXXXX)
+  esp_backup=$(mktemp -d /var/tmp/inferna-system-factory-reset-esp.XXXXXX)
   backup_esp "$ESP_MNT" "$esp_backup"
   esp_restore=$ESP_MNT
 
@@ -635,7 +635,7 @@ stage_full_reset() {
   btrfs subvolume snapshot "$top/@factory" "$next" >>"$LOG_FILE"
 
   local unit_src="$next/usr/share/omarchy/install/provisioning"
-  [[ -f $unit_src/omarchy-provision-owner.service && -x $next/usr/bin/omarchy-provision-owner ]] ||
+  [[ -f $unit_src/inferna-provision-owner.service && -x $next/usr/bin/inferna-provision-owner ]] ||
     fail "the factory snapshot predates provisioning support; cannot reset from it"
 
   log "Scrubbing machine identity from the factory system"
@@ -671,7 +671,7 @@ stage_full_reset() {
   rebuild_next_boot "$next"
 
   log "Activating the factory system"
-  local old="@omarchy-old-$(date +%s)"
+  local old="@inferna-old-$(date +%s)"
   mv "$top/@" "$top/$old"
   # Until the factory root is at @ the reset is not committed: cleanup restores
   # the old root's boot files, or has the platform's boot package roll them
@@ -704,16 +704,16 @@ require_factory_snapshot() {
   [[ -d $TOP_MNT/@factory ]] && return 0
 
   echo
-  gum style --bold --foreground 3 "$(omarchy-i18n reset.noSnapshot)"
+  gum style --bold --foreground 3 "$(inferna-i18n reset.noSnapshot)"
   echo
-  gum style --width 80 "$(omarchy-i18n reset.noSnapshotWhy)"
+  gum style --width 80 "$(inferna-i18n reset.noSnapshotWhy)"
   echo
-  gum style --foreground 8 "$(omarchy-i18n reset.reinstallHint)"
+  gum style --foreground 8 "$(inferna-i18n reset.reinstallHint)"
   exit 1
 }
 
 main() {
-  omarchy-cmd-present btrfs || { echo "Error: btrfs-progs is required" >&2; exit 1; }
+  inferna-cmd-present btrfs || { echo "Error: btrfs-progs is required" >&2; exit 1; }
 
   root_is_btrfs_at || fail "reset requires the standard Omarchy Btrfs layout (subvol=@)"
 
@@ -747,11 +747,11 @@ main() {
   umount -R "$TOP_MNT" 2>/dev/null || true
 
   echo
-  gum style --bold "$(omarchy-i18n reset.staged)"
-  if gum confirm --affirmative "$(omarchy-i18n reset.rebootNow)" --negative "$(omarchy-i18n reset.rebootLater)" "$(omarchy-i18n reset.rebootQuestion)"; then
+  gum style --bold "$(inferna-i18n reset.staged)"
+  if gum confirm --affirmative "$(inferna-i18n reset.rebootNow)" --negative "$(inferna-i18n reset.rebootLater)" "$(inferna-i18n reset.rebootQuestion)"; then
     systemctl reboot
   else
-    gum style --foreground 3 "$(omarchy-i18n reset.stopUsing)"
+    gum style --foreground 3 "$(inferna-i18n reset.stopUsing)"
   fi
 }
 

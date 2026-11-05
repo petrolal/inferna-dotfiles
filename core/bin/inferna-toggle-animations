@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle animations, blur and shadows, which are slow without a GPU
-# omarchy:args=[toggle|on|off]
-# omarchy:examples=omarchy toggle animations | omarchy toggle animations off | omarchy toggle animations on
+# inferna:summary=Toggle animations, blur and shadows, which are slow without a GPU
+# inferna:args=[toggle|on|off]
+# inferna:examples=inferna toggle animations | inferna toggle animations off | inferna toggle animations on
 
 case ${1:-toggle} in
 toggle)
-  if omarchy-hyprland-animations-off; then
+  if inferna-hyprland-animations-off; then
     animations=on
   else
     animations=off
@@ -14,7 +14,7 @@ toggle)
   ;;
 on | off) animations=$1 ;;
 *)
-  echo "Usage: omarchy-toggle-animations [toggle|on|off]" >&2
+  echo "Usage: inferna-toggle-animations [toggle|on|off]" >&2
   exit 1
   ;;
 esac
@@ -26,18 +26,18 @@ without_gpu="$HOME/.local/state/inferna/toggles/animations-without-gpu"
 
 # The flag records animations being off, so on and off swap on the way through.
 if [[ $animations == "on" ]]; then
-  if [[ -e $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/omarchy-software-rendering ]]; then
+  if [[ -e $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/inferna-software-rendering ]]; then
     mkdir -p "${without_gpu%/*}"
     touch "$without_gpu"
   fi
-  omarchy-hyprland-toggle no-animations off
+  inferna-hyprland-toggle no-animations off
 else
   rm -f "$without_gpu"
-  omarchy-hyprland-toggle no-animations on
+  inferna-hyprland-toggle no-animations on
 fi
 
-if omarchy-hyprland-animations-off; then
-  omarchy-notification-send -g 󰗘 "$(omarchy-i18n animations.disabled)"
+if inferna-hyprland-animations-off; then
+  inferna-notification-send -g 󰗘 "$(inferna-i18n animations.disabled)"
 else
-  omarchy-notification-send -g 󰗘 "$(omarchy-i18n animations.enabled)"
+  inferna-notification-send -g 󰗘 "$(inferna-i18n animations.enabled)"
 fi

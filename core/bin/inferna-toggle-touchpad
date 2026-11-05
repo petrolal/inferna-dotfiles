@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Enable, disable, or toggle the touchpad
-# omarchy:args=[on|off|toggle]
+# inferna:summary=Enable, disable, or toggle the touchpad
+# inferna:args=[on|off|toggle]
 
-exec omarchy-toggle-input-device touchpad "${1:-toggle}"
+exec inferna-toggle-input-device touchpad "${1:-toggle}"

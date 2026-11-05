@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Refresh the ~/.config/chromium-flags.conf file from the Omarchy defaults.
+# inferna:summary=Refresh the ~/.config/chromium-flags.conf file from the Omarchy defaults.
 
 CONFIG_FILE="$HOME/.config/chromium-flags.conf"
 INSTALL_GOOGLE_ACCOUNTS=false
@@ -13,17 +13,17 @@ if [[ -f $CONFIG_FILE ]] && \
 fi
 
 # Refresh the Chromium configuration
-omarchy-refresh-config chromium-flags.conf
+inferna-refresh-config chromium-flags.conf
 
 # Install/refresh the native messaging hosts used by the bundled extensions
-omarchy-install-chromium-copy-url
-omarchy-install-chromium-ytdlp
+inferna-install-chromium-copy-url
+inferna-install-chromium-ytdlp
 
 # Re-install Google accounts if previously configured
 if [[ $INSTALL_GOOGLE_ACCOUNTS == "true" ]]; then
-  omarchy-install-chromium-google-account
+  inferna-install-chromium-google-account
 fi
 
 # Put the Snapdragon video decoding settings back. Last, so a failure here is
 # the command's result.
-omarchy-install-video-decode
+inferna-install-video-decode

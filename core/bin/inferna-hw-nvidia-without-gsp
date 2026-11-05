@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Detect whether the computer has an NVIDIA GPU without GSP firmware (Maxwell/Pascal/Volta).
+# inferna:summary=Detect whether the computer has an NVIDIA GPU without GSP firmware (Maxwell/Pascal/Volta).
 
 # Bounded at both ends, because the callers install the 580xx driver on a match
 # and it supports exactly this span. GSP firmware arrived with Turing, which is

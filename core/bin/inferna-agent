@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the default coding agent in a terminal
-# omarchy:args=[--inline] [--pick] [--local] [--local-model <recipe>] [--prefer-local] [--agent <id>]
-# omarchy:examples=omarchy agent | omarchy agent --inline | omarchy agent --local | omarchy agent --agent codex
+# inferna:summary=Launch the default coding agent in a terminal
+# inferna:args=[--inline] [--pick] [--local] [--local-model <recipe>] [--prefer-local] [--agent <id>]
+# inferna:examples=inferna agent | inferna agent --inline | inferna agent --local | inferna agent --agent codex
 
 inline=false
 pick=false
@@ -12,7 +12,7 @@ local_model=""
 agent_override=""
 
 # Flags only. A bare prompt would shadow the subcommands under this group, so
-# prompts go through omarchy-agent-prompt, which passes one here as --prompt.
+# prompts go through inferna-agent-prompt, which passes one here as --prompt.
 while (($#)); do
   case "$1" in
     --inline)
@@ -60,12 +60,12 @@ done
 # button on each subscription opens the harness made for it, Codex for OpenAI.
 if [[ -n $agent_override ]]; then
   agent=$agent_override
-  if omarchy-cmd-missing "$agent"; then
-    omarchy-notification-send "$(omarchy-i18n agents.harnessMissing "$agent")" "$(omarchy-i18n agents.harnessMissingBody "$agent")"
+  if inferna-cmd-missing "$agent"; then
+    inferna-notification-send "$(inferna-i18n agents.harnessMissing "$agent")" "$(inferna-i18n agents.harnessMissingBody "$agent")"
     exit 1
   fi
 else
-  agent=$(omarchy-default-agent)
+  agent=$(inferna-default-agent)
 fi
 
 # --prefer-local takes the local model when one is up and the usual agent when
@@ -73,7 +73,7 @@ fi
 # last started wins when it is running; any other running one will do. One
 # still loading is not up yet, and opening an agent on it would only error.
 if [[ $prefer_local == "true" && $use_local != "true" ]]; then
-  local_model=$(omarchy-agent-local status --json 2>/dev/null | jq -r '
+  local_model=$(inferna-agent-local status --json 2>/dev/null | jq -r '
     [.models // {} | to_entries[] | select(.value.unit == "active" and .value.sub_state == "running") | .key] as $up
     | if (.last as $last | $up | index($last)) != null then .last else ($up[0] // empty) end' 2>/dev/null)
   [[ -n $local_model ]] && use_local=true
@@ -85,7 +85,7 @@ fi
 if [[ $use_local == "true" && $agent != "pi" && $agent != "opencode" ]]; then
   local_agent=""
   for candidate in pi opencode; do
-    if omarchy-cmd-present "$candidate"; then
+    if inferna-cmd-present "$candidate"; then
       local_agent=$candidate
       break
     fi
@@ -95,7 +95,7 @@ if [[ $use_local == "true" && $agent != "pi" && $agent != "opencode" ]]; then
     # open the usual one rather than nothing.
     use_local=false
   elif [[ -z $local_agent ]]; then
-    omarchy-notification-send -u critical "$(omarchy-i18n agents.localUnsupported)" "$(omarchy-i18n agents.localUnsupportedBody)"
+    inferna-notification-send -u critical "$(inferna-i18n agents.localUnsupported)" "$(inferna-i18n agents.localUnsupportedBody)"
     exit 1
   else
     agent=$local_agent
@@ -106,14 +106,14 @@ fi
 # picked. --pick offers the choice instead of the error, which is what the
 # keybinding wants: a keypress that opens nothing explains nothing.
 if [[ -z $agent ]]; then
-  [[ $pick == "true" ]] && exec omarchy-menu summon setup.default.agent
+  [[ $pick == "true" ]] && exec inferna-menu summon setup.default.agent
   echo "Choose default agent with: omarchy default agent <name>" >&2
   exit 1
 fi
 
 # OpenClaw's launcher sets OpenClaw up when the package became the seed before
 # this user's OpenClaw moved, so with the package a missing command is its to fix.
-if omarchy-cmd-missing "$agent" && ! { [[ $agent == "openclaw" ]] && omarchy-pkg-present openclaw; }; then
+if inferna-cmd-missing "$agent" && ! { [[ $agent == "openclaw" ]] && inferna-pkg-present openclaw; }; then
   echo "$agent is not installed. Choose an installed agent with: omarchy default agent <name>" >&2
   exit 1
 fi
@@ -155,7 +155,7 @@ openclaw)
   # start while the gateway owns the state directory). It has no permission
   # prompts to skip, and --message seeds the session while keeping it
   # interactive.
-  command=(omarchy-launch-openclaw --tui)
+  command=(inferna-launch-openclaw --tui)
   [[ -n ${prompt:-} ]] && command+=(--message "$prompt")
   ;;
 codex)
@@ -272,7 +272,7 @@ esac
 # a launch-time overlay Omarchy owns, never by editing the agent's own config.
 # Only agents with such an overlay can be pointed there.
 if [[ $use_local == "true" ]]; then
-  mapfile -t overlay < <(omarchy-agent-local overlay "$agent" ${local_model:+"$local_model"})
+  mapfile -t overlay < <(inferna-agent-local overlay "$agent" ${local_model:+"$local_model"})
   (( ${#overlay[@]} == 3 )) || exit 1
   case "$agent" in
   opencode)
@@ -291,18 +291,18 @@ fi
 # agents panel or a crash report is not lost.
 if [[ -n ${prompt:-} && -n ${prompt_via_clipboard:-} ]]; then
   printf '%s' "$prompt" | wl-copy
-  omarchy-notification-send -g 󰅇 "$(omarchy-i18n agents.promptOnClipboard "$prompt_via_clipboard")" \
-    "$(omarchy-i18n agents.promptOnClipboardBody)"
+  inferna-notification-send -g 󰅇 "$(inferna-i18n agents.promptOnClipboard "$prompt_via_clipboard")" \
+    "$(inferna-i18n agents.promptOnClipboardBody)"
 fi
 
-# omarchy-mise-install's wrappers run `mise use` and `mise x`, current ones on
+# inferna-mise-install's wrappers run `mise use` and `mise x`, current ones on
 # lines of their own and older ones after an inline variable; either way
 # running one installs the tool it wraps. A symlink is the user's own install.
 mise_wrapper() {
   [[ ! -L $1 ]] && head -c 4096 "$1" | grep -qaE 'mise (use|x) '
 }
 
-# The user's own install in ~/.local/bin, which omarchy-default-agent counts as
+# The user's own install in ~/.local/bin, which inferna-default-agent counts as
 # installed, still wins over mise's lazy shim earlier on PATH, which would
 # install and run mise's copy instead. Once mise has installed its own, a
 # terminal runs that one, so the launcher does too. OpenClaw's command runs its
@@ -334,7 +334,7 @@ if [[ -n $home_env ]]; then
   fi
   unset "$account_pin"
   if [[ -z ${!home_env:-} ]]; then
-    home=$(omarchy-agent-account-home "$agent")
+    home=$(inferna-agent-account-home "$agent")
     account_env=(env -u "$home_env" "$account_pin=$home")
     [[ -n $home ]] && account_env+=("$home_env=$home")
     command=("${account_env[@]}" "${command[@]}")
@@ -346,5 +346,5 @@ if [[ $inline == "true" ]]; then
 else
   # A fixed app-id rather than the default org.omarchy.<binary>, so every agent
   # window shares one class for window rules and themes to single out.
-  exec omarchy-launch-tui --app-id=org.omarchy.agent "${command[@]}"
+  exec inferna-launch-tui --app-id=org.omarchy.agent "${command[@]}"
 fi

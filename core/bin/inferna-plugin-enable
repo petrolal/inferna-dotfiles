@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Enable a shell plugin
-# omarchy:group=plugin
-# omarchy:args=<id> [placement]
-# omarchy:examples=omarchy plugin enable acme.weather --section right
+# inferna:summary=Enable a shell plugin
+# inferna:group=plugin
+# inferna:args=<id> [placement]
+# inferna:examples=inferna plugin enable acme.weather --section right
 
 set -euo pipefail
 
 fail() {
-  echo "omarchy-plugin-enable: $*" >&2
+  echo "inferna-plugin-enable: $*" >&2
   exit 1
 }
 
 if [[ ${1:-} == "-h" || ${1:-} == "--help" ]]; then
-  echo "Usage: omarchy plugin enable <id> [placement]"
+  echo "Usage: inferna plugin enable <id> [placement]"
   exit 0
 fi
 
@@ -21,7 +21,7 @@ id="${1:-}"
 [[ -n $id ]] || fail "plugin id is required"
 shift
 
-if (( $# > 0 )) && omarchy-plugin-catalog | jq -e --arg id "$id" '
+if (( $# > 0 )) && inferna-plugin-catalog | jq -e --arg id "$id" '
   any(.[]; .id == $id and (.kinds | index("bar")))
 ' >/dev/null; then
   fail "'$id' is a bar; it replaces the bar in use rather than taking a place in one"
@@ -82,16 +82,16 @@ placement=$(jq -cn \
     + (if $after == "" then {} else {after: $after} end)
   ')
 
-result=$(omarchy-shell shell enablePlugin "$id" "$placement")
+result=$(inferna-shell shell enablePlugin "$id" "$placement")
 if [[ $result == "unknown" ]]; then
-  fail "plugin '$id' is not known; run: omarchy-shell shell rescanPlugins"
+  fail "plugin '$id' is not known; run: inferna-shell shell rescanPlugins"
 elif [[ $result != "ok" ]]; then
   fail "$result"
 fi
 
 if [[ $placement != "{}" ]]; then
   echo "Enabled and moved $id"
-elif omarchy-plugin-catalog | jq -e --arg id "$id" '
+elif inferna-plugin-catalog | jq -e --arg id "$id" '
   any(.[]; .id == $id and (.kinds | index("bar")))
 ' >/dev/null; then
   echo "Now using $id as the bar"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print active network status for the shell
-# omarchy:group=network
-# omarchy:args=[--verbose]
+# inferna:summary=Print active network status for the shell
+# inferna:group=network
+# inferna:args=[--verbose]
 
 verbose=false
 internet_probe=1.1.1.1
@@ -14,7 +14,7 @@ case "${1:-}" in
     verbose=true
     ;;
   *)
-    echo "Usage: omarchy-network-status [--verbose]" >&2
+    echo "Usage: inferna-network-status [--verbose]" >&2
     exit 2
     ;;
 esac
@@ -59,7 +59,7 @@ print_ping_samples() {
   local tmpdir router_file internet_file
   local router_pid="" internet_pid=""
 
-  omarchy-cmd-present ping || return
+  inferna-cmd-present ping || return
   tmpdir=$(mktemp -d) || return
   router_file="$tmpdir/router"
   internet_file="$tmpdir/internet"
@@ -111,7 +111,7 @@ print_verbose() {
   if [[ -d /sys/class/net/$iface/wireless ]]; then
     printf 'type\twifi\n'
 
-    if omarchy-cmd-present iw; then
+    if inferna-cmd-present iw; then
       link=$(iw dev "$iface" link 2>/dev/null)
 
       if [[ -n $link ]]; then

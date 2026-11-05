@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle dedicated vs integrated GPU mode via supergfxd (for hybrid gpu laptops, like Asus G14).
-# omarchy:requires-sudo=true
+# inferna:summary=Toggle dedicated vs integrated GPU mode via supergfxd (for hybrid gpu laptops, like Asus G14).
+# inferna:requires-sudo=true
 
 install_root_file() {
   local source="$1"
@@ -32,8 +32,8 @@ safe_stage_path() {
   [[ $suffix =~ ^[[:alnum:]]{6}$ ]]
 }
 
-if omarchy-cmd-missing supergfxctl; then
-  omarchy-pkg-add supergfxctl
+if inferna-cmd-missing supergfxctl; then
+  inferna-pkg-add supergfxctl
 
   # Create config before starting service to prevent hang on first boot
   sudo tee /etc/supergfxd.conf >/dev/null <<'CONF'
@@ -68,7 +68,7 @@ fi
 
 case "$gpu_mode" in
 "Integrated")
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n gpu.enableDedicated)"; then
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n gpu.enableDedicated)"; then
     # Switch to hybrid mode
     sudo sed -i "s/\"mode\": \".*\"/\"mode\": \"Hybrid\"/" /etc/supergfxd.conf
 
@@ -78,11 +78,11 @@ case "$gpu_mode" in
     # Remove the startup delay override (not needed for Hybrid mode)
     sudo rm -rf /etc/systemd/system/supergfxd.service.d/delay-start.conf
 
-    omarchy-system reboot
+    inferna-system reboot
   fi
   ;;
 "Hybrid")
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n gpu.useIntegrated)"; then
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n gpu.useIntegrated)"; then
     # Delay supergfxd startup to avoid race condition with display manager
     # that can cause system freeze when booting in Integrated mode
     sudo mkdir -p /etc/systemd/system/supergfxd.service.d
@@ -109,7 +109,7 @@ case "$gpu_mode" in
       -e 's/"vfio_enable": false/"vfio_enable": true/' \
       /etc/supergfxd.conf
 
-    omarchy-system reboot
+    inferna-system reboot
   fi
   ;;
 *)

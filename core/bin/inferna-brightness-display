@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or adjust brightness on the focused display.
-# omarchy:args=[--no-osd] [--monitor name] [+N%|N%-|N%|off|on]
-# omarchy:examples=omarchy brightness display | omarchy brightness display +5% | omarchy brightness display --monitor DP-1 50% | omarchy brightness display off | omarchy brightness display on
+# inferna:summary=Show or adjust brightness on the focused display.
+# inferna:args=[--no-osd] [--monitor name] [+N%|N%-|N%|off|on]
+# inferna:examples=inferna brightness display | inferna brightness display +5% | inferna brightness display --monitor DP-1 50% | inferna brightness display off | inferna brightness display on
 
 no_osd=0
 monitor=""
@@ -29,14 +29,14 @@ backlight_brightness() {
   brightnessctl -d "$1" -m 2>/dev/null | awk -F, '{ gsub("%", "", $4); print $4; found=1 } END{ exit !found }'
 }
 
-[[ -n $monitor ]] || monitor="$(omarchy-hyprland-monitor-focused 2>/dev/null || true)"
+[[ -n $monitor ]] || monitor="$(inferna-hyprland-monitor-focused 2>/dev/null || true)"
 
 monitor_is_internal() {
   [[ $monitor =~ ^(eDP|LVDS|DSI)- ]]
 }
 
 use_apple_display() {
-  omarchy-hyprland-monitor-focused-apple "$monitor"
+  inferna-hyprland-monitor-focused-apple "$monitor"
 }
 
 use_ddc_display() {
@@ -48,7 +48,7 @@ use_ddc_display() {
 # I2C buses, slowly, so only a connector with a ddc node is probed. Everywhere
 # else every external monitor is.
 monitor_may_have_ddc() {
-  local displays_conf=/usr/share/omarchy-platform/displays.conf directive argument
+  local displays_conf=/usr/share/inferna-platform/displays.conf directive argument
   [[ -r $displays_conf ]] || return 0
 
   while IFS=$' \t\r' read -r directive argument || [[ -n $directive ]]; do
@@ -68,16 +68,16 @@ use_backlight_display() {
 
 if (( $# == 0 )); then
   if use_apple_display; then
-    omarchy-brightness-display-apple
+    inferna-brightness-display-apple
     exit
   elif use_ddc_display; then
-    omarchy-brightness-display-ddc "$monitor"
+    inferna-brightness-display-ddc "$monitor"
     exit
   elif ! use_backlight_display; then
     exit 1
   fi
 
-  device="$(omarchy-hw-display)" || exit 1
+  device="$(inferna-hw-display)" || exit 1
   backlight_brightness "$device"
   exit
 fi
@@ -98,23 +98,23 @@ fi
 
 # Drop overlapping brightness key events so concurrent invocations do not race.
 # Hardware key repeat present on some devices can otherwise glitch OSD rendering.
-exec {lock_fd}>"${XDG_RUNTIME_DIR:-/tmp}/omarchy-brightness-display.lock"
+exec {lock_fd}>"${XDG_RUNTIME_DIR:-/tmp}/inferna-brightness-display.lock"
 flock -n "$lock_fd" || exit 0
 
 if use_apple_display; then
   if (( no_osd )); then
-    omarchy-brightness-display-apple --no-osd "$step"
+    inferna-brightness-display-apple --no-osd "$step"
   else
-    omarchy-brightness-display-apple "$step"
+    inferna-brightness-display-apple "$step"
   fi
 elif use_ddc_display; then
-  brightness="$(omarchy-brightness-display-ddc "$monitor" "$step")" || exit 1
-  (( no_osd )) || omarchy-osd -i brightness -p "$brightness"
+  brightness="$(inferna-brightness-display-ddc "$monitor" "$step")" || exit 1
+  (( no_osd )) || inferna-osd -i brightness -p "$brightness"
 elif ! use_backlight_display; then
   exit 1
 else
   # Current device highlighted
-  device="$(omarchy-hw-display)" || exit 1
+  device="$(inferna-hw-display)" || exit 1
 
   # Current brightness percentage
   current=$(backlight_brightness "$device") || exit 1
@@ -145,5 +145,5 @@ else
   brightnessctl -d "$device" set "$step" >/dev/null
 
   # Show the new brightness in OSD
-  (( no_osd )) || omarchy-osd -i brightness -p "$(backlight_brightness "$device")"
+  (( no_osd )) || inferna-osd -i brightness -p "$(backlight_brightness "$device")"
 fi

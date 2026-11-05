@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Run pending Omarchy migrations.
-# omarchy:args=[--pending]
+# inferna:summary=Run pending Omarchy migrations.
+# inferna:args=[--pending]
 
 set -euo pipefail
 
 mode="run"
 
 usage() {
-  echo "Usage: omarchy-migrate [--pending]"
+  echo "Usage: inferna-migrate [--pending]"
 }
 
 while (($#)); do
@@ -99,4 +99,4 @@ done 3< <(migration_entries)
 # Clear a login-time notification the user left sitting there and then resolved
 # by running migrations some other way. The substring matches both the current
 # and legacy notification titles.
-omarchy-notification-dismiss "Omarchy Migrations" >/dev/null 2>&1 || true
+inferna-notification-dismiss "Omarchy Migrations" >/dev/null 2>&1 || true

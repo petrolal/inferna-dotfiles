@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Select input methods for Japanese, Korean, or Chinese typing
-# omarchy:args=[mozc|hangul|pinyin|chewing|cangjie5]
-# omarchy:examples=omarchy setup input | omarchy setup input mozc
-# omarchy:requires-sudo=true
+# inferna:summary=Select input methods for Japanese, Korean, or Chinese typing
+# inferna:args=[mozc|hangul|pinyin|chewing|cangjie5]
+# inferna:examples=inferna setup input | inferna setup input mozc
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
 if (( $# > 1 )); then
-  echo "Usage: omarchy setup input [mozc|hangul|pinyin|chewing|cangjie5]" >&2
+  echo "Usage: inferna setup input [mozc|hangul|pinyin|chewing|cangjie5]" >&2
   exit 1
 fi
 
@@ -24,6 +24,6 @@ case "$method" in
 esac
 
 mapfile -t packages < <(jq -r --arg method "$method" '.[$method].packages[]' "$OMARCHY_PATH/default/input-methods/presets.json")
-omarchy-pkg-add "${packages[@]}"
+inferna-pkg-add "${packages[@]}"
 /usr/bin/python3 "$OMARCHY_PATH/default/input-methods/typing_setup.py" add "$method"
 echo "Input method added. Use Super+I or the Japanese/Korean input key to switch; existing custom Fcitx keys are preserved."

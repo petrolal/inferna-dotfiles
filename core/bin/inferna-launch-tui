@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch a TUI command in the default terminal with Omarchy styling
-# omarchy:args=[--app-id=<app-id>] <command> [args...]
+# inferna:summary=Launch a TUI command in the default terminal with Omarchy styling
+# inferna:args=[--app-id=<app-id>] <command> [args...]
 
 if [[ ${1:-} == --app-id=* ]]; then
   APP_ID="${1#--app-id=}"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Move an older monitors.lua over to the new template
-# omarchy:hidden=true
+# inferna:summary=Move an older monitors.lua over to the new template
+# inferna:hidden=true
 
 # Older versions kept Omarchy's monitor defaults in hypr/monitors.lua, with
 # comments explaining them. The defaults now live in default/hypr/monitors.lua,

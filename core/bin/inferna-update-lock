@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Run a command while holding the Omarchy update lock
-# omarchy:args=<held|run> [command] [args...]
-# omarchy:hidden=true
+# inferna:summary=Run a command while holding the Omarchy update lock
+# inferna:args=<held|run> [command] [args...]
+# inferna:hidden=true
 
 set -e
 
 lock_dir="${XDG_RUNTIME_DIR:-/tmp}"
-lock_path="$lock_dir/omarchy-update.lock"
+lock_path="$lock_dir/inferna-update.lock"
 
 lock_is_held() {
   local lock_fd_path=""
@@ -26,7 +26,7 @@ case "${1:-}" in
   run)
     shift
     if (( $# == 0 )); then
-      echo "Usage: omarchy-update-lock run <command> [args...]" >&2
+      echo "Usage: inferna-update-lock run <command> [args...]" >&2
       exit 2
     fi
 
@@ -41,7 +41,7 @@ case "${1:-}" in
     exec "$@"
     ;;
   *)
-    echo "Usage: omarchy-update-lock <held|run> [command] [args...]" >&2
+    echo "Usage: inferna-update-lock <held|run> [command] [args...]" >&2
     exit 2
     ;;
 esac

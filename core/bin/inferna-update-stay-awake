@@ -1,8 +1,8 @@
 #!/usr/bin/env bash -p
 
-# omarchy:summary=Manage sleep and idle inhibition during an update
-# omarchy:args=<start|stop>
-# omarchy:hidden=true
+# inferna:summary=Manage sleep and idle inhibition during an update
+# inferna:args=<start|stop>
+# inferna:hidden=true
 
 if [[ $- != *p* ]]; then
   echo "Refusing an unsafe Bash startup." >&2
@@ -10,7 +10,7 @@ if [[ $- != *p* ]]; then
 fi
 
 security_entrypoint=$(/usr/bin/readlink -e -- "${BASH_SOURCE[0]}") || exit 126
-source "${security_entrypoint%/*}/omarchy-security-functions" || exit 126
+source "${security_entrypoint%/*}/inferna-security-functions" || exit 126
 omarchy_security_require_privileged_bash_startup || exit 126
 set -e
 omarchy_security_sanitize_bash_environment "$0" "$@"
@@ -107,7 +107,7 @@ initialize_state_boundary() {
     ensure_private_directory "$state_base" || fail_state_boundary
   fi
 
-  state_dir="$state_base/omarchy-update-stay-awake"
+  state_dir="$state_base/inferna-update-stay-awake"
   idle_owner_file="$state_dir/idle-owner"
   inhibit_pid_file="$state_dir/inhibit-pid"
   launch_control_file="$state_dir/launch-control"
@@ -386,7 +386,7 @@ stop_locked() {
         current_idle_owner=$(<"$stay_awake_state")
       fi
       if [[ $current_idle_owner == "$idle_owner" ]]; then
-        omarchy-toggle-idle allow-idle >/dev/null 2>&1 || true
+        inferna-toggle-idle allow-idle >/dev/null 2>&1 || true
       fi
     else
       echo "Ignoring unsafe Omarchy update idle ownership state." >&2
@@ -462,7 +462,7 @@ start_locked() {
   # starts. It stays a shell so stop's TERM ends it with a clean exit, since
   # systemd-inhibit reports a child killed by a signal as an error.
   local hold_command=(
-    /usr/bin/systemd-inhibit --what=sleep:idle --who=omarchy-update
+    /usr/bin/systemd-inhibit --what=sleep:idle --who=inferna-update
     --why="Omarchy update in progress [$token]" --mode=block
     /usr/bin/setpriv --reuid "$caller_uid" --regid "$(/usr/bin/id -g)" --clear-groups
     /usr/bin/bash -p -c '
@@ -555,7 +555,7 @@ start_locked() {
     # The idle toggle uses this marker. Publish its owner in the same write so
     # cancellation cannot leave an unowned Stay Awake setting behind.
     if ! printf '%s\n' "$idle_owner" >"$stay_awake_state"; then
-      omarchy-toggle-idle allow-idle >/dev/null 2>&1 || true
+      inferna-toggle-idle allow-idle >/dev/null 2>&1 || true
       return 1
     fi
   fi
@@ -566,7 +566,7 @@ start_locked() {
 case "${1:-}" in
   start | stop) ;;
   *)
-    echo "Usage: omarchy-update-stay-awake <start|stop>" >&2
+    echo "Usage: inferna-update-stay-awake <start|stop>" >&2
     exit 2
     ;;
 esac

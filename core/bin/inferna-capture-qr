@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Decode a QR code from a screenshot region
-# omarchy:group=capture
-# omarchy:examples=omarchy capture qr
+# inferna:summary=Decode a QR code from a screenshot region
+# inferna:group=capture
+# inferna:examples=inferna capture qr
 
 # Keep hyprpicker alive until after grim captures so the screenshot sees the
 # frozen overlay rather than live content shifting during teardown.
@@ -23,7 +23,7 @@ SELECTION=$(slurp 2>/dev/null)
 RESULT=$(grim -g "$SELECTION" - | zbarimg -q --raw -Sdisable -Sqrcode.enable - 2>/dev/null)
 
 if [[ -z $RESULT ]]; then
-  omarchy-notification-send -g 󰐲 -u critical "$(omarchy-i18n capture.qrNone)" "$(omarchy-i18n capture.qrHelp)"
+  inferna-notification-send -g 󰐲 -u critical "$(inferna-i18n capture.qrNone)" "$(inferna-i18n capture.qrHelp)"
   exit 1
 fi
 
@@ -33,4 +33,4 @@ fi
 # the notification history, and an unmarked copy would be retained by clipboard
 # history. Pasting still works; only the recorded copy is given up.
 printf '%s' "$RESULT" | wl-copy --sensitive
-omarchy-notification-send -g 󰐲 "$(omarchy-i18n capture.qrCopied)"
+inferna-notification-send -g 󰐲 "$(inferna-i18n capture.qrCopied)"

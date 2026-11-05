@@ -1,14 +1,22 @@
 local paths = require("default.hypr.paths")
 local require_all = require("default.hypr.require_all")
 
-local toggles_dir = paths.state_home .. "/omarchy/toggles/hypr"
-package.path = toggles_dir .. "/?.lua;" .. package.path
+local toggles_dir = paths.state_home .. "/inferna/toggles/hypr"
+local legacy_toggles_dir = paths.state_home .. "/omarchy/toggles/hypr"
+package.path = toggles_dir .. "/?.lua;" .. legacy_toggles_dir .. "/?.lua;" .. package.path
 
 -- touchpad-disabled.lua / touchscreen-disabled.lua were generated Lua in older
 -- versions and could carry an injected USB device name. They must never be loaded
 -- as code again: exclude them so a not-yet-migrated install cannot execute a
 -- leftover payload on reload. The migration recovers the name and deletes them.
 require_all.files(toggles_dir, nil, {
+  reload = true,
+  exclude = {
+    ["touchpad-disabled"] = true,
+    ["touchscreen-disabled"] = true,
+  },
+})
+require_all.files(legacy_toggles_dir, nil, {
   reload = true,
   exclude = {
     ["touchpad-disabled"] = true,

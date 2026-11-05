@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Prevent direct pacman system upgrades from bypassing omarchy update.
-# omarchy:hidden=true
+# inferna:summary=Prevent direct pacman system upgrades from bypassing omarchy update.
+# inferna:hidden=true
 
 set -euo pipefail
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Pick a screen region over frozen screen content
-# omarchy:args=[region|windows|smart|fullscreen] [--keep-freeze] [--match-monitor] | --take-fullscreen | --take-window | --select-window <next|prev|left|right|up|down>
-# omarchy:hidden=true
+# inferna:summary=Pick a screen region over frozen screen content
+# inferna:args=[region|windows|smart|fullscreen] [--keep-freeze] [--match-monitor] | --take-fullscreen | --take-window | --select-window <next|prev|left|right|up|down>
+# inferna:hidden=true
 
 # Prints the picked geometry in slurp's "X,Y WxH" format, or exits 1 when the
 # pick is cancelled. Shared by screenshot and screen recording so the picker
@@ -20,8 +20,8 @@
 #   --match-monitor print "monitor:NAME" instead when the picked geometry
 #                   exactly matches a monitor
 
-FULLSCREEN_MARKER="${XDG_RUNTIME_DIR:-/tmp}/omarchy-capture-region-fullscreen"
-WINDOW_MARKER="${XDG_RUNTIME_DIR:-/tmp}/omarchy-capture-region-window"
+FULLSCREEN_MARKER="${XDG_RUNTIME_DIR:-/tmp}/inferna-capture-region-fullscreen"
+WINDOW_MARKER="${XDG_RUNTIME_DIR:-/tmp}/inferna-capture-region-window"
 
 # accounting for portrait/transformed displays
 JQ_MONITOR_GEO='

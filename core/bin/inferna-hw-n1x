@@ -1,7 +1,7 @@
 #!/usr/bin/env bash -p
 
-# omarchy:summary=Detect whether the computer is an NVIDIA N1x laptop (the old name of omarchy-hw-aarch64-n1x).
-# omarchy:hidden=true
+# inferna:summary=Detect whether the computer is an NVIDIA N1x laptop (the old name of inferna-hw-aarch64-n1x).
+# inferna:hidden=true
 
 # Kept while N1x install images still call it by this name. Like the predicate
 # it runs, it refuses a launch without -p and searches no PATH.
@@ -12,4 +12,4 @@ fi
 
 dir=${BASH_SOURCE[0]%/*}
 [[ $dir != "${BASH_SOURCE[0]}" ]] || dir=.
-exec "$dir/omarchy-hw-aarch64-n1x"
+exec "$dir/inferna-hw-aarch64-n1x"

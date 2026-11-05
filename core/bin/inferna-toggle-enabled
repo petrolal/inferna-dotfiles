@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check if a toggle is enabled (flag file exists)
-# omarchy:args=<flag-name>
+# inferna:summary=Check if a toggle is enabled (flag file exists)
+# inferna:args=<flag-name>
 
 [[ -f "$HOME/.local/state/inferna/toggles/$1" ]]

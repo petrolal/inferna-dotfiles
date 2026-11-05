@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Enable, disable, or toggle a Hyprland input device
-# omarchy:args=<touchpad|touchscreen> [on|off|toggle|cycle]
-# omarchy:hidden=true
+# inferna:summary=Enable, disable, or toggle a Hyprland input device
+# inferna:args=<touchpad|touchscreen> [on|off|toggle|cycle]
+# inferna:hidden=true
 
 KIND="${1:-}"
 ACTION="${2:-toggle}"
 
 usage() {
-  echo "Usage: omarchy-toggle-input-device <touchpad|touchscreen> [on|off|toggle|cycle]" >&2
+  echo "Usage: inferna-toggle-input-device <touchpad|touchscreen> [on|off|toggle|cycle]" >&2
 }
 
 case "$KIND" in
@@ -27,7 +27,7 @@ esac
 # toggle tools, so it keeps working when XDG_STATE_HOME diverges.
 NAME_FILE="$HOME/.local/state/inferna/toggles/hypr/$KIND-disabled-name"
 
-device="$("omarchy-hw-$KIND")"
+device="$("inferna-hw-$KIND")"
 
 require_device() {
   if [[ -z $device ]]; then
@@ -55,9 +55,9 @@ enable() {
   require_device
   apply_device true
   if [[ $KIND == "touchpad" ]]; then
-    omarchy-osd -i "$ICON" -m "$(omarchy-i18n input.touchpadEnabled)"
+    inferna-osd -i "$ICON" -m "$(inferna-i18n input.touchpadEnabled)"
   else
-    omarchy-osd -i "$ICON" -m "$(omarchy-i18n input.touchscreenEnabled)"
+    inferna-osd -i "$ICON" -m "$(inferna-i18n input.touchscreenEnabled)"
   fi
 }
 
@@ -67,9 +67,9 @@ disable() {
   mkdir -p "$(dirname "$NAME_FILE")"
   printf '%s\n' "$device" >"$NAME_FILE"
   if [[ $KIND == "touchpad" ]]; then
-    omarchy-osd -i "$ICON" -m "$(omarchy-i18n input.touchpadDisabled)"
+    inferna-osd -i "$ICON" -m "$(inferna-i18n input.touchpadDisabled)"
   else
-    omarchy-osd -i "$ICON" -m "$(omarchy-i18n input.touchscreenDisabled)"
+    inferna-osd -i "$ICON" -m "$(inferna-i18n input.touchscreenDisabled)"
   fi
 }
 

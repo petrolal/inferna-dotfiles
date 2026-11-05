@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the Plymouth boot theme colors and logo
-# omarchy:args=<background-hex> <text-hex> <path-to-logo.png>
-# omarchy:examples=omarchy plymouth set '#1d2021' '#ebdbb2' ~/.local/state/inferna/current/theme/plymouth/logo.png
-# omarchy:requires-sudo=true
+# inferna:summary=Set the Plymouth boot theme colors and logo
+# inferna:args=<background-hex> <text-hex> <path-to-logo.png>
+# inferna:examples=inferna plymouth set '#1d2021' '#ebdbb2' ~/.local/state/inferna/current/theme/plymouth/logo.png
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ set -euo pipefail
 # so the privileged process never resolves a user-controlled input path.
 
 usage() {
-  echo "Usage: omarchy-plymouth-set <background-hex> <text-hex> <path-to-logo.png>" >&2
+  echo "Usage: inferna-plymouth-set <background-hex> <text-hex> <path-to-logo.png>" >&2
   exit 1
 }
 
@@ -35,7 +35,7 @@ else
 fi
 
 if (( EUID == 0 )); then
-  echo "Error: run omarchy-plymouth-set as your user, not under sudo." >&2
+  echo "Error: run inferna-plymouth-set as your user, not under sudo." >&2
   exit 1
 fi
 
@@ -94,9 +94,9 @@ run_root_transaction() {
     report_failure() {
       [[ -z $failure_reported ]] || return 0
       failure_reported=1
-      printf "omarchy-plymouth-set: refusing to publish: %s failed validation\n" "$failure_context" >&2
+      printf "inferna-plymouth-set: refusing to publish: %s failed validation\n" "$failure_context" >&2
       if [[ -n ${failure_hint:-} ]]; then
-        printf "omarchy-plymouth-set: %s\n" "$failure_hint" >&2
+        printf "inferna-plymouth-set: %s\n" "$failure_hint" >&2
       fi
     }
     trap report_failure ERR
@@ -249,7 +249,7 @@ run_root_transaction() {
       install -o 0 -g 0 -m 0600 -- "$source" "$destination"
     }
 
-    staging_dir=$(mktemp -d /tmp/omarchy-plymouth.XXXXXXXX)
+    staging_dir=$(mktemp -d /tmp/inferna-plymouth.XXXXXXXX)
     temporary=
     cleanup() {
       [[ -z $temporary ]] || rm -f -- "$temporary"
@@ -338,7 +338,7 @@ run_root_transaction() {
       [[ -n $parent && -n $filename && $filename != "." && $filename != ".." ]]
       validate_trusted_directory "$parent"
 
-      temporary=$(mktemp --tmpdir="$parent" ".$filename.omarchy-new.XXXXXXXX")
+      temporary=$(mktemp --tmpdir="$parent" ".$filename.inferna-new.XXXXXXXX")
       install -o 0 -g 0 -m 0644 -- "$source" "$temporary"
       copied_size=$(stat -c %s -- "$temporary")
       (( copied_size == source_size ))
@@ -373,7 +373,7 @@ fi
 if [[ $mode != "refresh-sddm" ]]; then
   sudo plymouth-set-default-theme omarchy
 
-  if omarchy-cmd-present limine-mkinitcpio; then
+  if inferna-cmd-present limine-mkinitcpio; then
     sudo limine-mkinitcpio
   else
     sudo mkinitcpio -P

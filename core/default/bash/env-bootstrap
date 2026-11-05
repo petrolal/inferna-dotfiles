@@ -7,12 +7,21 @@
 # /etc/omarchy.conf is written by omarchy-dev-link and reset by
 # omarchy-dev-unlink. When absent, force the packaged default instead of
 # preserving a stale inherited value.
-if [ -f /etc/omarchy.conf ]; then
+if [ -n "${INFERNA_PATH:-}" ]; then
+  : "${OMARCHY_PATH:=$INFERNA_PATH}"
+elif [ -f /etc/inferna.conf ]; then
+  . /etc/inferna.conf
+  : "${INFERNA_PATH:=/usr/share/inferna}"
+  OMARCHY_PATH="$INFERNA_PATH"
+elif [ -f /etc/omarchy.conf ]; then
   . /etc/omarchy.conf
   : "${OMARCHY_PATH:=/usr/share/omarchy}"
+  INFERNA_PATH="$OMARCHY_PATH"
 else
-  OMARCHY_PATH=/usr/share/omarchy
+  INFERNA_PATH="${HOME:-/root}/inferna-dotfiles/core"
+  OMARCHY_PATH="$INFERNA_PATH"
 fi
+export INFERNA_PATH
 export OMARCHY_PATH
 
 # Only prepend in dev-link mode. On a production install, the binaries are

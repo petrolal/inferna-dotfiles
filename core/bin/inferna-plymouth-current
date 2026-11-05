@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show which theme is styling the Plymouth boot screen
-# omarchy:examples=omarchy plymouth current
+# inferna:summary=Show which theme is styling the Plymouth boot screen
+# inferna:examples=inferna plymouth current
 
-# omarchy-plymouth-set installs the theme's unlock.png as a byte-for-byte
+# inferna-plymouth-set installs the theme's unlock.png as a byte-for-byte
 # copy of logo.png, so matching it back identifies the current theme.
 installed_logo=/usr/share/plymouth/themes/omarchy/logo.png
 
@@ -12,8 +12,8 @@ if cmp -s "$OMARCHY_PATH/default/plymouth/logo.png" "$installed_logo"; then
   exit
 fi
 
-omarchy-plymouth-list | while read -r name; do
-  if cmp -s "$(omarchy-theme-dir "$name")/unlock.png" "$installed_logo"; then
+inferna-plymouth-list | while read -r name; do
+  if cmp -s "$(inferna-theme-dir "$name")/unlock.png" "$installed_logo"; then
     echo "$name"
     exit
   fi

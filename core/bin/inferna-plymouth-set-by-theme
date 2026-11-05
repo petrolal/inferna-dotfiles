@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the Plymouth boot theme from an Omarchy theme
-# omarchy:args=<theme-name>
-# omarchy:requires-sudo=true
+# inferna:summary=Set the Plymouth boot theme from an Omarchy theme
+# inferna:args=<theme-name>
+# inferna:requires-sudo=true
 
 # Resolve a theme by name and apply its unlock.png + colors.toml as the
-# Plymouth boot screen via omarchy-plymouth-set.
+# Plymouth boot screen via inferna-plymouth-set.
 
 if (( $# != 1 )); then
-  echo "Usage: omarchy-plymouth-set-by-theme <theme-name>" >&2
+  echo "Usage: inferna-plymouth-set-by-theme <theme-name>" >&2
   exit 1
 fi
 
 theme=$1
 
-theme_dir=$(omarchy-theme-dir "$theme")
+theme_dir=$(inferna-theme-dir "$theme")
 
 theme_color() {
   local key="$1"
@@ -50,4 +50,4 @@ theme_color() {
 bg=$(theme_color background)
 text=$(theme_color foreground)
 
-exec omarchy-plymouth-set "$bg" "$text" "$theme_dir/unlock.png"
+exec inferna-plymouth-set "$bg" "$text" "$theme_dir/unlock.png"

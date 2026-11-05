@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set a Hyprland monitor's rotation (the focused one by default)
-# omarchy:args=[--monitor NAME] [0|90|180|270]
-# omarchy:examples=omarchy hyprland monitor rotate | omarchy hyprland monitor rotate 90 | omarchy hyprland monitor rotate --monitor DP-2 270
+# inferna:summary=Show or set a Hyprland monitor's rotation (the focused one by default)
+# inferna:args=[--monitor NAME] [0|90|180|270]
+# inferna:examples=inferna hyprland monitor rotate | inferna hyprland monitor rotate 90 | inferna hyprland monitor rotate --monitor DP-2 270
 
 usage() {
-  echo "Usage: omarchy-hyprland-monitor-rotate [--monitor NAME] [0|90|180|270]"
+  echo "Usage: inferna-hyprland-monitor-rotate [--monitor NAME] [0|90|180|270]"
 }
 
 if [[ ${1:-} == "--monitor" ]]; then
@@ -71,7 +71,7 @@ width=$(jq -r '.width' <<<"$monitor_info")
 height=$(jq -r '.height' <<<"$monitor_info")
 mode=$(jq -r '"\(.width)x\(.height)@\(.refreshRate)"' <<<"$monitor_info")
 
-omarchy-hyprland-monitor-persist "$active_monitor" "$scale" "" "" "$transform"
+inferna-hyprland-monitor-persist "$active_monitor" "$scale" "" "" "$transform"
 
 # A quarter turn swaps the monitor's width and height in the layout. The layout
 # reads the size through the current transform, so the new size goes in swapped
@@ -86,7 +86,7 @@ fi
 
 others=$(hyprctl monitors -j | jq --arg name "$active_monitor" '[.[] | select(.name != $name)] | length')
 if (( others > 0 )); then
-  omarchy-hyprland-monitor-layout --resized "$active_monitor" "${width}x${height}" "$scale" "$new_size" "$scale" "$mode" "$transform"
+  inferna-hyprland-monitor-layout --resized "$active_monitor" "${width}x${height}" "$scale" "$new_size" "$scale" "$mode" "$transform"
 else
   hyprctl eval "hl.monitor({ output = \"$active_monitor\", mode = \"$mode\", position = \"auto\", scale = $scale, transform = $transform })" >/dev/null
 fi

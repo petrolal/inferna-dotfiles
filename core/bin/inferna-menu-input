@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Prompt for text input from a menu
-# omarchy:group=menu
-# omarchy:name=input
-# omarchy:args=prompt [menu args...]
-# omarchy:examples=omarchy menu input Reminder|omarchy-menu-input "Reminder in minutes" --width 400
+# inferna:summary=Prompt for text input from a menu
+# inferna:group=menu
+# inferna:name=input
+# inferna:args=prompt [menu args...]
+# inferna:examples=inferna menu input Reminder|inferna-menu-input "Reminder in minutes" --width 400
 
 set -euo pipefail
 
@@ -20,7 +20,7 @@ while (( $# > 0 )); do
     --width)
       shift
       if (( $# == 0 )); then
-        echo "omarchy-menu-input: --width requires a value" >&2
+        echo "inferna-menu-input: --width requires a value" >&2
         exit 1
       fi
       menu_width="$1"
@@ -45,7 +45,7 @@ payload=$(perl -MEncode=decode -MJSON::PP=encode_json -e '
   print encode_json($payload)
 ' "$prompt" "$selection_file" "$done_file" "$menu_width")
 
-omarchy-shell shell summon omarchy.menu "$payload" >/dev/null
+inferna-shell shell summon omarchy.menu "$payload" >/dev/null
 
 while [[ ! -e $done_file ]]; do
   sleep 0.05

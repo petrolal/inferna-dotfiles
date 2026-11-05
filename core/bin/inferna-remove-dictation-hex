@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Hex dictation
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Hex dictation
+# inferna:requires-sudo=true
 
 set -e
 
 systemctl --user disable --now hex.service 2>/dev/null || true
-omarchy-pkg-drop hex-bin
+inferna-pkg-drop hex-bin
 systemctl --user daemon-reload
 
 # Hex's settings, history, and downloaded models stay in ~/.local/share/hex.
@@ -15,4 +15,4 @@ if [[ -f $backend_config && $(< "$backend_config") == "hex" ]]; then
   rm "$backend_config"
 fi
 
-omarchy-restart-hyprctl
+inferna-restart-hyprctl

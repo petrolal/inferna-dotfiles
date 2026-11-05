@@ -13,13 +13,13 @@ import QtQuick.Shapes
 Item {
   id: root
 
-  // Injected by omarchy-shell when this plugin is summoned.
-  property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  // Injected by inferna-shell when this plugin is summoned.
+  property string omarchyPath: Quickshell.env("INFERNA_PATH") || Quickshell.env("OMARCHY_PATH")
   property var shell: null
   property var manifest: null
 
   // Plugin lifecycle hooks. The host calls open(payloadJson) after
-  // `omarchy-shell shell summon omarchy.menu ...` and close() when hidden.
+  // `inferna-shell shell summon omarchy.menu ...` and close() when hidden.
   property string pendingInitialMenu: "root"
 
   function open(payloadJson) {
@@ -61,10 +61,10 @@ Item {
   // JSONC menu definitions. The shell parses both at startup and merges
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
-  property string defaultMenuPath: omarchyPath + "/default/omarchy/inferna-menu.jsonc"
+  property string defaultMenuPath: omarchyPath + "/default/inferna/inferna-menu.jsonc"
   property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Menu title. Set "root": { "title": "YOUR NAME" } in the extension file above.
-  readonly property string brandName: (root.item("root") && root.item("root").title) ? root.item("root").title : "OMARCHY"
+  readonly property string brandName: (root.item("root") && root.item("root").title) ? root.item("root").title : "INFERNA"
   property var defaultMenuItems: []
   property var userMenuItems: []
   property bool opened: false

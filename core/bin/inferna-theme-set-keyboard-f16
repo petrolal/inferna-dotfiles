@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply the current theme keyboard color to Framework Laptop 16 keyboards
-# omarchy:hidden=true
+# inferna:summary=Apply the current theme keyboard color to Framework Laptop 16 keyboards
+# inferna:hidden=true
 
 FRAMEWORK16_THEME=$HOME/.local/state/inferna/current/theme/keyboard.rgb
 
@@ -30,7 +30,7 @@ hex_to_qmk_hue_saturation() {
   }'
 }
 
-if omarchy-cmd-present qmk_hid && [[ -f $FRAMEWORK16_THEME ]]; then
+if inferna-cmd-present qmk_hid && [[ -f $FRAMEWORK16_THEME ]]; then
   hex=$(cat "$FRAMEWORK16_THEME")
   hex="${hex#\#}"
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the NordVPN service with optional GUI.
-# omarchy:requires-sudo=true
+# inferna:summary=Install the NordVPN service with optional GUI.
+# inferna:requires-sudo=true
 
 echo "Installing NordVPN..."
-omarchy-pkg-add nordvpn-bin
+inferna-pkg-add nordvpn-bin
 
 echo "Enabling NordVPN daemon..."
 sudo systemctl enable --now nordvpnd
@@ -15,4 +15,4 @@ sudo usermod -aG nordvpn "$USER"
 echo -e "\nNordVPN installed! After reboot, run 'nordvpn login' to authenticate."
 
 echo
-gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n nordvpn.rebootNow)" && omarchy-system reboot
+gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n nordvpn.rebootNow)" && inferna-system reboot

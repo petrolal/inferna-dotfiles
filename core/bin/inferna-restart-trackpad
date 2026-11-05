@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Reset the trackpad by unbinding and rebinding its driver.
-# omarchy:requires-sudo=true
+# inferna:summary=Reset the trackpad by unbinding and rebinding its driver.
+# inferna:requires-sudo=true
 
 # Only reset I2C HID devices that udev marks as a touchpad, so the keyboard and
 # touchscreen sharing the i2c_hid_acpi driver are left alone.
@@ -18,7 +18,7 @@ is_touchpad() {
 }
 
 echo "Releasing the trackpad in Hyprland..."
-omarchy-toggle-input-device touchpad cycle
+inferna-toggle-input-device touchpad cycle
 
 driver="${OMARCHY_I2C_HID_DRIVER_PATH:-/sys/bus/i2c/drivers/i2c_hid_acpi}"
 

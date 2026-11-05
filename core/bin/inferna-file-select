@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-# omarchy:summary=Pick files with the desktop file chooser
-# omarchy:args=[--title <title>] [--multiple] [--directory] [--extensions "<ext ext...>"]
-# omarchy:examples=omarchy file select --title "Send with Tailscale" --multiple | omarchy file select --title "Pick image" --extensions "png svg" | omarchy file select --title "Share folder" --directory
+# inferna:summary=Pick files with the desktop file chooser
+# inferna:args=[--title <title>] [--multiple] [--directory] [--extensions "<ext ext...>"]
+# inferna:examples=inferna file select --title "Send with Tailscale" --multiple | inferna file select --title "Pick image" --extensions "png svg" | inferna file select --title "Share folder" --directory
 
 # Python rather than bash, alone among the commands here, because the portal
 # answers a request with a Response signal addressed to the connection that
@@ -36,7 +36,7 @@ EXIT_CHOOSER_FAILED = 2
 # The dialog's own title when the caller names none, in the Omarchy language.
 def default_title():
     try:
-        title = subprocess.run("omarchy-i18n files.selectFile".split(), capture_output=True, text=True).stdout
+        title = subprocess.run("inferna-i18n files.selectFile".split(), capture_output=True, text=True).stdout
     except OSError:
         title = ""
     if not title or title == "files.selectFile":
@@ -53,7 +53,7 @@ def main():
     args, unknown = parser.parse_known_args()
 
     if unknown:
-        print("omarchy-file-select: unknown option %s" % unknown[0], file=sys.stderr)
+        print("inferna-file-select: unknown option %s" % unknown[0], file=sys.stderr)
         return EXIT_CHOOSER_FAILED
 
     if args.title is None:
@@ -135,5 +135,5 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except GLib.Error as error:
-        print("omarchy-file-select: %s" % error.message, file=sys.stderr)
+        print("inferna-file-select: %s" % error.message, file=sys.stderr)
         sys.exit(EXIT_CHOOSER_FAILED)

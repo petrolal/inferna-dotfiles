@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Reset Omarchy user configs and shipped defaults in $HOME (destructive)
+# inferna:summary=Reset Omarchy user configs and shipped defaults in $HOME (destructive)
 
 set -euo pipefail
 
@@ -18,15 +18,15 @@ echo "Resetting Omarchy user configs to shipped defaults..."
 # Trailing dot copies dotfiles; the shell wouldn't glob them with /etc/skel/*.
 cp -af /etc/skel/. ~/
 
-omarchy-refresh-limine
-omarchy-refresh-plymouth
+inferna-refresh-limine
+inferna-refresh-plymouth
 
-if omarchy-cmd-present omarchy-nvim-refresh; then
-  omarchy-nvim-refresh
-elif omarchy-cmd-present omarchy-nvim-setup; then
-  omarchy-nvim-setup --force
+if inferna-cmd-present inferna-nvim-refresh; then
+  inferna-nvim-refresh
+elif inferna-cmd-present inferna-nvim-setup; then
+  inferna-nvim-setup --force
 fi
 
 # /etc/skel holds the shared defaults, so put the Snapdragon video decoding
 # settings back.
-omarchy-install-video-decode
+inferna-install-video-decode

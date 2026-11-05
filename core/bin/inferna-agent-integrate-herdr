@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install herdr's status and session-restore integration for agents mise just installed
-# omarchy:hidden=true
+# inferna:summary=Install herdr's status and session-restore integration for agents mise just installed
+# inferna:hidden=true
 
 # mise runs this as a postinstall hook (etc/mise/conf.d/omarchy.toml), naming the
 # tools it just installed in MISE_INSTALLED_TOOLS. Omarchy's agents are lazy and

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Record N1x hardware and boot evidence to /var/log/omarchy-n1x-probe.log, on demand.
-# omarchy:requires-sudo=true
+# inferna:summary=Record N1x hardware and boot evidence to /var/log/inferna-n1x-probe.log, on demand.
+# inferna:requires-sudo=true
 
-log=/var/log/omarchy-n1x-probe.log
+log=/var/log/inferna-n1x-probe.log
 exec > >(tee "$log") 2>&1
 
 section() {

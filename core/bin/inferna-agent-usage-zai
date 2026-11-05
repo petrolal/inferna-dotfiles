@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Z.ai GLM Coding Plan usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Z.ai GLM Coding Plan usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Z.ai (GLM Coding Plan) usage into one display-ready JSON record.
 
 Rate limits and the plan tier come from Z.ai's coding-plan monitor endpoint
@@ -255,7 +255,7 @@ def fetch_limits(api_key: str, platform: str) -> dict[str, Any]:
     if not label:
       # A window Z.ai adds later would vanish silently otherwise.
       print(
-        f"omarchy-agent-usage-zai: unmapped limit window (unit={item.get('unit')}, "
+        f"inferna-agent-usage-zai: unmapped limit window (unit={item.get('unit')}, "
         f"number={item.get('number')})",
         file=sys.stderr,
       )
@@ -437,7 +437,7 @@ def main() -> int:
     record = scan(args.force, args.limits_only)
   except Exception as error:  # noqa: BLE001 - a collector must always emit a record
     record = base_record(usageStatusText="Z.ai limits unavailable", authHelpText="Z.ai usage scan failed.")
-    print(f"omarchy-agent-usage-zai: {type(error).__name__}", file=sys.stderr)
+    print(f"inferna-agent-usage-zai: {type(error).__name__}", file=sys.stderr)
   emit(record)
   return 0
 

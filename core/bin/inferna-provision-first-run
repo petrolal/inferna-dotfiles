@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Finish first-login setup for Omarchy.
-# omarchy:args=[--force]
-# omarchy:hidden=true
+# inferna:summary=Finish first-login setup for Omarchy.
+# inferna:args=[--force]
+# inferna:hidden=true
 
 set -e
 
 usage() {
   cat <<USAGE
-Usage: omarchy-provision-first-run [--force]
+Usage: inferna-provision-first-run [--force]
 
 Run first-login user setup and notification hooks. By default this only runs
 once per user.
@@ -38,12 +38,12 @@ done
 
 state_dir=~/.local/state/inferna
 FIRST_RUN_DONE="first-run-user"
-if omarchy-done check "$FIRST_RUN_DONE" && (( force == 0 )); then
+if inferna-done check "$FIRST_RUN_DONE" && (( force == 0 )); then
   echo "First-run already complete."
   exit 0
 fi
 
-omarchy-provision-user "${finalize_user_args[@]}" || true
+inferna-provision-user "${finalize_user_args[@]}" || true
 
 mkdir -p "$state_dir"
 
@@ -69,16 +69,16 @@ run_first_run_step() {
 }
 
 run_first_run_step "install fingerprint setup post-update hook" \
-  omarchy-hook-install post-update "$OMARCHY_PATH/install/user/first-run/setup-fingerprint.hook"
+  inferna-hook-install post-update "$OMARCHY_PATH/install/user/first-run/setup-fingerprint.hook"
 run_first_run_step "install agent setup post-update hook" \
-  omarchy-hook-install post-update "$OMARCHY_PATH/install/user/first-run/setup-agent.hook"
+  inferna-hook-install post-update "$OMARCHY_PATH/install/user/first-run/setup-agent.hook"
 
 run_first_run_step "enable user systemd units" \
   bash "$OMARCHY_PATH/install/user/first-run/enable-user-units.sh"
 # Finalization ran it too, maybe without a session; the platform finishes what
 # needs one here.
 run_first_run_step "run the platform's user setup" \
-  omarchy-lifecycle-dispatch setup-user
+  inferna-lifecycle-dispatch setup-user
 run_first_run_step "set GNOME theme" \
   bash "$OMARCHY_PATH/install/user/first-run/gnome-theme.sh"
 run_first_run_step "set GTK primary paste" \
@@ -86,7 +86,7 @@ run_first_run_step "set GTK primary paste" \
 run_first_run_step "apply speaker tuning" \
   bash "$OMARCHY_PATH/install/user/first-run/audio-tuning.sh"
 
-omarchy-notification-wait || log_first_run "Timed out waiting for notification service; continuing"
+inferna-notification-wait || log_first_run "Timed out waiting for notification service; continuing"
 # Superwhisper places its bar panel through the shell, so it waits for it too.
 run_first_run_step "configure Superwhisper dictation" \
   bash "$OMARCHY_PATH/install/user/first-run/superwhisper.sh"
@@ -100,7 +100,7 @@ run_first_run_step "schedule Wi-Fi/update notifications" \
   bash "$OMARCHY_PATH/install/user/first-run/wifi.sh"
 
 if (( first_run_failed == 0 )); then
-  omarchy-done mark "$FIRST_RUN_DONE"
+  inferna-done mark "$FIRST_RUN_DONE"
 else
   log_first_run "One or more first-run steps failed; first-run will retry next login"
 fi

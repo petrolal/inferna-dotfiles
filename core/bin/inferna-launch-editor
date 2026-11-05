@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the default editor selected via Omarchy defaults.
-# omarchy:args=[--inline] <path>
+# inferna:summary=Launch the default editor selected via Omarchy defaults.
+# inferna:args=[--inline] <path>
 
 default_editor="$HOME/.local/state/inferna/defaults/editor"
 
@@ -21,14 +21,14 @@ fi
 # sublime-text-4 ships `subl` on PATH, not `sublime_text`.
 [[ $editor == sublime_text ]] && editor=subl
 
-omarchy-cmd-present "$editor" || editor="nvim"
+inferna-cmd-present "$editor" || editor="nvim"
 
 case "${editor##*/}" in
 nvim | vim | nano | micro | hx | helix | fresh)
   if [[ $inline == "true" ]]; then
     exec "$editor" -- "$@"
   else
-    exec omarchy-launch-tui "$editor" -- "$@"
+    exec inferna-launch-tui "$editor" -- "$@"
   fi
   ;;
 *)

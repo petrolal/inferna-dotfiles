@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List available monospace fonts
-# omarchy:examples=omarchy font list | omarchy font set "CaskaydiaMono Nerd Font"
+# inferna:summary=List available monospace fonts
+# inferna:examples=inferna font list | inferna font set "CaskaydiaMono Nerd Font"
 
 fc-list :spacing=100 -f "%{family[0]}\n" | grep -v -i -E 'emoji|signwriting|omarchy' | sort -u

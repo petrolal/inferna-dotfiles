@@ -17,7 +17,7 @@ import "Numbers.js" as Numbers
 QtObject {
   id: root
 
-  readonly property string omarchyPath: Quickshell.env("OMARCHY_PATH")
+  readonly property string omarchyPath: Quickshell.env("INFERNA_PATH") || Quickshell.env("OMARCHY_PATH")
   readonly property string configHome: Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")
 
   readonly property string language: languageCode(languageFile.text())
@@ -85,7 +85,7 @@ QtObject {
   property FileView languageFile: FileView {
     // OMARCHY_LANGUAGE_FILE overrides the location, as it does for
     // omarchy-i18n, so tests can pin a language whatever the machine uses.
-    path: Quickshell.env("OMARCHY_LANGUAGE_FILE") || (root.configHome + "/omarchy/language")
+    path: Quickshell.env("INFERNA_LANGUAGE_FILE") || Quickshell.env("OMARCHY_LANGUAGE_FILE") || (root.configHome + "/inferna/language")
     watchChanges: true
     printErrors: false
     blockLoading: true

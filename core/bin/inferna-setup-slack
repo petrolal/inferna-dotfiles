@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Make Slack follow Omarchy themes live
+# inferna:summary=Make Slack follow Omarchy themes live
 
 set -euo pipefail
 
@@ -12,7 +12,7 @@ fi
 [[ -f /usr/bin/slack ]] || { echo "Install Slack Desktop first." >&2; exit 1; }
 
 if [[ ! -f $HOME/.local/state/inferna/current/theme/slack.json ]]; then
-  omarchy-theme-refresh
+  inferna-theme-refresh
 fi
 
 desktop="/usr/share/applications/slack.desktop"
@@ -24,7 +24,7 @@ if ! grep -qE '^Exec=(/usr/bin/)?slack( |$)' "$desktop"; then
 fi
 
 mkdir -p "${override%/*}" "$state"
-if [[ -f $override ]] && ! grep -qE '^Exec=omarchy-launch-slack( |$)' "$override"; then
+if [[ -f $override ]] && ! grep -qE '^Exec=inferna-launch-slack( |$)' "$override"; then
   if [[ -e $override.before-omarchy ]]; then
     echo "An earlier launcher backup already exists: $override.before-omarchy" >&2
     exit 1
@@ -33,11 +33,11 @@ if [[ -f $override ]] && ! grep -qE '^Exec=omarchy-launch-slack( |$)' "$override
 fi
 pending=$(mktemp "$override.XXXXXX")
 trap 'rm -f "$pending"' EXIT
-sed -E 's#^Exec=(/usr/bin/)?slack( |$)#Exec=omarchy-launch-slack\2#' "$desktop" >"$pending"
+sed -E 's#^Exec=(/usr/bin/)?slack( |$)#Exec=inferna-launch-slack\2#' "$desktop" >"$pending"
 mv "$pending" "$override"
 touch "$state/enabled"
 update-desktop-database "${override%/*}"
-omarchy-theme-set-slack
+inferna-theme-set-slack
 
 echo "Slack theme sync enabled. Fully quit Slack and reopen it from the launcher once."
 echo "Future Omarchy theme changes will recolor open Slack windows automatically."

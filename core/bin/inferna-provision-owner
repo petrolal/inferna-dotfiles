@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=First-boot provisioning: create the user on a machine installed in deferred provisioning
-# omarchy:requires-sudo=true
-# omarchy:hidden=true
+# inferna:summary=First-boot provisioning: create the user on a machine installed in deferred provisioning
+# inferna:requires-sudo=true
+# inferna:hidden=true
 
-# Runs on tty1 via omarchy-provision-owner.service when /var/lib/omarchy/provisioning/pending
-# exists — the state a deferred-provisioning ISO install or omarchy-system-factory-reset leaves
+# Runs on tty1 via inferna-provision-owner.service when /var/lib/omarchy/provisioning/pending
+# exists — the state a deferred-provisioning ISO install or inferna-system-factory-reset leaves
 # behind. Asks for the user (the configurator's Step 2), creates it with the
 # groups system setup recorded, finalizes it offline, re-keys LUKS from the
 # throwaway install passphrase to the user's password, and hands off to SDDM.
 # A platform whose boot package owns its boot chain prepares it, drops the
 # install key's unlock from it and records the kept key slot through
-# omarchy-lifecycle-dispatch.
+# inferna-lifecycle-dispatch.
 
 set -euo pipefail
 
 PROVISIONING_DIR=/var/lib/omarchy/provisioning
 OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
-LOG_FILE=/var/log/omarchy-provision-owner.log
+LOG_FILE=/var/log/inferna-provision-owner.log
 
 if (( EUID != 0 )); then
-  echo "Error: omarchy-provision-owner must run as root" >&2
+  echo "Error: inferna-provision-owner must run as root" >&2
   exit 1
 fi
 
@@ -29,7 +29,7 @@ fi
 # Never set up a user on a half-wiped system: while a factory wipe is still
 # pending (i.e. it failed this boot), stand down and let it retry next boot.
 if [[ -f $PROVISIONING_DIR/wipe-pending ]]; then
-  echo "omarchy-provision-owner: factory wipe still pending; not running user setup" >&2
+  echo "inferna-provision-owner: factory wipe still pending; not running user setup" >&2
   exit 1
 fi
 
@@ -172,8 +172,8 @@ SHOW_CURSOR="${CSI}?25h"
 CLEAR="${CSI}2J${CSI}H"
 GREEN="${CSI}32m"
 
-STATE_FILE=/run/omarchy-provision-owner.state
-FINALIZE_WARNING_FLAG=/run/omarchy-provision-owner.finalize-warning
+STATE_FILE=/run/inferna-provision-owner.state
+FINALIZE_WARNING_FLAG=/run/inferna-provision-owner.finalize-warning
 
 tips=(
   "Super + Space opens the Omarchy menu for apps, settings, and more"
@@ -666,7 +666,7 @@ Timezone,${timezone:-UTC}" |
   gum confirm --negative "No, change it" "Does this look right?"
 }
 
-# Groups recorded by omarchy-apply-system's scripts at install time
+# Groups recorded by inferna-apply-system's scripts at install time
 # (/var/lib/omarchy/provisioning/groups), filtered to groups that exist on this system.
 user_groups() {
   local groups="wheel" group
@@ -739,8 +739,8 @@ create_user() {
   # uncomments %wheel in /etc/sudoers. Always write the drop-in: detecting an
   # existing grant is error-prone (omarchy ships narrow %wheel NOPASSWD rules
   # for specific commands), and a duplicate grant is harmless.
-  echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-omarchy-wheel
-  chmod 440 /etc/sudoers.d/00-omarchy-wheel
+  echo "%wheel ALL=(ALL:ALL) ALL" >/etc/sudoers.d/00-inferna-wheel
+  chmod 440 /etc/sudoers.d/00-inferna-wheel
 
   source "$OMARCHY_PATH/install/helpers/browser-policy.sh"
   for dir in "${BROWSER_POLICY_MANAGED_DIRS[@]}"; do
@@ -786,7 +786,7 @@ configure_login() {
 # login) and deletes its own unit and enablement symlink. Ordering Before= (not
 # After=) is what makes it deterministic — no sleep/race against SDDM's startup.
 install_autologin_once_cleanup() {
-  local unit=omarchy-provision-autologin-once.service
+  local unit=inferna-provision-autologin-once.service
   sed "s|@UNIT@|$unit|g" >"/etc/systemd/system/$unit" <<'UNIT'
 [Unit]
 Description=Drop the first-boot autologin before the next login
@@ -858,8 +858,8 @@ configure_region() {
   fi
   # Re-render pacman for the region with the channel this machine installed.
   channel=$(sed -n 's|^Server = https://pkgs\.omarchy\.[a-z]*/\([a-z]*\)/.*|\1|p' "$pacman_conf" | head -1)
-  if [[ -n $channel && -x $OMARCHY_PATH/bin/omarchy-apply-pacman ]]; then
-    "$OMARCHY_PATH/bin/omarchy-apply-pacman" "$channel" "${OMARCHY_REGION_TARGET:-/}" 2>&1 || true
+  if [[ -n $channel && -x $OMARCHY_PATH/bin/inferna-apply-pacman ]]; then
+    "$OMARCHY_PATH/bin/inferna-apply-pacman" "$channel" "${OMARCHY_REGION_TARGET:-/}" 2>&1 || true
   fi
 }
 
@@ -869,7 +869,7 @@ configure_region() {
 # it at every boot.
 configure_wireless_regdom() {
   bash "$OMARCHY_PATH/install/hardware/set-wireless-regdom.sh" 2>&1 || return 0
-  if omarchy-cmd-present set-wireless-regdom; then
+  if inferna-cmd-present set-wireless-regdom; then
     set-wireless-regdom 2>&1 || true
   fi
 }
@@ -889,15 +889,15 @@ finalize_user() {
     OMARCHY_SETUP_CONTEXT=provision-owner \
     OMARCHY_INSTALL_LOG_FILE="$LOG_FILE" \
     OMARCHY_LOG_TO_STDOUT=1 \
-    "$OMARCHY_PATH/bin/omarchy-provision-user" --force --first-install
+    "$OMARCHY_PATH/bin/inferna-provision-user" --force --first-install
 }
 
 # During the provisioning window the staged key rides in the UKI's initramfs,
 # named on the kernel cmdline, so boot unlocks unattended.
 PROVISIONING_UNLOCK_FILES=(
   /etc/omarchy/provisioning.key
-  /etc/limine-entry-tool.d/99-omarchy-provisioning-unlock.conf
-  /etc/mkinitcpio.conf.d/99-omarchy-provisioning-key.conf
+  /etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf
+  /etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf
 )
 
 limine_auto_unlock_present() {
@@ -924,8 +924,8 @@ limine_auto_unlock_drop() {
     log_step "limine-update failed during re-key; restoring auto-unlock for retry"
     install -Dm600 "$PROVISIONING_DIR/luks-key" /etc/omarchy/provisioning.key
     echo 'KERNEL_CMDLINE[default]+=" cryptkey=rootfs:/etc/omarchy/provisioning.key"' \
-      >/etc/limine-entry-tool.d/99-omarchy-provisioning-unlock.conf
-    echo 'FILES+=(/etc/omarchy/provisioning.key)' >/etc/mkinitcpio.conf.d/99-omarchy-provisioning-key.conf
+      >/etc/limine-entry-tool.d/99-inferna-provisioning-unlock.conf
+    echo 'FILES+=(/etc/omarchy/provisioning.key)' >/etc/mkinitcpio.conf.d/99-inferna-provisioning-key.conf
   else
     log_step "limine-update failed during re-key; the staged key is gone, so no auto-unlock is restored"
   fi
@@ -943,8 +943,8 @@ unlock_owner() {
   [[ -z ${UNLOCK_OWNER:-} ]] || return 0
 
   local commit verify
-  commit=$("$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" --resolve provision-commit) || return 1
-  verify=$("$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" --resolve provision-verify) || return 1
+  commit=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-commit) || return 1
+  verify=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve provision-verify) || return 1
   if [[ -n $commit && -n $verify ]]; then
     UNLOCK_OWNER=platform
   elif [[ -z $commit && -z $verify ]]; then
@@ -958,7 +958,7 @@ unlock_owner() {
 luks_auto_unlock_present() {
   unlock_owner || return 0
   if [[ $UNLOCK_OWNER == "platform" ]]; then
-    ! "$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" provision-verify >>"$LOG_FILE" 2>&1
+    ! "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-verify >>"$LOG_FILE" 2>&1
   else
     limine_auto_unlock_present
   fi
@@ -967,7 +967,7 @@ luks_auto_unlock_present() {
 luks_auto_unlock_drop() {
   unlock_owner || return 1
   if [[ $UNLOCK_OWNER == "platform" ]]; then
-    "$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" provision-commit >>"$LOG_FILE" 2>&1
+    "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-commit >>"$LOG_FILE" 2>&1
   else
     limine_auto_unlock_drop
   fi
@@ -976,7 +976,7 @@ luks_auto_unlock_drop() {
 # The platform records the slot the re-key keeps, and no recovery slot; a no-op
 # where nothing does.
 luks_record_slots() {
-  "$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" luks-slots "owner=$1" "recovery=" >>"$LOG_FILE" 2>&1
+  "$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" luks-slots "owner=$1" "recovery=" >>"$LOG_FILE" 2>&1
 }
 
 # Move the LUKS volume from the throwaway install passphrase to the user's
@@ -1073,7 +1073,7 @@ reset_limine_config() {
 
   machine_id=$(cat /etc/machine-id 2>/dev/null || true)
   if [[ -f $esp/limine.conf ]]; then
-    # Same rewrite as omarchy-system-factory-reset, keyed to this identity:
+    # Same rewrite as inferna-system-factory-reset, keyed to this identity:
     # this machine's entry keeps only its header, and any copy after the first
     # is dropped. An entry-less config passes through as is.
     entries=$(awk -v id="$machine_id" '
@@ -1101,7 +1101,7 @@ reset_limine_config() {
 cleanup_oem_state() {
   rm -f "$PROVISIONING_DIR/pending" "$PROVISIONING_DIR/authorized_keys" "$PROVISIONING_DIR/setup-user" "$REKEY_STATE"
 
-  rm -f /etc/systemd/system/multi-user.target.wants/omarchy-provision-owner.service
+  rm -f /etc/systemd/system/multi-user.target.wants/inferna-provision-owner.service
   systemctl daemon-reload 2>/dev/null || true
 }
 
@@ -1158,8 +1158,8 @@ run_provisioning() {
 # anything.
 platform_ready() {
   local error
-  if error=$("$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" provision-prepare 2>&1 >>"$LOG_FILE") &&
-    error=$("$OMARCHY_PATH/bin/omarchy-lifecycle-dispatch" --resolve luks-slots 2>&1 >/dev/null); then
+  if error=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" provision-prepare 2>&1 >>"$LOG_FILE") &&
+    error=$("$OMARCHY_PATH/bin/inferna-lifecycle-dispatch" --resolve luks-slots 2>&1 >/dev/null); then
     return 0
   fi
   error=${error:-"The boot package could not prepare this machine for setup."}
@@ -1274,7 +1274,7 @@ main() {
       # getty), and on a failed deferred setup there's no user account and root
       # is locked — so exiting would strand the machine with no way in. Exec a
       # root shell on tty1; SDDM starts once it exits.
-      say "Dropping to a root shell. Run 'omarchy-provision-owner' to retry setup."
+      say "Dropping to a root shell. Run 'inferna-provision-owner' to retry setup."
       exec /bin/bash
     fi
   done

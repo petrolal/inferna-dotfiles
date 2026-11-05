@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Wait for the desktop notification server to accept notifications
-# omarchy:args=[timeout-seconds]
-# omarchy:hidden=true
+# inferna:summary=Wait for the desktop notification server to accept notifications
+# inferna:args=[timeout-seconds]
+# inferna:hidden=true
 
 set -uo pipefail
 
@@ -20,7 +20,7 @@ notification_server_ready() {
 # notification bus name before notify-send has anywhere to deliver.
 attempts=$((timeout * 10))
 while (( attempts > 0 )); do
-  if omarchy-shell notifications ping >/dev/null 2>&1 && notification_server_ready; then
+  if inferna-shell notifications ping >/dev/null 2>&1 && notification_server_ready; then
     exit 0
   fi
   attempts=$((attempts - 1))

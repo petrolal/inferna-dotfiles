@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show current monospace font
-# omarchy:examples=omarchy font current
+# inferna:summary=Show current monospace font
+# inferna:examples=inferna font current
 
 # fontconfig is the source of truth. fc-match returns a comma-separated
 # alias list (e.g. "JetBrainsMono Nerd Font,JetBrainsMono NF") so take

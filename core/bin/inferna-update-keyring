@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Ensure the Omarchy, Arch and (on aarch64) Arch Linux ARM keyring packages are installed and populated
-# omarchy:requires-sudo=true
+# inferna:summary=Ensure the Omarchy, Arch and (on aarch64) Arch Linux ARM keyring packages are installed and populated
+# inferna:requires-sudo=true
 
-# omarchy-update runs this under set -e as a trusted pre-step, so a failed recv
+# inferna-update runs this under set -e as a trusted pre-step, so a failed recv
 # or a broken keyring has to stop this script here, not surface later as
 # signature errors in the middle of the main transaction.
 set -euo pipefail
 
-if omarchy-pkg-missing omarchy-keyring || ! sudo pacman-key --list-keys 40DFB630FF42BCFFB047046CF0134EE680CAC571 &>/dev/null; then
+if inferna-pkg-missing inferna-keyring || ! sudo pacman-key --list-keys 40DFB630FF42BCFFB047046CF0134EE680CAC571 &>/dev/null; then
   sudo pacman-key --recv-keys 40DFB630FF42BCFFB047046CF0134EE680CAC571 --keyserver keys.openpgp.org
   sudo pacman-key --lsign-key 40DFB630FF42BCFFB047046CF0134EE680CAC571
 
   # This is generally not a good idea, but this is a special case because we're going to be updating
-  # the full set of packages in omarchy-update-system-pkgs right after this (and it needs latest keyring)!
+  # the full set of packages in inferna-update-system-pkgs right after this (and it needs latest keyring)!
   sudo pacman -Sy
-  omarchy-pkg-add omarchy-keyring
+  inferna-pkg-add inferna-keyring
 
   sudo pacman-key --list-keys 40DFB630FF42BCFFB047046CF0134EE680CAC571
 fi
@@ -35,8 +35,8 @@ alarm_key_trusted() {
   [[ $(sudo gpg --homedir /etc/pacman.d/gnupg --no-permission-warning --batch --with-colons --list-keys "$alarm_key" 2>/dev/null) =~ (^|$'\n')pub:[fu]: ]]
 }
 
-if omarchy-hw-aarch64 && ! alarm_key_trusted; then
-  if omarchy-pkg-present archlinuxarm-keyring; then
+if inferna-hw-aarch64 && ! alarm_key_trusted; then
+  if inferna-pkg-present archlinuxarm-keyring; then
     sudo pacman-key --populate archlinuxarm
   else
     sudo pacman-key --recv-keys "$alarm_key" --keyserver keyserver.ubuntu.com
@@ -45,15 +45,15 @@ if omarchy-hw-aarch64 && ! alarm_key_trusted; then
   fi
 fi
 
-# Ensure we have the latest archlinux-keyring and omarchy-keyring, maintainer
+# Ensure we have the latest archlinux-keyring and inferna-keyring, maintainer
 # keys might have changed.
 # --needed installs only a newer keyring: new or revoked keys reach the repos
 # as a new package version, and an installed version was populated when it
 # went in, so reinstalling the same one only repeats that populate.
 # An aarch64 machine's Arch Linux ARM repositories are signed with keys of
 # their own, so its keyring is kept current the same way.
-keyrings=(archlinux-keyring omarchy-keyring)
-if omarchy-hw-aarch64 && { omarchy-pkg-present archlinuxarm-keyring || (( alarm_keyring_missing )); }; then
+keyrings=(archlinux-keyring inferna-keyring)
+if inferna-hw-aarch64 && { inferna-pkg-present archlinuxarm-keyring || (( alarm_keyring_missing )); }; then
   keyrings+=(archlinuxarm-keyring)
 fi
 # A platform package names the signing keyrings of the repositories it adds,
@@ -61,7 +61,7 @@ fi
 # repository the machine didn't already trust; a refreshed keyring may carry
 # that repository's new keys. A line that isn't one keyring package name is
 # skipped with a warning, so a mistake in the list can't stop every update.
-platform_keyrings=/usr/share/omarchy-platform/keyrings
+platform_keyrings=/usr/share/inferna-platform/keyrings
 if [[ -f $platform_keyrings ]]; then
   while read -r keyring extra || [[ -n $keyring ]]; do
     [[ -n $keyring && $keyring != \#* ]] || continue
@@ -69,7 +69,7 @@ if [[ -f $platform_keyrings ]]; then
       echo "Warning: skipping ${keyring}${extra:+ $extra} in $platform_keyrings: not a keyring package name" >&2
       continue
     fi
-    if omarchy-pkg-present "$keyring" && [[ " ${keyrings[*]} " != *" $keyring "* ]]; then
+    if inferna-pkg-present "$keyring" && [[ " ${keyrings[*]} " != *" $keyring "* ]]; then
       keyrings+=("$keyring")
     fi
   done <"$platform_keyrings"
@@ -77,7 +77,7 @@ fi
 echo -e "\e[32m\nUpdate signing keys\e[0m"
 sudo pacman -Sy --needed --noconfirm "${keyrings[@]}" >/dev/null 2> >(grep -vE '^warning: [a-z0-9@._+-]+-keyring-[^ ]+ is up to date -- skipping$' >&2)
 
-if omarchy-hw-aarch64 && ! alarm_key_trusted; then
+if inferna-hw-aarch64 && ! alarm_key_trusted; then
   echo "Arch Linux ARM's signing key $alarm_key is still not trusted" >&2
   exit 1
 fi

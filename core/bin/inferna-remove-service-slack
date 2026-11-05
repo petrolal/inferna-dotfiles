@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Uninstall Slack Desktop and clean up its theme integration
-# omarchy:hidden=true
-# omarchy:requires-sudo=true
+# inferna:summary=Uninstall Slack Desktop and clean up its theme integration
+# inferna:hidden=true
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
-omarchy-pkg-drop slack-desktop
+inferna-pkg-drop slack-desktop
 override="$HOME/.local/share/applications/slack.desktop"
-if [[ -f $override ]] && grep -qE '^Exec=omarchy-launch-slack( |$)' "$override"; then
+if [[ -f $override ]] && grep -qE '^Exec=inferna-launch-slack( |$)' "$override"; then
   rm "$override"
   update-desktop-database "${override%/*}"
 fi

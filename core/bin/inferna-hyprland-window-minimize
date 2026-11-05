@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Minimize a window to the dock
-# omarchy:args=[window-address]
+# inferna:summary=Minimize a window to the dock
+# inferna:args=[window-address]
 
 # The active window when given no address. Minimized windows wait on a special
 # workspace, and the dock brings them back.
@@ -15,17 +15,17 @@ fi
 [[ -n $ADDRESS && $WORKSPACE =~ ^[0-9]+$ ]] || exit 1
 
 # Only floating workspaces have the dock to bring a window back from.
-[[ $(omarchy-hyprland-workspace-layout-current "$WORKSPACE") == "floating" ]] || exit 0
+[[ $(inferna-hyprland-workspace-layout-current "$WORKSPACE") == "floating" ]] || exit 0
 
 remember_minimized_from() {
   local address=$1 workspace=$2 clients tag
   if clients=$(hyprctl clients -j); then
     while read -r tag; do
-      [[ $tag =~ ^omarchy-minimized-from-[0-9]+$ && $tag != "omarchy-minimized-from-$workspace" ]] || continue
+      [[ $tag =~ ^inferna-minimized-from-[0-9]+$ && $tag != "inferna-minimized-from-$workspace" ]] || continue
       hyprctl dispatch "hl.dsp.window.tag({ tag = \"-$tag\", window = \"address:$address\" })" >/dev/null
     done < <(jq -r --arg address "$address" '.[] | select(.address == $address) | (.tags // [])[]' <<<"$clients")
   fi
-  hyprctl dispatch "hl.dsp.window.tag({ tag = \"+omarchy-minimized-from-$workspace\", window = \"address:$address\" })" >/dev/null
+  hyprctl dispatch "hl.dsp.window.tag({ tag = \"+inferna-minimized-from-$workspace\", window = \"address:$address\" })" >/dev/null
 }
 
 remember_minimized_from "$ADDRESS" "$WORKSPACE"

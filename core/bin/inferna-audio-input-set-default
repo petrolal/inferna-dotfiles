@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the default audio input and move active streams
-# omarchy:args=<node-id> <source-name>
-# omarchy:examples=omarchy audio input set default 43 alsa_input.pci-0000_00_1f.3.analog-stereo
+# inferna:summary=Set the default audio input and move active streams
+# inferna:args=<node-id> <source-name>
+# inferna:examples=inferna audio input set default 43 alsa_input.pci-0000_00_1f.3.analog-stereo
 
 node_id=${1:-}
 source_name=${2:-}
 
 if [[ -z $node_id || -z $source_name ]]; then
-  echo "Usage: omarchy-audio-input-set-default <node-id> <source-name>" >&2
+  echo "Usage: inferna-audio-input-set-default <node-id> <source-name>" >&2
   exit 1
 fi
 

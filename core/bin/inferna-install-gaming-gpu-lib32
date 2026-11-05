@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install lib32 graphics drivers (Vulkan + NVIDIA) for any detected GPUs.
-# omarchy:group=install
-# omarchy:name=gaming gpu-lib32
-# omarchy:requires-sudo=true
+# inferna:summary=Install lib32 graphics drivers (Vulkan + NVIDIA) for any detected GPUs.
+# inferna:group=install
+# inferna:name=gaming gpu-lib32
+# inferna:requires-sudo=true
 
 set -e
 
 # lib32 drivers come from Arch's multilib repository, which only exists on
 # x86_64. aarch64 runs Valve's native arm64 Steam client and needs none.
-omarchy-hw-x86 || exit 0
+inferna-hw-x86 || exit 0
 
 echo "Installing lib32 graphics drivers..."
 
@@ -25,12 +25,12 @@ for vendor in "${!VULKAN_DRIVERS[@]}"; do
   fi
 done
 
-if omarchy-hw-nvidia-gsp; then
+if inferna-hw-nvidia-gsp; then
   PACKAGES+=(lib32-nvidia-utils)
-elif omarchy-hw-nvidia-without-gsp; then
+elif inferna-hw-nvidia-without-gsp; then
   PACKAGES+=(lib32-nvidia-580xx-utils)
 fi
 
 if (( ${#PACKAGES[@]} > 0 )); then
-  omarchy-pkg-add "${PACKAGES[@]}"
+  inferna-pkg-add "${PACKAGES[@]}"
 fi

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch or focus on a given web app identified by the window-pattern.
-# omarchy:args=<window-pattern> <url-and-flags...>
+# inferna:summary=Launch or focus on a given web app identified by the window-pattern.
+# inferna:args=<window-pattern> <url-and-flags...>
 
 if (($# == 0)); then
-  echo "Usage: omarchy-launch-or-focus-webapp [window-pattern] [url-and-flags...]"
+  echo "Usage: inferna-launch-or-focus-webapp [window-pattern] [url-and-flags...]"
   exit 1
 fi
 
 WINDOW_PATTERN="$1"
 shift
-LAUNCH_COMMAND="omarchy-launch-webapp $@"
+LAUNCH_COMMAND="inferna-launch-webapp $@"
 
-exec omarchy-launch-or-focus "$WINDOW_PATTERN" "$LAUNCH_COMMAND"
+exec inferna-launch-or-focus "$WINDOW_PATTERN" "$LAUNCH_COMMAND"

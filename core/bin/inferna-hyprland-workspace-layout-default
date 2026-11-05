@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set the layout of workspaces without one of their own: dwindle, scrolling, or floating
-# omarchy:args=[dwindle|scrolling|floating]
-# omarchy:examples=omarchy hyprland workspace layout default | omarchy hyprland workspace layout default scrolling
+# inferna:summary=Show or set the layout of workspaces without one of their own: dwindle, scrolling, or floating
+# inferna:args=[dwindle|scrolling|floating]
+# inferna:examples=inferna hyprland workspace layout default | inferna hyprland workspace layout default scrolling
 
 # Layout changes replace one notification instead of stacking a new one for
 # each press, so cycling through the layouts leaves a single, current one.
@@ -10,7 +10,7 @@ notify_layout() {
   local state="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layout-notification"
   local last id
   [[ -r $state ]] && read -r last <"$state"
-  if id=$(omarchy-notification-send -p -r "${last:-0}" -g 󱂬 "$1") && [[ $id =~ ^[0-9]+$ ]]; then
+  if id=$(inferna-notification-send -p -r "${last:-0}" -g 󱂬 "$1") && [[ $id =~ ^[0-9]+$ ]]; then
     mkdir -p "$(dirname "$state")" && printf '%s\n' "$id" >"$state"
   fi
 }
@@ -28,11 +28,11 @@ if (( $# == 0 )); then
 fi
 
 case $1 in
-  dwindle) MESSAGE=$(omarchy-i18n layout.defaultTiling) ;;
-  scrolling) MESSAGE=$(omarchy-i18n layout.defaultScrolling) ;;
-  floating) MESSAGE=$(omarchy-i18n layout.defaultFloating) ;;
+  dwindle) MESSAGE=$(inferna-i18n layout.defaultTiling) ;;
+  scrolling) MESSAGE=$(inferna-i18n layout.defaultScrolling) ;;
+  floating) MESSAGE=$(inferna-i18n layout.defaultFloating) ;;
   *)
-    echo "Usage: omarchy-hyprland-workspace-layout-default [dwindle|scrolling|floating]" >&2
+    echo "Usage: inferna-hyprland-workspace-layout-default [dwindle|scrolling|floating]" >&2
     exit 1
     ;;
 esac
@@ -58,8 +58,8 @@ busy_workspace_ids() {
         [$clients[]
           | select(.workspace.name == "special:minimized")
           | (.tags // [])[]
-          | select(test("^omarchy-minimized-from-[1-9][0-9]*$"))
-          | sub("^omarchy-minimized-from-"; "")
+          | select(test("^inferna-minimized-from-[1-9][0-9]*$"))
+          | sub("^inferna-minimized-from-"; "")
           | tonumber]
       ) | unique | .[]
     else
@@ -69,13 +69,13 @@ busy_workspace_ids() {
 }
 
 if ! busy=$(busy_workspace_ids); then
-  echo "omarchy-hyprland-workspace-layout-default: could not read the workspaces or the minimized windows, so nothing was changed" >&2
+  echo "inferna-hyprland-workspace-layout-default: could not read the workspaces or the minimized windows, so nothing was changed" >&2
   exit 1
 fi
 
 while read -r workspace; do
   [[ -n $workspace && ! -f $MODES_DIR/$workspace.lua ]] || continue
-  current=$(omarchy-hyprland-workspace-layout-current "$workspace")
+  current=$(inferna-hyprland-workspace-layout-current "$workspace")
   if [[ $current != "$1" ]]; then
     printf 'o.workspace_mode({ workspace = "%s", mode = "%s" })\n' "$workspace" "$current" >"$MODES_DIR/$workspace.lua"
   fi
@@ -91,7 +91,7 @@ done
 # user's own looknfeel. Workspaces given a layout with Super + L keep theirs.
 printf 'o.workspace_mode({ default = "%s" })\n' "$1" >"$DEFAULT_FILE"
 
-omarchy-restart-hyprctl
-omarchy-shell -q omarchy.workspaces refresh
-omarchy-shell -q omarchy.dock refresh
+inferna-restart-hyprctl
+inferna-shell -q omarchy.workspaces refresh
+inferna-shell -q omarchy.dock refresh
 notify_layout "$MESSAGE"

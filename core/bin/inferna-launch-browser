@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the default browser as determined by xdg-settings.
-# omarchy:args=[url]
+# inferna:summary=Launch the default browser as determined by xdg-settings.
+# inferna:args=[url]
 
-default_browser=$(omarchy-cmd-default-browser)
+default_browser=$(inferna-cmd-default-browser)
 
-# Read Exec= from the same data dirs omarchy-cmd-default-browser searched, in
+# Read Exec= from the same data dirs inferna-cmd-default-browser searched, in
 # the same order, so the command always comes from the entry that was checked.
 IFS=: read -ra data_dirs <<<"${XDG_DATA_HOME:-$HOME/.local/share}:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 browser_exec=""
@@ -19,8 +19,8 @@ done
 # Handing an empty command to uwsm-app surfaces as "Command not found: \"\"",
 # which fails a keybinding silently. Say what is missing and how to fix it.
 if [[ -z $browser_exec ]]; then
-  echo "omarchy-launch-browser: no default browser found; set one with 'omarchy default browser <browser>'" >&2
-  omarchy-notification-send -u critical -g 󰖟 "$(omarchy-i18n browser.notFound)" "$(omarchy-i18n browser.notFoundHint)"
+  echo "inferna-launch-browser: no default browser found; set one with 'omarchy default browser <browser>'" >&2
+  inferna-notification-send -u critical -g 󰖟 "$(inferna-i18n browser.notFound)" "$(inferna-i18n browser.notFoundHint)"
   exit 1
 fi
 
@@ -38,8 +38,8 @@ if [[ " $* " == *" --private "* ]]; then
   fi
 fi
 
-if ! omarchy-cmd-browser-handoff "$browser_exec" "${@/--private/$private_flag}"; then
-  systemd-run --user --quiet --collect --unit="omarchy-browser-$(date +%s%N)" \
+if ! inferna-cmd-browser-handoff "$browser_exec" "${@/--private/$private_flag}"; then
+  systemd-run --user --quiet --collect --unit="inferna-browser-$(date +%s%N)" \
     --property=StandardOutput=null --property=StandardError=null \
     uwsm-app -- "$browser_exec" "${@/--private/$private_flag}"
 fi
@@ -53,5 +53,5 @@ for argument in "$@"; do
 done
 
 if [[ -n $url && -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
-  omarchy-hyprland-focus-app "^$(basename "$browser_exec" -stable).*$" || true
+  inferna-hyprland-focus-app "^$(basename "$browser_exec" -stable).*$" || true
 fi

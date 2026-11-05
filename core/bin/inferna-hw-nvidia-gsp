@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Detect whether the computer has an NVIDIA GPU with GSP firmware (Turing or newer).
+# inferna:summary=Detect whether the computer has an NVIDIA GPU with GSP firmware (Turing or newer).
 
 # Turing is the first generation with GSP firmware, and the first to use device
 # IDs at 0x1e00 or above; Maxwell, Pascal, and Volta all sit below that line.

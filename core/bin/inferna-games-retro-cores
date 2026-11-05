@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List installed RetroArch core names
+# inferna:summary=List installed RetroArch core names
 
 set -e
 

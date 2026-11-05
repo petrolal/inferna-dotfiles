@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open the omarchy-shell dev gallery (qs.Ui kit preview)
-# omarchy:args=[section]
-# omarchy:examples=omarchy dev ui-preview | omarchy dev ui-preview button | omarchy dev ui-preview button-group | omarchy dev ui-preview slider
+# inferna:summary=Open the inferna-shell dev gallery (qs.Ui kit preview)
+# inferna:args=[section]
+# inferna:examples=inferna dev ui-preview | inferna dev ui-preview button | inferna dev ui-preview button-group | inferna dev ui-preview slider
 #
 # Pass a section name to jump straight to that component instead of
 # scrolling from the top. Section names match the cursor section ids in
@@ -17,4 +17,4 @@ else
   payload='{}'
 fi
 
-omarchy-shell shell summon omarchy.dev-gallery "$payload"
+inferna-shell shell summon omarchy.dev-gallery "$payload"

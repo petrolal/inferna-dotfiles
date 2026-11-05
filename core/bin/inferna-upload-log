@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Upload logs to logs.omarchy.org
-# omarchy:args=<log-file>
-# omarchy:hidden=true
+# inferna:summary=Upload logs to logs.omarchy.org
+# inferna:args=<log-file>
+# inferna:hidden=true
 
 LOG_TYPE="${1:-install}"
 TEMP_LOG="/tmp/upload-log.txt"
 SYSTEM_INFO="/tmp/system-info.txt"
 
 # Get system information if fastfetch is available
-if omarchy-cmd-present fastfetch; then
+if inferna-cmd-present fastfetch; then
   {
     echo "========================================="
     echo "SYSTEM INFORMATION"
@@ -59,13 +59,13 @@ same_or_prefix_log() {
 case "$LOG_TYPE" in
 install)
   # In the live ISO before reboot, the target system is mounted at /mnt so the
-  # omarchy install log lives at /mnt/var/log/omarchy-install.log. On the
-  # installed system it's at /var/log/omarchy-install.log. Prefer whichever
+  # omarchy install log lives at /mnt/var/log/inferna-install.log. On the
+  # installed system it's at /var/log/inferna-install.log. Prefer whichever
   # exists, with /mnt taking precedence (only present in the ISO context, and
   # there it's the right one).
   ARCHINSTALL_LOG="/var/log/archinstall/install.log"
-  LIVE_OMARCHY_LOG="/var/log/omarchy-install.log"
-  TARGET_OMARCHY_LOG="/mnt/var/log/omarchy-install.log"
+  LIVE_OMARCHY_LOG="/var/log/inferna-install.log"
+  TARGET_OMARCHY_LOG="/mnt/var/log/inferna-install.log"
 
   cat "$SYSTEM_INFO" >"$TEMP_LOG"
   if [[ -s $ARCHINSTALL_LOG ]]; then

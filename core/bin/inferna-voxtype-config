@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open Voxtype configuration
+# inferna:summary=Open Voxtype configuration
 
 set -e
 
-omarchy-launch-floating-terminal-with-presentation "voxtype configure"
-omarchy-restart-shell
+inferna-launch-floating-terminal-with-presentation "voxtype configure"
+inferna-restart-shell

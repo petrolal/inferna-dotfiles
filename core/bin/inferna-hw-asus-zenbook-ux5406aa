@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Detect ASUS Zenbook UX5406AA series laptops on Intel Panther Lake.
+# inferna:summary=Detect ASUS Zenbook UX5406AA series laptops on Intel Panther Lake.
 
-omarchy-hw-match "ux5406aa" && omarchy-hw-intel-ptl
+inferna-hw-match "ux5406aa" && inferna-hw-intel-ptl

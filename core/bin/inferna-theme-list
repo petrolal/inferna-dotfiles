@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List available themes
-# omarchy:examples=omarchy theme list | omarchy theme set "Tokyo Night"
+# inferna:summary=List available themes
+# inferna:examples=inferna theme list | inferna theme set "Tokyo Night"
 
 {
   find ~/.config/inferna/themes/ -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -printf '%f\n'

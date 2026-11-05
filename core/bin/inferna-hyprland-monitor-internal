@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Enable, disable, toggle, or recover the internal laptop display
-# omarchy:args=<on|off|toggle|recover>
+# inferna:summary=Enable, disable, toggle, or recover the internal laptop display
+# inferna:args=<on|off|toggle|recover>
 
 TOGGLE="internal-monitor-disable"
 TOGGLE_FLAG="$HOME/.local/state/inferna/toggles/hypr/$TOGGLE.lua"
 MIRROR_TOGGLE="internal-monitor-mirror"
 
-INTERNAL=$(omarchy-hyprland-monitor-laptop)
+INTERNAL=$(inferna-hyprland-monitor-laptop)
 
 wake() {
   hyprctl dispatch 'hl.dsp.dpms({ action = "enable" })' >/dev/null 2>&1 || true
 }
 
 on() {
-  if omarchy-hyprland-toggle-enabled $TOGGLE; then
-    omarchy-hyprland-toggle $TOGGLE off
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.laptopEnabled)"
+  if inferna-hyprland-toggle-enabled $TOGGLE; then
+    inferna-hyprland-toggle $TOGGLE off
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.laptopEnabled)"
   fi
 
   wake
@@ -24,26 +24,26 @@ on() {
 
 off() {
   if [[ -z $INTERNAL ]]; then
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.noLaptopDisplay)"
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.noLaptopDisplay)"
     exit 1
   fi
 
   # The name is written into generated Lua below, so only a plain connector
   # name may pass; anything else could execute on the next reload.
   if [[ ! $INTERNAL =~ ^[A-Za-z0-9._-]+$ ]]; then
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.unsafeName)"
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.unsafeName)"
     exit 1
   fi
 
-  if ! omarchy-hyprland-monitor-external-active; then
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.onlyDisplay)"
+  if ! inferna-hyprland-monitor-external-active; then
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.onlyDisplay)"
     exit 1
   fi
 
-  if omarchy-hyprland-toggle-disabled $TOGGLE && omarchy-hyprland-toggle-disabled $MIRROR_TOGGLE; then
+  if inferna-hyprland-toggle-disabled $TOGGLE && inferna-hyprland-toggle-disabled $MIRROR_TOGGLE; then
     printf 'hl.monitor({ output = "%s", disabled = true })\n' "$INTERNAL" >"$TOGGLE_FLAG"
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.laptopDisabled)"
-    omarchy-restart-hyprctl
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.laptopDisabled)"
+    inferna-restart-hyprctl
   fi
 }
 
@@ -51,15 +51,15 @@ recover() {
   # Runs from the clamshell watcher every few seconds, so it must be a no-op
   # unless it actually re-enables a display: an unconditional wake here undoes
   # lock-screen blanking and races the resume modeset into a visible flash.
-  omarchy-hyprland-monitor-external-active && return 0
-  omarchy-hyprland-toggle-enabled $TOGGLE || return 0
+  inferna-hyprland-monitor-external-active && return 0
+  inferna-hyprland-toggle-enabled $TOGGLE || return 0
 
-  omarchy-hyprland-toggle $TOGGLE off
+  inferna-hyprland-toggle $TOGGLE off
   wake
 }
 
 toggle() {
-  if omarchy-hyprland-toggle-enabled $TOGGLE; then
+  if inferna-hyprland-toggle-enabled $TOGGLE; then
     on
   else
     off

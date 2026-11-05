@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the current background image or video
-# omarchy:args=<path-to-media>
-# omarchy:examples=omarchy theme bg set ~/Pictures/background.png
+# inferna:summary=Set the current background image or video
+# inferna:args=<path-to-media>
+# inferna:examples=inferna theme bg set ~/Pictures/background.png
 
 if [[ -z $1 ]]; then
-  echo "Usage: omarchy-theme-bg-set <path-to-media>" >&2
+  echo "Usage: inferna-theme-bg-set <path-to-media>" >&2
   exit 1
 fi
 
@@ -18,14 +18,14 @@ if [[ ! -f $BACKGROUND ]]; then
 fi
 
 # A theme switch repoints the background too, so the two take turns.
-exec 9>"${XDG_RUNTIME_DIR:-/tmp}/omarchy-theme-set.lock"
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/inferna-theme-set.lock"
 flock 9
 
-INTRO=$(omarchy-theme-bg-boot-intro --resolve-enabled "$BACKGROUND")
+INTRO=$(inferna-theme-bg-boot-intro --resolve-enabled "$BACKGROUND")
 
 # The shell sequences the change, with the intro or the ordinary transition,
 # and repoints the link itself once nothing on screen can flash.
-if [[ $(omarchy-shell shell switchBackground "$BACKGROUND" "$INTRO" 2>/dev/null) != "ok" ]]; then
+if [[ $(inferna-shell shell switchBackground "$BACKGROUND" "$INTRO" 2>/dev/null) != "ok" ]]; then
   ln -nsf "$BACKGROUND" "$CURRENT_BACKGROUND_LINK"
-  omarchy-shell -q background set "$BACKGROUND"
+  inferna-shell -q background set "$BACKGROUND"
 fi

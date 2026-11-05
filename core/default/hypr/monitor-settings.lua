@@ -18,17 +18,18 @@
 
 local paths = require("default.hypr.paths")
 
-local STATE_FILE = paths.state_home .. "/omarchy/monitors/settings"
+local STATE_FILE = paths.state_home .. "/inferna/monitors/settings"
+local LEGACY_STATE_FILE = paths.state_home .. "/omarchy/monitors/settings"
 
 local M = {}
 
 local function load()
   local settings = {}
-  if _G.omarchy_monitor_panel_settings == false then
+  if _G.inferna_monitor_panel_settings == false or _G.omarchy_monitor_panel_settings == false then
     return settings
   end
 
-  local file = io.open(STATE_FILE, "r")
+  local file = io.open(STATE_FILE, "r") or io.open(LEGACY_STATE_FILE, "r")
   if not file then
     return settings
   end

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open a generic image selector menu
-# omarchy:args=[--selected <image>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>...
+# inferna:summary=Open a generic image selector menu
+# inferna:args=[--selected <image>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>...
 
 selected_image=""
 print_name=false
@@ -15,7 +15,7 @@ print_rows=false
 image_dirs=()
 
 usage() {
-  echo "Usage: omarchy-menu-images [--selected <image>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>..."
+  echo "Usage: inferna-menu-images [--selected <image>] [--print-name] [--show-labels] [--filterable] [--lazy-thumbnails] [--preload] [--prepare-only] [--cache-only] [--print-rows] <image-dir>..."
 }
 
 while (( $# > 0 )); do
@@ -386,11 +386,11 @@ fi
 rows_b64=$(printf '%s' "$rows" | base64 -w 0)
 
 if [[ $preload == true ]]; then
-  omarchy-shell image-selector preload "$rows_b64" "$selected_list_image" "$show_labels" "$filterable" >/dev/null || true
+  inferna-shell image-selector preload "$rows_b64" "$selected_list_image" "$show_labels" "$filterable" >/dev/null || true
   exit 0
 fi
 
-if ! open_result=$(omarchy-shell image-selector open \
+if ! open_result=$(inferna-shell image-selector open \
      "" \
      "$rows_b64" \
      "$selected_list_image" \

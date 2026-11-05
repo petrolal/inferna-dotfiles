@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Keep logind from suspending on lid close while a display it misses is in use
-# omarchy:group=system
-# omarchy:hidden=true
+# inferna:summary=Keep logind from suspending on lid close while a display it misses is in use
+# inferna:group=system
+# inferna:hidden=true
 
 # systemd-logind treats a closed lid as docked only when an external display is
 # on a connector type it lists (HDMI, DisplayPort, DVI, VGA...). USB-C displays
@@ -14,7 +14,7 @@
 # lid that is still shut suspends at once: logind rechecks a closed lid after
 # every event.
 
-UNIT="omarchy-lid-inhibit.service"
+UNIT="inferna-lid-inhibit.service"
 drm_path="${OMARCHY_DRM_PATH:-/sys/class/drm}"
 cgroup_path="${OMARCHY_CGROUP_PATH:-/proc/self/cgroup}"
 
@@ -67,7 +67,7 @@ fi
 # Only where logind would ignore a docked lid is there anything to stand in for.
 # An unanswered query changes nothing, for the same reason as above.
 wanted=0
-if (( in_use )) && omarchy-hw-laptop; then
+if (( in_use )) && inferna-hw-laptop; then
   docked_action=$(busctl get-property org.freedesktop.login1 /org/freedesktop/login1 \
     org.freedesktop.login1.Manager HandleLidSwitchDocked 2>/dev/null) || exit 0
   [[ -n $docked_action ]] || exit 0

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Copy a shipped user config from $OMARCHY_PATH/config into ~/.config (backs up your version).
-# omarchy:args=<config-path>
+# inferna:summary=Copy a shipped user config from $OMARCHY_PATH/config into ~/.config (backs up your version).
+# inferna:args=<config-path>
 
 config_file=${1:-}
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Copy subscription account logins to another Omarchy machine over SSH
-# omarchy:args=[--replace] <ssh-host> [claude|codex|grok...]
-# omarchy:examples=omarchy agent account copy laptop | omarchy agent account copy user@desktop claude
+# inferna:summary=Copy subscription account logins to another Omarchy machine over SSH
+# inferna:args=[--replace] <ssh-host> [claude|codex|grok...]
+# inferna:examples=inferna agent account copy laptop | inferna agent account copy user@desktop claude
 
 set -euo pipefail
 
@@ -28,13 +28,13 @@ while (( $# > 0 )); do
 done
 
 if [[ -z $host || $host == -* ]]; then
-  echo "Usage: omarchy-agent-account-copy [--replace] <ssh-host> [claude|codex|grok...]" >&2
+  echo "Usage: inferna-agent-account-copy [--replace] <ssh-host> [claude|codex|grok...]" >&2
   exit 1
 fi
 
 # Finish the export before connecting, so invalid input never reaches SSH.
 # The credentials stay in memory and stdin, never in command arguments.
-payload=$(omarchy-agent-account-transfer bundle "${providers[@]}")
-receiver=$(omarchy-agent-account-transfer receiver-command ${replace:+--replace})
+payload=$(inferna-agent-account-transfer bundle "${providers[@]}")
+receiver=$(inferna-agent-account-transfer receiver-command ${replace:+--replace})
 # Disable terminal allocation so SSH cannot echo the credential stream.
 printf '%s\n' "$payload" | ssh -T -- "$host" "$receiver"

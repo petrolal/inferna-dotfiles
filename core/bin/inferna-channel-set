@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the Omarchy package channel.
-# omarchy:args=<stable|rc|edge|dev>
-# omarchy:requires-sudo=true
+# inferna:summary=Set the Omarchy package channel.
+# inferna:args=<stable|rc|edge|dev>
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -11,7 +11,7 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-usage() { echo "Usage: omarchy-channel-set [stable|rc|edge|dev]"; }
+usage() { echo "Usage: inferna-channel-set [stable|rc|edge|dev]"; }
 fail() { echo "Error: $*" >&2; exit 1; }
 
 confirm_dev() {
@@ -49,7 +49,7 @@ validate_dev_region() {
   # just a directory with the region's name: dev refreshes edge, and leaving
   # dev later refreshes stable or rc with this checkout's tools.
   local profile="$checkout/default/regions/$region/pacman" fragment supported=true
-  [[ -x $checkout/bin/omarchy-apply-pacman ]] || supported=false
+  [[ -x $checkout/bin/inferna-apply-pacman ]] || supported=false
   for fragment in omarchy-{stable,rc,edge}.prepend mirrorlist-{stable,rc,edge}.prepend; do
     [[ -r $profile/$fragment ]] || supported=false
   done
@@ -67,7 +67,7 @@ link_dev_checkout() {
 
   # Check the destination before changing /etc/omarchy.conf or sudo's path.
   # An existing checkout is not pulled automatically and may be too old.
-  for required in bin/omarchy-update bin/omarchy-refresh-pacman; do
+  for required in bin/inferna-update bin/inferna-refresh-pacman; do
     if [[ ! -f $checkout/$required || ! -x $checkout/$required ]]; then
       fail "Update the checkout before switching to dev; missing required update support in $required."
     fi
@@ -82,15 +82,15 @@ link_dev_checkout() {
   # On aarch64 one from before it had platform templates would replace this
   # machine's repositories with x86's.
   if [[ $platform != "x86" ]]; then
-    for required in bin/omarchy-hw-platform install/helpers/pacman.sh; do
+    for required in bin/inferna-hw-platform install/helpers/pacman.sh; do
       if [[ ! -f $checkout/$required || ! -r $checkout/$required ||
-        ( $required == "bin/omarchy-hw-platform" && ! -x $checkout/$required ) ]]; then
+        ( $required == "bin/inferna-hw-platform" && ! -x $checkout/$required ) ]]; then
         fail "Update the checkout before switching to dev; on $platform it needs $required for this machine's repositories."
       fi
     done
   fi
 
-  omarchy-dev-link "$checkout" --no-reboot
+  inferna-dev-link "$checkout" --no-reboot
 }
 
 (( $# > 0 )) || { usage; exit 1; }
@@ -102,19 +102,19 @@ leaving_dev=0
 case "$channel" in
   stable)
     pacman_channel=stable
-    packages=(omarchy omarchy-settings)
+    packages=(omarchy inferna-settings)
     ;;
   rc)
     pacman_channel=rc
-    packages=(omarchy omarchy-settings)
+    packages=(omarchy inferna-settings)
     ;;
   edge)
     pacman_channel=edge
-    packages=(omarchy-dev omarchy-settings-dev)
+    packages=(inferna-dev inferna-settings-dev)
     ;;
   dev)
     pacman_channel=edge
-    packages=(omarchy-dev omarchy-settings-dev)
+    packages=(inferna-dev inferna-settings-dev)
     ;;
   *)
     echo "Unknown channel: $channel" >&2
@@ -126,7 +126,7 @@ esac
 # A channel this machine's platform has no templates for is refused before
 # anything changes (install/helpers/pacman.sh).
 source "$OMARCHY_PATH/install/helpers/pacman.sh"
-platform=$(omarchy-hw-platform) || fail "Cannot tell this machine's platform; nothing changed."
+platform=$(inferna-hw-platform) || fail "Cannot tell this machine's platform; nothing changed."
 templates=$(omarchy_pacman_templates "$platform") || exit 1
 [[ -f $templates/pacman-$pacman_channel.conf && -f $templates/mirrorlist-$pacman_channel ]] ||
   fail "Omarchy has no $pacman_channel channel for $platform; nothing changed."
@@ -139,7 +139,7 @@ fi
 
 # A failure past this point leaves the channel switch half-applied, so say how
 # to pick it back up rather than dying silently under set -e.
-trap 'echo -e "\nThe channel switch did not complete. Review the error above, then rerun: omarchy-channel-set '"$channel"'" >&2' ERR
+trap 'echo -e "\nThe channel switch did not complete. Review the error above, then rerun: inferna-channel-set '"$channel"'" >&2' ERR
 
 if [[ -z $dev_checkout && $OMARCHY_PATH != "/usr/share/omarchy" ]]; then
   leaving_dev=1
@@ -149,17 +149,17 @@ if [[ -n $dev_checkout ]]; then
   link_dev_checkout "$dev_checkout"
   export OMARCHY_PATH="$dev_checkout"
   export PATH="$OMARCHY_PATH/bin:$PATH"
-  omarchy-state set reboot-required
+  inferna-state set reboot-required
 fi
 
-omarchy-refresh-pacman "$pacman_channel"
+inferna-refresh-pacman "$pacman_channel"
 # The refresh can have installed an older release without this tree's helpers,
-# so the swap calls pacman itself. --ask 4 accepts omarchy <-> omarchy-dev
+# so the swap calls pacman itself. --ask 4 accepts omarchy <-> inferna-dev
 # replacement prompts without file overwrites.
 sudo env OMARCHY_UPDATE_PACMAN=1 pacman -S --needed --noconfirm --ask 4 "${packages[@]}"
 
 if [[ -z $dev_checkout ]]; then
-  omarchy-dev-unlink --no-reboot
+  inferna-dev-unlink --no-reboot
 
   if (( leaving_dev )); then
     # The packaged commands must win over the unlinked checkout's from here on.
@@ -169,11 +169,11 @@ if [[ -z $dev_checkout ]]; then
       [[ ${entry%/} == "$OMARCHY_PATH/bin" ]] || path+="${path:+:}$entry"
     done
     export PATH=$path
-    omarchy-state set reboot-required
+    inferna-state set reboot-required
   fi
   export OMARCHY_PATH=/usr/share/omarchy
 fi
 
 # The switch was already confirmed, but the user is still here: keep the
 # reboot prompt interactive.
-OMARCHY_UPDATE_UNATTENDED=0 "$OMARCHY_PATH/bin/omarchy-update" -y
+OMARCHY_UPDATE_UNATTENDED=0 "$OMARCHY_PATH/bin/inferna-update" -y

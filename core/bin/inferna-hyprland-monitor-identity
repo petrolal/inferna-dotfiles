@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the identity of the monitor on a connector
-# omarchy:args=OUTPUT
-# omarchy:hidden=true
+# inferna:summary=Print the identity of the monitor on a connector
+# inferna:args=OUTPUT
+# inferna:hidden=true
 
 # The physical monitor behind a connector, which saved monitor settings are kept
 # by, since a dock renames connectors between plugs. That's its name in
@@ -12,7 +12,7 @@
 output="${1:-}"
 
 if [[ -z $output ]]; then
-  echo "Usage: omarchy-hyprland-monitor-identity OUTPUT" >&2
+  echo "Usage: inferna-hyprland-monitor-identity OUTPUT" >&2
   exit 1
 fi
 

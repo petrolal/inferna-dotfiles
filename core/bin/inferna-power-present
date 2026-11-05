@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true if external power is connected.
+# inferna:summary=Returns true if external power is connected.
 
 power_supply_path="${OMARCHY_POWER_SUPPLY_PATH:-/sys/class/power_supply}"
 

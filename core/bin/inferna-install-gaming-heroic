@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Heroic Games Launcher (Epic, GOG, Amazon Prime Gaming) with graphics drivers.
-# omarchy:requires-sudo=true
+# inferna:summary=Install Heroic Games Launcher (Epic, GOG, Amazon Prime Gaming) with graphics drivers.
+# inferna:requires-sudo=true
 
 set -e
 
 echo "Installing Heroic Games Launcher..."
-omarchy-pkg-add heroic-games-launcher-bin
-omarchy-install-gaming-gpu-lib32
+inferna-pkg-add heroic-games-launcher-bin
+inferna-install-gaming-gpu-lib32
 
 setsid uwsm-app -- gtk-launch heroic >/dev/null 2>&1 &

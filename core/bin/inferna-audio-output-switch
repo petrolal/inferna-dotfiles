@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Switch between audio outputs while preserving the mute status
+# inferna:summary=Switch between audio outputs while preserving the mute status
 
 # Skip the physical sink an active speaker tuning fronts: rotating onto it would
 # silently bypass the tuning rather than pick a different output.
-fronted=$(omarchy-audio-tuning fronted-sink 2>/dev/null || true)
+fronted=$(inferna-audio-tuning fronted-sink 2>/dev/null || true)
 
 # pactl translates availability, headers and yes/no; parse them in the C locale.
 sinks=$(LC_ALL=C timeout 2 pactl -f json list sinks |
@@ -14,7 +14,7 @@ sinks=$(LC_ALL=C timeout 2 pactl -f json list sinks |
 sinks_count=$(jq 'length' <<<"$sinks")
 
 if (( sinks_count == 0 )); then
-  omarchy-osd -m "$(omarchy-i18n audio.noDevices)"
+  inferna-osd -m "$(inferna-i18n audio.noDevices)"
   exit 1
 fi
 
@@ -33,7 +33,7 @@ next_sink_description=$(jq -r '.description // .properties."device.description" 
 # A tuning sink sits at a fixed 100% and unmuted while real loudness lives on the
 # physical sink beneath it, so read the level from whichever sink actually carries
 # it or the OSD contradicts the volume keys.
-next_sink_effective=$(omarchy-audio-output-sink "$next_sink_name")
+next_sink_effective=$(inferna-audio-output-sink "$next_sink_name")
 next_sink_volume=$(LC_ALL=C timeout 2 pactl get-sink-volume "$next_sink_effective" 2>/dev/null |
   awk 'NR == 1 {for (i = 1; i <= NF; i++) if ($i ~ /%$/) {sub("%", "", $i); print $i; exit}}')
 [[ -n $next_sink_volume ]] || next_sink_volume=$(jq -r '.volume | to_entries[0].value.value_percent | sub("%"; "") | tonumber' <<<"$next_sink")
@@ -54,7 +54,7 @@ else
 fi
 
 if [[ $next_sink_name != $current_sink_name ]]; then
-  omarchy-audio-output-set-default "$(jq -r '.index' <<<"$next_sink")" "$next_sink_name"
+  inferna-audio-output-set-default "$(jq -r '.index' <<<"$next_sink")" "$next_sink_name"
 fi
 
-omarchy-osd -i "volume-${icon_state}" -m "$next_sink_description"
+inferna-osd -i "volume-${icon_state}" -m "$next_sink_description"

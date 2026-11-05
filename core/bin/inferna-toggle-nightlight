@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle nightlight screen temperature
-# omarchy:args=[--status]
-# omarchy:examples=omarchy toggle nightlight
+# inferna:summary=Toggle nightlight screen temperature
+# inferna:args=[--status]
+# inferna:examples=inferna toggle nightlight
 
 ON_TEMP=4000
 OFF_TEMP=6500
@@ -71,4 +71,4 @@ if (( TARGET_TEMP == OFF_TEMP )); then
   hyprctl hyprsunset identity >/dev/null 2>&1
 fi
 
-omarchy-shell -q nightlight refresh
+inferna-shell -q nightlight refresh

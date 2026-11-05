@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Log out, reboot, or shut down after closing applications
-# omarchy:args=<logout|reboot|shutdown>
-# omarchy:examples=omarchy system logout | omarchy system reboot | omarchy system shutdown
-# omarchy:aliases=omarchy logout | omarchy reboot | omarchy shutdown
+# inferna:summary=Log out, reboot, or shut down after closing applications
+# inferna:args=<logout|reboot|shutdown>
+# inferna:examples=inferna system logout | inferna system reboot | inferna system shutdown
+# inferna:aliases=inferna logout | inferna reboot | inferna shutdown
 
-usage="Usage: omarchy-system <logout|reboot|shutdown>"
+usage="Usage: inferna-system <logout|reboot|shutdown>"
 for arg in "$@"; do
   case $arg in
     -h | --help) echo "$usage"; exit 0 ;;
@@ -27,30 +27,30 @@ esac
 # Each action has whole sentences of its own, so a translation can inflect it.
 case $action in
   logout)
-    message=$(omarchy-i18n system.loggingOut)
-    failed_title=$(omarchy-i18n system.logoutFailed)
-    failed_body=$(omarchy-i18n system.logoutRetry)
+    message=$(inferna-i18n system.loggingOut)
+    failed_title=$(inferna-i18n system.logoutFailed)
+    failed_body=$(inferna-i18n system.logoutRetry)
     ;;
   reboot)
-    message=$(omarchy-i18n system.rebooting)
-    failed_title=$(omarchy-i18n system.rebootFailed)
-    failed_body=$(omarchy-i18n system.rebootRetry)
+    message=$(inferna-i18n system.rebooting)
+    failed_title=$(inferna-i18n system.rebootFailed)
+    failed_body=$(inferna-i18n system.rebootRetry)
     ;;
   shutdown)
-    message=$(omarchy-i18n system.shuttingDown)
-    failed_title=$(omarchy-i18n system.shutdownFailed)
-    failed_body=$(omarchy-i18n system.shutdownRetry)
+    message=$(inferna-i18n system.shuttingDown)
+    failed_title=$(inferna-i18n system.shutdownFailed)
+    failed_body=$(inferna-i18n system.shutdownRetry)
     ;;
 esac
 
 exit_session() {
-  omarchy-osd -i "$action" -m "$message" -d 5000
+  inferna-osd -i "$action" -m "$message" -d 5000
   if [[ $action != "logout" ]]; then
-    omarchy-state clear re*-required
+    inferna-state clear re*-required
   fi
 
   # Proceed as soon as apps exit, with a bound for unresponsive windows.
-  timeout 2s omarchy-hyprland-window-close-all --wait
+  timeout 2s inferna-hyprland-window-close-all --wait
   "${command[@]}"
 }
 
@@ -67,7 +67,7 @@ elif [[ ${2:-} == "--execute" ]]; then
   fi
   status=$?
   if (( status != 0 )); then
-    omarchy-notification-send -u critical "$failed_title" "$failed_body"
+    inferna-notification-send -u critical "$failed_title" "$failed_body"
     exit "$status"
   fi
 elif [[ -z ${2:-} ]]; then

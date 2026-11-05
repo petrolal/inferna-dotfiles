@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether Dropbox is installed and running
-# omarchy:hidden=true
+# inferna:summary=Check whether Dropbox is installed and running
+# inferna:hidden=true
 
 set -euo pipefail
 
-if omarchy-cmd-present dropbox-cli && dropbox-cli running >/dev/null 2>&1; then
+if inferna-cmd-present dropbox-cli && dropbox-cli running >/dev/null 2>&1; then
   exit 0
 fi
 

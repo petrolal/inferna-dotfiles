@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the Claude extension for Chromium-based browsers
-# omarchy:requires-sudo=true
+# inferna:summary=Install the Claude extension for Chromium-based browsers
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -11,7 +11,7 @@ fi
 
 EXTENSION_ID="fcoeoabgfenejglbffodgkkbkcdhcgfn"
 EXTENSION_JSON='{ "external_update_url": "https://clients2.google.com/service/update2/crx" }'
-PACKAGED_PATH=/usr/bin/omarchy-install-chromium-claude
+PACKAGED_PATH=/usr/bin/inferna-install-chromium-claude
 
 # Brave and Brave Origin share Chromium's external extension directory.
 # Seed all supported browsers, including those installed after choosing Claude.

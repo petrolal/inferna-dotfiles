@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Unblock and restart the bluetooth service.
+# inferna:summary=Unblock and restart the bluetooth service.
 
 echo -e "Unblocking bluetooth...\n"
 rfkill unblock bluetooth

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set up FIDO2 authentication for sudo and polkit
-# omarchy:requires-sudo=true
+# inferna:summary=Set up FIDO2 authentication for sudo and polkit
+# inferna:requires-sudo=true
 
 set -e
 set -o pipefail
@@ -44,7 +44,7 @@ echo -e "\e[32mSetting up FIDO2 device for authentication.\n\e[0m"
 
 # Install required packages
 echo "Installing required packages..."
-omarchy-pkg-add libfido2 pam-u2f
+inferna-pkg-add libfido2 pam-u2f
 
 if ! check_fido2_hardware; then
   exit 1
@@ -57,10 +57,10 @@ authfile=/etc/fido2/fido2
 # install -d follows a symlink here and applies the mode and ownership to
 # whatever it points at, so the credential would be staged and published inside
 # the link target and that directory reopened to root:root 755. This is the
-# threat omarchy-remove-security-fido2 already names on its side.
+# threat inferna-remove-security-fido2 already names on its side.
 if [[ -L $authdir || ( -e $authdir && ! -d $authdir ) ]]; then
   echo -e "\e[31m\n$authdir is not a FIDO2 configuration directory.\e[0m"
-  echo "Run omarchy-remove-security-fido2 first, then set FIDO2 up again."
+  echo "Run inferna-remove-security-fido2 first, then set FIDO2 up again."
   exit 1
 fi
 
@@ -70,7 +70,7 @@ fi
 # pam_u2f authfile.
 if [[ -L $authfile || ( -e $authfile && ! -f $authfile ) ]]; then
   echo -e "\e[31m\n$authfile is not a FIDO2 registration file.\e[0m"
-  echo "Run omarchy-remove-security-fido2 first, then set FIDO2 up again."
+  echo "Run inferna-remove-security-fido2 first, then set FIDO2 up again."
   exit 1
 fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove all web apps installed via omarchy-webapp-install.
+# inferna:summary=Remove all web apps installed via inferna-webapp-install.
 
 set -e
 
@@ -12,7 +12,7 @@ echo "Scanning for web apps in $APP_DIR..."
 
 webapp_desktop_files=()
 while IFS= read -r -d '' file; do
-  if grep -q "Exec=omarchy-launch-webapp\|Exec=omarchy-webapp-handler" "$file" 2>/dev/null; then
+  if grep -q "Exec=inferna-launch-webapp\|Exec=inferna-webapp-handler" "$file" 2>/dev/null; then
     webapp_desktop_files+=("$file")
   fi
 done < <(find "$APP_DIR" -maxdepth 1 -name "*.desktop" -print0 2>/dev/null)
@@ -30,7 +30,7 @@ for file in "${webapp_desktop_files[@]}"; do
   rm -f "$ICON_DIR/$icon_name.png" "$ICON_DIR/$app_name.png" "$OLD_ICON_DIR/$app_name.png"
 done
 
-if omarchy-cmd-present update-desktop-database; then
+if inferna-cmd-present update-desktop-database; then
   update-desktop-database "$APP_DIR" &>/dev/null || true
 fi
 

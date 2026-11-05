@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Reload Helix configuration
+# inferna:summary=Reload Helix configuration
 
 if pgrep -x helix >/dev/null; then
   pkill -USR1 helix

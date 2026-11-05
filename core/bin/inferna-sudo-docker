@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Succeed when Docker needs sudo, fail when it can be used directly
-# omarchy:args=[--configured]
-# omarchy:examples=omarchy-sudo-docker && echo "needs sudo" | omarchy-sudo-docker --configured
-# omarchy:hidden=true
+# inferna:summary=Succeed when Docker needs sudo, fail when it can be used directly
+# inferna:args=[--configured]
+# inferna:examples=inferna-sudo-docker && echo "needs sudo" | inferna-sudo-docker --configured
+# inferna:hidden=true
 
 # The docker group is root-equivalent, so Omarchy leaves users out of it by
 # default and reaches the daemon through a prompt instead. Everything that has
@@ -21,7 +21,7 @@
 #                  Answered from the account's configured groups, so the menu
 #                  offers the toggle that can actually change state.
 #
-# Succeeds (exit 0) when sudo is needed, so it reads as `if omarchy-sudo-docker`.
+# Succeeds (exit 0) when sudo is needed, so it reads as `if inferna-sudo-docker`.
 
 DOCKER_SOCKET="${OMARCHY_DOCKER_SOCKET:-/var/run/docker.sock}"
 
@@ -38,7 +38,7 @@ case "${1:-}" in
   exit 0
   ;;
 *)
-  echo "Usage: omarchy-sudo-docker [--configured]" >&2
+  echo "Usage: inferna-sudo-docker [--configured]" >&2
   exit 2
   ;;
 esac

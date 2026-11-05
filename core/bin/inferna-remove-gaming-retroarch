@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove RetroArch, all libretro cores, and its config/saves. Leaves ~/Games/roms and ~/Games/bios alone.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove RetroArch, all libretro cores, and its config/saves. Leaves ~/Games/roms and ~/Games/bios alone.
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-pkg-drop \
+inferna-pkg-drop \
   retroarch \
   retroarch-assets-glui retroarch-assets-ozone retroarch-assets-xmb \
   libretro-beetle-pce libretro-beetle-pce-fast libretro-beetle-psx libretro-beetle-psx-hw libretro-beetle-supergrafx \

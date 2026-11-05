@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the name and email for your git commits, and sign in to GitHub
-# omarchy:args=[--name <name>] [--email <email>]
-# omarchy:examples=omarchy setup git | omarchy setup git --name "Jane Doe" --email jane@example.com
+# inferna:summary=Set the name and email for your git commits, and sign in to GitHub
+# inferna:args=[--name <name>] [--email <email>]
+# inferna:examples=inferna setup git | inferna setup git --name "Jane Doe" --email jane@example.com
 
 set -e
 
 usage() {
   cat <<USAGE
-Usage: omarchy-setup-git [--name <name>] [--email <email>]
+Usage: inferna-setup-git [--name <name>] [--email <email>]
 
 Without options, asks for the name and email used for git commits and offers
 to sign in to GitHub. With either option, sets what was given and asks nothing.
@@ -44,10 +44,10 @@ while (($#)); do
 done
 
 if (( interactive )); then
-  omarchy-i18n gitSetup.intro
+  inferna-i18n gitSetup.intro
   echo
-  name=$(gum input --no-show-help --value "$name" --placeholder "$(omarchy-i18n gitSetup.namePlaceholder)" --prompt "$(omarchy-i18n gitSetup.namePrompt)")
-  email=$(gum input --no-show-help --value "$email" --placeholder "you@example.com" --prompt "$(omarchy-i18n gitSetup.emailPrompt)")
+  name=$(gum input --no-show-help --value "$name" --placeholder "$(inferna-i18n gitSetup.namePlaceholder)" --prompt "$(inferna-i18n gitSetup.namePrompt)")
+  email=$(gum input --no-show-help --value "$email" --placeholder "you@example.com" --prompt "$(inferna-i18n gitSetup.emailPrompt)")
   set_name=1 set_email=1
 fi
 
@@ -82,18 +82,18 @@ if (( set_email )) && [[ -n ${email//[[:space:]]/} ]]; then
 fi
 
 if [[ -f ~/.XCompose ]]; then
-  omarchy-restart-xcompose >/dev/null 2>&1 || true
+  inferna-restart-xcompose >/dev/null 2>&1 || true
 fi
 
 if (( interactive )); then
   echo
-  if omarchy-cmd-missing gh; then
-    omarchy-i18n gitSetup.ghMissing
+  if inferna-cmd-missing gh; then
+    inferna-i18n gitSetup.ghMissing
   # Only a gh that has signed in before is asked, as running the lazy shim installs it.
   elif grep -qs "^github.com:" "${GH_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/gh}/hosts.yml" &&
     gh auth status --hostname github.com >/dev/null 2>&1; then
-    omarchy-i18n gitSetup.ghSignedIn
-  elif gum confirm --no-show-help --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n gitSetup.ghSignIn)"; then
+    inferna-i18n gitSetup.ghSignedIn
+  elif gum confirm --no-show-help --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n gitSetup.ghSignIn)"; then
     gh auth login
   fi
 fi

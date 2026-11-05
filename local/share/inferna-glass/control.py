@@ -119,7 +119,7 @@ def atomic(path, text):
 
 def theme_mode():
     try:
-        r = subprocess.run(['omarchy', 'theme', 'color', '--file',
+        r = subprocess.run(['inferna', 'theme', 'color', '--file',
                             str(HOME / '.local/state/inferna/current/theme/colors.toml'), 'mode'],
                            capture_output=True, text=True, timeout=10)
         return r.stdout.strip() if r.stdout.strip() in ('light', 'dark') else 'dark'

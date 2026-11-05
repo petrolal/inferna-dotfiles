@@ -141,6 +141,14 @@ in
   # and provides `use nix` with caching.
   programs.direnv.enable = true;
 
+  # GnuPG + agent for signing Maven Central artifacts (and the GPG key export
+  # in github-repo-manager's scripts/get_gpg_key.sh). Qt pinentry so the
+  # passphrase prompt shows up under Hyprland even when gpg runs without a TTY.
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-qt;
+  };
+
   environment.systemPackages = [
     jvm-init
     node-init

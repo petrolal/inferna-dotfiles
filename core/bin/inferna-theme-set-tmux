@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync current Omarchy theme environment into tmux
-# omarchy:hidden=true
+# inferna:summary=Sync current Omarchy theme environment into tmux
+# inferna:hidden=true
 
 CURRENT_THEME_PATH="$HOME/.local/state/inferna/current/theme"
 GUM_ENV="$CURRENT_THEME_PATH/gum_env.lua"
@@ -65,7 +65,7 @@ load_theme_colors() {
 
   while IFS=$'\t' read -r key value; do
     THEME_COLORS[$key]="$value"
-  done < <(omarchy-theme-color --file "$COLORS_TOML" --all 2>/dev/null)
+  done < <(inferna-theme-color --file "$COLORS_TOML" --all 2>/dev/null)
 }
 
 sync_theme_environment() {
@@ -82,7 +82,7 @@ sync_theme_environment() {
 sync_colorfgbg() {
   local colorfgbg="15;0"
 
-  # omarchy-theme-color resolves mode from colors.toml, a legacy light.mode
+  # inferna-theme-color resolves mode from colors.toml, a legacy light.mode
   # file, or background luminance, so a bare light check covers all theme styles.
   if [[ ${THEME_COLORS[mode]} == "light" ]]; then
     colorfgbg="0;15"
@@ -92,7 +92,7 @@ sync_colorfgbg() {
 }
 
 theme_osc_sequences() {
-  omarchy-theme-osc "$COLORS_TOML"
+  inferna-theme-osc "$COLORS_TOML"
 }
 
 sync_tmux_window_style() {

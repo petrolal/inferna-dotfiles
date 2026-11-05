@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-# omarchy:summary=Play a realistic run of notifications to look at the notification UI
-# omarchy:hidden=true
+# inferna:summary=Play a realistic run of notifications to look at the notification UI
+# inferna:hidden=true
 """A realistic run of notifications, sent straight onto the session bus as an
 app would: a stack building, a code to copy, a link to open, and the apps this
 desktop has icons for. The senders mimic what really notifies this desktop
@@ -80,7 +80,7 @@ def send(bus, n):
 def main():
   bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
   # Off screen, not forgotten: history keeps what was there.
-  subprocess.run(["omarchy-shell", "-q", "notifications", "dismissAll"], check=False)
+  subprocess.run(["inferna-shell", "-q", "notifications", "dismissAll"], check=False)
   time.sleep(0.4)
   try:
     for n in NOTIFICATIONS:

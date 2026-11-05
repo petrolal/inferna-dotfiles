@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Voxtype dictation and its configuration
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Voxtype dictation and its configuration
+# inferna:requires-sudo=true
 
 set -e
 
 # Remove voxtype and its configurations.
 
-if omarchy-cmd-present voxtype; then
+if inferna-cmd-present voxtype; then
   echo "Uninstall Voxtype to remove dictation."
 
   # Remove services
@@ -15,14 +15,14 @@ if omarchy-cmd-present voxtype; then
   systemctl --user daemon-reload
 
   # Remove packages and configs
-  omarchy-pkg-drop voxtype-bin
+  inferna-pkg-drop voxtype-bin
   rm -rf ~/.config/voxtype
   rm -rf ~/.local/share/voxtype
   backend_config="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/defaults/dictation"
   if [[ -f $backend_config && $(< "$backend_config") == "voxtype" ]]; then
     rm "$backend_config"
   fi
-  omarchy-restart-hyprctl
+  inferna-restart-hyprctl
 else
   echo "Voxtype was not installed."
 fi

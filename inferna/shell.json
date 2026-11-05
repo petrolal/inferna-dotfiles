@@ -106,6 +106,12 @@
     "denon.polkit"
   ],
   "disabledPlugins": [
+    "inferna.battery",
+    "inferna.notifications",
+    "inferna.menu",
+    "inferna.lock",
+    "inferna.osd",
+    "inferna.polkit",
     "omarchy.battery",
     "omarchy.notifications",
     "omarchy.menu",

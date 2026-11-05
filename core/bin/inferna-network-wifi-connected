@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether the default route runs over connected Wi-Fi
-# omarchy:group=network
-# omarchy:hidden=true
+# inferna:summary=Check whether the default route runs over connected Wi-Fi
+# inferna:group=network
+# inferna:hidden=true
 
 # The menu's Wi-Fi QR Code row asks this on every open. It answers what
-# omarchy-network-status reports as wifi -- the default-route device is
+# inferna-network-status reports as wifi -- the default-route device is
 # wireless and NetworkManager has it activated -- without the nmcli and iw
 # queries that only feed that status line's SSID, signal and frequency (~65ms
 # against ~3ms here). Keep the two agreeing.
@@ -18,7 +18,7 @@ device=${BASH_REMATCH[2]}
 
 [[ -d $net_class_path/$device/wireless ]] || exit 1
 
-# NM_DEVICE_STATE_ACTIVATED, the "100 (connected)" omarchy-network-status
+# NM_DEVICE_STATE_ACTIVATED, the "100 (connected)" inferna-network-status
 # matches in nmcli's GENERAL.STATE.
 device_path=$(busctl --system call org.freedesktop.NetworkManager /org/freedesktop/NetworkManager \
   org.freedesktop.NetworkManager GetDeviceByIpIface s "$device" 2>/dev/null) || exit 1

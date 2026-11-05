@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Lutris, Wine, umu-launcher, and all their configs and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Lutris, Wine, umu-launcher, and all their configs and caches.
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-pkg-drop lutris wine-staging wine-mono wine-gecko winetricks python-protobuf umu-launcher
+inferna-pkg-drop lutris wine-staging wine-mono wine-gecko winetricks python-protobuf umu-launcher
 
 rm -rf \
   "$HOME/.config/lutris" \

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Choose whether the keyboard's top row sends F1-F12 or media keys by default
-# omarchy:args=[mediakeys|fnkeys]
-# omarchy:examples=omarchy keyboard toprow | omarchy keyboard toprow mediakeys | omarchy keyboard toprow fnkeys
-# omarchy:requires-sudo=true
+# inferna:summary=Choose whether the keyboard's top row sends F1-F12 or media keys by default
+# inferna:args=[mediakeys|fnkeys]
+# inferna:examples=inferna keyboard toprow | inferna keyboard toprow mediakeys | inferna keyboard toprow fnkeys
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -19,11 +19,11 @@ set -euo pipefail
 
 modprobe_dir=${OMARCHY_MODPROBE_DIR:-/etc/modprobe.d}
 sys_module=${OMARCHY_SYS_MODULE:-/sys/module}
-conf="$modprobe_dir/omarchy-toprow.conf"
+conf="$modprobe_dir/inferna-toprow.conf"
 rebuild_pending=${OMARCHY_TOPROW_REBUILD_PENDING:-/var/lib/omarchy/toprow-rebuild-pending}
 
 usage() {
-  echo "Usage: omarchy-keyboard-toprow [mediakeys|fnkeys] [--no-rebuild]" >&2
+  echo "Usage: inferna-keyboard-toprow [mediakeys|fnkeys] [--no-rebuild]" >&2
   exit 1
 }
 
@@ -49,7 +49,7 @@ param() {
 # Prints unsupported where Linux can't set it: Apple Silicon, or a keyboard
 # that keeps Fn-lock in its own firmware.
 if [[ -z $state ]]; then
-  if omarchy-hw-aarch64-apple || [[ ! -d $sys_module/hid_asus && ! -d $sys_module/asus_wmi && ! -d $sys_module/hid_apple ]]; then
+  if inferna-hw-aarch64-apple || [[ ! -d $sys_module/hid_asus && ! -d $sys_module/asus_wmi && ! -d $sys_module/hid_apple ]]; then
     echo unsupported
   elif grep -qx 'options hid_asus fnlock_default=1' "$conf" 2>/dev/null; then
     echo fnkeys
@@ -66,8 +66,8 @@ if [[ -z $state ]]; then
   exit 0
 fi
 
-if omarchy-hw-aarch64-apple; then
-  echo "On Apple Silicon the omarchy-mac package sets the keyboard's mode." >&2
+if inferna-hw-aarch64-apple; then
+  echo "On Apple Silicon the inferna-mac package sets the keyboard's mode." >&2
   exit 1
 fi
 
@@ -77,7 +77,7 @@ else
   fnmode=1 fnlock=0 first="the media keys" second="F1-F12"
 fi
 
-content="# Written by omarchy-keyboard-toprow: the top row sends $first by default,
+content="# Written by inferna-keyboard-toprow: the top row sends $first by default,
 # and Fn (Fn+Esc to lock it) gives $second.
 options hid_apple fnmode=$fnmode
 options hid_asus fnlock_default=$fnlock
@@ -136,7 +136,7 @@ if (( needs_rebuild )); then
 
   # limine-mkinitcpio reports a kernel it could not rebuild and still exits 0.
   if (( status[0] != 0 || status[1] != 0 )) || grep -q 'mkinitcpio failed for kernel' "$log"; then
-    echo "Could not rebuild the boot image; run omarchy-keyboard-toprow $state again once that is fixed." >&2
+    echo "Could not rebuild the boot image; run inferna-keyboard-toprow $state again once that is fixed." >&2
     exit 1
   fi
   sudo rm -f "$rebuild_pending"

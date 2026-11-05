@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install one of the approved terminals and set it as the default for Omarchy (Super + Return etc).
-# omarchy:args=<alacritty|foot|ghostty|kitty>
-# omarchy:requires-sudo=true
+# inferna:summary=Install one of the approved terminals and set it as the default for Omarchy (Super + Return etc).
+# inferna:args=<alacritty|foot|ghostty|kitty>
+# inferna:requires-sudo=true
 
 if (($# == 0)); then
-  echo "Usage: omarchy-install-terminal [alacritty|foot|ghostty|kitty]"
+  echo "Usage: inferna-install-terminal [alacritty|foot|ghostty|kitty]"
   exit 1
 fi
 
@@ -26,7 +26,7 @@ esac
 echo "Installing $package..."
 
 # Install package
-if omarchy-pkg-add $package; then
+if inferna-pkg-add $package; then
   # Copy custom desktop entries with X-TerminalArg* keys
   if [[ $package == "alacritty" ]]; then
     mkdir -p ~/.local/share/applications

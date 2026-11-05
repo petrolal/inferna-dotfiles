@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Ollama Cloud usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Ollama Cloud usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Ollama Cloud usage into one display-ready JSON record.
 
 Everything the agents panel shows for Ollama Cloud comes from this one

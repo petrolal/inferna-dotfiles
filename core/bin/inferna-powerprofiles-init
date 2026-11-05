@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the correct power profile on boot based on current AC/battery state.
+# inferna:summary=Set the correct power profile on boot based on current AC/battery state.
 
-exec omarchy-powerprofiles-set autodetect
+exec inferna-powerprofiles-set autodetect

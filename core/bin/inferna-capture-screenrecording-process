@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check or signal the current user's recording processes
-# omarchy:args=[--pid <pid>] [--signal INT|KILL]
-# omarchy:hidden=true
+# inferna:summary=Check or signal the current user's recording processes
+# inferna:args=[--pid <pid>] [--signal INT|KILL]
+# inferna:hidden=true
 
 usage() {
-  echo "Usage: omarchy-capture-screenrecording-process [--pid <pid>]... [--signal INT|KILL]" >&2
+  echo "Usage: inferna-capture-screenrecording-process [--pid <pid>]... [--signal INT|KILL]" >&2
   exit 2
 }
 

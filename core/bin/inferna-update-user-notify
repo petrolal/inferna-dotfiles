@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Compatibility wrapper for omarchy-migrate-notify.
-# omarchy:hidden=true
+# inferna:summary=Compatibility wrapper for inferna-migrate-notify.
+# inferna:hidden=true
 
-exec omarchy-migrate-notify "$@"
+exec inferna-migrate-notify "$@"

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Generate the system locale for an Omarchy language
-# omarchy:args=<code>
-# omarchy:hidden=true
+# inferna:summary=Generate the system locale for an Omarchy language
+# inferna:args=<code>
+# inferna:hidden=true
 
 set -euo pipefail
 
-# Runs as root through the passwordless rule in etc/sudoers.d/omarchy-locale-generate,
+# Runs as root through the passwordless rule in etc/sudoers.d/inferna-locale-generate,
 # which names each registry code as the whole argument. Under sudo's
 # secure_path a dev link prepends a user-writable checkout bin/ to PATH, and
 # every helper this calls by bare name (grep, sed, localedef) is a system
@@ -18,7 +18,7 @@ if (( EUID == 0 )); then
 fi
 
 # Root reads only the packaged registry and the real locale.gen; the
-# overrides are for unprivileged tests (same convention as omarchy-language).
+# overrides are for unprivileged tests (same convention as inferna-language).
 registry=/usr/share/omarchy/default/i18n/locales.json
 locale_gen=/etc/locale.gen
 if (( EUID != 0 )); then
@@ -28,7 +28,7 @@ fi
 
 code=${1:-}
 if (( $# != 1 )) || [[ ! $code =~ ^[a-z]{2,3}(-[A-Za-z]{2})?$ ]]; then
-  echo "Usage: omarchy-locale-generate <code>" >&2
+  echo "Usage: inferna-locale-generate <code>" >&2
   exit 1
 fi
 

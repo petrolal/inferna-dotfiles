@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set up fingerprint authentication for sudo, polkit, and lock screen
-# omarchy:requires-sudo=true
+# inferna:summary=Set up fingerprint authentication for sudo, polkit, and lock screen
+# inferna:requires-sudo=true
 
 set -e
 
@@ -16,14 +16,14 @@ setup_pam_config() {
   # fixed /usr/bin path the omarchy package always provides, so the gate keeps
   # working across package installs and dev-link — the latter overlays
   # $OMARCHY_PATH trees but leaves /usr/bin untouched.
-  local fprintd_gate="auth      [success=1 default=ignore] pam_exec.so quiet /usr/bin/omarchy-hw-laptop-closed"
+  local fprintd_gate="auth      [success=1 default=ignore] pam_exec.so quiet /usr/bin/inferna-hw-laptop-closed"
 
   # Configure sudo
   if ! grep -q pam_fprintd.so /etc/pam.d/sudo; then
     echo "Configuring sudo for fingerprint authentication..."
     sudo sed -i '1i auth      sufficient pam_fprintd.so' /etc/pam.d/sudo
   fi
-  if ! grep -q 'omarchy-hw-laptop-closed' /etc/pam.d/sudo; then
+  if ! grep -q 'inferna-hw-laptop-closed' /etc/pam.d/sudo; then
     echo "Adding clamshell gate to sudo..."
     # Insert immediately before pam_fprintd so success=1 skips exactly it.
     sudo sed -i "/pam_fprintd\.so/i $fprintd_gate" /etc/pam.d/sudo
@@ -35,13 +35,13 @@ setup_pam_config() {
       echo "Configuring polkit for fingerprint authentication..."
       sudo sed -i '1i auth      sufficient pam_fprintd.so' /etc/pam.d/polkit-1
     fi
-    if ! grep -q 'omarchy-hw-laptop-closed' /etc/pam.d/polkit-1; then
+    if ! grep -q 'inferna-hw-laptop-closed' /etc/pam.d/polkit-1; then
       echo "Adding clamshell gate to polkit..."
       sudo sed -i "/pam_fprintd\.so/i $fprintd_gate" /etc/pam.d/polkit-1
     fi
   else
     echo "Creating polkit configuration with fingerprint authentication..."
-    # omarchy:heredoc-expands paths=none -- $fprintd_gate is the literal PAM
+# inferna:heredoc-expands paths=none -- $fprintd_gate is the literal PAM
     # line defined above, shared with the two sed insertions so the gate cannot
     # drift between files. The only path in it is the fixed /usr/bin one.
     sudo tee /etc/pam.d/polkit-1 >/dev/null <<EOF
@@ -141,16 +141,16 @@ verify_progress() {
 echo -e "\e[32mSetting up fingerprint scanner for authentication.\n\e[0m"
 
 # Bail before installing anything if there's no reader to talk to.
-if ! omarchy-hw-fingerprint; then
+if ! inferna-hw-fingerprint; then
   echo -e "\e[31mNo fingerprint sensor detected.\e[0m"
   exit 1
 fi
 
 # libfprint-git tracks upstream ahead of the Arch release, so a new reader only
-# needs a pin bump in omarchy-pkgs. It conflicts with stock libfprint, and
+# needs a pin bump in inferna-pkgs. It conflicts with stock libfprint, and
 # --noconfirm answers that prompt with N; --ask 4 accepts the replacement in
 # one transaction, so a failed install leaves the existing driver in place.
-if omarchy-pkg-missing libfprint-git fprintd usbutils; then
+if inferna-pkg-missing libfprint-git fprintd usbutils; then
   echo "Installing required packages..."
   sudo pacman -S --needed --noconfirm --ask 4 -- libfprint-git fprintd usbutils
 fi
@@ -176,12 +176,12 @@ authenticate "First, confirm it's you."
 # platform that can't be told goes on as on one without a hook: a reader its
 # platform keeps off stays off, so fprintd doesn't find it, and any other
 # reader still enrolls.
-if ! enable_hook=$(omarchy-lifecycle-dispatch --resolve enable-fingerprint); then
+if ! enable_hook=$(inferna-lifecycle-dispatch --resolve enable-fingerprint); then
   echo -e "\e[33mThe fingerprint sensor's platform support couldn't be checked, so a reader the platform keeps off stays off.\e[0m"
   enable_hook=
 fi
 if [[ -n $enable_hook ]]; then
-  if ! sudo omarchy-lifecycle-dispatch enable-fingerprint; then
+  if ! sudo inferna-lifecycle-dispatch enable-fingerprint; then
     echo -e "\e[31mThe fingerprint sensor was not turned on, so nothing was enrolled.\e[0m"
     exit 1
   fi
@@ -212,7 +212,7 @@ esac
 # which D-Bus doesn't say. Touch ID does, and its check needs no touch while
 # nothing is enrolled; any other reader's first stage counts, touched or not.
 # The name is the driver's full_name in libfprint/drivers/aurora/aurora.c, which
-# omarchy-pkgs adds to libfprint-git in pkgbuilds/libfprint-git/aurora-apple-sep.patch.
+# inferna-pkgs adds to libfprint-git in pkgbuilds/libfprint-git/aurora-apple-sep.patch.
 # If it changes there, Touch ID shows one step early.
 duplicate_check=0
 if [[ $(fingerprint_reader name) == "Apple secure enclave fingerprint sensor" ]]; then
@@ -235,9 +235,9 @@ if (( enroll_status == 0 )); then
     # Editing the stacks up front would leave those machines pointing at
     # pam_fprintd with nothing to match.
     setup_pam_config
-    "$OMARCHY_PATH/bin/omarchy-apply-lock"
-    if [[ ! -f /etc/pam.d/omarchy-lock-fingerprint ]]; then
-      echo "Fingerprint enrollment succeeded, but lock-screen configuration could not be confirmed. Run omarchy-apply-lock and try again." >&2
+    "$OMARCHY_PATH/bin/inferna-apply-lock"
+    if [[ ! -f /etc/pam.d/inferna-lock-fingerprint ]]; then
+      echo "Fingerprint enrollment succeeded, but lock-screen configuration could not be confirmed. Run inferna-apply-lock and try again." >&2
       exit 1
     fi
     echo -e "\e[32m\nPerfect! Fingerprint authentication is now configured.\e[0m"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set window corners: theme, sharp, or rounded
-# omarchy:args=[theme|sharp|rounded]
-# omarchy:examples=omarchy hyprland corners | omarchy hyprland corners rounded
+# inferna:summary=Show or set window corners: theme, sharp, or rounded
+# inferna:args=[theme|sharp|rounded]
+# inferna:examples=inferna hyprland corners | inferna hyprland corners rounded
 
 TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
 
@@ -20,11 +20,11 @@ if (( $# == 0 )); then
 fi
 
 case $1 in
-  theme) LABEL=$(omarchy-i18n corners.followTheme) ;;
-  sharp) LABEL=$(omarchy-i18n corners.sharp) ;;
-  rounded) LABEL=$(omarchy-i18n corners.rounded) ;;
+  theme) LABEL=$(inferna-i18n corners.followTheme) ;;
+  sharp) LABEL=$(inferna-i18n corners.sharp) ;;
+  rounded) LABEL=$(inferna-i18n corners.rounded) ;;
   *)
-    echo "Usage: omarchy-hyprland-corners [theme|sharp|rounded]" >&2
+    echo "Usage: inferna-hyprland-corners [theme|sharp|rounded]" >&2
     exit 1
     ;;
 esac
@@ -37,5 +37,5 @@ for mode in sharp rounded; do
   [[ $mode == "$1" ]] || rm -f "$TOGGLES_DIR/corners-$mode.lua" || exit 1
 done
 
-omarchy-restart-hyprctl
-omarchy-notification-send -g 󰘇 "$LABEL"
+inferna-restart-hyprctl
+inferna-notification-send -g 󰘇 "$LABEL"

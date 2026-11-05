@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle a full screen desktop: hide the top bar and remove the window gaps together
-# omarchy:args=[toggle|on|off]
-# omarchy:examples=omarchy toggle fullscreen desktop | omarchy toggle fullscreen desktop off | omarchy toggle fullscreen desktop on
+# inferna:summary=Toggle a full screen desktop: hide the top bar and remove the window gaps together
+# inferna:args=[toggle|on|off]
+# inferna:examples=inferna toggle fullscreen desktop | inferna toggle fullscreen desktop off | inferna toggle fullscreen desktop on
 
 ACTION="${1:-toggle}"
 
@@ -10,7 +10,7 @@ case $ACTION in
   toggle|"")
     # Only leave full screen when both halves are already in it, so a lone bar
     # or a lone gap toggle is pulled into line rather than flipped away.
-    if omarchy-toggle-enabled bar-off && omarchy-hyprland-toggle-enabled window-no-gaps; then
+    if inferna-toggle-enabled bar-off && inferna-hyprland-toggle-enabled window-no-gaps; then
       ACTION="off"
     else
       ACTION="on"
@@ -18,10 +18,10 @@ case $ACTION in
     ;;
   on|off) ;;
   *)
-    echo "Usage: omarchy-toggle-fullscreen-desktop [toggle|on|off]" >&2
+    echo "Usage: inferna-toggle-fullscreen-desktop [toggle|on|off]" >&2
     exit 1
     ;;
 esac
 
-omarchy-toggle-bar "$ACTION"
-omarchy-hyprland-toggle window-no-gaps "$ACTION"
+inferna-toggle-bar "$ACTION"
+inferna-hyprland-toggle window-no-gaps "$ACTION"

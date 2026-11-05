@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Diagnose a crashed process with the default coding agent
-# omarchy:args=<pid> [comm] [exe] [signal]
-# omarchy:examples=omarchy agent crash 1516893
+# inferna:summary=Diagnose a crashed process with the default coding agent
+# inferna:args=<pid> [comm] [exe] [signal]
+# inferna:examples=inferna agent crash 1516893
 
 # Clicked from a "Process crashed:" notification, or run by hand against any PID
 # in `coredumpctl list`. The method lives in the diagnose-crash skill so it is
@@ -11,11 +11,11 @@
 
 set -euo pipefail
 
-pid=${1:?usage: omarchy-agent-crash <pid> [comm] [exe] [signal]}
+pid=${1:?usage: inferna-agent-crash <pid> [comm] [exe] [signal]}
 
 if [[ ! $pid =~ ^[0-9]+$ ]]; then
   echo "Not a PID: $pid" >&2
-  echo "Usage: omarchy agent crash <pid>   (see: coredumpctl list)" >&2
+  echo "Usage: inferna agent crash <pid>   (see: coredumpctl list)" >&2
   exit 1
 fi
 
@@ -49,4 +49,4 @@ mechanism, read the skill files directly and follow them instead:
 PROMPT
 )
 
-exec omarchy-agent --prompt "$prompt"
+exec inferna-agent --prompt "$prompt"

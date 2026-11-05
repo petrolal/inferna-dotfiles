@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Restart tmux if running with the latest configuration
+# inferna:summary=Restart tmux if running with the latest configuration
 
 if tmux has-session 2>/dev/null; then
   tmux source-file ~/.config/tmux/tmux.conf

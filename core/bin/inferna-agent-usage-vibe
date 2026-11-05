@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Mistral Vibe usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Mistral Vibe usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Mistral Vibe usage into one display-ready JSON record.
 
 Local stats come from the sessions Vibe saves under ~/.vibe/logs/session/

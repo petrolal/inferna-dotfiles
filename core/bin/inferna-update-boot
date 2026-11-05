@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Verify the platform's boot chain after the update's package changes
-# omarchy:hidden=true
-# omarchy:requires-sudo=true
+# inferna:summary=Verify the platform's boot chain after the update's package changes
+# inferna:hidden=true
+# inferna:requires-sudo=true
 
 # Proves that the boot files the package steps left boot the updated system;
 # omarchy update neither finishes nor offers a reboot until this passes. It is
@@ -13,7 +13,7 @@
 set -e
 
 if (( $# )); then
-  echo "Usage: omarchy-update-boot" >&2
+  echo "Usage: inferna-update-boot" >&2
   exit 2
 fi
 operation=update-verify
@@ -24,7 +24,7 @@ operation=update-verify
 errors=$(mktemp)
 trap 'rm -f "$errors"' EXIT
 status=0
-resolved=$(omarchy-lifecycle-dispatch --resolve "$operation" 2>"$errors") || status=$?
+resolved=$(inferna-lifecycle-dispatch --resolve "$operation" 2>"$errors") || status=$?
 
 # 3: the platform's boot package is not installed at all. Such a machine
 # predates it and boots a chain the package does not manage, so verification
@@ -35,5 +35,5 @@ elif (( status != 0 )); then
   cat "$errors" >&2
   exit "$status"
 elif [[ -n $resolved ]]; then
-  sudo omarchy-lifecycle-dispatch "$operation"
+  sudo inferna-lifecycle-dispatch "$operation"
 fi

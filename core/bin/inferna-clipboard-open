@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open a clipboard history entry
-# omarchy:group=clipboard
-# omarchy:args=--history-index <index>
-# omarchy:hidden=true
+# inferna:summary=Open a clipboard history entry
+# inferna:group=clipboard
+# inferna:args=--history-index <index>
+# inferna:hidden=true
 
 history_index=""
 history_path="$HOME/.local/state/inferna/clipboard-history.json"
@@ -15,7 +15,7 @@ while (( $# > 0 )); do
       shift 2
       ;;
     *)
-      echo "Usage: omarchy-clipboard-open --history-index <index>" >&2
+      echo "Usage: inferna-clipboard-open --history-index <index>" >&2
       exit 1
       ;;
   esac
@@ -45,14 +45,14 @@ open_text() {
   fi
 
   if [[ -n $url ]]; then
-    exec omarchy-launch-browser "$url"
+    exec inferna-launch-browser "$url"
   fi
 
   open_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/clipboard-open"
   mkdir -p "$open_dir"
   open_file=$(mktemp --tmpdir="$open_dir" clipboard.XXXXXX.txt) || exit 1
   printf '%s' "$text" >"$open_file"
-  exec omarchy-launch-editor "$open_file"
+  exec inferna-launch-editor "$open_file"
 }
 
 case "$entry_type" in

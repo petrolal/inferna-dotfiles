@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove the Claude desktop app along with its configuration and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove the Claude desktop app along with its configuration and caches.
+# inferna:requires-sudo=true
 
 # -u so an unset HOME is an error rather than a set of rm -rf paths rooted at /.
 set -euo pipefail
@@ -10,7 +10,7 @@ set -euo pipefail
 # leaves it running deletes the directory and watches it come straight back.
 pkill -x claude-desktop || true
 
-omarchy-pkg-drop claude-desktop
+inferna-pkg-drop claude-desktop
 
 # Not ~/.claude, ~/.claude.json, or ~/.cache/claude-cli-nodejs: those belong
 # to the Claude Code CLI, which ships in a different package that survives

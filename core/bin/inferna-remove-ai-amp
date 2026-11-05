@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove the Amp desktop app along with its configuration and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove the Amp desktop app along with its configuration and caches.
+# inferna:requires-sudo=true
 
 # -u so an unset HOME is an error rather than a set of rm -rf paths rooted at /.
 set -euo pipefail
@@ -10,7 +10,7 @@ set -euo pipefail
 # that leaves it running deletes the directory and watches it come straight back.
 pkill -x amp-desktop || true
 
-omarchy-pkg-drop amp-desktop-bin
+inferna-pkg-drop amp-desktop-bin
 
 # Not ~/.config/amp, ~/.local/share/amp, or ~/.cache/amp: those belong to the
 # Amp CLI, which is installed and used on its own. The desktop app pins its

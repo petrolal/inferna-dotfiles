@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Pick one or multiple options from a menu
-# omarchy:group=menu
-# omarchy:name=select
-# omarchy:args=prompt [option...] [-- --multiple --selected <value> --on-change <command-json> --change-key <key> --width <pixels> --maxheight <pixels>]
-# omarchy:examples=omarchy menu select Format jpg png|omarchy-menu-select Resolution 4k 1080p 720p -- --width 400
+# inferna:summary=Pick one or multiple options from a menu
+# inferna:group=menu
+# inferna:name=select
+# inferna:args=prompt [option...] [-- --multiple --selected <value> --on-change <command-json> --change-key <key> --width <pixels> --maxheight <pixels>]
+# inferna:examples=inferna menu select Format jpg png|inferna-menu-select Resolution 4k 1080p 720p -- --width 400
 
 # An option may lead with an icon, as "<glyph><TAB><label>", and may trail a
 # subtext shown under the label, as "<glyph><TAB><label><TAB><subtext>". The
@@ -21,7 +21,7 @@
 set -euo pipefail
 
 if (( $# < 1 )); then
-  echo "Usage: omarchy-menu-select <prompt> [option...] [-- menu args...]" >&2
+  echo "Usage: inferna-menu-select <prompt> [option...] [-- menu args...]" >&2
   exit 1
 fi
 
@@ -44,7 +44,7 @@ while (( $# > 0 )); do
         --on-change)
           shift
           if (( $# == 0 )); then
-            echo "omarchy-menu-select: --on-change requires a JSON command array" >&2
+            echo "inferna-menu-select: --on-change requires a JSON command array" >&2
             exit 1
           fi
           on_change="$1"
@@ -52,7 +52,7 @@ while (( $# > 0 )); do
         --change-key)
           shift
           if (( $# == 0 )); then
-            echo "omarchy-menu-select: --change-key requires a value" >&2
+            echo "inferna-menu-select: --change-key requires a value" >&2
             exit 1
           fi
           change_key="$1"
@@ -63,7 +63,7 @@ while (( $# > 0 )); do
         --selected)
           shift
           if (( $# == 0 )); then
-            echo "omarchy-menu-select: --selected requires a value" >&2
+            echo "inferna-menu-select: --selected requires a value" >&2
             exit 1
           fi
           selected+=("$1")
@@ -71,7 +71,7 @@ while (( $# > 0 )); do
         --width)
           shift
           if (( $# == 0 )); then
-            echo "omarchy-menu-select: --width requires a value" >&2
+            echo "inferna-menu-select: --width requires a value" >&2
             exit 1
           fi
           menu_width="$1"
@@ -80,7 +80,7 @@ while (( $# > 0 )); do
           arg="$1"
           shift
           if (( $# == 0 )); then
-            echo "omarchy-menu-select: $arg requires a value" >&2
+            echo "inferna-menu-select: $arg requires a value" >&2
             exit 1
           fi
           menu_maxheight="$1"
@@ -100,7 +100,7 @@ if (( ${#options[@]} == 0 )) && [[ ! -t 0 ]]; then
 fi
 
 if (( ${#options[@]} == 0 )); then
-  echo "Usage: omarchy-menu-select <prompt> [option...] [-- menu args...]" >&2
+  echo "Usage: inferna-menu-select <prompt> [option...] [-- menu args...]" >&2
   exit 1
 fi
 
@@ -128,7 +128,7 @@ payload=$(perl -MEncode=decode -MJSON::PP=encode_json,decode_json -e '
   print encode_json($payload)
 ' "$prompt" "$options_json" "$selection_file" "$done_file" "$menu_width" "$menu_maxheight" "$multiple" "$selected_json" "$on_change" "$change_key")
 
-omarchy-shell shell summon omarchy.menu "$payload" >/dev/null || exit 2
+inferna-shell shell summon omarchy.menu "$payload" >/dev/null || exit 2
 
 while [[ ! -e $done_file ]]; do
   sleep 0.05

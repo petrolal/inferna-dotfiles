@@ -151,7 +151,7 @@ d["plugins"] = [p for p in d.get("plugins", []) if p.get("id") not in missing]
 for side, items in d.get("bar", {}).get("layout", {}).items():
     d["bar"]["layout"][side] = [w for w in items if w.get("id") not in missing]
 if "hello-lock" in missing:
-    d["disabledPlugins"] = [p for p in d.get("disabledPlugins", []) if p != "omarchy.lock"]
+    d["disabledPlugins"] = [p for p in d.get("disabledPlugins", []) if p != "inferna.lock" and p != "omarchy.lock"]
 json.dump(d, open(path, "w"), indent=2)
 PY
 fi

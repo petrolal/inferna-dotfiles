@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Helix and configure it to use the current Omarchy theme
+# inferna:summary=Install Helix and configure it to use the current Omarchy theme
 
 echo "Installing Helix..."
-omarchy-pkg-add helix
+inferna-pkg-add helix
 
 mkdir -p ~/.config/helix/themes
 
@@ -19,7 +19,7 @@ fi
 
 # Ensure the symlink target exists for users whose current theme predates this template
 if [[ ! -e $HOME/.local/state/inferna/current/theme/helix.toml ]]; then
-  omarchy-theme-refresh
+  inferna-theme-refresh
 fi
 
 # Arch-based distros ship Helix as 'helix' rather than the upstream 'hx'.

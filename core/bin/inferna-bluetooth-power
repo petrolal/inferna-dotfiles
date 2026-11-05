@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Turn Bluetooth on or off, remembered across reboots
-# omarchy:group=bluetooth
-# omarchy:args=<on|off|toggle|is-on>
+# inferna:summary=Turn Bluetooth on or off, remembered across reboots
+# inferna:group=bluetooth
+# inferna:args=<on|off|toggle|is-on>
 
 # BlueZ never persists an adapter's Powered property, so turning Bluetooth off
 # through bluetoothctl lasts only until the next boot. The rfkill soft block does
@@ -59,7 +59,7 @@ power_on() {
   timeout 5s bluetoothctl power on >/dev/null 2>&1
   wait_powered && return 0
 
-  echo "omarchy-bluetooth-power: adapter did not come up" >&2
+  echo "inferna-bluetooth-power: adapter did not come up" >&2
   return 1
 }
 
@@ -83,7 +83,7 @@ case "${1:-}" in
     powered
     ;;
   *)
-    echo "Usage: omarchy-bluetooth-power <on|off|toggle|is-on>" >&2
+    echo "Usage: inferna-bluetooth-power <on|off|toggle|is-on>" >&2
     exit 1
     ;;
 esac

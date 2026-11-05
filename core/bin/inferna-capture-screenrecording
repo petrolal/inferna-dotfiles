@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Start or stop screen recording
-# omarchy:group=capture
-# omarchy:args=[--fullscreen] [--with-desktop-audio] [--with-microphone-audio] [--with-webcam] [--webcam-device=<device>] [--webcam-size=<small|medium|large>] [--resolution=<size>] [--stop-recording] [--status]
-# omarchy:examples=omarchy screenrecord | omarchy capture screenrecording --with-desktop-audio
-# omarchy:aliases=omarchy screenrecord
+# inferna:summary=Start or stop screen recording
+# inferna:group=capture
+# inferna:args=[--fullscreen] [--with-desktop-audio] [--with-microphone-audio] [--with-webcam] [--webcam-device=<device>] [--webcam-size=<small|medium|large>] [--resolution=<size>] [--stop-recording] [--status]
+# inferna:examples=inferna screenrecord | inferna capture screenrecording --with-desktop-audio
+# inferna:aliases=inferna screenrecord
 #
 # Env: OMARCHY_SCREENRECORD_USE_PORTAL=true skips the built-in slurp picker and
 # uses gpu-screen-recorder's xdg-desktop-portal capture backend instead. The
@@ -15,7 +15,7 @@
 # start.
 #
 # Env: OMARCHY_SCREENRECORD_DEBUG=true appends the recorder's stderr (and the
-# picker target it was launched with) to $XDG_RUNTIME_DIR/omarchy-screenrecord.log
+# picker target it was launched with) to $XDG_RUNTIME_DIR/inferna-screenrecord.log
 # so users can attach a log when reporting capture failures.
 #
 # Backend: gpu-screen-recorder. Where it is not installed, or it exits before
@@ -46,20 +46,20 @@ STATUS="false"
 # the state directory when there is no session runtime dir -- :-/tmp would put
 # both files back at the fixed names this comment describes.
 RUNTIME_DIR="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/omarchy}"
-RECORDING_FILE="$RUNTIME_DIR/omarchy-screenrecord-filename"
-REGION_FILE="$RUNTIME_DIR/omarchy-screenrecord-region"
+RECORDING_FILE="$RUNTIME_DIR/inferna-screenrecord-filename"
+REGION_FILE="$RUNTIME_DIR/inferna-screenrecord-region"
 # The recorder's pid, so stop and status act on that process alone.
-REC_PID_FILE="$RUNTIME_DIR/omarchy-screenrecord-pid"
+REC_PID_FILE="$RUNTIME_DIR/inferna-screenrecord-pid"
 # The PulseAudio module ids of a combined-audio null sink, for cleanup.
-PA_MODULES_FILE="$RUNTIME_DIR/omarchy-screenrecord-pa-modules"
+PA_MODULES_FILE="$RUNTIME_DIR/inferna-screenrecord-pa-modules"
 # Present while a start holds the lock; another toggle or stop then leaves
 # CANCEL_FILE for that start instead of queueing behind its picker or recorder.
-STARTING_FILE="$RUNTIME_DIR/omarchy-screenrecord-starting"
-CANCEL_FILE="$RUNTIME_DIR/omarchy-screenrecord-cancel"
+STARTING_FILE="$RUNTIME_DIR/inferna-screenrecord-starting"
+CANCEL_FILE="$RUNTIME_DIR/inferna-screenrecord-cancel"
 # How long a recorder may take to create its file, except through the portal,
 # whose picker waits on the user.
 READY_TIMEOUT_TICKS=75
-LOG_FILE=$([[ ${OMARCHY_SCREENRECORD_DEBUG:-false} == "true" ]] && echo "$RUNTIME_DIR/omarchy-screenrecord.log" || echo "/dev/null")
+LOG_FILE=$([[ ${OMARCHY_SCREENRECORD_DEBUG:-false} == "true" ]] && echo "$RUNTIME_DIR/inferna-screenrecord.log" || echo "/dev/null")
 
 for arg in "$@"; do
   case "$arg" in
@@ -86,7 +86,7 @@ esac
 # --status only answers whether our recording runs, for the bar and the menu, so
 # it needs no recordings directory and never notifies.
 if [[ $STATUS != "true" && ! -d $OUTPUT_DIR ]]; then
-  omarchy-notification-send -u critical -t 3000 "$(omarchy-i18n capture.noRecordingDir "$OUTPUT_DIR")"
+  inferna-notification-send -u critical -t 3000 "$(inferna-i18n capture.noRecordingDir "$OUTPUT_DIR")"
   exit 1
 fi
 
@@ -95,9 +95,9 @@ start_webcam_overlay() {
 
   # Auto-detect first available webcam if none specified
   if [[ -z $WEBCAM_DEVICE ]]; then
-    WEBCAM_DEVICE=$(omarchy-capture-webcam-list | sed -n '1s/[[:space:]].*//p')
+    WEBCAM_DEVICE=$(inferna-capture-webcam-list | sed -n '1s/[[:space:]].*//p')
     if [[ -z $WEBCAM_DEVICE ]]; then
-      omarchy-notification-send -u critical -t 3000 "$(omarchy-i18n capture.noWebcam)"
+      inferna-notification-send -u critical -t 3000 "$(inferna-i18n capture.noWebcam)"
       return 1
     fi
   fi
@@ -133,7 +133,7 @@ start_webcam_overlay() {
   done
 
   [[ ${1:-} == region:* ]] && echo "${1#region:}" >"$REGION_FILE"
-  omarchy-capture-webcam-resize "$WEBCAM_SIZE"
+  inferna-capture-webcam-resize "$WEBCAM_SIZE"
 
   sleep 0.6
 }
@@ -159,7 +159,7 @@ default_resolution() {
 # user cancelled the picker.
 select_capture_target() {
   local target
-  target=$(omarchy-capture-region smart --match-monitor) || return 1
+  target=$(inferna-capture-region smart --match-monitor) || return 1
 
   if [[ $target == monitor:* ]]; then
     echo "$target"
@@ -180,7 +180,7 @@ recorder_backends() {
   local backend found=false
 
   for backend in gpu-screen-recorder wf-recorder; do
-    if omarchy-cmd-present "$backend"; then
+    if inferna-cmd-present "$backend"; then
       echo "$backend"
       found=true
     fi
@@ -235,7 +235,7 @@ wf_audio_device() {
 }
 
 wf_audio_unavailable() {
-  omarchy-notification-send -u critical -t 5000 "$(omarchy-i18n capture.recordingWithoutAudio "$1")" "$(omarchy-i18n capture.audioNotAdded "$1")" >/dev/null 2>&1
+  inferna-notification-send -u critical -t 5000 "$(inferna-i18n capture.recordingWithoutAudio "$1")" "$(inferna-i18n capture.audioNotAdded "$1")" >/dev/null 2>&1
 }
 
 wf_audio_cleanup() {
@@ -308,7 +308,7 @@ start_screenrecording() {
   # slurp + the kms backend, which avoids the EGL DMA-BUF modifier import
   # failures the portal path can hit on some configurations.
   if [[ $FULLSCREEN == "true" ]]; then
-    target="monitor:$(omarchy-hyprland-monitor-focused)"
+    target="monitor:$(inferna-hyprland-monitor-focused)"
     capture_args=(-w "${target#monitor:}" -s "${RESOLUTION:-$(default_resolution)}")
   elif [[ ${OMARCHY_SCREENRECORD_USE_PORTAL:-false} == "true" ]]; then
     target="portal"
@@ -403,17 +403,17 @@ select_recorder() {
 
   local pid
   pid=$(<"$REC_PID_FILE")
-  [[ $pid =~ ^[0-9]+$ ]] && omarchy-capture-screenrecording-process --pid "$pid" || return 1
+  [[ $pid =~ ^[0-9]+$ ]] && inferna-capture-screenrecording-process --pid "$pid" || return 1
   RECORDER=(--pid "$pid")
 }
 
 # Stops the recorder screenrecording_active selected.
 stop_screenrecording() {
-  omarchy-capture-screenrecording-process "${RECORDER[@]}" --signal INT # SIGINT required to save video properly
+  inferna-capture-screenrecording-process "${RECORDER[@]}" --signal INT # SIGINT required to save video properly
 
   # Wait a maximum of 5 seconds to finish before hard killing
   local count=0
-  while omarchy-capture-screenrecording-process "${RECORDER[@]}" && ((count < 50)); do
+  while inferna-capture-screenrecording-process "${RECORDER[@]}" && ((count < 50)); do
     sleep 0.1
     count=$((count + 1))
   done
@@ -422,15 +422,15 @@ stop_screenrecording() {
   cleanup_webcam
   wf_audio_cleanup
 
-  if omarchy-capture-screenrecording-process "${RECORDER[@]}"; then
-    omarchy-capture-screenrecording-process "${RECORDER[@]}" --signal KILL
-    omarchy-notification-send -u critical -t 5000 "$(omarchy-i18n capture.recordingError)" "$(omarchy-i18n capture.recordingKilled)"
+  if inferna-capture-screenrecording-process "${RECORDER[@]}"; then
+    inferna-capture-screenrecording-process "${RECORDER[@]}" --signal KILL
+    inferna-notification-send -u critical -t 5000 "$(inferna-i18n capture.recordingError)" "$(inferna-i18n capture.recordingKilled)"
   elif [[ ! -f $(cat "$RECORDING_FILE" 2>/dev/null) ]]; then
     # No recording to finalize or show, as when stopping a recorder this script did not start.
     :
   else
     local filename=$(cat "$RECORDING_FILE" 2>/dev/null)
-    local preview="$RUNTIME_DIR/omarchy-screenrecord-preview-$$.png"
+    local preview="$RUNTIME_DIR/inferna-screenrecord-preview-$$.png"
 
     # Take the preview frame from the raw recording while finalizing runs,
     # 0.2s in: the frame the finalized video, trimmed by 0.1s, shows at 0.1s.
@@ -451,10 +451,10 @@ stop_screenrecording() {
     local image_args=()
     [[ -s $preview ]] && image_args=(--image "$preview")
 
-    omarchy-notification-send "$(omarchy-i18n capture.recordingSaved)" "$(recording_details "$filename")" \
+    inferna-notification-send "$(inferna-i18n capture.recordingSaved)" "$(recording_details "$filename")" \
       -t 10000 "${image_args[@]}" \
-      --action "$(omarchy-i18n capture.recordingOpen)" mpv -- \
-      --action "$(omarchy-i18n capture.recordingCut)" omacut \
+      --action "$(inferna-i18n capture.recordingOpen)" mpv -- \
+      --action "$(inferna-i18n capture.recordingCut)" omacut \
       --with "$filename"
 
     # The shell loads the preview into memory when the toast appears and never
@@ -470,7 +470,7 @@ stop_screenrecording() {
 }
 
 # How long the saved recording runs and how big it is, like "1:07 · 12.4 MB".
-# Each number goes to omarchy-i18n on its own, so it takes the language's
+# Each number goes to inferna-i18n on its own, so it takes the language's
 # digits and decimal separator, and the units live in the catalog.
 recording_details() {
   local seconds bytes length="" value unit size
@@ -478,10 +478,10 @@ recording_details() {
   if [[ $seconds =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
     seconds=$(LC_ALL=C printf '%.0f' "$seconds")
     if ((seconds >= 3600)); then
-      length=$(omarchy-i18n capture.recordingLengthHours $((seconds / 3600)) \
+      length=$(inferna-i18n capture.recordingLengthHours $((seconds / 3600)) \
         "$(printf '%02d' $((seconds % 3600 / 60)))" "$(printf '%02d' $((seconds % 60)))")
     else
-      length=$(omarchy-i18n capture.recordingLength $((seconds / 60)) "$(printf '%02d' $((seconds % 60)))")
+      length=$(inferna-i18n capture.recordingLength $((seconds / 60)) "$(printf '%02d' $((seconds % 60)))")
     fi
   fi
 
@@ -492,25 +492,25 @@ recording_details() {
     printf(i == 1 ? "%d %s\n" : "%.1f %s\n", b, unit[i])
   }')
   case $unit in
-  KB) size=$(omarchy-i18n capture.recordingSizeKB "$value") ;;
-  MB) size=$(omarchy-i18n capture.recordingSizeMB "$value") ;;
-  GB) size=$(omarchy-i18n capture.recordingSizeGB "$value") ;;
-  *) size=$(omarchy-i18n capture.recordingSizeB "$value") ;;
+  KB) size=$(inferna-i18n capture.recordingSizeKB "$value") ;;
+  MB) size=$(inferna-i18n capture.recordingSizeMB "$value") ;;
+  GB) size=$(inferna-i18n capture.recordingSizeGB "$value") ;;
+  *) size=$(inferna-i18n capture.recordingSizeB "$value") ;;
   esac
 
   if [[ -n $length ]]; then
-    omarchy-i18n capture.recordingDetails "$length" "$size"
+    inferna-i18n capture.recordingDetails "$length" "$size"
   else
     echo "$size"
   fi
 }
 
 toggle_screenrecording_indicator() {
-  omarchy-shell -q omarchy.indicators refresh
+  inferna-shell -q omarchy.indicators refresh
 }
 
 screenrecording_active() {
-  if select_recorder && omarchy-capture-screenrecording-process "${RECORDER[@]}"; then
+  if select_recorder && inferna-capture-screenrecording-process "${RECORDER[@]}"; then
     return 0
   else
     if [[ -f $REC_PID_FILE ]]; then
@@ -565,7 +565,7 @@ fi
     if flock -n 9; then
       screenrecording_active
     else
-      select_recorder && omarchy-capture-screenrecording-process "${RECORDER[@]}"
+      select_recorder && inferna-capture-screenrecording-process "${RECORDER[@]}"
     fi
   else
     # A start still in its picker or waiting on its recorder is cancelled, not
@@ -614,4 +614,4 @@ fi
       fi
     fi
   fi
-} 9>>"$RUNTIME_DIR/omarchy-screenrecord.lock"
+} 9>>"$RUNTIME_DIR/inferna-screenrecord.lock"

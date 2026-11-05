@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch Signal or start its installer when missing.
+# inferna:summary=Launch Signal or start its installer when missing.
 
 set -e
 
@@ -11,5 +11,5 @@ if [[ -n $WINDOW_ADDRESS ]]; then
 elif [[ -x /usr/bin/signal-desktop ]]; then
   exec setsid uwsm-app -- /usr/bin/signal-desktop
 else
-  exec omarchy-launch-floating-terminal-with-presentation omarchy-install-service-signal
+  exec inferna-launch-floating-terminal-with-presentation inferna-install-service-signal
 fi

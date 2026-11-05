@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show the current battery status notification
+# inferna:summary=Show the current battery status notification
 
-omarchy-notification-send -g 󰁹 -u low "$(omarchy-battery-status)"
+inferna-notification-send -g 󰁹 -u low "$(inferna-battery-status)"

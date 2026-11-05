@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether Omarchy updates are available.
+# inferna:summary=Check whether Omarchy updates are available.
 
 set -euo pipefail
 
@@ -15,14 +15,14 @@ if [[ $OMARCHY_PATH != "/usr/share/omarchy" ]]; then
     if (( behind > 0 )); then
       commit_label=commits
       (( behind == 1 )) && commit_label=commit
-      updates+=("omarchy-dev-checkout $behind new $commit_label on $upstream")
+      updates+=("inferna-dev-checkout $behind new $commit_label on $upstream")
     fi
   fi
 fi
 
 package=""
-if pacman -Qq omarchy-dev >/dev/null 2>&1; then
-  package=omarchy-dev
+if pacman -Qq inferna-dev >/dev/null 2>&1; then
+  package=inferna-dev
 elif pacman -Qq omarchy >/dev/null 2>&1; then
   package=omarchy
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Shared helpers for editing ~/.config/inferna/shell.json (source this, don't run it).
-# omarchy:hidden=true
+# inferna:summary=Shared helpers for editing ~/.config/inferna/shell.json (source this, don't run it).
+# inferna:hidden=true
 
 CONFIG_FILE="$HOME/.config/inferna/shell.json"
 DEFAULTS_FILE="$OMARCHY_PATH/config/omarchy/shell.json"
@@ -12,8 +12,8 @@ fail() {
 }
 
 refresh_shell_config() {
-  if ! omarchy-shell shell reloadConfig >/dev/null 2>&1; then
-    omarchy-shell -q shell rescanPlugins >/dev/null 2>&1 || true
+  if ! inferna-shell shell reloadConfig >/dev/null 2>&1; then
+    inferna-shell -q shell rescanPlugins >/dev/null 2>&1 || true
   fi
 }
 

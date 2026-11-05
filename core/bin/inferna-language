@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set the Omarchy language and the session's locale
-# omarchy:args=[<code>|list|locale [<code>]|seed <code>]
-# omarchy:examples=omarchy language | omarchy language da | omarchy language list
+# inferna:summary=Show or set the Omarchy language and the session's locale
+# inferna:args=[<code>|list|locale [<code>]|seed <code>]
+# inferna:examples=inferna language | inferna language da | inferna language list
 
 set -euo pipefail
 
@@ -64,21 +64,21 @@ locale_generated() {
 
 # The session's LANG lives with the user, beside the language choice:
 # uwsm sources this at login and exports it to every app it launches.
-session_env=${XDG_CONFIG_HOME:-$HOME/.config}/uwsm/env.d/50-omarchy-language
+session_env=${XDG_CONFIG_HOME:-$HOME/.config}/uwsm/env.d/50-inferna-language
 
 # Generating a locale is the one step that needs root. The helper does it from
-# a registry code alone, at the path etc/sudoers.d/omarchy-locale-generate
+# a registry code alone, at the path etc/sudoers.d/inferna-locale-generate
 # names, so the passwordless rule matches even where $OMARCHY_PATH points at a
 # checkout; without the package (a bare dev checkout) the checkout's own copy
 # runs, behind a password prompt.
-generator=/usr/bin/omarchy-locale-generate
-[[ -x $generator ]] || generator=$OMARCHY_PATH/bin/omarchy-locale-generate
+generator=/usr/bin/inferna-locale-generate
+[[ -x $generator ]] || generator=$OMARCHY_PATH/bin/inferna-locale-generate
 
 # True when sudo would run the helper for this code without a password. `sudo
 # -l` alone only says a command is permitted, which the blanket %wheel rule
 # answers yes to; the long listing prints the matched entry's tags, so
 # !authenticate is the grant and nothing else. Under -n it prompts for
-# nothing, so a machine whose omarchy-settings predates the grant falls
+# nothing, so a machine whose inferna-settings predates the grant falls
 # through to a prompt instead of failing.
 generator_is_passwordless() {
   sudo -n -l -l "$generator" "$1" 2>/dev/null | grep -q '!authenticate'
@@ -110,10 +110,10 @@ generate_locale() {
 apply_session_locale() {
   local locale=$1
   mkdir -p "$(dirname "$session_env")"
-  printf '# The session language, set by omarchy-language (Setup > Language).\nexport LANG=%s\n' "$locale" >"$session_env"
+  printf '# The session language, set by inferna-language (Setup > Language).\nexport LANG=%s\n' "$locale" >"$session_env"
 
   if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl eval "hl.env(\"LANG\", \"$locale\", true)" >/dev/null 2>&1; then
-    omarchy-restart-shell >/dev/null 2>&1 || true
+    inferna-restart-shell >/dev/null 2>&1 || true
   fi
 }
 
@@ -134,9 +134,9 @@ seed_typing() {
 set_language() {
   local code=$1
   if ! known_language "$code"; then
-    echo "Usage: omarchy-language [<code>|list|locale [<code>]]" >&2
+    echo "Usage: inferna-language [<code>|list|locale [<code>]]" >&2
     echo "Unknown language code: $code" >&2
-    echo "Run 'omarchy-language list' to see the available codes." >&2
+    echo "Run 'inferna-language list' to see the available codes." >&2
     exit 1
   fi
 
@@ -153,7 +153,7 @@ set_language() {
   seed_typing "$code"
   apply_session_locale "$locale"
 
-  omarchy-notification-send -g  "$(omarchy-i18n language.changed "$name")" "$(omarchy-i18n language.newApps)"
+  inferna-notification-send -g  "$(inferna-i18n language.changed "$name")" "$(inferna-i18n language.newApps)"
 }
 
 case "${1:-}" in
@@ -174,7 +174,7 @@ seed)
   fi
   [[ -s $language_file ]] && exit 0
   mkdir -p "$(dirname "$session_env")" "$(dirname "$language_file")"
-  printf '# The session language, set by omarchy-language (Setup > Language).\nexport LANG=%s\n' "$(locale_for "$code")" >"$session_env"
+  printf '# The session language, set by inferna-language (Setup > Language).\nexport LANG=%s\n' "$(locale_for "$code")" >"$session_env"
   echo "$code" >"$language_file"
   ;;
 locale)

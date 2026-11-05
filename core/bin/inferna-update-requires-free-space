@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check free disk space required for an update
-# omarchy:hidden=true
+# inferna:summary=Check free disk space required for an update
+# inferna:hidden=true
 
 set -e
 

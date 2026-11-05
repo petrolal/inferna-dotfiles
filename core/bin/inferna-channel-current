@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the active Omarchy package channel
+# inferna:summary=Print the active Omarchy package channel
 
 set -euo pipefail
 
@@ -12,14 +12,14 @@ if [[ $OMARCHY_PATH != "/usr/share/omarchy" ]]; then
   exit 0
 fi
 
-# omarchy-dev / omarchy-settings-dev are only shipped from the edge package
-# repo, so their presence alone means edge. omarchy / omarchy-settings come
-# from either the stable or rc mirror, distinguished by omarchy-version-channel
+# inferna-dev / inferna-settings-dev are only shipped from the edge package
+# repo, so their presence alone means edge. omarchy / inferna-settings come
+# from either the stable or rc mirror, distinguished by inferna-version-channel
 # (which reports the mirror as its first token).
-if pacman -Q omarchy-dev omarchy-settings-dev >/dev/null 2>&1; then
+if pacman -Q inferna-dev inferna-settings-dev >/dev/null 2>&1; then
   echo edge
-elif pacman -Q omarchy omarchy-settings >/dev/null 2>&1; then
-  channel=$(omarchy-version-channel 2>/dev/null | awk '{ print $1 }')
+elif pacman -Q omarchy inferna-settings >/dev/null 2>&1; then
+  channel=$(inferna-version-channel 2>/dev/null | awk '{ print $1 }')
   case "$channel" in
     stable) echo stable ;;
     rc) echo rc ;;

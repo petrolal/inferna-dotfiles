@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply Omarchy hardware-specific packages and system configuration
-# omarchy:group=apply
-# omarchy:requires-sudo=true
-# omarchy:examples=omarchy apply hardware --install-user dhh
-# omarchy:hidden=true
+# inferna:summary=Apply Omarchy hardware-specific packages and system configuration
+# inferna:group=apply
+# inferna:requires-sudo=true
+# inferna:examples=inferna apply hardware --install-user dhh
+# inferna:hidden=true
 
 set -euo pipefail
 
 usage() {
   cat <<USAGE
-Usage: omarchy apply hardware --install-user USER
+Usage: inferna apply hardware --install-user USER
        omarchy apply hardware --defer-provisioning
 
 Runs idempotent hardware detection/setup for the installed machine. This is
-called by omarchy-apply-system during ISO finalization and can be rerun later
+called by inferna-apply-system during ISO finalization and can be rerun later
 for diagnostics or after hardware/package updates.
 
 --defer-provisioning runs without an install user (deferred-provisioning installs create the user at
 first boot); group grants are recorded in /var/lib/omarchy/provisioning/groups.
 
 In an image build (/var/lib/omarchy/image/target exists) nothing runs here: every step is queued
-for omarchy-provision-hardware on the machine's first boot.
+for inferna-provision-hardware on the machine's first boot.
 USAGE
 }
 
@@ -50,7 +50,7 @@ while (($#)); do
 done
 
 if (( EUID != 0 )); then
-  echo "Error: omarchy-apply-hardware must run as root" >&2
+  echo "Error: inferna-apply-hardware must run as root" >&2
   exit 1
 fi
 
@@ -69,11 +69,11 @@ else
 fi
 
 export OMARCHY_INSTALL_USER="$install_user"
-# Only omarchy-provision-hardware runs steps as an image's first boot.
+# Only inferna-provision-hardware runs steps as an image's first boot.
 unset OMARCHY_IMAGE_DEFERRED_HARDWARE
 export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
 export OMARCHY_INSTALL="${OMARCHY_INSTALL:-$OMARCHY_PATH/install}"
-export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/omarchy-install.log}"
+export OMARCHY_INSTALL_LOG_FILE="${OMARCHY_INSTALL_LOG_FILE:-/var/log/inferna-install.log}"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 source "$OMARCHY_INSTALL/helpers/logging.sh"

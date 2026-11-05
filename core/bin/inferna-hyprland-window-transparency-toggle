@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggles transparency for the currently focused window.
+# inferna:summary=Toggles transparency for the currently focused window.
 
 set -euo pipefail
 

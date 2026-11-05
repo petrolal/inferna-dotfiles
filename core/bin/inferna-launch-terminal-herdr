@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch or attach to the persistent herdr session in a terminal
+# inferna:summary=Launch or attach to the persistent herdr session in a terminal
 
-exec omarchy-launch-terminal herdr
+exec inferna-launch-terminal herdr

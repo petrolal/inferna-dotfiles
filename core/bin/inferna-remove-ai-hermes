@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove the Hermes desktop app along with the Hermes runtime it installed.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove the Hermes desktop app along with the Hermes runtime it installed.
+# inferna:requires-sudo=true
 
 # -u so an unset HOME is an error rather than a set of rm -rf paths rooted at /.
 set -euo pipefail
@@ -162,10 +162,10 @@ done
 
 # The installer leaves a unit waiting to hand the app the Omarchy theme; it
 # runs Hermes itself to do so, so it is stopped before the sweep reaches it.
-systemctl --user stop omarchy-hermes-theme.service 2>/dev/null || true
+systemctl --user stop inferna-hermes-theme.service 2>/dev/null || true
 
 hermes_holders stop
-omarchy-pkg-drop hermes-desktop
+inferna-pkg-drop hermes-desktop
 
 # Upstream's installer writes this when the runtime under ~/.hermes has landed,
 # whether Omarchy ran it for the app or the app's own first launch did, and it
@@ -226,10 +226,10 @@ if [[ -d $HOME/.hermes || -d $HOME/.config/Hermes ]] && [[ -t 0 ]]; then
   size=$(du -shc "$HOME/.hermes" "$HOME/.config/Hermes" 2>/dev/null | tail -1 | cut -f1 || true)
   # du glues the unit to the number ("1.2G"); write the number with the
   # language's decimal separator and digits.
-  if [[ $size =~ ^([0-9]+([.,][0-9]+)?)([A-Za-z]*)$ ]] && number=$(omarchy-i18n --number "${BASH_REMATCH[1]/,/.}"); then
+  if [[ $size =~ ^([0-9]+([.,][0-9]+)?)([A-Za-z]*)$ ]] && number=$(inferna-i18n --number "${BASH_REMATCH[1]/,/.}"); then
     size="$number${BASH_REMATCH[3]}"
   fi
-  if gum confirm --default=false --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n hermes.deleteData "$size")"; then
+  if gum confirm --default=false --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n hermes.deleteData "$size")"; then
     hermes_holders stop
     rm -rf "$HOME/.hermes" "$HOME/.config/Hermes"
     data_removed=true

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Manage persistent state files for Omarchy toggles and settings.
-# omarchy:args=<set|clear> <state-name-or-pattern>
-# omarchy:hidden=true
+# inferna:summary=Manage persistent state files for Omarchy toggles and settings.
+# inferna:args=<set|clear> <state-name-or-pattern>
+# inferna:hidden=true
 
 STATE_DIR="$HOME/.local/state/inferna"
 mkdir -p "$STATE_DIR"
@@ -11,12 +11,12 @@ COMMAND="$1"
 STATE_NAME="$2"
 
 if [[ -z $COMMAND ]]; then
-  echo "Usage: omarchy-state <set|clear> <state-name-or-pattern>"
+  echo "Usage: inferna-state <set|clear> <state-name-or-pattern>"
   exit 1
 fi
 
 if [[ -z $STATE_NAME ]]; then
-  echo "Usage: omarchy-state $COMMAND <state-name>"
+  echo "Usage: inferna-state $COMMAND <state-name>"
   exit 1
 fi
 

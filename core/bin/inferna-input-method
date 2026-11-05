@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Configure, inspect, or switch input methods
-# omarchy:args=<status|cycle [back]|configure --seed|--defaults>
-# omarchy:hidden=true
+# inferna:summary=Configure, inspect, or switch input methods
+# inferna:args=<status|cycle [back]|configure --seed|--defaults>
+# inferna:hidden=true
 
 set -euo pipefail
 
 if [[ ${1:-} == "cycle" ]]; then
   direction=${2:-next}
   if [[ $direction != "next" && $direction != "back" ]]; then
-    echo "Usage: omarchy-input-method cycle [back]" >&2
+    echo "Usage: inferna-input-method cycle [back]" >&2
     exit 1
   fi
   # The shell's reader retains a choice made while nothing has focus.
-  if [[ $(omarchy-shell shell cycleInput "$direction") != "ok" ]]; then
+  if [[ $(inferna-shell shell cycleInput "$direction") != "ok" ]]; then
     echo "The shell's input reader is not running" >&2
     exit 1
   fi

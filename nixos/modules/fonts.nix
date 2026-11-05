@@ -13,7 +13,7 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
-    adwaita-fonts # Sans font used by Omarchy bar, menu, and Pebble shell
+    adwaita-fonts # Sans font used by Inferna bar, menu, and Pebble shell
   ]);
 
   # Enable font directory and fontconfig for proper font discovery

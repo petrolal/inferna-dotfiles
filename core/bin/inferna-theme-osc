@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print OSC sequences for an Omarchy color theme
-# omarchy:hidden=true
+# inferna:summary=Print OSC sequences for an Omarchy color theme
+# inferna:hidden=true
 
 theme="${1:-$HOME/.local/state/inferna/current/theme/colors.toml}"
 
@@ -11,7 +11,7 @@ declare -A COLORS
 
 while IFS=$'\t' read -r key value; do
   COLORS[$key]="$value"
-done < <(omarchy-theme-color --file "$theme" --all)
+done < <(inferna-theme-color --file "$theme" --all)
 
 emit_osc() {
   local code="$1"

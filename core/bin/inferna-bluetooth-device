@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Control a Bluetooth device
-# omarchy:group=bluetooth
-# omarchy:args=[pair|connect|disconnect|forget] <address>
-# omarchy:examples=omarchy bluetooth device connect 00:11:22:33:44:55
+# inferna:summary=Control a Bluetooth device
+# inferna:group=bluetooth
+# inferna:args=[pair|connect|disconnect|forget] <address>
+# inferna:examples=inferna bluetooth device connect 00:11:22:33:44:55
 
 set -e
 
 usage() {
-  echo "Usage: omarchy-bluetooth-device [pair|connect|disconnect|forget] <address>" >&2
+  echo "Usage: inferna-bluetooth-device [pair|connect|disconnect|forget] <address>" >&2
   exit 1
 }
 
@@ -22,7 +22,7 @@ power_on() {
   [[ $(timeout 2s bluetoothctl show 2>/dev/null) == *"Powered: yes"* ]] && return
   # Not bluetoothctl directly: Bluetooth is turned off by an rfkill soft block,
   # and BlueZ refuses to power an adapter up while one is set.
-  omarchy-bluetooth-power on || true
+  inferna-bluetooth-power on || true
 }
 
 trust_device() {

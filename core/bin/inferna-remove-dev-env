@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove a development environment that was previously installed via omarchy-install-dev-env.
-# omarchy:args=<ruby|node|bun|deno|go|php|laravel|symfony|python|elixir|phoenix|zig|rust|java|dotnet|ocaml|clojure|scala>
-# omarchy:requires-sudo=true
+# inferna:summary=Remove a development environment that was previously installed via inferna-install-dev-env.
+# inferna:args=<ruby|node|bun|deno|go|php|laravel|symfony|python|elixir|phoenix|zig|rust|java|dotnet|ocaml|clojure|scala>
+# inferna:requires-sudo=true
 
 if [[ -z $1 ]]; then
-  echo "Usage: omarchy-remove-dev-env <ruby|node|bun|deno|go|php|laravel|symfony|python|elixir|phoenix|zig|rust|java|dotnet|ocaml|clojure|scala>" >&2
+  echo "Usage: inferna-remove-dev-env <ruby|node|bun|deno|go|php|laravel|symfony|python|elixir|phoenix|zig|rust|java|dotnet|ocaml|clojure|scala>" >&2
   exit 1
 fi
 
@@ -15,7 +15,7 @@ remove_php() {
   mise tool-alias unset php
 
   # PHP from before it moved to mise
-  omarchy-pkg-drop php composer php-sqlite xdebug
+  inferna-pkg-drop php composer php-sqlite xdebug
 }
 
 case "$1" in
@@ -57,7 +57,7 @@ laravel)
   ;;
 symfony)
   echo -e "Removing Symfony CLI...\n"
-  omarchy-pkg-drop symfony-cli
+  inferna-pkg-drop symfony-cli
   ;;
 python)
   echo -e "Removing Python...\n"

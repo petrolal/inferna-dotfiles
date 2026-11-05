@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Finalize Omarchy user setup (runtime tweaks /etc/skel can't do)
-# omarchy:hidden=true
+# inferna:summary=Finalize Omarchy user setup (runtime tweaks /etc/skel can't do)
+# inferna:hidden=true
 
 set -euo pipefail
 
 usage() {
   cat <<USAGE
-Usage: omarchy finalize user [--force] [--first-install]
+Usage: inferna finalize user [--force] [--first-install]
 
 Runs the per-user setup steps that /etc/skel can't seed:
 dev-aware skill symlinks, xdg-user-dirs + gtk bookmarks (need \$HOME),
 default browser/mailto, and install/user/all.sh.
 
-For shipped configs see /etc/skel (new users) and omarchy-reinstall-configs
+For shipped configs see /etc/skel (new users) and inferna-reinstall-configs
 (existing users explicitly resyncing).
 
 --first-install is used by the ISO in the target chroot. It marks shipped
@@ -24,7 +24,7 @@ USAGE
 }
 
 if (( EUID == 0 )); then
-  echo "Error: run omarchy-provision-user as the user being configured, not as root." >&2
+  echo "Error: run inferna-provision-user as the user being configured, not as root." >&2
   exit 1
 fi
 
@@ -56,7 +56,7 @@ done
 state_dir="$HOME/.local/state/inferna"
 mkdir -p "$state_dir"
 
-if omarchy-done check finalize-user && (( force == 0 )); then
+if inferna-done check finalize-user && (( force == 0 )); then
   echo "User finalization already complete."
   exit 0
 fi
@@ -67,7 +67,7 @@ export OMARCHY_SETUP_CONTEXT="${OMARCHY_SETUP_CONTEXT:-runtime}"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 if (( first_install )) && [[ $OMARCHY_SETUP_CONTEXT == "runtime" ]]; then
-  # The ISO chroot doesn't set a context; omarchy-provision-owner runs first-install
+  # The ISO chroot doesn't set a context; inferna-provision-owner runs first-install
   # finalization too but with OMARCHY_SETUP_CONTEXT=provision-owner already set.
   export OMARCHY_SETUP_CONTEXT=iso-chroot
 fi
@@ -124,7 +124,7 @@ done
 
 source "$OMARCHY_INSTALL/user/all.sh"
 
-omarchy-refresh-applications
+inferna-refresh-applications
 env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser chromium.desktop
 xdg-mime default HEY.desktop x-scheme-handler/mailto
 
@@ -135,5 +135,5 @@ if (( first_install )); then
   done
 fi
 
-omarchy-done mark finalize-user
+inferna-done mark finalize-user
 echo "User finalization complete."

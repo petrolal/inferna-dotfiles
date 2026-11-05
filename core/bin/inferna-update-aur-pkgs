@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Update AUR packages if any are installed
+# inferna:summary=Update AUR packages if any are installed
 
-# mise exports GOROOT and GOBIN for its own Go. omarchy-upgrade-to-quattro runs
+# mise exports GOROOT and GOBIN for its own Go. inferna-upgrade-to-quattro runs
 # this with the system PATH but the caller's environment, so /usr/bin/go would
 # compile with mise's toolchain and every Go PKGBUILD fails with
 # "compile: version ... does not match go tool version". With both unset,
@@ -10,7 +10,7 @@
 unset GOROOT GOBIN
 
 if pacman -Qem >/dev/null; then
-  if omarchy-pkg-aur-accessible; then
+  if inferna-pkg-aur-accessible; then
     echo -e "\e[32m\nUpdate AUR packages\e[0m"
     yay -Sua --noconfirm --cleanafter --ignore gcc14,gcc14-libs || exit 1
     echo

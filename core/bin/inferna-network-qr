@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Generate a Wi-Fi QR matrix for the shell
-# omarchy:group=network
-# omarchy:args=[--meta] [interface]
+# inferna:summary=Generate a Wi-Fi QR matrix for the shell
+# inferna:group=network
+# inferna:args=[--meta] [interface]
 
 set -euo pipefail
 

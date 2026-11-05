@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle Omarchy features between enabled and disabled
-# omarchy:args=<flag-name> [toggle|on|off]
+# inferna:summary=Toggle Omarchy features between enabled and disabled
+# inferna:args=<flag-name> [toggle|on|off]
 
 if (($# < 1)); then
-  echo "Usage: omarchy-toggle <flag-name> [toggle|on|off]" >&2
+  echo "Usage: inferna-toggle <flag-name> [toggle|on|off]" >&2
   exit 1
 fi
 
@@ -36,7 +36,7 @@ case "$ACTION" in
     disable
     ;;
   *)
-    echo "Usage: omarchy-toggle <flag-name> [toggle|on|off]" >&2
+    echo "Usage: inferna-toggle <flag-name> [toggle|on|off]" >&2
     exit 1
     ;;
 esac

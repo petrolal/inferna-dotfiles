@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the mic-mute indicator LED on laptops that expose a platform::micmute LED node.
-# omarchy:args=<on|off>
+# inferna:summary=Set the mic-mute indicator LED on laptops that expose a platform::micmute LED node.
+# inferna:args=<on|off>
 
 if [[ -e /sys/class/leds/platform::micmute/brightness ]]; then
   case "$1" in

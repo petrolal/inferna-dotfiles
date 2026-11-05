@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Configure Quickshell lock screen authentication
-# omarchy:requires-sudo=true
-# omarchy:hidden=true
+# inferna:summary=Configure Quickshell lock screen authentication
+# inferna:requires-sudo=true
+# inferna:hidden=true
 
 set -e
 
@@ -28,7 +28,7 @@ as_root() {
 
 echo "Configuring lock screen password authentication..."
 
-as_root tee /etc/pam.d/omarchy-lock-password >/dev/null <<'EOF'
+as_root tee /etc/pam.d/inferna-lock-password >/dev/null <<'EOF'
 #%PAM-1.0
 auth       required                    pam_faillock.so preauth silent deny=10 unlock_time=120
 -auth      [success=2 default=ignore]  pam_systemd_home.so
@@ -59,13 +59,13 @@ if grep -qE '^[[:space:]]*-[[:space:]]*#[0-9]+:' <<< "$fingerprint_status"; then
   as_root install -Dm755 -o root -g root "$resume_hook_src" "$resume_hook_dst"
   as_root install -Dm644 -o root -g root "$stop_timeout_src" "$stop_timeout_dst"
   as_root systemctl daemon-reload
-  as_root tee /etc/pam.d/omarchy-lock-fingerprint >/dev/null <<'EOF'
+  as_root tee /etc/pam.d/inferna-lock-fingerprint >/dev/null <<'EOF'
 #%PAM-1.0
 auth       required                    pam_fprintd.so
 account    include                     system-local-login
 EOF
 elif [[ $fingerprint_status == "no" ]] || grep -qi 'has no fingers enrolled' <<< "$fingerprint_status"; then
-  as_root rm -f /etc/pam.d/omarchy-lock-fingerprint "$resume_hook_dst"
+  as_root rm -f /etc/pam.d/inferna-lock-fingerprint "$resume_hook_dst"
   # Only reload when something was there: this branch also runs in the
   # install chroot, where there is no systemd to reload.
   if [[ -e $stop_timeout_dst ]]; then
@@ -77,9 +77,9 @@ else
   echo "Could not check fingerprint enrollment; keeping the existing configuration." >&2
 fi
 
-# omarchy-shell can't reach a running shell during chroot install. The echo
+# inferna-shell can't reach a running shell during chroot install. The echo
 # is just confirmation, so swallow the failure rather than letting it become
 # the script's exit code.
-if omarchy-shell lock status >/dev/null 2>&1; then
+if inferna-shell lock status >/dev/null 2>&1; then
   echo "Lock screen authentication configured."
 fi

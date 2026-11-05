@@ -1,6 +1,6 @@
 #!/usr/bin/env bash -p
 
-# omarchy:summary=Detect whether the computer is an NVIDIA N1x laptop.
+# inferna:summary=Detect whether the computer is an NVIDIA N1x laptop.
 
 # Callers run this by absolute path, from systemd and from the shell, so use the
 # detector shipped beside it rather than whichever one PATH finds. -p keeps a
@@ -13,5 +13,5 @@ fi
 
 dir=${BASH_SOURCE[0]%/*}
 [[ $dir != "${BASH_SOURCE[0]}" ]] || dir=.
-platform=$("$dir/omarchy-hw-platform") || exit 1
+platform=$("$dir/inferna-hw-platform") || exit 1
 [[ $platform == "aarch64-n1x" ]]

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Cycle to the next background for the current theme
-# omarchy:examples=omarchy theme bg next
+# inferna:summary=Cycle to the next background for the current theme
+# inferna:examples=inferna theme bg next
 
 THEME_NAME=$(cat "$HOME/.local/state/inferna/current/theme.name" 2>/dev/null)
 THEME_BACKGROUNDS_PATH="$HOME/.local/state/inferna/current/theme/backgrounds/"
@@ -17,12 +17,12 @@ mapfile -d '' -t BACKGROUNDS < <(
 TOTAL=${#BACKGROUNDS[@]}
 
 if (( TOTAL == 0 )); then
-  omarchy-notification-send "$(omarchy-i18n theme.noBackground)" -t 2000
+  inferna-notification-send "$(inferna-i18n theme.noBackground)" -t 2000
 else
   # The shell knows a selection it has not linked yet, so quick presses each
   # move on from the one before. Without it, the link names the current one.
   # With neither, cycling starts from the first background.
-  CURRENT_BACKGROUND=$(omarchy-shell shell selectedBackground 2>/dev/null)
+  CURRENT_BACKGROUND=$(inferna-shell shell selectedBackground 2>/dev/null)
   if [[ -z $CURRENT_BACKGROUND && -L $CURRENT_BACKGROUND_LINK ]]; then
     CURRENT_BACKGROUND=$(readlink "$CURRENT_BACKGROUND_LINK")
   fi
@@ -45,5 +45,5 @@ else
     NEW_BACKGROUND="${BACKGROUNDS[$NEXT_INDEX]}"
   fi
 
-  omarchy-theme-bg-set "$NEW_BACKGROUND"
+  inferna-theme-bg-set "$NEW_BACKGROUND"
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Cycle the current active workspace through the dwindle, scrolling, and floating layouts
-# omarchy:args=[back]
+# inferna:summary=Cycle the current active workspace through the dwindle, scrolling, and floating layouts
+# inferna:args=[back]
 
 # Layout changes replace one notification instead of stacking a new one for
 # each press, so cycling through the layouts leaves a single, current one.
@@ -9,14 +9,14 @@ notify_layout() {
   local state="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layout-notification"
   local last id
   [[ -r $state ]] && read -r last <"$state"
-  if id=$(omarchy-notification-send -p -r "${last:-0}" -g 󱂬 "$1") && [[ $id =~ ^[0-9]+$ ]]; then
+  if id=$(inferna-notification-send -p -r "${last:-0}" -g 󱂬 "$1") && [[ $id =~ ^[0-9]+$ ]]; then
     mkdir -p "$(dirname "$state")" && printf '%s\n' "$id" >"$state"
   fi
 }
 
 DIRECTION=${1:-next}
 if [[ $DIRECTION != "next" && $DIRECTION != "back" ]]; then
-  echo "Usage: omarchy-hyprland-workspace-layout-toggle [back]" >&2
+  echo "Usage: inferna-hyprland-workspace-layout-toggle [back]" >&2
   exit 1
 fi
 
@@ -28,7 +28,7 @@ ACTIVE_WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id')
 MODES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/workspace-layouts"
 MODE_FILE="$MODES_DIR/$ACTIVE_WORKSPACE.lua"
 
-CURRENT_MODE=$(omarchy-hyprland-workspace-layout-current)
+CURRENT_MODE=$(inferna-hyprland-workspace-layout-current)
 
 if [[ $DIRECTION == "back" ]]; then
   case "$CURRENT_MODE" in
@@ -50,16 +50,16 @@ APPLY="o.workspace_mode({ workspace = \"$ACTIVE_WORKSPACE\", mode = \"$NEW_MODE\
 # Each layout has whole sentences of its own, so a translation can inflect it.
 case $NEW_MODE in
   dwindle)
-    SET_MESSAGE=$(omarchy-i18n layout.workspaceTiling)
-    UNSAVED_MESSAGE=$(omarchy-i18n layout.workspaceTilingUnsaved)
+    SET_MESSAGE=$(inferna-i18n layout.workspaceTiling)
+    UNSAVED_MESSAGE=$(inferna-i18n layout.workspaceTilingUnsaved)
     ;;
   scrolling)
-    SET_MESSAGE=$(omarchy-i18n layout.workspaceScrolling)
-    UNSAVED_MESSAGE=$(omarchy-i18n layout.workspaceScrollingUnsaved)
+    SET_MESSAGE=$(inferna-i18n layout.workspaceScrolling)
+    UNSAVED_MESSAGE=$(inferna-i18n layout.workspaceScrollingUnsaved)
     ;;
   *)
-    SET_MESSAGE=$(omarchy-i18n layout.workspaceFloating)
-    UNSAVED_MESSAGE=$(omarchy-i18n layout.workspaceFloatingUnsaved)
+    SET_MESSAGE=$(inferna-i18n layout.workspaceFloating)
+    UNSAVED_MESSAGE=$(inferna-i18n layout.workspaceFloatingUnsaved)
     ;;
 esac
 
@@ -71,8 +71,8 @@ if hyprctl eval "$APPLY" >/dev/null 2>&1; then
 fi
 
 if (( ! APPLIED )); then
-  notify_layout "$(omarchy-i18n layout.needsReload)"
-elif [[ $NEW_MODE == "$(omarchy-hyprland-workspace-layout-default)" ]] && rm -f "$MODE_FILE"; then
+  notify_layout "$(inferna-i18n layout.needsReload)"
+elif [[ $NEW_MODE == "$(inferna-hyprland-workspace-layout-default)" ]] && rm -f "$MODE_FILE"; then
   # Cycled onto the default, a workspace goes back to following it, so a later
   # change of the default reaches it too.
   notify_layout "$SET_MESSAGE"
@@ -86,13 +86,13 @@ fi
 
 # The bar shows the focused workspace's layout, and the dock shows on floating ones.
 if (( APPLIED )); then
-  omarchy-shell -q omarchy.workspaces refresh
-  omarchy-shell -q omarchy.dock refresh
+  inferna-shell -q omarchy.workspaces refresh
+  inferna-shell -q omarchy.dock refresh
 fi
 
 # A workspace starting to float sets up its titlebars as the mode applies. The
 # titlebar plugin itself is only loaded while the config loads, so the first
 # floating workspace of a session still needs a reload to bring it in.
 if (( APPLIED )) && [[ $NEW_MODE == "floating" ]] && ! hyprctl plugin list -j 2>/dev/null | jq -e 'any(.[]?; .name == "hyprbars")' >/dev/null 2>&1; then
-  omarchy-restart-hyprctl
+  inferna-restart-hyprctl
 fi

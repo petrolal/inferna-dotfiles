@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Codex usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Codex usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Codex usage into one display-ready JSON record.
 
 Local stats come from native Codex CLI session files, pi/omp sessions that
@@ -95,7 +95,7 @@ def mise_shims_dir():
 
 
 def is_lazy_launcher(path):
-  # omarchy-mise-install writes a regular file whose first step is `mise use
+  # inferna-mise-install writes a regular file whose first step is `mise use
   # -g`, and mise's shims exec `mise x`; running either installs the tool it
   # wraps. A shim is a symlink to the mise binary itself, so the symlink
   # check comes after the shim checks: a symlink elsewhere is the user's own
@@ -596,7 +596,7 @@ def fetch_codex_rpc(home=None, primary=True):
     return result
 
   try:
-    rpc_request(proc, 1, "initialize", {"clientInfo": {"name": "omarchy-agent-usage", "version": "1"}}, timeout=8)
+    rpc_request(proc, 1, "initialize", {"clientInfo": {"name": "inferna-agent-usage", "version": "1"}}, timeout=8)
     rpc_send(proc, {"method": "initialized", "params": {}}, "initialized")
     limits_msg = rpc_request(proc, 2, "account/rateLimits/read", timeout=8)
 

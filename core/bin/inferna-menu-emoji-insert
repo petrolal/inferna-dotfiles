@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Insert an emoji into the focused application
-# omarchy:group=menu
-# omarchy:args=<emoji>
-# omarchy:hidden=true
+# inferna:summary=Insert an emoji into the focused application
+# inferna:group=menu
+# inferna:args=<emoji>
+# inferna:hidden=true
 
 emoji="${1:-}"
 copy_pid=""

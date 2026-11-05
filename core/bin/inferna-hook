@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Run a named hook from ~/.config/inferna/hooks/<name> and ~/.config/inferna/hooks/<name>.d/.
-# omarchy:args=[name] [args...]
+# inferna:summary=Run a named hook from ~/.config/inferna/hooks/<name> and ~/.config/inferna/hooks/<name>.d/.
+# inferna:args=[name] [args...]
 
 set -e
 
 if (( $# < 1 )); then
-  echo "Usage: omarchy-hook [name] [args...]"
+  echo "Usage: inferna-hook [name] [args...]"
   exit 1
 fi
 

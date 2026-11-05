@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Close all open windows
-# omarchy:args=[--wait]
+# inferna:summary=Close all open windows
+# inferna:args=[--wait]
 
 clients=$(hyprctl clients -j) || exit 1
 

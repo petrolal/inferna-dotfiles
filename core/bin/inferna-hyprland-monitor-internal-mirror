@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Enable, disable, toggle, or recover mirroring the internal display to every external monitor
-# omarchy:args=<on|off|toggle|recover>
+# inferna:summary=Enable, disable, toggle, or recover mirroring the internal display to every external monitor
+# inferna:args=<on|off|toggle|recover>
 
 TOGGLE="internal-monitor-mirror"
 TOGGLE_FLAG="$HOME/.local/state/inferna/toggles/hypr/$TOGGLE.lua"
 DISABLE_TOGGLE="internal-monitor-disable"
 
-INTERNAL=$(omarchy-hyprland-monitor-laptop)
+INTERNAL=$(inferna-hyprland-monitor-laptop)
 # Every active external monitor shows the internal display, as a Mac mirrors
 # all its displays.
 mapfile -t EXTERNALS < <(hyprctl monitors -j | jq -r '.[] | select(.name | test("^(eDP|LVDS|DSI)-") | not).name')
 
 on() {
   if (( ${#EXTERNALS[@]} == 0 )); then
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.noExternalForMirror)"
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.noExternalForMirror)"
     exit 1
   fi
 
   if [[ -z $INTERNAL ]]; then
-    omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.noLaptopToMirror)"
+    inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.noLaptopToMirror)"
     exit 1
   fi
 
@@ -27,29 +27,29 @@ on() {
   # names may pass; a user-created headless output can carry any name.
   for output in "$INTERNAL" "${EXTERNALS[@]}"; do
     if [[ ! $output =~ ^[A-Za-z0-9._-]+$ ]]; then
-      omarchy-notification-send -g 󰍹 "$(omarchy-i18n monitor.unsafeName)"
+      inferna-notification-send -g 󰍹 "$(inferna-i18n monitor.unsafeName)"
       exit 1
     fi
   done
 
-  omarchy-hyprland-toggle $DISABLE_TOGGLE off
+  inferna-hyprland-toggle $DISABLE_TOGGLE off
 
-  if omarchy-hyprland-toggle-disabled $TOGGLE; then
+  if inferna-hyprland-toggle-disabled $TOGGLE; then
     for external in "${EXTERNALS[@]}"; do
       printf 'hl.monitor({ output = "%s", mode = "preferred", position = "auto", scale = 1, mirror = "%s" })\n' "$external" "$INTERNAL"
     done >"$TOGGLE_FLAG"
-    omarchy-restart-hyprctl
+    inferna-restart-hyprctl
   fi
 }
 
 off() {
-  if omarchy-hyprland-toggle-enabled $TOGGLE; then
-    omarchy-hyprland-toggle $TOGGLE off
+  if inferna-hyprland-toggle-enabled $TOGGLE; then
+    inferna-hyprland-toggle $TOGGLE off
   fi
 }
 
 toggle() {
-  if omarchy-hyprland-toggle-enabled $TOGGLE; then
+  if inferna-hyprland-toggle-enabled $TOGGLE; then
     off
   else
     on
@@ -57,8 +57,8 @@ toggle() {
 }
 
 recover() {
-  if ! omarchy-hyprland-monitor-external-active && omarchy-hyprland-toggle-enabled $TOGGLE; then
-    omarchy-hyprland-toggle $TOGGLE off
+  if ! inferna-hyprland-monitor-external-active && inferna-hyprland-toggle-enabled $TOGGLE; then
+    inferna-hyprland-toggle $TOGGLE off
   fi
 }
 

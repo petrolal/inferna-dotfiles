@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=List webcam devices that support video capture
-# omarchy:hidden=true
+# inferna:summary=List webcam devices that support video capture
+# inferna:hidden=true
 
 capture_capable() {
   local device="$1"

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Record dictation using Superwhisper
-# omarchy:args=<start|stop|toggle>
+# inferna:summary=Record dictation using Superwhisper
+# inferna:args=<start|stop|toggle>
 
 case "${1:-}" in
   start) superwhisper start ;;
   stop)
-    if omarchy-cmd-missing superwhisper || ! systemctl --user is-active --quiet superwhisper.service; then
+    if inferna-cmd-missing superwhisper || ! systemctl --user is-active --quiet superwhisper.service; then
       exit 0
     else
       superwhisper stop
     fi
     ;;
   toggle) superwhisper record ;;
-  *) echo "Usage: omarchy dictation superwhisper <start|stop|toggle>" >&2; exit 1 ;;
+  *) echo "Usage: inferna dictation superwhisper <start|stop|toggle>" >&2; exit 1 ;;
 esac

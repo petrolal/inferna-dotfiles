@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install and launch Geforce Now.
-# omarchy:group=install
-# omarchy:name=gaming geforce-now
+# inferna:summary=Install and launch Geforce Now.
+# inferna:group=install
+# inferna:name=gaming geforce-now
 
 set -e
 
 echo "Installing GeForce NOW..."
-omarchy-pkg-add flatpak
+inferna-pkg-add flatpak
 cd /tmp
 
 # Download and run GeForce NOW
@@ -17,4 +17,4 @@ chmod +x GeForceNOWSetup.bin
 
 # Ensure a separate browser process not started by GFN is available.
 # If not, it seems like GFN has a tendency to hang on login.
-setsid omarchy-launch-browser
+setsid inferna-launch-browser

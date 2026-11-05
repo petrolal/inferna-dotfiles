@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install Signal and launch it.
-# omarchy:requires-sudo=true
+# inferna:summary=Install Signal and launch it.
+# inferna:requires-sudo=true
 
 set -e
 
 echo "Installing Signal..."
-omarchy-pkg-add signal-desktop
+inferna-pkg-add signal-desktop
 
 echo "Opening Signal..."
 setsid uwsm-app -- /usr/bin/signal-desktop >/dev/null 2>&1 &

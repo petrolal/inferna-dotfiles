@@ -42,6 +42,7 @@ require("default.hypr.toggles")
 
 -- Glass surfaces: summoned shell popups (polkit, clipboard, emojis) use the
 -- bar's sans instead of monospace. Takes effect on the next shell start.
+hl.env("INFERNA_MENU_FONT", "Adwaita Sans")
 hl.env("OMARCHY_MENU_FONT", "Adwaita Sans")
 
 do local p = os.getenv("HOME") .. "/.config/hypr/theme_studio_border.lua"; local f = io.open(p); if f then f:close(); dofile(p) end end  -- Theme Studio: window border colors (written by its panel)

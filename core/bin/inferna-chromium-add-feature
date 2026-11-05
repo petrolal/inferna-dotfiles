@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Add a feature to Chromium's --enable-features in the user's flags file
-# omarchy:args=<feature>
-# omarchy:hidden=true
+# inferna:summary=Add a feature to Chromium's --enable-features in the user's flags file
+# inferna:args=<feature>
+# inferna:hidden=true
 
 set -euo pipefail
 
 feature=${1:-}
 if [[ ! $feature =~ ^[A-Za-z0-9]+$ ]]; then
-  echo "Usage: omarchy-chromium-add-feature <feature>" >&2
+  echo "Usage: inferna-chromium-add-feature <feature>" >&2
   exit 1
 fi
 

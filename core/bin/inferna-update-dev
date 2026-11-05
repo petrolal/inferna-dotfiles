@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Update the active Omarchy dev checkout
+# inferna:summary=Update the active Omarchy dev checkout
 
 set -euo pipefail
 

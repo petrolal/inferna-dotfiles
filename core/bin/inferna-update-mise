@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Update mise-managed tools
+# inferna:summary=Update mise-managed tools
 
-if omarchy-cmd-present mise; then
+if inferna-cmd-present mise; then
   echo -e "\e[32m\nUpdate mise tools\e[0m"
 
   # mise withholds releases younger than its cooldown, so tools stay behind for

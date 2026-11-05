@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Give terminals, btop, and GTK apps a see-through background while windows are glassy
-# omarchy:args=[theme-dir]
-# omarchy:hidden=true
+# inferna:summary=Give terminals, btop, and GTK apps a see-through background while windows are glassy
+# inferna:args=[theme-dir]
+# inferna:hidden=true
 
 # A Hyprland opacity rule fades a terminal's text along with its background,
 # and foot turns compositor blur down unless its own config asks for it, so the
@@ -30,12 +30,12 @@ remove_block() {
   local begin end
   # Theme switches wait on this, and a freshly rendered file has no block, so
   # look for one before building its sed addresses.
-  [[ -f $file ]] && grep -qF "$open omarchy-glass begin" "$file" || return 0
-  begin=$(regex "$open omarchy-glass begin")
-  end=$(regex "$open omarchy-glass end$close")
+  [[ -f $file ]] && grep -qF "$open inferna-glass begin" "$file" || return 0
+  begin=$(regex "$open inferna-glass begin")
+  end=$(regex "$open inferna-glass end$close")
 
   local added_newline=false
-  grep -qxF "$open omarchy-glass begin after a line without a newline$close" "$file" && added_newline=true
+  grep -qxF "$open inferna-glass begin after a line without a newline$close" "$file" && added_newline=true
   sed -i "/^$begin/,/^$end\$/d" "$file" || return 1
   if [[ $added_newline == "true" && -s $file && -z $(tail -c 1 "$file") ]]; then
     truncate -s -1 "$file" || return 1
@@ -45,9 +45,9 @@ remove_block() {
 append_block() {
   local file="$1" open="$2" close="$3" lines="$4"
   if [[ -s $file && -n $(tail -c 1 "$file") ]]; then
-    printf '\n%s\n%s\n%s\n' "$open omarchy-glass begin after a line without a newline$close" "$lines" "$open omarchy-glass end$close" >>"$file"
+    printf '\n%s\n%s\n%s\n' "$open inferna-glass begin after a line without a newline$close" "$lines" "$open inferna-glass end$close" >>"$file"
   else
-    printf '%s\n%s\n%s\n' "$open omarchy-glass begin$close" "$lines" "$open omarchy-glass end$close" >>"$file"
+    printf '%s\n%s\n%s\n' "$open inferna-glass begin$close" "$lines" "$open inferna-glass end$close" >>"$file"
   fi
 }
 
@@ -78,7 +78,7 @@ glass() {
   if [[ -n $section ]] && grep -qE "$header" "$file"; then
     local block
     block=$(mktemp) || return 1
-    printf '# omarchy-glass begin\n%s\n# omarchy-glass end\n' "$lines" >"$block"
+    printf '# inferna-glass begin\n%s\n# inferna-glass end\n' "$lines" >"$block"
     sed -i -E "0,/$header/{/$header/r $block
 }" "$file"
     local result=$?

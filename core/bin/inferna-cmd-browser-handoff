@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Hand a command line to the running Chromium-based browser
-# omarchy:args=<browser-command> [browser-args...]
-# omarchy:hidden=true
+# inferna:summary=Hand a command line to the running Chromium-based browser
+# inferna:args=<browser-command> [browser-args...]
+# inferna:hidden=true
 
 # A second browser process spends ~165ms starting up only to pass its command
 # line to the running one over the profile's singleton socket, then exits. Send

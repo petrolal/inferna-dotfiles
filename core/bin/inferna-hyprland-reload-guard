@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Pause or resume Hyprland config auto-reload around package transactions.
-# omarchy:hidden=true
+# inferna:summary=Pause or resume Hyprland config auto-reload around package transactions.
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -9,7 +9,7 @@ command="${1:-}"
 case "$command" in
   pause | resume | paused) ;;
   *)
-    echo "Usage: omarchy-hyprland-reload-guard pause|resume|paused" >&2
+    echo "Usage: inferna-hyprland-reload-guard pause|resume|paused" >&2
     exit 1
     ;;
 esac

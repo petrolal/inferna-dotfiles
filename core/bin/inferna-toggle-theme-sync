@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle mirroring theme changes to and from your herdr machines
+# inferna:summary=Toggle mirroring theme changes to and from your herdr machines
 
-omarchy-toggle herdr-theme-sync
+inferna-toggle herdr-theme-sync
 
-if omarchy-toggle-enabled herdr-theme-sync; then
-  omarchy-notification-send -g 󰸌 "$(omarchy-i18n themeSync.enabled)"
+if inferna-toggle-enabled herdr-theme-sync; then
+  inferna-notification-send -g 󰸌 "$(inferna-i18n themeSync.enabled)"
 else
-  omarchy-notification-send -g 󰸌 "$(omarchy-i18n themeSync.disabled)"
+  inferna-notification-send -g 󰸌 "$(inferna-i18n themeSync.disabled)"
 fi

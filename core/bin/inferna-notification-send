@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Send an Omarchy desktop notification
-# omarchy:args=[--app-name <app-name>] [-g <glyph>] [-u <low|normal|critical>] [-i <icon>] [-t <ms>] [-r <id>] [-p] [--transient] [--image <path-or-uri>] <headline> [description] [--exec <program> [args...] | --action <label> <program> [words...]... [--with <args...>]]
-# omarchy:examples=omarchy notification send "Reminder" "5 minutes are up" -g 󰢌
+# inferna:summary=Send an Omarchy desktop notification
+# inferna:args=[--app-name <app-name>] [-g <glyph>] [-u <low|normal|critical>] [-i <icon>] [-t <ms>] [-r <id>] [-p] [--transient] [--image <path-or-uri>] <headline> [description] [--exec <program> [args...] | --action <label> <program> [words...]... [--with <args...>]]
+# inferna:examples=inferna notification send "Reminder" "5 minutes are up" -g 󰢌
 
 set -euo pipefail
 
@@ -10,7 +10,7 @@ headline=""
 description=""
 glyph=
 urgency="low"
-app_name="omarchy-action"
+app_name="inferna-action"
 app_icon=""
 image=
 expire_timeout=-1
@@ -25,7 +25,7 @@ with_args=()
 parsed_option_args=0
 
 usage() {
-  echo "Usage: omarchy-notification-send [--app-name <app-name>] [-g <glyph>] [-u <low|normal|critical>] [-i <icon>] [-t <ms>] [-r <id>] [-p] [--transient] [--image <path-or-uri>] <headline> [description] [--exec <program> [args...] | --action <label> <program> [words...]... [--with <args...>]]" >&2
+  echo "Usage: inferna-notification-send [--app-name <app-name>] [-g <glyph>] [-u <low|normal|critical>] [-i <icon>] [-t <ms>] [-r <id>] [-p] [--transient] [--image <path-or-uri>] <headline> [description] [--exec <program> [args...] | --action <label> <program> [words...]... [--with <args...>]]" >&2
 }
 
 # Recognize a known option, in both `--flag value` and `--flag=value` forms.
@@ -187,12 +187,12 @@ critical) urgency_byte=2 ;;
 esac
 
 # a{sv} hints, as busctl triples (key, variant type, value). urgency is a byte;
-# the rest are strings. The click command rides here as omarchy-exec-argv, built
+# the rest are strings. The click command rides here as inferna-exec-argv, built
 # only from --exec below.
 hints=(urgency y "$urgency_byte")
 
 if [[ -n $glyph ]]; then
-  hints+=(omarchy-glyph s "$glyph")
+  hints+=(inferna-glyph s "$glyph")
 fi
 
 if [[ -n $image ]]; then
@@ -223,7 +223,7 @@ if ((exec_present)); then
   # NUL-delimit into jq so every byte survives as data: jq's own --args would eat
   # a bare "--", and a newline in an arg must not split the vector.
   exec_argv_json=$(printf '%s\0' "${exec_args[@]}" | jq -Rsc 'split("\u0000")[:-1]')
-  hints+=(omarchy-exec-argv s "$exec_argv_json")
+  hints+=(inferna-exec-argv s "$exec_argv_json")
 fi
 
 if ((${#action_labels[@]} > 0)); then
@@ -244,9 +244,9 @@ if ((${#action_labels[@]} > 0)); then
     jq -nc --arg label "${action_labels[i]}" --argjson words "${action_words[i]}" --argjson with "$with_json" \
       '{label: $label, argv: ($words + $with)}'
   done | jq -sc '.')
-  hints+=(omarchy-actions s "$actions_json")
+  hints+=(inferna-actions s "$actions_json")
   # Clicking the card runs the first action.
-  hints+=(omarchy-exec-argv s "$(jq -c '.[0].argv' <<<"$actions_json")")
+  hints+=(inferna-exec-argv s "$(jq -c '.[0].argv' <<<"$actions_json")")
 elif ((${#with_args[@]} > 0)); then
   echo "--with gives arguments to --action; it needs at least one --action before it." >&2
   exit 1
@@ -260,7 +260,7 @@ hint_count=$((${#hints[@]} / 3))
 # D-Bus parameter instead, and the leading `--` keeps a dash-leading value
 # (headline, description, a negative timeout) positional rather than a busctl
 # option. So the summary and body are strings that can never become a hint, and
-# omarchy-exec-argv is set only from --exec.
+# inferna-exec-argv is set only from --exec.
 #
 # Signature susssasa{sv}i: app_name, replaces_id, app_icon, summary, body,
 # actions (empty), hints, expire_timeout. replaces_id (from -r) updates a toast

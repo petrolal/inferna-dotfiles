@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Overwrite the user config for hyprsunset with the Omarchy default and restart the service.
+# inferna:summary=Overwrite the user config for hyprsunset with the Omarchy default and restart the service.
 
-omarchy-refresh-config hypr/hyprsunset.conf
-omarchy-restart-hyprsunset
+inferna-refresh-config hypr/hyprsunset.conf
+inferna-restart-hyprsunset

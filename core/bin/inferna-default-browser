@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Set the default browser for Omarchy and XDG handlers
-# omarchy:args=[chromium|chrome|brave|brave-origin|edge|firefox|zen]
-# omarchy:examples=omarchy default browser firefox | omarchy default browser brave
+# inferna:summary=Set the default browser for Omarchy and XDG handlers
+# inferna:args=[chromium|chrome|brave|brave-origin|edge|firefox|zen]
+# inferna:examples=inferna default browser firefox | inferna default browser brave
 
 installing=false
 if [[ ${1:-} == "--install" ]]; then
@@ -11,7 +11,7 @@ if [[ ${1:-} == "--install" ]]; then
 fi
 
 if (($# == 0)); then
-  current_browser=$(omarchy-cmd-default-browser)
+  current_browser=$(inferna-cmd-default-browser)
   case "$current_browser" in
   chromium.desktop) echo "chromium" ;;
   google-chrome.desktop) echo "chrome" ;;
@@ -34,22 +34,22 @@ edge) browser="edge"; command="microsoft-edge-stable"; desktop_id="microsoft-edg
 firefox) browser="firefox"; command="firefox"; desktop_id="firefox.desktop"; name="Firefox"; glyph=󰈹 ;;
 zen) browser="zen"; command="zen-browser"; desktop_id="zen.desktop"; name="Zen"; glyph=󰖟 ;;
 *)
-  echo "Usage: omarchy-default-browser <chromium|chrome|brave|brave-origin|edge|firefox|zen>"
+  echo "Usage: inferna-default-browser <chromium|chrome|brave|brave-origin|edge|firefox|zen>"
   exit 1
   ;;
 esac
 
-if omarchy-cmd-missing "$command"; then
+if inferna-cmd-missing "$command"; then
   if [[ $installing == "false" ]]; then
-    exec omarchy-launch-floating-terminal-with-presentation omarchy-default-browser --install "$browser"
+    exec inferna-launch-floating-terminal-with-presentation inferna-default-browser --install "$browser"
   else
-    omarchy-install-browser "$browser" || exit 1
+    inferna-install-browser "$browser" || exit 1
   fi
 fi
 
 # xdg-settings checks what it set by reading the handler back, which the
-# desktop-specific list would answer with omarchy-browser.desktop, so it must
+# desktop-specific list would answer with inferna-browser.desktop, so it must
 # only see mimeapps.list, where the browser itself is kept.
 env -u BROWSER XDG_CURRENT_DESKTOP= xdg-settings set default-web-browser "$desktop_id" || exit 1
 
-omarchy-notification-send -g $glyph "$(omarchy-i18n default.browserSet "$name")"
+inferna-notification-send -g $glyph "$(inferna-i18n default.browserSet "$name")"

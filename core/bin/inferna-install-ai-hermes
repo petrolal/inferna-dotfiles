@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the Hermes desktop app
-# omarchy:requires-sudo=true
+# inferna:summary=Install the Hermes desktop app
+# inferna:requires-sudo=true
 
 set -e
 
@@ -11,7 +11,7 @@ if (( EUID == 0 )); then
 fi
 
 # The same install the default agent gets, plus opening the window.
-omarchy-install-hermes-cli --now
+inferna-install-hermes-cli --now
 
 echo "Opening Hermes Desktop..."
 setsid uwsm-app -- /usr/bin/hermes-desktop >/dev/null 2>&1 &

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Prune superseded versions from the pacman package cache
-# omarchy:requires-sudo=true
+# inferna:summary=Prune superseded versions from the pacman package cache
+# inferna:requires-sudo=true
 
 set -e
 

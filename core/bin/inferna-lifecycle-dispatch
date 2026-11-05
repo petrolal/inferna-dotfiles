@@ -1,9 +1,9 @@
 #!/usr/bin/env bash -p
 
-# omarchy:summary=Run a fixed lifecycle operation through the platform's own packages
-# omarchy:args=[--resolve] <operation> [arguments...]
-# omarchy:requires-sudo=true
-# omarchy:hidden=true
+# inferna:summary=Run a fixed lifecycle operation through the platform's own packages
+# inferna:args=[--resolve] <operation> [arguments...]
+# inferna:requires-sudo=true
+# inferna:hidden=true
 
 # Provisioning, factory reset, update, boot, system and user setup and app
 # installs call a fixed set of operations here. A platform that needs its own
@@ -40,7 +40,7 @@ operations=(
 user_operations=(setup-user post-install pre-remove)
 
 usage() {
-  echo "Usage: omarchy-lifecycle-dispatch [--resolve] <operation> [arguments...]" >&2
+  echo "Usage: inferna-lifecycle-dispatch [--resolve] <operation> [arguments...]" >&2
   echo "Operations: ${operations[*]}" >&2
   exit 2
 }
@@ -68,7 +68,7 @@ listed "$operation" "${operations[@]}" || usage
 # root resolves only the fixed paths below, and the detector beside this file
 # ignores its fixture roots. Fixture roots exist for unprivileged tests.
 fixed_path=/usr/local/sbin:/usr/local/bin:/usr/bin
-detect=("$(PATH=$fixed_path dirname -- "${BASH_SOURCE[0]}")/omarchy-hw-platform")
+detect=("$(PATH=$fixed_path dirname -- "${BASH_SOURCE[0]}")/inferna-hw-platform")
 if (( EUID == 0 )); then
   export PATH=$fixed_path
   detect=(/usr/bin/env -i PATH="$fixed_path" "${detect[@]}")
@@ -89,15 +89,15 @@ fi
 
 # x86, plain aarch64, Snapdragon, N1x and GB10 machines have no registered
 # package: every operation is a no-op there and callers keep their generic path.
-# Apple Silicon's boot operations belong to omarchy-mac-boot, and its system and
-# user setup and app-install hooks to omarchy-mac (both omacom/omarchy-mac-pkgs).
+# Apple Silicon's boot operations belong to inferna-mac-boot, and its system and
+# user setup and app-install hooks to inferna-mac (both omacom/inferna-mac-pkgs).
 # Provisioning and factory reset have no other path on a Mac, only update-verify
 # checks what an update left in its boot chain, its boot checks prove the kept
 # LUKS slots that luks-slots records, and hardware setup has no other way to run
 # the Mac's boot setup (setup-boot), so those operations are required. So is
 # update-takeover: the Mac boot chain and its image own files no package does,
 # and a Mac whose boot package can't vouch for a takeover keeps them. Setup and
-# the app-install hooks are optional: a Mac without omarchy-mac keeps Omarchy's
+# the app-install hooks are optional: a Mac without inferna-mac keeps Omarchy's
 # generic setup and installs. So are the fingerprint hooks, which turn on a
 # reader the platform keeps off until the owner agrees (a Mac's Touch ID).
 # Moving an operation to required also changes apple_optional in
@@ -107,12 +107,12 @@ case $platform:$operation in
   aarch64-apple:setup-system | aarch64-apple:setup-user | aarch64-apple:post-install | aarch64-apple:pre-remove | \
     aarch64-apple:enable-fingerprint | aarch64-apple:disable-fingerprint)
     implementation=/usr/lib/omarchy/mac
-    package=omarchy-mac
+    package=inferna-mac
     required=()
     ;;
   aarch64-apple:*)
     implementation=/usr/lib/omarchy/mac-boot
-    package=omarchy-mac-boot
+    package=inferna-mac-boot
     required=(
       provision-prepare provision-commit provision-verify
       reset-prepare reset-verify reset-commit reset-rollback

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the installed Omarchy version
+# inferna:summary=Print the installed Omarchy version
 
 omarchy_path=${OMARCHY_PATH:-/usr/share/omarchy}
 omarchy_path=${omarchy_path%/}
@@ -17,8 +17,8 @@ if [[ $omarchy_path != "/usr/share/omarchy" ]]; then
   exit 0
 fi
 
-# The edge channel installs omarchy-dev instead of omarchy, so check both.
-for package in omarchy-dev omarchy; do
+# The edge channel installs inferna-dev instead of omarchy, so check both.
+for package in inferna-dev omarchy; do
   version=$(pacman -Q "$package" 2>/dev/null | awk '{ print $2 }')
   [[ -n $version ]] && break
 done

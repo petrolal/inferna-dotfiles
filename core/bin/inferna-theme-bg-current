@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show current background
-# omarchy:examples=omarchy theme bg current
+# inferna:summary=Show current background
+# inferna:examples=inferna theme bg current
 
 BACKGROUND_PATH=$(readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null)
 

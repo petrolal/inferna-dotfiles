@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove preinstalled Omarchy applications (web apps, TUIs, and selected packages).
+# inferna:summary=Remove preinstalled Omarchy applications (web apps, TUIs, and selected packages).
 
-if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n preinstalls.confirmRemove)"; then
+if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n preinstalls.confirmRemove)"; then
   echo -e "Removing preinstalled Omarchy applications...\n"
 
-  omarchy-webapp-remove-all
-  omarchy-tui-remove-all
+  inferna-webapp-remove-all
+  inferna-tui-remove-all
 
   mkdir -p ~/.local/state/inferna
   touch ~/.local/state/inferna/preinstalls-removed
-  omarchy-restart-hyprctl
+  inferna-restart-hyprctl
 
   # Disable Omarchy's default mise tools for this user and retire their shims.
-  omarchy-mise-default-tools disable || exit 1
+  inferna-mise-default-tools disable || exit 1
 
   # Remove wrappers left by older Omarchy releases.
   rm -f ~/.local/bin/codex ~/.local/bin/claude ~/.local/bin/agy ~/.local/bin/copilot \
@@ -27,7 +27,7 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
   fi
 
   # Cursor's own installer links ~/.local/bin/cursor-agent as well, so only
-  # the mise wrapper omarchy-mise-install wrote is a preinstall.
+  # the mise wrapper inferna-mise-install wrote is a preinstall.
   if [[ -f ~/.local/bin/cursor-agent && ! -L ~/.local/bin/cursor-agent ]] &&
     grep -Eq '^mise use -g .*"cursor-agent"' ~/.local/bin/cursor-agent; then
     rm -f ~/.local/bin/cursor-agent
@@ -39,7 +39,7 @@ if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-
     rm -f ~/.local/bin/muse
   fi
 
-  omarchy-pkg-drop \
+  inferna-pkg-drop \
     aether \
     cliamp \
     libreoffice-fresh \

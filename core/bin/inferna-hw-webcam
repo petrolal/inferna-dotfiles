@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether a webcam is available
+# inferna:summary=Check whether a webcam is available
 
 # The menu asks this on every open. Read the capture capability udev already
 # recorded for each video node rather than opening the nodes with v4l2-ctl, which
@@ -40,4 +40,4 @@ for node in "${nodes[@]}"; do
 done
 
 # No capture node recorded: ask the devices.
-[[ -n $(omarchy-capture-webcam-list) ]]
+[[ -n $(inferna-capture-webcam-list) ]]

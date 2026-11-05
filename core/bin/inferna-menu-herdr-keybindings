@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Display annotated Herdr keybindings using an interactive search menu.
-# omarchy:args=[--print|-p] [--config <path>]
+# inferna:summary=Display annotated Herdr keybindings using an interactive search menu.
+# inferna:args=[--print|-p] [--config <path>]
 
 print_only=false
 config_file="${HERDR_CONFIG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/herdr/config.toml}"
@@ -228,4 +228,4 @@ if [[ ! $monitor_height =~ ^[0-9]+$ ]] || ((monitor_height <= 0)); then
 fi
 
 menu_height=$((monitor_height * 40 / 100))
-printf '%s\n' "$records" | omarchy-menu-select "$(omarchy-i18n keybindings.herdrTitle)" -- --width 800 --height "$menu_height" >/dev/null || true
+printf '%s\n' "$records" | inferna-menu-select "$(inferna-i18n keybindings.herdrTitle)" -- --width 800 --height "$menu_height" >/dev/null || true

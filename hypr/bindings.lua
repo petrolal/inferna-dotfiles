@@ -2,31 +2,31 @@
 -- unbind defaults before replacing them.
 
 -- See current bindings and descriptions:
---   omarchy menu keybindings --print
+--   inferna menu keybindings --print
 
--- To disable every Omarchy default binding, set this in
--- ~/.config/hypr/hyprland.lua before require("default.hypr.omarchy"), then add
+-- To disable every Inferna default binding, set this in
+-- ~/.config/hypr/hyprland.lua before require("default.hypr.inferna"), then add
 -- only the bindings you want below:
---   omarchy_default_bindings = false
+--   inferna_default_bindings = false
 
 -- To disable all preinstalled app/webapp bindings, set:
---   omarchy_preinstalled_bindings = false
+--   inferna_preinstalled_bindings = false
 
 -- Add a new binding.
 -- o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
 
 -- Change an existing binding by unbinding it first, then binding the key again.
--- This example changes SUPER+SPACE from the launcher to the Omarchy root menu.
+-- This example changes SUPER+SPACE from the launcher to the Inferna root menu.
 -- hl.unbind("SUPER + SPACE")
--- o.bind("SUPER + SPACE", "Omarchy menu", "omarchy-menu toggle root")
+-- o.bind("SUPER + SPACE", "Inferna menu", "inferna-menu toggle root")
 
 -- Disable a default binding without replacing it.
 -- hl.unbind("SUPER + SHIFT + B")
 
 -- Logitech MX Keys examples:
--- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
+-- o.bind("SUPER + SHIFT + S", nil, "inferna-capture-screenshot")
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
--- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
+-- o.bind("SUPER + PERIOD", nil, "inferna-shell shell toggle inferna.emojis")
 
 -- Swap fullscreen shortcuts; let the scrolling layout preserve window widths.
 hl.unbind("SUPER + F")
@@ -37,7 +37,7 @@ o.bind("SUPER + CTRL + ALT + F", "Toggle all windows full width", os.getenv("HOM
 
 -- Native window swaps exchange column widths and can break maximized restore
 -- sizes. Move the entire scrolling column, including its remembered width.
--- These replace Omarchy's "Swap window to the left/right" bindings.
+-- These replace Inferna's "Swap window to the left/right" bindings.
 for _, item in ipairs({ { "LEFT", "l" }, { "RIGHT", "r" } }) do
   local direction = item[2]
   hl.unbind("SUPER + SHIFT + " .. item[1])
@@ -91,7 +91,7 @@ hl.unbind("SUPER + CTRL + SHIFT + S")
 o.bind("SUPER + CTRL + code:12", "Snip: Capture fullscreen", hl.dsp.global("snip:fullscreen"))
 o.bind("SUPER + CTRL + code:13", "Snip: Capture area", hl.dsp.global("snip:area"))
 o.bind("SUPER + CTRL + SHIFT + S", "Snip: Open capture history", hl.dsp.global("snip:history"))
--- Replaces Omarchy screen recording; press again to stop in Snip.
+-- Replaces Inferna screen recording; press again to stop in Snip.
 hl.unbind("ALT + PRINT")
 o.bind("ALT + PRINT", "Snip: Record screen", hl.dsp.global("snip:record"))
 end
@@ -111,7 +111,7 @@ o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
 -- flea --picker: end.
 
 -- ML4W style keybinding aliases
-o.bind("SUPER + B", "Open Browser", { omarchy = "browser" })
+o.bind("SUPER + B", "Open Browser", { inferna = "browser" })
 o.bind("SUPER + E", "Open File Manager", hl.dsp.exec_cmd("thunar"))
 o.bind("SUPER + CTRL + RETURN", "Open application launcher", { menu = "root" })
 o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl activewindow | grep pid | tr -d 'pid:' | xargs kill"))

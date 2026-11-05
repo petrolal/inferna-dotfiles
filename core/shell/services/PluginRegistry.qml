@@ -164,18 +164,22 @@ QtObject {
   }
 
   function isDisabled(config, id) {
-    return Util.isPlainObject(config) && Array.isArray(config.disabledPlugins)
-      && config.disabledPlugins.indexOf(Util.canonicalWidgetId(String(id))) !== -1
+    if (!Util.isPlainObject(config) || !Array.isArray(config.disabledPlugins)) return false
+    var key = Util.canonicalWidgetId(String(id || ""))
+    var altKey = key.indexOf("inferna.") === 0 ? ("omarchy." + key.slice(8)) : (key.indexOf("omarchy.") === 0 ? ("inferna." + key.slice(8)) : key)
+    return config.disabledPlugins.indexOf(key) !== -1 || config.disabledPlugins.indexOf(altKey) !== -1
   }
 
   function resolveEnabledId(id) {
     var key = Util.canonicalWidgetId(String(id || ""))
+    var altKey = key.indexOf("inferna.") === 0 ? ("omarchy." + key.slice(8)) : (key.indexOf("omarchy.") === 0 ? ("inferna." + key.slice(8)) : key)
     // Callers keep using the built-in id after cloning; the enabled local
     // manifest is the implementation that should receive the call.
     for (var candidate in installedPlugins) {
       var manifest = installedPlugins[candidate]
-      var metadata = manifest && Util.isPlainObject(manifest.omarchy) ? manifest.omarchy : null
-      if (metadata && String(metadata.clonedFrom || "") === key && isEnabled(candidate))
+      var metadata = manifest && (Util.isPlainObject(manifest.inferna) ? manifest.inferna : (Util.isPlainObject(manifest.omarchy) ? manifest.omarchy : null))
+      var clonedFrom = metadata ? String(metadata.clonedFrom || "") : ""
+      if (clonedFrom && (clonedFrom === key || clonedFrom === altKey) && isEnabled(candidate))
         return candidate
     }
     return key

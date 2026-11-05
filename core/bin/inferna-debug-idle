@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show idle, screensaver, and lock diagnostics
-# omarchy:group=debug
-# omarchy:args=[log-lines]
-# omarchy:examples=omarchy debug idle | omarchy-debug-idle 400
+# inferna:summary=Show idle, screensaver, and lock diagnostics
+# inferna:group=debug
+# inferna:args=[log-lines]
+# inferna:examples=inferna debug idle | inferna-debug-idle 400
 
 lines=${1:-200}
 if [[ ! $lines =~ ^[0-9]+$ ]]; then
@@ -18,7 +18,7 @@ section "Time"
 date -Is
 
 section "Idle IPC status"
-omarchy-shell idle status 2>&1 | jq . 2>/dev/null || omarchy-shell idle status 2>&1 || true
+inferna-shell idle status 2>&1 | jq . 2>/dev/null || inferna-shell idle status 2>&1 || true
 
 section "Quickshell instances"
 quickshell list -p "$OMARCHY_PATH/shell" --any-display 2>&1 || true
@@ -28,15 +28,15 @@ quickshell --no-color log -p "$OMARCHY_PATH/shell" --any-display --tail "$lines"
   | grep -Ei 'omarchy idle|idle_notify|screensaver|lock|error|warn|failed' || true
 
 section "Persisted shell log"
-journalctl -t omarchy-shell -n "$lines" --no-pager --quiet 2>/dev/null || true
+journalctl -t inferna-shell -n "$lines" --no-pager --quiet 2>/dev/null || true
 
 section "Relevant processes"
 ps -eo pid=,args= \
-  | grep -E 'quickshell -n -p|omarchy-system-sleep-monitor|systemd-inhibit.*Lock screen before suspend|omarchy-screensaver' \
+  | grep -E 'quickshell -n -p|inferna-system-sleep-monitor|systemd-inhibit.*Lock screen before suspend|inferna-screensaver' \
   | grep -v grep || true
 
 section "Sleep lock service"
-systemctl --user status omarchy-sleep-lock.service --no-pager 2>/dev/null || true
+systemctl --user status inferna-sleep-lock.service --no-pager 2>/dev/null || true
 
 section "Hyprland screensaver layers"
 hyprctl layers -j 2>/dev/null \
@@ -49,13 +49,13 @@ hyprctl clients -j 2>/dev/null \
 section "Screensaver detector"
 if hyprctl layers -j 2>/dev/null | jq -e '[.. | objects | select(.namespace? == "org.omarchy.screensaver")] | length > 0' >/dev/null; then
   echo "running-layer"
-elif pgrep -f '[/]usr/lib/omarchy-screensaver/omarchy-screensaver' >/dev/null; then
+elif pgrep -f '[/]usr/lib/inferna-screensaver/inferna-screensaver' >/dev/null; then
   echo "running-process"
-elif omarchy-toggle-enabled screensaver-off; then
+elif inferna-toggle-enabled screensaver-off; then
   echo "disabled"
 else
   echo "stopped"
 fi
 
 section "Lock detector"
-omarchy-shell lock status 2>&1 | jq . 2>/dev/null || omarchy-shell lock status 2>&1 || true
+inferna-shell lock status 2>&1 | jq . 2>/dev/null || inferna-shell lock status 2>&1 || true

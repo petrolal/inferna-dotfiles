@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch the installed Battle.net client via umu-launcher + GE-Proton.
-# omarchy:args=[--with-mangohud]
-# omarchy:examples=omarchy launch battlenet | omarchy launch battlenet --with-mangohud
+# inferna:summary=Launch the installed Battle.net client via umu-launcher + GE-Proton.
+# inferna:args=[--with-mangohud]
+# inferna:examples=inferna launch battlenet | inferna launch battlenet --with-mangohud
 
 set -e
 
@@ -15,7 +15,7 @@ for arg in "$@"; do
     --with-mangohud) with_mangohud=1 ;;
     -h|--help)
       cat <<'EOF'
-Usage: omarchy-launch-battlenet [--with-mangohud]
+Usage: inferna-launch-battlenet [--with-mangohud]
 
 Options:
   --with-mangohud   Enable the MangoHud FPS overlay for games launched from
@@ -26,14 +26,14 @@ EOF
       ;;
     *)
       echo "Unknown argument: $arg" >&2
-      echo "Try: omarchy-launch-battlenet --help" >&2
+      echo "Try: inferna-launch-battlenet --help" >&2
       exit 1
       ;;
   esac
 done
 
 if [[ ! -f $LAUNCHER ]]; then
-  echo "Battle.net is not installed. Run omarchy-install-gaming-battlenet first." >&2
+  echo "Battle.net is not installed. Run inferna-install-gaming-battlenet first." >&2
   exit 1
 fi
 

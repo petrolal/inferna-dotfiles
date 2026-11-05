@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Prompt for required reboot or service restarts after updates
-# omarchy:args=[--services-only|--reboot-only]
+# inferna:summary=Prompt for required reboot or service restarts after updates
+# inferna:args=[--services-only|--reboot-only]
 
 kernel_modules_path="${OMARCHY_KERNEL_MODULES_PATH:-/usr/lib/modules}"
 
@@ -14,9 +14,9 @@ esac
 echo
 confirm_reboot() {
   if [[ ${OMARCHY_UPDATE_UNATTENDED:-0} == "1" ]]; then
-    echo "$1 Run omarchy-system reboot when ready."
-  elif gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$1"; then
-    omarchy-system reboot
+    echo "$1 Run inferna-system reboot when ready."
+  elif gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$1"; then
+    inferna-system reboot
     exit 0
   fi
 }
@@ -38,14 +38,14 @@ if [[ $mode != "--services-only" ]]; then
   done
 
   if [[ $kernel_updated == "true" ]]; then
-    confirm_reboot "$(omarchy-i18n update.kernelReboot)"
+    confirm_reboot "$(inferna-i18n update.kernelReboot)"
   elif [[ -f $HOME/.local/state/inferna/reboot-required ]]; then
-    confirm_reboot "$(omarchy-i18n update.rebootRequired)"
+    confirm_reboot "$(inferna-i18n update.rebootRequired)"
   fi
 
   running_hyprland=$(readlink /proc/$(pgrep -x Hyprland)/exe 2>/dev/null)
   if [[ $running_hyprland == *"(deleted)"* ]]; then
-    confirm_reboot "$(omarchy-i18n update.hyprlandReboot)"
+    confirm_reboot "$(inferna-i18n update.hyprlandReboot)"
   fi
 fi
 
@@ -55,8 +55,8 @@ if [[ $mode != "--reboot-only" ]]; then
       filename=$(basename "$file")
       service=$(echo "$filename" | sed 's/restart-\(.*\)-required/\1/')
       echo "Restarting $service"
-      omarchy-state clear "$filename"
-      omarchy-restart-"$service"
+      inferna-state clear "$filename"
+      inferna-restart-"$service"
     fi
   done
 
@@ -65,5 +65,5 @@ if [[ $mode != "--reboot-only" ]]; then
   # prints its reason: the next update or login gets a fresh shell anyway.
   echo -e "\e[32m\nRestarting shell\e[0m"
   echo "All plugins have been reloaded"
-  omarchy-restart-shell || true
+  inferna-restart-shell || true
 fi

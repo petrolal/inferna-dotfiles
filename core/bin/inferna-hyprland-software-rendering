@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Turn off animations, blur and shadows for a Hyprland session that renders on the CPU
-# omarchy:hidden=true
+# inferna:summary=Turn off animations, blur and shadows for a Hyprland session that renders on the CPU
+# inferna:hidden=true
 
 # Hyprland draws every frame on the CPU when Mesa has no driver for the GPU
 # (llvmpipe or softpipe), and animations then stutter and cost real CPU time.
@@ -16,7 +16,7 @@ if [[ -z ${XDG_RUNTIME_DIR:-} || -z ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
   exit 0
 fi
 
-marker="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/omarchy-software-rendering"
+marker="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/inferna-software-rendering"
 if [[ -e $marker ]]; then
   exit 0
 fi
@@ -26,7 +26,7 @@ fi
 # Mesa's complaints about devices it can't open are expected on exactly these
 # machines, so they stay out of the journal.
 for (( attempt = 1; attempt <= 20; attempt++ )); do
-  renderer=$(omarchy-hw-software-rendering --print 2>/dev/null)
+  renderer=$(inferna-hw-software-rendering --print 2>/dev/null)
   status=$?
   if (( status != 2 )); then
     break
@@ -38,7 +38,7 @@ if (( status == 0 )); then
   # The renderer's name in the marker is only there for debugging.
   printf '%s\n' "$renderer" >"$marker"
 
-  if omarchy-toggle-enabled animations-without-gpu; then
+  if inferna-toggle-enabled animations-without-gpu; then
     logger -t omarchy "Hyprland renders on the CPU ($renderer); animations stay on, as Appearance turned them back on."
   else
     hyprctl reload >/dev/null
@@ -61,12 +61,12 @@ if (( status == 0 )); then
       # The notice shows once per machine, and not where animations were
       # already off by choice (a VM install turns them off); the journal line
       # above repeats at every login. The shell serves notifications and comes
-      # up slowly on the CPU, so wait for it. Not omarchy-action, as it's a
+      # up slowly on the CPU, so wait for it. Not inferna-action, as it's a
       # notice, not a confirmation: Do Not Disturb holds it.
       noticed="$HOME/.local/state/inferna/software-rendering-noticed"
-      if [[ ! -e $noticed ]] && ! omarchy-hyprland-toggle-enabled no-animations; then
-        if omarchy-notification-wait 15; then
-          omarchy-notification-send --app-name "Software Rendering" -g 󰘚 -u normal -t 30000 "$(omarchy-i18n animations.softwareRendering)" "$(omarchy-i18n animations.softwareRenderingBody)"
+      if [[ ! -e $noticed ]] && ! inferna-hyprland-toggle-enabled no-animations; then
+        if inferna-notification-wait 15; then
+          inferna-notification-send --app-name "Software Rendering" -g 󰘚 -u normal -t 30000 "$(inferna-i18n animations.softwareRendering)" "$(inferna-i18n animations.softwareRenderingBody)"
           mkdir -p "${noticed%/*}"
           touch "$noticed"
         else

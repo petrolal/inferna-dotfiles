@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the OEM Windows product key stored in firmware
-# omarchy:requires-sudo=true
+# inferna:summary=Print the OEM Windows product key stored in firmware
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -25,7 +25,7 @@ extract_key() {
 }
 
 key=""
-if omarchy-cmd-present strings; then
+if inferna-cmd-present strings; then
   key=$(read_msdm strings | extract_key) || true
 fi
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Sunshine and close Omarchy-managed Moonlight streaming ports.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Sunshine and close Omarchy-managed Moonlight streaming ports.
+# inferna:requires-sudo=true
 
 set -e
 
@@ -36,7 +36,7 @@ close_ufw_port_for_tailscale() {
 close_ufw_ports() {
   local port
 
-  if omarchy-cmd-missing ufw; then
+  if inferna-cmd-missing ufw; then
     return
   fi
 
@@ -60,8 +60,8 @@ disable_hyprland_autostart() {
 }
 
 systemctl --user disable --now sunshine 2>/dev/null || true
-omarchy-pkg-drop sunshine
-omarchy-webapp-remove "$SUNSHINE_ADMIN_APP" 2>/dev/null || true
+inferna-pkg-drop sunshine
+inferna-webapp-remove "$SUNSHINE_ADMIN_APP" 2>/dev/null || true
 disable_hyprland_autostart
 close_ufw_ports
 

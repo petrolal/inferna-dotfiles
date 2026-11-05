@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Update installed git-managed plugins
-# omarchy:group=plugin
-# omarchy:args=[id] [--yes]
+# inferna:summary=Update installed git-managed plugins
+# inferna:group=plugin
+# inferna:args=[id] [--yes]
 
 set -euo pipefail
 
@@ -14,7 +14,7 @@ ASSUME_YES=0
 UPDATED_ANY=0
 
 fail() {
-  echo "omarchy-plugin-update: $*" >&2
+  echo "inferna-plugin-update: $*" >&2
   exit 1
 }
 
@@ -41,7 +41,7 @@ update_one() {
   local dir="$PLUGINS_DIR/$id"
 
   if ! git -C "$dir" fetch --quiet origin HEAD; then
-    echo "omarchy-plugin-update: fetch failed for '$id'" >&2
+    echo "inferna-plugin-update: fetch failed for '$id'" >&2
     return 1
   fi
 
@@ -52,7 +52,7 @@ update_one() {
 
   if (( ! ASSUME_YES )); then
     echo "Changes for $id:"
-    if omarchy-cmd-present delta; then
+    if inferna-cmd-present delta; then
       git -C "$dir" diff HEAD FETCH_HEAD | delta --paging=never
     else
       git -C "$dir" diff HEAD FETCH_HEAD
@@ -65,13 +65,13 @@ update_one() {
   fi
 
   if ! git -C "$dir" merge --ff-only FETCH_HEAD >/dev/null 2>&1; then
-    echo "omarchy-plugin-update: cannot fast-forward '$id'; you have local changes in $dir" >&2
+    echo "inferna-plugin-update: cannot fast-forward '$id'; you have local changes in $dir" >&2
     return 1
   fi
 
-  if ! omarchy-plugin-validate "$dir"; then
+  if ! inferna-plugin-validate "$dir"; then
     git -C "$dir" reset --hard ORIG_HEAD >/dev/null
-    echo "omarchy-plugin-update: update of '$id' failed validation; rolled back" >&2
+    echo "inferna-plugin-update: update of '$id' failed validation; rolled back" >&2
     return 1
   fi
 
@@ -88,7 +88,7 @@ while (( $# > 0 )); do
     shift
     ;;
   -h | --help)
-    echo "Usage: omarchy plugin update [id] [--yes]"
+    echo "Usage: inferna plugin update [id] [--yes]"
     exit 0
     ;;
   -*)
@@ -128,6 +128,6 @@ for id in "${targets[@]}"; do
 done
 
 if (( UPDATED_ANY )); then
-  omarchy-shell shell rescanPlugins >/dev/null
+  inferna-shell shell rescanPlugins >/dev/null
 fi
 exit $rc

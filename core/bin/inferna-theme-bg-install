@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open the current theme's user background folder
+# inferna:summary=Open the current theme's user background folder
 
 CURRENT_THEME_NAME=$(cat "$HOME/.local/state/inferna/current/theme.name")
 THEME_USER_BACKGROUNDS="$HOME/.config/inferna/backgrounds/$CURRENT_THEME_NAME"

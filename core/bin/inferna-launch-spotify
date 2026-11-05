@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Launch Spotify or start its installer when missing.
+# inferna:summary=Launch Spotify or start its installer when missing.
 
 set -e
 
@@ -11,7 +11,7 @@ if [[ -n $WINDOW_ADDRESS ]]; then
 elif [[ -x /usr/bin/spotify ]]; then
   exec setsid uwsm-app -- /usr/bin/spotify
 elif [[ -f $HOME/.local/share/applications/Spotify.desktop ]]; then
-  exec omarchy-launch-webapp "https://open.spotify.com/"
+  exec inferna-launch-webapp "https://open.spotify.com/"
 else
-  exec omarchy-launch-floating-terminal-with-presentation omarchy-install-service-spotify
+  exec inferna-launch-floating-terminal-with-presentation inferna-install-service-spotify
 fi

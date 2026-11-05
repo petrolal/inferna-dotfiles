@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set the glyph forms for Chinese, Japanese, and Korean text
-# omarchy:args=[jp|kr|sc|tc|hk|default]
-# omarchy:examples=omarchy font cjk | omarchy font cjk jp | omarchy font cjk default
+# inferna:summary=Show or set the glyph forms for Chinese, Japanese, and Korean text
+# inferna:args=[jp|kr|sc|tc|hk|default]
+# inferna:examples=inferna font cjk | inferna font cjk jp | inferna font cjk default
 
 set -euo pipefail
 
 # Also seeded by the first CJK input method or language chosen. Tagged text and
 # a CJK session language keep their own forms regardless.
-preference=${XDG_CONFIG_HOME:-$HOME/.config}/fontconfig/conf.d/50-omarchy-input-method.conf
+preference=${XDG_CONFIG_HOME:-$HOME/.config}/fontconfig/conf.d/50-inferna-input-method.conf
 
 case "${1:-}" in
 "")
@@ -21,11 +21,11 @@ case "${1:-}" in
   ;;
 jp | kr | sc | tc | hk | default)
   /usr/bin/python3 "$OMARCHY_PATH/default/input-methods/configure.py" font "$1"
-  omarchy-restart-shell
-  omarchy-notification-send -g  "$(omarchy-i18n font.cjkChanged)" "$(omarchy-i18n font.restartAppsToSeeChange)"
+  inferna-restart-shell
+  inferna-notification-send -g  "$(inferna-i18n font.cjkChanged)" "$(inferna-i18n font.restartAppsToSeeChange)"
   ;;
 *)
-  echo "Usage: omarchy-font-cjk [jp|kr|sc|tc|hk|default]" >&2
+  echo "Usage: inferna-font-cjk [jp|kr|sc|tc|hk|default]" >&2
   exit 1
   ;;
 esac

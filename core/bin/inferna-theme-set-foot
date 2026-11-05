@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Apply current Omarchy theme colors and background alpha to running Foot terminals
-# omarchy:hidden=true
+# inferna:summary=Apply current Omarchy theme colors and background alpha to running Foot terminals
+# inferna:hidden=true
 
 colors_toml=$HOME/.local/state/inferna/current/theme/colors.toml
 foot_ini=$HOME/.local/state/inferna/current/theme/foot.ini
@@ -12,14 +12,14 @@ foot_ini=$HOME/.local/state/inferna/current/theme/foot.ini
 # once; each terminal's shells come from the kernel's list of its children.
 foot_pids=$(pgrep -x foot) || exit 0
 
-foot_osc=$(omarchy-theme-osc "$colors_toml")
+foot_osc=$(inferna-theme-osc "$colors_toml")
 [[ -n $foot_osc ]] || exit 0
 
 # foot takes a background alpha as an urxvt-style [percent] prefix, so a theme
 # going see-through or back, as with Glassy windows, reaches running terminals.
 # The last alpha in the theme's foot.ini wins, as it does when foot reads it.
 alpha=$(sed -n 's/^[[:space:]]*alpha[[:space:]]*=[[:space:]]*\([0-9.]*\).*/\1/p' "$foot_ini" 2>/dev/null | tail -n 1)
-background=$(omarchy-theme-color --file "$colors_toml" background 2>/dev/null)
+background=$(inferna-theme-color --file "$colors_toml" background 2>/dev/null)
 if [[ -n $background ]]; then
   percent=$(awk -v alpha="${alpha:-1}" 'BEGIN { printf "%d", alpha * 100 + 0.5 }')
   foot_osc+=$(printf '\033]11;[%d]%s\007' "$percent" "$background")

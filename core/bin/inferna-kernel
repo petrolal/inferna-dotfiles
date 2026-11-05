@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show, list, or set the kernel Limine boots by default
-# omarchy:args=[get|list|set <kernel>]
-# omarchy:examples=omarchy kernel | omarchy kernel list | omarchy kernel set linux-omarchy
-# omarchy:requires-sudo=true
+# inferna:summary=Show, list, or set the kernel Limine boots by default
+# inferna:args=[get|list|set <kernel>]
+# inferna:examples=inferna kernel | inferna kernel list | inferna kernel set linux-omarchy
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
@@ -17,9 +17,9 @@ fi
 LIMINE_CONF="${OMARCHY_KERNEL_LIMINE_CONF:-/etc/default/limine}"
 LIMINE_DROP_INS="${OMARCHY_KERNEL_LIMINE_DROP_INS:-/etc/limine-entry-tool.d}"
 MODULES_DIR="${OMARCHY_KERNEL_MODULES_DIR:-/usr/lib/modules}"
-LOCK_FILE="${OMARCHY_KERNEL_LOCK:-/run/lock/omarchy-kernel.lock}"
+LOCK_FILE="${OMARCHY_KERNEL_LOCK:-/run/lock/inferna-kernel.lock}"
 
-usage() { echo "Usage: omarchy-kernel [get|list|set <kernel>]"; }
+usage() { echo "Usage: inferna-kernel [get|list|set <kernel>]"; }
 
 # Every kernel package records its pkgbase in its module tree, and that is the
 # name Limine's boot entries and BOOT_ORDER patterns refer to.
@@ -97,7 +97,7 @@ first_menu_kernel() {
 }
 
 # Direct Boot has the firmware load one UKI and skip Limine, so reordering the
-# boot menu would change nothing that boots. Read as omarchy-boot-direct does,
+# boot menu would change nothing that boots. Read as inferna-boot-direct does,
 # from efibootmgr directly, since root runs on a PATH without omarchy-*.
 direct_boot_active() {
   efibootmgr 2>/dev/null | cut -f1 | grep -Eq '^Boot[0-9A-Fa-f]+\*[[:space:]]+Omarchy[[:space:]]*$'
@@ -145,7 +145,7 @@ set_kernel() {
   elif direct_boot_active; then
     echo "Error: Direct Boot skips the boot menu. Turn it off in Setup > Direct Boot to switch kernels." >&2
     if (( EUID != 0 )) && [[ ! -t 0 ]]; then
-      omarchy-notification-send -g  -u critical "$(omarchy-i18n kernel.directBoot)"
+      inferna-notification-send -g  -u critical "$(inferna-i18n kernel.directBoot)"
     fi
     exit 1
   fi
@@ -157,20 +157,20 @@ set_kernel() {
 
   # The root half runs from the packaged copy when there is one, else from the
   # checkout. Root resolves nothing here: pkexec clears the environment.
-  local self=/usr/bin/omarchy-kernel
-  [[ -x $self ]] || self=$OMARCHY_PATH/bin/omarchy-kernel
+  local self=/usr/bin/inferna-kernel
+  [[ -x $self ]] || self=$OMARCHY_PATH/bin/inferna-kernel
 
   if [[ -t 0 ]]; then
     sudo "$self" set "$kernel"
-    omarchy-state set reboot-required
+    inferna-state set reboot-required
     echo "$kernel will boot after the next restart."
   else
     # From the menu there is no terminal, so polkit asks once, on screen.
     if pkexec "$self" set "$kernel"; then
-      omarchy-state set reboot-required
-      omarchy-notification-send -g  -t 30000 "$(omarchy-i18n kernel.nowUsing "$kernel")" "$(omarchy-i18n kernel.rebootToUse)" --exec omarchy-system reboot
+      inferna-state set reboot-required
+      inferna-notification-send -g  -t 30000 "$(inferna-i18n kernel.nowUsing "$kernel")" "$(inferna-i18n kernel.rebootToUse)" --exec inferna-system reboot
     else
-      omarchy-notification-send -g  -u critical -t 30000 "$(omarchy-i18n kernel.switchFailed "$kernel")" "$(omarchy-i18n kernel.retryInTerminal)" --exec omarchy-launch-floating-terminal-with-presentation "omarchy-kernel set $kernel"
+      inferna-notification-send -g  -u critical -t 30000 "$(inferna-i18n kernel.switchFailed "$kernel")" "$(inferna-i18n kernel.retryInTerminal)" --exec inferna-launch-floating-terminal-with-presentation "inferna-kernel set $kernel"
       exit 1
     fi
   fi

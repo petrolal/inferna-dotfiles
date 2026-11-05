@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Detect whether NVIDIA drives the display (rather than a hybrid iGPU).
+# inferna:summary=Detect whether NVIDIA drives the display (rather than a hybrid iGPU).
 
 # On hybrid laptops the display is usually wired to the integrated GPU while
 # the NVIDIA card only handles offloaded rendering. Forcing NVIDIA's VA-API and

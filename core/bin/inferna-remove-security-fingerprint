@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove fingerprint authentication from sudo, polkit, and lock screen
-# omarchy:requires-sudo=true
+# inferna:summary=Remove fingerprint authentication from sudo, polkit, and lock screen
+# inferna:requires-sudo=true
 
 set -e
 
@@ -24,22 +24,22 @@ fi
 
 remove_pam_config() {
   # Remove from sudo (both the fingerprint module and its clamshell gate)
-  if grep -Eq 'pam_fprintd\.so|omarchy-hw-laptop-closed' /etc/pam.d/sudo; then
+  if grep -Eq 'pam_fprintd\.so|inferna-hw-laptop-closed' /etc/pam.d/sudo; then
     echo "Removing fingerprint authentication from sudo..."
-    sudo sed -i -e '/pam_fprintd\.so/d' -e '/omarchy-hw-laptop-closed/d' /etc/pam.d/sudo
+    sudo sed -i -e '/pam_fprintd\.so/d' -e '/inferna-hw-laptop-closed/d' /etc/pam.d/sudo
   fi
 
   # Remove from polkit (both the fingerprint module and its clamshell gate)
-  if [[ -f /etc/pam.d/polkit-1 ]] && grep -Eq 'pam_fprintd\.so|omarchy-hw-laptop-closed' /etc/pam.d/polkit-1; then
+  if [[ -f /etc/pam.d/polkit-1 ]] && grep -Eq 'pam_fprintd\.so|inferna-hw-laptop-closed' /etc/pam.d/polkit-1; then
     echo "Removing fingerprint authentication from polkit..."
-    sudo sed -i -e '/pam_fprintd\.so/d' -e '/omarchy-hw-laptop-closed/d' /etc/pam.d/polkit-1
+    sudo sed -i -e '/pam_fprintd\.so/d' -e '/inferna-hw-laptop-closed/d' /etc/pam.d/polkit-1
   fi
 }
 
 remove_lock_fingerprint_pam() {
-  if [[ -f /etc/pam.d/omarchy-lock-fingerprint ]]; then
+  if [[ -f /etc/pam.d/inferna-lock-fingerprint ]]; then
     echo "Removing lock screen fingerprint authentication..."
-    sudo rm -f /etc/pam.d/omarchy-lock-fingerprint
+    sudo rm -f /etc/pam.d/inferna-lock-fingerprint
   fi
 }
 
@@ -69,7 +69,7 @@ if ! sudo -n true 2>/dev/null && ! sudo -v; then
 fi
 # fprintd finds no reader when it is off or unplugged: then nothing could be
 # deleted from it, which is said plainly rather than as a failure.
-if omarchy-cmd-present fprintd-delete && ! delete_output=$(sudo fprintd-delete "$fingerprint_user" 2>&1); then
+if inferna-cmd-present fprintd-delete && ! delete_output=$(sudo fprintd-delete "$fingerprint_user" 2>&1); then
   if [[ $delete_output == *"No devices available"* ]]; then
     echo -e "\e[33mNo fingerprint reader is available now, so any fingerprints stored on the reader itself stay there.\e[0m"
   else
@@ -85,12 +85,12 @@ sudo rm -rf -- "/var/lib/fprint/$fingerprint_user"
 
 # A platform that turned its reader on for setup turns it off again. Failing to
 # doesn't stop the removal, but the owner is told the reader may stay on.
-if ! disable_hook=$(omarchy-lifecycle-dispatch --resolve disable-fingerprint) ||
-  { [[ -n $disable_hook ]] && ! sudo omarchy-lifecycle-dispatch disable-fingerprint; }; then
+if ! disable_hook=$(inferna-lifecycle-dispatch --resolve disable-fingerprint) ||
+  { [[ -n $disable_hook ]] && ! sudo inferna-lifecycle-dispatch disable-fingerprint; }; then
   echo -e "\e[33mThe fingerprint reader may still be turned on at the next boot.\e[0m"
 fi
 
 echo "Removing fingerprint packages..."
-omarchy-pkg-drop fprintd libfprint libfprint-git
+inferna-pkg-drop fprintd libfprint libfprint-git
 
 echo -e "\e[32mFingerprint authentication and $fingerprint_user's local saved fingerprints have been removed.\e[0m"

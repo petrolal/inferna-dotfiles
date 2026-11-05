@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the sink whose volume and mute a given output really uses
-# omarchy:args=[sink-name]
-# omarchy:group=audio
-# omarchy:examples=omarchy audio output sink | omarchy audio output sink omarchy_speaker_tuning
+# inferna:summary=Print the sink whose volume and mute a given output really uses
+# inferna:args=[sink-name]
+# inferna:group=audio
+# inferna:examples=inferna audio output sink | inferna audio output sink omarchy_speaker_tuning
 
 set -uo pipefail
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Add or remove an EFI boot entry for the Omarchy UKI, allowing the system to boot directly
-# omarchy:requires-sudo=true
+# inferna:summary=Add or remove an EFI boot entry for the Omarchy UKI, allowing the system to boot directly
+# inferna:requires-sudo=true
 
 # Apple Silicon boots m1n1, then U-Boot, which finds the bootloader on its own
 # and creates its boot entries itself, so there is no direct-boot entry to add
 # or remove.
-if omarchy-hw-aarch64-apple; then
+if inferna-hw-aarch64-apple; then
   echo "Error: Direct boot is not supported on Apple Silicon: U-Boot finds the bootloader itself" >&2
   exit 1
 fi
@@ -34,10 +34,10 @@ case "${bios_vendor,,}" in
     ;;
 esac
 
-boot_num=$(omarchy-boot-direct --number | head -1)
+boot_num=$(inferna-boot-direct --number | head -1)
 
 if [[ -n $boot_num ]]; then
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n directBoot.disable)"; then
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n directBoot.disable)"; then
     echo "Removing EFI boot entry $boot_num"
     sudo efibootmgr --bootnum "$boot_num" --delete-bootnum >/dev/null
   fi
@@ -55,7 +55,7 @@ else
   disk=$(echo "$boot_source" | sed 's/p\?[0-9]*$//')
   part=$(echo "$boot_source" | grep -o 'p\?[0-9]*$' | sed 's/^p//')
 
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n directBoot.setup)"; then
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n directBoot.setup)"; then
     echo "Creating EFI boot entry for $uki_file"
 
     sudo efibootmgr --create \

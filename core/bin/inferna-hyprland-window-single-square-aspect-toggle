@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle single-window square aspect ratio.
+# inferna:summary=Toggle single-window square aspect ratio.
 
-case $(omarchy-hyprland-toggle single-window-aspect-ratio) in
-  on) omarchy-notification-send -g  "$(omarchy-i18n window.squareOn)" ;;
-  off) omarchy-notification-send -g  "$(omarchy-i18n window.squareOff)" ;;
+case $(inferna-hyprland-toggle single-window-aspect-ratio) in
+  on) inferna-notification-send -g  "$(inferna-i18n window.squareOn)" ;;
+  off) inferna-notification-send -g  "$(inferna-i18n window.squareOff)" ;;
 esac

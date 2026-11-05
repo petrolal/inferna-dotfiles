@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Add branded glyphs to the Omarchy icon font
-# omarchy:args=[list|add] <name> <svg-file-or-url> [--codepoint U+E9xx] [--font PATH]
-# omarchy:examples=omarchy dev font list | omarchy dev font add ollama https://simpleicons.org/icons/ollama.svg
+# inferna:summary=Add branded glyphs to the Omarchy icon font
+# inferna:args=[list|add] <name> <svg-file-or-url> [--codepoint U+E9xx] [--font PATH]
+# inferna:examples=inferna dev font list | inferna dev font add ollama https://simpleicons.org/icons/ollama.svg
 """Append monochrome SVG marks to default/fonts/omarchy/omarchy.ttf.
 
 The font is a private-use icon font: the menu renders a mark by setting
@@ -553,7 +553,7 @@ def read_svg(location):
     if not location.startswith(('http://', 'https://')):
         return open(location, encoding='utf-8').read()
     # Icon sites reject the stock urllib agent, so ask like a browser would.
-    req = urllib.request.Request(location, headers={'User-Agent': 'omarchy-dev-font'})
+    req = urllib.request.Request(location, headers={'User-Agent': 'inferna-dev-font'})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.read().decode('utf-8')
@@ -644,7 +644,7 @@ def main():
         print('  - check the new line in %s' % os.path.relpath(readme))
     print('  - point a menu entry at it: "icon":"%s","iconFont":"omarchy"' % chr(cp))
     print('  - the font is package-owned, so it reaches the desktop through an')
-    print('    omarchy-settings release, not through omarchy update')
+    print('    inferna-settings release, not through omarchy update')
 
 
 if __name__ == '__main__':

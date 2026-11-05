@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Restart audio services and recover stuck USB audio devices.
-# omarchy:examples=omarchy restart audio | omarchy-restart-audio
+# inferna:summary=Restart audio services and recover stuck USB audio devices.
+# inferna:examples=inferna restart audio | inferna-restart-audio
 
 services=(wireplumber.service pipewire.service pipewire-pulse.service)
 
@@ -152,7 +152,7 @@ reset_usb_audio_device() {
 
   [[ -d $sysfs ]] || return 1
 
-  if ! omarchy-cmd-present usbreset; then
+  if ! inferna-cmd-present usbreset; then
     echo "usbreset is not installed; replug or power-cycle $device to recover it."
     return 1
   fi
@@ -168,7 +168,7 @@ reset_usb_audio_device() {
     return 0
   fi
 
-  echo "Could not reset $product automatically. Replug or power-cycle it, then run omarchy-restart-audio again."
+  echo "Could not reset $product automatically. Replug or power-cycle it, then run inferna-restart-audio again."
   return 1
 }
 

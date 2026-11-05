@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set how see-through windows are: opaque, transparent, or glassy
-# omarchy:args=[opaque|transparent|glassy]
-# omarchy:examples=omarchy hyprland window transparency | omarchy hyprland window transparency glassy
+# inferna:summary=Show or set how see-through windows are: opaque, transparent, or glassy
+# inferna:args=[opaque|transparent|glassy]
+# inferna:examples=inferna hyprland window transparency | inferna hyprland window transparency glassy
 
 TOGGLES_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/toggles/hypr"
 
@@ -37,28 +37,28 @@ if (( $# == 0 )); then
 fi
 
 if [[ ! $1 =~ ^(opaque|transparent|glassy)$ ]]; then
-  echo "Usage: omarchy-hyprland-window-transparency [opaque|transparent|glassy]" >&2
+  echo "Usage: inferna-hyprland-window-transparency [opaque|transparent|glassy]" >&2
   exit 1
 fi
 
 # A theme switch renders the next theme's terminal files from the saved choice
 # and then replaces the current theme, so the choice and the glass written into
 # the current theme are changed under its lock, or the switch could drop them.
-exec 9>"${XDG_RUNTIME_DIR:-/tmp}/omarchy-theme-set.lock"
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/inferna-theme-set.lock"
 flock 9
 
 # A choice whose glass cannot be written is taken back, so the saved choice
 # is always the one on screen.
 previous=$(current_mode)
 save_mode "$1" || exit 1
-if ! omarchy-theme-set-glass; then
+if ! inferna-theme-set-glass; then
   save_mode "$previous"
-  omarchy-theme-set-glass
+  inferna-theme-set-glass
   exit 1
 fi
 flock -u 9
 
-omarchy-restart-hyprctl
-omarchy-restart-terminal
-omarchy-theme-set-foot
-omarchy-restart-btop
+inferna-restart-hyprctl
+inferna-restart-terminal
+inferna-theme-set-foot
+inferna-restart-btop

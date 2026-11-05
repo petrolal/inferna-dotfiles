@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Battle.net, its Proton prefix, installed games, and desktop entry.
+# inferna:summary=Remove Battle.net, its Proton prefix, installed games, and desktop entry.
 
 set -e
 
@@ -18,17 +18,17 @@ update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 echo
 echo "Battle.net and its Proton prefix at $PREFIX have been removed."
 
-if omarchy-pkg-present umu-launcher; then
+if inferna-pkg-present umu-launcher; then
   echo
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n battlenet.removeUmu)"; then
-    omarchy-pkg-drop umu-launcher
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n battlenet.removeUmu)"; then
+    inferna-pkg-drop umu-launcher
   fi
 fi
 
 PROTON_DIR="$HOME/.local/share/Steam/compatibilitytools.d"
 if compgen -G "$PROTON_DIR/GE-Proton*" >/dev/null; then
   echo
-  if gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n battlenet.removeProton)"; then
+  if gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n battlenet.removeProton)"; then
     rm -rf "$PROTON_DIR"/GE-Proton*
     rm -rf "$HOME/.local/share/umu"
   fi

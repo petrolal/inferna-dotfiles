@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Antigravity usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Antigravity usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Google Antigravity usage into one display-ready JSON record.
 
-The id is agy, the name omarchy-default-agent and omarchy-agent know the CLI
+The id is agy, the name inferna-default-agent and inferna-agent know the CLI
 by, so the record and the default agent agree on which agent this is.
 
 Local stats come from Antigravity's history log, conversation summaries, and

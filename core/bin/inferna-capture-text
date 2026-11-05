@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Extract text from a screenshot region with OCR
-# omarchy:group=capture
-# omarchy:examples=omarchy capture text
+# inferna:summary=Extract text from a screenshot region with OCR
+# inferna:group=capture
+# inferna:examples=inferna capture text
 
 # Keep hyprpicker alive until after grim captures so the screenshot sees the
 # frozen overlay rather than live content shifting during teardown.
@@ -23,4 +23,4 @@ TEXT=$(grim -g "$SELECTION" - | tesseract stdin stdout --oem 1 --psm 6 -l "${OMA
 [[ -z $TEXT ]] && exit 1
 
 printf "%s" "$TEXT" | wl-copy
-omarchy-notification-send -g 󰴑 "$(omarchy-i18n capture.textCopied)"
+inferna-notification-send -g 󰴑 "$(inferna-i18n capture.textCopied)"

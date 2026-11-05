@@ -41,7 +41,7 @@
     ui.enable = true;
   };
 
-  # Inferna / Omarchy environment variables
+  # Inferna environment variables
   environment.sessionVariables = {
     INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
     OMARCHY_PATH = "/home/petrolal/inferna-dotfiles/core";

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Toggle idle behavior so the system either idles normally or stays awake
-# omarchy:group=toggle
-# omarchy:args=[toggle|stay-awake|allow-idle|status]
-# omarchy:examples=omarchy toggle idle | omarchy toggle idle stay-awake | omarchy-toggle-idle --status
+# inferna:summary=Toggle idle behavior so the system either idles normally or stays awake
+# inferna:group=toggle
+# inferna:args=[toggle|stay-awake|allow-idle|status]
+# inferna:examples=inferna toggle idle | inferna toggle idle stay-awake | inferna-toggle-idle --status
 
 STATE_DIR="$HOME/.local/state/inferna/indicators"
 STATE_FILE="$STATE_DIR/stay-awake"
@@ -61,7 +61,7 @@ case "${1:-toggle}" in
     print_status
     ;;
   *)
-    echo "Usage: omarchy-toggle-idle [toggle|stay-awake|allow-idle|status]" >&2
+    echo "Usage: inferna-toggle-idle [toggle|stay-awake|allow-idle|status]" >&2
     exit 1
     ;;
 esac

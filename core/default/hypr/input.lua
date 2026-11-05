@@ -95,7 +95,7 @@ hl.config({
 -- name, so they are matched by that to scroll at the same rate.
 local function terminal_scroll(class, title, factor)
   o.window(class, { scroll_touchpad = factor })
-  o.window({ class = "(org\\.omarchy\\..*|TUI\\..*)", initial_title = title }, { scroll_touchpad = factor })
+  o.window({ class = "(org\\.inferna\\..*|org\\.omarchy\\..*|TUI\\..*)", initial_title = title }, { scroll_touchpad = factor })
 end
 
 terminal_scroll("(Alacritty|kitty)", "(Alacritty|kitty)", 1.5)

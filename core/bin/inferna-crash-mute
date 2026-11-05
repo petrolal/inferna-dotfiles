@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Silence crash notifications for one program, or list what is silenced
-# omarchy:args=[--] [<program>] [on|off|toggle]
-# omarchy:examples=omarchy crash mute | omarchy crash mute hyprland | omarchy crash mute /usr/bin/hyprland | omarchy crash mute hyprland off
+# inferna:summary=Silence crash notifications for one program, or list what is silenced
+# inferna:args=[--] [<program>] [on|off|toggle]
+# inferna:examples=inferna crash mute | inferna crash mute hyprland | inferna crash mute /usr/bin/hyprland | inferna crash mute hyprland off
 
-# The flag omarchy-crash-watch reads before announcing a crash. Muting is per
+# The flag inferna-crash-watch reads before announcing a crash. Muting is per
 # program; Trigger > Toggle > Crash Capture is the switch for all of them.
 
 set -uo pipefail
@@ -12,7 +12,7 @@ set -uo pipefail
 readonly MUTES="$HOME/.local/state/inferna/toggles/crash-ignore"
 
 usage() {
-  echo "Usage: omarchy crash mute [--] [<program>] [on|off|toggle]" >&2
+  echo "Usage: inferna crash mute [--] [<program>] [on|off|toggle]" >&2
 }
 
 # Only regular files, because that is all the watcher honours: anything else in
@@ -62,11 +62,11 @@ case "$action" in
     ;;
 esac
 
-omarchy-toggle "crash-ignore/$program" "$action" || exit 1
+inferna-toggle "crash-ignore/$program" "$action" || exit 1
 
 # Report what is now true rather than what was asked for: the flag is what the
 # watcher reads, and a toggle does not say which way it went.
-if omarchy-toggle-enabled "crash-ignore/$program"; then
+if inferna-toggle-enabled "crash-ignore/$program"; then
   echo "Muted crash notifications for $program."
 else
   echo "Crash notifications for $program are back on."

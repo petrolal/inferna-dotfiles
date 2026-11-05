@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Arrange monitors by placing each at a position in the layout
-# omarchy:args=NAME=XxY [NAME=XxY...] | --resized NAME OLD_MODE OLD_SCALE NEW_MODE NEW_SCALE
-# omarchy:examples=omarchy hyprland monitor layout eDP-1=0x0 DP-1=1280x0 | omarchy hyprland monitor layout --resized DP-1 6016x3384 2 5120x2880 2
-# omarchy:hidden=true
+# inferna:summary=Arrange monitors by placing each at a position in the layout
+# inferna:args=NAME=XxY [NAME=XxY...] | --resized NAME OLD_MODE OLD_SCALE NEW_MODE NEW_SCALE
+# inferna:examples=inferna hyprland monitor layout eDP-1=0x0 DP-1=1280x0 | inferna hyprland monitor layout --resized DP-1 6016x3384 2 5120x2880 2
+# inferna:hidden=true
 
 # Positions are in Hyprland's layout space: logical pixels, after each
 # monitor's scale. Every position is applied in one eval, so the monitors never
 # pass through a half-moved arrangement, and then saved for each monitor.
 
 usage() {
-  echo "Usage: omarchy-hyprland-monitor-layout NAME=XxY [NAME=XxY...]"
-  echo "       omarchy-hyprland-monitor-layout --resized NAME OLD_SIZE OLD_SCALE NEW_SIZE NEW_SCALE [MODE [TRANSFORM]]"
+  echo "Usage: inferna-hyprland-monitor-layout NAME=XxY [NAME=XxY...]"
+  echo "       inferna-hyprland-monitor-layout --resized NAME OLD_SIZE OLD_SCALE NEW_SIZE NEW_SCALE [MODE [TRANSFORM]]"
 }
 
 monitors_json=$(hyprctl monitors -j)
@@ -131,5 +131,5 @@ for i in "${!names[@]}"; do
   else
     scale=$(jq -r --arg name "${names[i]}" '.[] | select(.name == $name) | .scale' <<<"$monitors_json")
   fi
-  omarchy-hyprland-monitor-persist "${names[i]}" "$scale" "" "${positions[i]}"
+  inferna-hyprland-monitor-persist "${names[i]}" "$scale" "" "${positions[i]}"
 done

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Copy text to the clipboard and type or paste it
-# omarchy:group=clipboard
-# omarchy:args=[--shift-insert] [--copy-only] [--history-index <index>|<text>]
-# omarchy:examples=omarchy clipboard paste text "hello" | omarchy clipboard paste text --shift-insert "hello"
-# omarchy:hidden=true
+# inferna:summary=Copy text to the clipboard and type or paste it
+# inferna:group=clipboard
+# inferna:args=[--shift-insert] [--copy-only] [--history-index <index>|<text>]
+# inferna:examples=inferna clipboard paste text "hello" | inferna clipboard paste text --shift-insert "hello"
+# inferna:hidden=true
 
 use_shift_insert=false
 copy_only=false

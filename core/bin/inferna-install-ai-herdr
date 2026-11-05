@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the Herdr desktop app from its official installer
+# inferna:summary=Install the Herdr desktop app from its official installer
 
 set -euo pipefail
 
@@ -20,7 +20,7 @@ sh "$installer"
 
 # An updated user's current theme may have been staged before this template existed.
 if [[ ! -f $HOME/.local/state/inferna/current/theme/herdr-app.json ]]; then
-  omarchy-theme-refresh
+  inferna-theme-refresh
 fi
 
 echo "Opening Herdr..."
@@ -31,7 +31,7 @@ setsid uwsm-app -- "$HOME/.local/bin/herdr-app" >/dev/null 2>&1 &
 echo "Matching Herdr to the current theme..."
 themed=0
 for (( attempt = 0; attempt < 60; attempt++ )); do
-  if omarchy-theme-set-herdr-app --activate 2>/dev/null; then
+  if inferna-theme-set-herdr-app --activate 2>/dev/null; then
     themed=1
     break
   fi

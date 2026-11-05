@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Measure theme switcher cache and selector prep times
-# omarchy:args=[--repeat=<count>] [--keep-cache]
-# omarchy:examples=omarchy dev benchmark theme switcher | omarchy dev benchmark theme-switcher --repeat=10
-# omarchy:aliases=omarchy dev benchmark theme-switcher
+# inferna:summary=Measure theme switcher cache and selector prep times
+# inferna:args=[--repeat=<count>] [--keep-cache]
+# inferna:examples=inferna dev benchmark theme switcher | inferna dev benchmark theme-switcher --repeat=10
+# inferna:aliases=inferna dev benchmark theme-switcher
 
 set -euo pipefail
 
@@ -17,9 +17,9 @@ Usage:
   omarchy dev benchmark theme switcher [--repeat=<count>] [--keep-cache]
 
 Measure the non-interactive parts of the theme switcher:
-- theme preview index build (omarchy-theme-switcher before UI handoff)
+- theme preview index build (inferna-theme-switcher before UI handoff)
 - lazy selector row prep used by the interactive theme switcher
-- full thumbnail cache warmup cost (omarchy-menu-images --cache-only)
+- full thumbnail cache warmup cost (inferna-menu-images --cache-only)
 
 Options:
   --repeat=<count>  Number of warm runs to measure for each case (default: 5)
@@ -116,11 +116,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cat >"$stub_bin/omarchy-menu-images" <<'EOF'
+cat >"$stub_bin/inferna-menu-images" <<'EOF'
 #!/usr/bin/env bash
 exit 0
 EOF
-chmod +x "$stub_bin/omarchy-menu-images"
+chmod +x "$stub_bin/inferna-menu-images"
 
 benchmark_env=(
   env
@@ -138,15 +138,15 @@ preview_dir="$benchmark_cache/omarchy/theme-selector/previews"
 thumbnail_preview_dir="$thumbnail_cache/omarchy/theme-selector/previews"
 
 build_theme_index() {
-  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/omarchy-theme-switcher"
+  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/inferna-theme-switcher"
 }
 
 prepare_selector_lazy() {
-  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/omarchy-menu-images" --prepare-only --lazy-thumbnails --show-labels --filterable "$preview_dir"
+  "${benchmark_env[@]}" "$OMARCHY_BIN_DIR/inferna-menu-images" --prepare-only --lazy-thumbnails --show-labels --filterable "$preview_dir"
 }
 
 prepare_image_cache() {
-  "${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/omarchy-menu-images" --cache-only "$thumbnail_preview_dir"
+  "${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/inferna-menu-images" --cache-only "$thumbnail_preview_dir"
 }
 
 printf 'Theme switcher benchmark (%d warm runs each)\n\n' "$REPEAT"
@@ -154,7 +154,7 @@ printf '%-34s %s ms\n' "theme index cold" "$(format_ms "$(measure_once build_the
 run_case "theme index warm" build_theme_index
 printf '%-34s %s ms\n' "selector prep cold (lazy)" "$(format_ms "$(measure_once prepare_selector_lazy)")"
 run_case "selector prep warm (lazy)" prepare_selector_lazy
-"${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/omarchy-theme-switcher" >/dev/null
+"${thumbnail_env[@]}" "$OMARCHY_BIN_DIR/inferna-theme-switcher" >/dev/null
 printf '%-34s %s ms\n' "thumbnail cache cold" "$(format_ms "$(measure_once prepare_image_cache)")"
 run_case "thumbnail cache warm" prepare_image_cache
 

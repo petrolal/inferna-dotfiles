@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Get or set the default dictation backend
-# omarchy:args=[backend]
-# omarchy:examples=omarchy default dictation | omarchy default dictation superwhisper
+# inferna:summary=Get or set the default dictation backend
+# inferna:args=[backend]
+# inferna:examples=inferna default dictation | inferna default dictation superwhisper
 
 if (($# > 1)); then
-  echo "Usage: omarchy default dictation [backend]" >&2
+  echo "Usage: inferna default dictation [backend]" >&2
   exit 1
 fi
 
@@ -28,10 +28,10 @@ fi
 if (($# == 0)); then
   echo "$backend"
 else
-  installer="omarchy-install-dictation-$backend"
-  if omarchy-cmd-missing "$installer"; then
+  installer="inferna-install-dictation-$backend"
+  if inferna-cmd-missing "$installer"; then
     echo "No installer available for dictation backend: $backend" >&2
     exit 1
   fi
-  omarchy-launch-floating-terminal-with-presentation "$installer"
+  inferna-launch-floating-terminal-with-presentation "$installer"
 fi

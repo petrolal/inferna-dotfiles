@@ -4,6 +4,7 @@ local home = os.getenv("HOME")
 local reload_prefixes = {
   "default.hypr",
   "hypr",
+  "inferna.current.theme",
   "omarchy.current.theme",
 }
 
@@ -29,11 +30,12 @@ for _, module in ipairs(modules_to_reload) do
 end
 
 -- Load generated state from ~/.local/state, user modules from ~/.config, and
--- Omarchy defaults from $OMARCHY_PATH.
+-- Inferna defaults from $INFERNA_PATH.
+local core_path = os.getenv("INFERNA_PATH") or os.getenv("OMARCHY_PATH") or "/usr/share/inferna"
 package.path = home
   .. "/.local/state/?.lua;"
   .. home
   .. "/.config/?.lua;"
-  .. (os.getenv("OMARCHY_PATH") or "/usr/share/omarchy")
+  .. core_path
   .. "/?.lua;"
   .. package.path

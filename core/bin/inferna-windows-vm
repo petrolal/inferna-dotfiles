@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install, launch, stop, inspect, or remove the Windows VM
-# omarchy:args=<install|remove|launch|stop|status> [options]
-# omarchy:requires-sudo=true
+# inferna:summary=Install, launch, stop, inspect, or remove the Windows VM
+# inferna:args=<install|remove|launch|stop|status> [options]
+# inferna:requires-sudo=true
 
 # The VM is an x86_64 Windows guest under KVM, which only an x86_64 host runs.
-if ! omarchy-hw-x86; then
+if ! inferna-hw-x86; then
   echo "Windows VM needs an x86_64 machine (it runs an x86_64 guest under KVM)." >&2
   exit 1
 fi
@@ -14,7 +14,7 @@ fi
 # it needs the root-owned Docker daemon. By default the user is NOT in the docker
 # group (that group is root-equivalent), so Docker access is gated behind a
 # single polkit prompt. If the user opted into sudoless Docker
-# (omarchy-setup-security-sudoless-docker), the socket is reachable directly and
+# (inferna-setup-security-sudoless-docker), the socket is reachable directly and
 # no prompt appears.
 #
 # The compose file lives in a root-owned directory and is only ever written by
@@ -33,8 +33,8 @@ LEGACY_COMPOSE_FILE="$HOME/.config/windows/docker-compose.yml"
 # the user's own config, so the plaintext password is never world-readable.
 CREDENTIALS_FILE="$HOME/.config/windows/credentials"
 IMAGE="dockurr/windows"
-CONTAINER="omarchy-windows"
-VM_LOCK_DIR=/run/lock/omarchy-windows-vm
+CONTAINER="inferna-windows"
+VM_LOCK_DIR=/run/lock/inferna-windows-vm
 # Removal is the only path that recursively proves there are no bind aliases.
 # Bound every metadata walk so a large or hostile caller tree fails closed
 # instead of hanging a privileged action indefinitely.
@@ -58,7 +58,7 @@ fi
 # on and in effect). Asking about the socket rather than the configured groups
 # keeps the prompt in place through the window where sudoless Docker is enabled
 # but the reboot that grants the group has not happened yet.
-docker_needs_sudo() { omarchy-sudo-docker; }
+docker_needs_sudo() { inferna-sudo-docker; }
 
 # The command to hand pkexec for the privileged re-exec. pkexec runs whatever
 # executable it is given (after authorization) and only shows the path in the
@@ -68,7 +68,7 @@ docker_needs_sudo() { omarchy-sudo-docker; }
 # prompt the user grants for the trusted helper could run an attacker's binary
 # as root. Fails closed (empty output) when no trustworthy target is found.
 priv_target() {
-  local candidate=/usr/bin/omarchy-windows-vm canonical probe owner mode
+  local candidate=/usr/bin/inferna-windows-vm canonical probe owner mode
   [[ -f $candidate && ! -L $candidate && -x $candidate ]] || return 1
   canonical=$(realpath -e -- "$candidate" 2>/dev/null) || return 1
   [[ $canonical == "$candidate" ]] || return 1
@@ -107,7 +107,7 @@ priv() {
   fi
   local target
   target=$(priv_target) || {
-    echo "omarchy-windows-vm: refusing to run a non-root-owned command as root" >&2
+    echo "inferna-windows-vm: refusing to run a non-root-owned command as root" >&2
     return 1
   }
   pkexec "$target" __priv "$action" "$@"
@@ -167,7 +167,7 @@ resolve_caller() {
 
   if ((EUID == 0)); then
     [[ ${PKEXEC_UID:-} =~ ^[0-9]{1,10}$ ]] && ((10#$PKEXEC_UID > 0)) || {
-      echo "omarchy-windows-vm: cannot identify the user who authorized this action" >&2
+      echo "inferna-windows-vm: cannot identify the user who authorized this action" >&2
       return 1
     }
     CALLER_UID=$((10#$PKEXEC_UID))
@@ -176,12 +176,12 @@ resolve_caller() {
   fi
 
   entry=$(getent passwd "$CALLER_UID") || {
-    echo "omarchy-windows-vm: no account exists for uid $CALLER_UID" >&2
+    echo "inferna-windows-vm: no account exists for uid $CALLER_UID" >&2
     return 1
   }
   IFS=: read -r _ _ _ CALLER_GID _ CALLER_HOME _ <<<"$entry"
   [[ $CALLER_GID =~ ^[0-9]+$ && $CALLER_HOME == /* && -d $CALLER_HOME ]] || {
-    echo "omarchy-windows-vm: invalid home directory for uid $CALLER_UID" >&2
+    echo "inferna-windows-vm: invalid home directory for uid $CALLER_UID" >&2
     return 1
   }
 
@@ -193,14 +193,14 @@ resolve_caller() {
   fi
   canonical=$(realpath -e -- "$CALLER_HOME" 2>/dev/null) || return 1
   [[ $canonical == "$CALLER_HOME" ]] || {
-    echo "omarchy-windows-vm: refusing a home directory reached through a symlink" >&2
+    echo "inferna-windows-vm: refusing a home directory reached through a symlink" >&2
     return 1
   }
 
   if ((EUID == 0)); then
     owner=$(stat -Lc '%u' "$CALLER_HOME") || return 1
     [[ $owner == "$CALLER_UID" ]] || {
-      echo "omarchy-windows-vm: caller does not own $CALLER_HOME" >&2
+      echo "inferna-windows-vm: caller does not own $CALLER_HOME" >&2
       return 1
     }
     # The user must not be able to rename or replace their home while root is
@@ -210,7 +210,7 @@ resolve_caller() {
       owner=$(stat -Lc '%u' "$parent") || return 1
       mode=$(stat -Lc '%a' "$parent") || return 1
       [[ $owner == 0 ]] && ! ((8#$mode & 022)) || {
-        echo "omarchy-windows-vm: unsafe writable parent in home path: $parent" >&2
+        echo "inferna-windows-vm: unsafe writable parent in home path: $parent" >&2
         return 1
       }
       [[ $parent == / ]] && break
@@ -232,7 +232,7 @@ resolve_caller() {
   # The first protected-anchor implementation used a root-owned sibling of
   # home. Recognize that exact derived pair during upgrade, but never accept a
   # path read from user input.
-  OLD_MOUNT_ROOT="$(dirname -- "$CALLER_HOME")/.omarchy-windows"
+  OLD_MOUNT_ROOT="$(dirname -- "$CALLER_HOME")/.inferna-windows"
   OLD_EXPECTED_STORAGE="$OLD_MOUNT_ROOT/users/$CALLER_UID/storage"
   OLD_EXPECTED_SHARED="$OLD_MOUNT_ROOT/users/$CALLER_UID/shared"
 }
@@ -280,7 +280,7 @@ prepare_runtime_tree() {
   owner=$(boundary_owner)
   if ((EUID == 0)); then
     [[ $RUNTIME_DIR == /var/lib/omarchy/windows ]] || {
-      echo "omarchy-windows-vm: refusing a non-standard privileged runtime path" >&2
+      echo "inferna-windows-vm: refusing a non-standard privileged runtime path" >&2
       return 1
     }
     # Check the nearest existing ancestor before mkdir can follow anything.
@@ -289,7 +289,7 @@ prepare_runtime_tree() {
     while [[ ! -e $probe && ! -L $probe ]]; do probe=$(dirname -- "$probe"); done
     while :; do
       assert_boundary_dir "$probe" 0 || {
-        echo "omarchy-windows-vm: unsafe runtime parent: $probe" >&2
+        echo "inferna-windows-vm: unsafe runtime parent: $probe" >&2
         return 1
       }
       [[ $probe == / ]] && break
@@ -307,7 +307,7 @@ prepare_runtime_tree() {
     prepare_boundary_component "$MOUNT_ROOT" "$RUNTIME_DIR" "$owner" 0711 &&
     prepare_boundary_component "$USERS_DIR" "$MOUNT_ROOT" "$owner" 0711 &&
     prepare_boundary_component "$CALLER_DATA_ROOT" "$USERS_DIR" "$owner" 0711 || {
-    echo "omarchy-windows-vm: unsafe VM mount boundary" >&2
+    echo "inferna-windows-vm: unsafe VM mount boundary" >&2
     return 1
   }
 }
@@ -319,13 +319,13 @@ prepare_runtime_tree() {
 open_mount_source() {
   local path="$1" label="$2" fd record uid identity
   [[ -d $path ]] || {
-    echo "omarchy-windows-vm: $label source is not a directory: $path" >&2
+    echo "inferna-windows-vm: $label source is not a directory: $path" >&2
     return 1
   }
   # Appending /. makes a directory-to-FIFO swap fail with ENOTDIR instead of
   # leaving the privileged helper blocked while opening an attacker-held pipe.
   exec {fd}<"$path/." || {
-    echo "omarchy-windows-vm: cannot open $label source: $path" >&2
+    echo "inferna-windows-vm: cannot open $label source: $path" >&2
     return 1
   }
   [[ -d /proc/$BASHPID/fd/$fd ]] || {
@@ -339,7 +339,7 @@ open_mount_source() {
   IFS='|' read -r uid identity <<<"$record"
   [[ $uid == "$CALLER_UID" ]] || {
     exec {fd}<&-
-    echo "omarchy-windows-vm: $label source must be a directory owned by uid $CALLER_UID" >&2
+    echo "inferna-windows-vm: $label source must be a directory owned by uid $CALLER_UID" >&2
     return 1
   }
   OPENED_MOUNT_FD=$fd
@@ -412,26 +412,26 @@ pinned_tree_contains() {
 validate_pinned_sources_disjoint() {
   local storage_fd="$1" storage_id="$2" shared_fd="$3" shared_id="$4" rc
   if [[ $storage_id == "$shared_id" ]]; then
-    echo "omarchy-windows-vm: storage and shared must be different directories" >&2
+    echo "inferna-windows-vm: storage and shared must be different directories" >&2
     return 1
   fi
   if pinned_dir_contains "$storage_id" "$shared_fd"; then
-    echo "omarchy-windows-vm: shared directory must not be inside storage" >&2
+    echo "inferna-windows-vm: shared directory must not be inside storage" >&2
     return 1
   else
     rc=$?
     ((rc == 1)) || {
-      echo "omarchy-windows-vm: could not verify storage/shared ancestry" >&2
+      echo "inferna-windows-vm: could not verify storage/shared ancestry" >&2
       return 1
     }
   fi
   if pinned_dir_contains "$shared_id" "$storage_fd"; then
-    echo "omarchy-windows-vm: storage directory must not be inside shared" >&2
+    echo "inferna-windows-vm: storage directory must not be inside shared" >&2
     return 1
   else
     rc=$?
     ((rc == 1)) || {
-      echo "omarchy-windows-vm: could not verify storage/shared ancestry" >&2
+      echo "inferna-windows-vm: could not verify storage/shared ancestry" >&2
       return 1
     }
   fi
@@ -479,13 +479,13 @@ removal_trees_disjoint() {
     "$shared_fd:$storage_fd:storage below shared source"; do
     IFS=: read -r scan_root_fd scan_needle_fd scan_label <<<"$scan"
     if pinned_tree_contains "$scan_root_fd" "$scan_needle_fd"; then
-      echo "omarchy-windows-vm: refusing removal: $scan_label" >&2
+      echo "inferna-windows-vm: refusing removal: $scan_label" >&2
       rc=1
       break
     else
       scan_rc=$?
       if ((scan_rc != 1)); then
-        echo "omarchy-windows-vm: removal containment scan failed or timed out" >&2
+        echo "inferna-windows-vm: removal containment scan failed or timed out" >&2
         rc=1
         break
       fi
@@ -506,7 +506,7 @@ prepare_mount_anchor() {
   if mountpoint -q -- "$path" 2>/dev/null; then return 0; fi
   prepare_boundary_component "$path" "$CALLER_DATA_ROOT" "$owner" 0700 || return 1
   [[ -z $(find "$path" -mindepth 1 -print -quit) ]] || {
-    echo "omarchy-windows-vm: refusing to hide data below mount anchor: $path" >&2
+    echo "inferna-windows-vm: refusing to hide data below mount anchor: $path" >&2
     return 1
   }
 }
@@ -529,7 +529,7 @@ bind_mount_leaf() {
   MOUNT_LEAF_NEW=0
   if mountpoint -q -- "$stable" 2>/dev/null; then
     mounted_leaf_matches "$stable" "$identity" || {
-      echo "omarchy-windows-vm: protected mount at $stable no longer matches its home source" >&2
+      echo "inferna-windows-vm: protected mount at $stable no longer matches its home source" >&2
       return 1
     }
     return 0
@@ -545,16 +545,16 @@ bind_mount_leaf() {
     if umount -- "$stable"; then
       MOUNT_LEAF_NEW=0
     else
-      echo "omarchy-windows-vm: could not roll back unverified bind at $stable" >&2
+      echo "inferna-windows-vm: could not roll back unverified bind at $stable" >&2
     fi
-    echo "omarchy-windows-vm: bind verification failed for $stable" >&2
+    echo "inferna-windows-vm: bind verification failed for $stable" >&2
     return 1
   fi
   mounted_leaf_matches "$stable" "$identity" || {
     if umount -- "$stable"; then
       MOUNT_LEAF_NEW=0
     else
-      echo "omarchy-windows-vm: could not roll back invalid bind at $stable" >&2
+      echo "inferna-windows-vm: could not roll back invalid bind at $stable" >&2
     fi
     return 1
   }
@@ -598,7 +598,7 @@ prepare_caller_mounts() {
   if [[ $storage_mode != 700 || $shared_mode != 700 ]]; then
     exec {storage_fd}<&-
     exec {shared_fd}<&-
-    echo "omarchy-windows-vm: could not make the VM data directories private: $LEGACY_STORAGE is mode ${storage_mode:-unknown}, $LEGACY_SHARED is mode ${shared_mode:-unknown} (expected 700)" >&2
+    echo "inferna-windows-vm: could not make the VM data directories private: $LEGACY_STORAGE is mode ${storage_mode:-unknown}, $LEGACY_SHARED is mode ${shared_mode:-unknown} (expected 700)" >&2
     return 1
   fi
 
@@ -672,7 +672,7 @@ rollback_new_caller_mounts() {
   if ((CALLER_MOUNTS_NEW_STORAGE)); then
     if umount -- "$EXPECTED_STORAGE"; then CALLER_MOUNTS_NEW_STORAGE=0; else failed=1; fi
   fi
-  ((failed == 0)) || echo "omarchy-windows-vm: could not roll back newly created VM mounts" >&2
+  ((failed == 0)) || echo "inferna-windows-vm: could not roll back newly created VM mounts" >&2
   return "$failed"
 }
 
@@ -700,7 +700,7 @@ write_compose_atomically() (
   esc_password=${esc_password//\$/\$\$}
 
   tmp=$(mktemp "$RUNTIME_DIR/.compose.XXXXXX") || exit 1
-  # omarchy:heredoc-expands paths=EXPECTED_STORAGE,EXPECTED_SHARED -- both are
+# inferna:heredoc-expands paths=EXPECTED_STORAGE,EXPECTED_SHARED -- both are
   # root-protected anchors derived from the authenticated caller uid and bound
   # to source inodes that were opened and validated before this compose is
   # written. The remaining expansions are revalidated scalar settings.
@@ -849,20 +849,20 @@ assert_mounts_safe() {
   local storage shared needs_rewrite=0 mounts_prepared=0
   resolve_caller || return 1
   assert_compose_trusted || {
-    echo "omarchy-windows-vm: refusing an untrusted compose file" >&2
+    echo "inferna-windows-vm: refusing an untrusted compose file" >&2
     return 1
   }
   storage=$(get_mount_source /storage)
   shared=$(get_mount_source /shared)
 
   [[ $(mount_source_count /storage) == 1 && $(mount_source_count /shared) == 1 ]] || {
-    echo "omarchy-windows-vm: refusing duplicate or missing VM mounts in the compose" >&2
+    echo "inferna-windows-vm: refusing duplicate or missing VM mounts in the compose" >&2
     return 1
   }
 
   if compose_mount_pair_is_migratable "$storage" "$shared"; then
     ((EUID == 0)) || {
-      echo "omarchy-windows-vm: legacy VM data needs an authorized migration" >&2
+      echo "inferna-windows-vm: legacy VM data needs an authorized migration" >&2
       return 1
     }
     prepare_caller_mounts || return 1
@@ -873,13 +873,13 @@ assert_mounts_safe() {
   fi
 
   [[ $storage == "$EXPECTED_STORAGE" && $shared == "$EXPECTED_SHARED" ]] || {
-    echo "omarchy-windows-vm: refusing unexpected host paths in the compose" >&2
+    echo "inferna-windows-vm: refusing unexpected host paths in the compose" >&2
     return 1
   }
 
   if ! compose_web_protected; then
     ((EUID == 0)) || {
-      echo "omarchy-windows-vm: web-console protection needs an authorized migration" >&2
+      echo "inferna-windows-vm: web-console protection needs an authorized migration" >&2
       return 1
     }
     needs_rewrite=1
@@ -897,7 +897,7 @@ assert_mounts_safe() {
     prepare_caller_mounts || return 1
   fi
   mounts_ready || {
-    echo "omarchy-windows-vm: refusing an unsafe VM mount anchor" >&2
+    echo "inferna-windows-vm: refusing an unsafe VM mount anchor" >&2
     return 1
   }
 }
@@ -948,24 +948,24 @@ __priv_remove() {
     $(mount_layer_count "$EXPECTED_SHARED") == 1 &&
     $(mount_descendant_count "$EXPECTED_STORAGE") == 0 &&
     $(mount_descendant_count "$EXPECTED_SHARED") == 0 ]] || {
-    echo "omarchy-windows-vm: refusing removal with unknown or stacked VM mounts" >&2
+    echo "inferna-windows-vm: refusing removal with unknown or stacked VM mounts" >&2
     return 1
   }
 
   dc down || {
-    echo "omarchy-windows-vm: could not stop the Windows VM; storage was not deleted" >&2
+    echo "inferna-windows-vm: could not stop the Windows VM; storage was not deleted" >&2
     return 1
   }
   if docker inspect "$CONTAINER" >/dev/null 2>&1; then
-    echo "omarchy-windows-vm: Windows container still exists; storage was not deleted" >&2
+    echo "inferna-windows-vm: Windows container still exists; storage was not deleted" >&2
     return 1
   fi
   docker info >/dev/null 2>&1 || {
-    echo "omarchy-windows-vm: cannot verify Docker state; storage was not deleted" >&2
+    echo "inferna-windows-vm: cannot verify Docker state; storage was not deleted" >&2
     return 1
   }
   mounts_ready || {
-    echo "omarchy-windows-vm: VM mount identity changed during removal" >&2
+    echo "inferna-windows-vm: VM mount identity changed during removal" >&2
     return 1
   }
   removal_trees_disjoint || return 1
@@ -994,12 +994,12 @@ preflight_user_mount_source() {
   uid=$(id -u)
   if [[ -L $path ]]; then
     [[ -d $path ]] || {
-      echo "omarchy-windows-vm: $label is a broken or non-directory symlink: $path" >&2
+      echo "inferna-windows-vm: $label is a broken or non-directory symlink: $path" >&2
       return 1
     }
   elif [[ -e $path ]]; then
     [[ -d $path ]] || {
-      echo "omarchy-windows-vm: $label is not a directory: $path" >&2
+      echo "inferna-windows-vm: $label is not a directory: $path" >&2
       return 1
     }
   else
@@ -1007,7 +1007,7 @@ preflight_user_mount_source() {
   fi
   owner=$(stat -Lc '%u' -- "$path") || return 1
   [[ $owner == "$uid" ]] || {
-    echo "omarchy-windows-vm: $label must be owned by uid $uid: $path" >&2
+    echo "inferna-windows-vm: $label must be owned by uid $uid: $path" >&2
     return 1
   }
 }
@@ -1021,7 +1021,7 @@ prepare_user_mount_sources() {
   storage_id=$(stat -Lc '%d:%i' -- "$storage") || return 1
   shared_id=$(stat -Lc '%d:%i' -- "$shared") || return 1
   [[ $storage_id != "$shared_id" ]] || {
-    echo "omarchy-windows-vm: storage and shared must be different directories" >&2
+    echo "inferna-windows-vm: storage and shared must be different directories" >&2
     return 1
   }
   chmod u=rwx,go=,a-s -- "$storage" "$shared"
@@ -1126,7 +1126,7 @@ migrate_legacy_compose() {
   # it never consumes volume paths from this user-owned legacy file.
   if ! write_compose "$ram" "$cores" "$disk" "$username" "$password" "$tz"; then
     echo "Could not migrate the existing configuration automatically." >&2
-    echo "Re-run: omarchy-windows-vm install" >&2
+    echo "Re-run: inferna-windows-vm install" >&2
     return 1
   fi
   rm -f "$LEGACY_COMPOSE_FILE"
@@ -1174,7 +1174,7 @@ install_windows() {
   prepare_user_mount_sources || exit 1
   check_prerequisites
 
-  omarchy-pkg-add freerdp openbsd-netcat gum
+  inferna-pkg-add freerdp openbsd-netcat gum
 
   mkdir -p "$HOME/.local/share/applications"
 
@@ -1182,7 +1182,7 @@ install_windows() {
 [Desktop Entry]
 Name=Windows
 Comment=Start Windows VM via Docker and connect with RDP
-Exec=uwsm app -- omarchy-windows-vm launch
+Exec=uwsm app -- inferna-windows-vm launch
 Icon=windows
 Terminal=false
 Type=Application
@@ -1207,7 +1207,7 @@ EOF
     fi
   done
 
-  SELECTED_RAM=$(echo $RAM_OPTIONS | tr ' ' '\n' | gum choose --selected="4G" --header="$(omarchy-i18n windowsVm.ramHeader)")
+  SELECTED_RAM=$(echo $RAM_OPTIONS | tr ' ' '\n' | gum choose --selected="4G" --header="$(inferna-i18n windowsVm.ramHeader)")
 
   # Check if user cancelled
   if [[ -z $SELECTED_RAM ]]; then
@@ -1215,7 +1215,7 @@ EOF
     exit 1
   fi
 
-  SELECTED_CORES=$(gum input --placeholder="$(omarchy-i18n windowsVm.coresPlaceholder "$TOTAL_CORES")" --value="2" --header="$(omarchy-i18n windowsVm.coresHeader)" --char-limit=2)
+  SELECTED_CORES=$(gum input --placeholder="$(inferna-i18n windowsVm.coresPlaceholder "$TOTAL_CORES")" --value="2" --header="$(inferna-i18n windowsVm.coresHeader)" --char-limit=2)
 
   # Check if user cancelled (Ctrl+C in gum input returns empty string)
   if [[ -z $SELECTED_CORES ]]; then
@@ -1255,7 +1255,7 @@ EOF
     DEFAULT_DISK="32G"
   fi
 
-  SELECTED_DISK=$(echo $DISK_OPTIONS | tr ' ' '\n' | gum choose --selected="$DEFAULT_DISK" --header="$(omarchy-i18n windowsVm.diskHeader)")
+  SELECTED_DISK=$(echo $DISK_OPTIONS | tr ' ' '\n' | gum choose --selected="$DEFAULT_DISK" --header="$(inferna-i18n windowsVm.diskHeader)")
 
   # Check if user cancelled
   if [[ -z $SELECTED_DISK ]]; then
@@ -1270,7 +1270,7 @@ EOF
   check_prerequisites "$DISK_SIZE_NUM"
 
   # Prompt for username and password
-  USERNAME=$(gum input --placeholder="$(omarchy-i18n windowsVm.usernamePlaceholder docker)" --header="$(omarchy-i18n windowsVm.usernameHeader)")
+  USERNAME=$(gum input --placeholder="$(inferna-i18n windowsVm.usernamePlaceholder docker)" --header="$(inferna-i18n windowsVm.usernameHeader)")
   if [[ -z $USERNAME ]]; then
     USERNAME="docker"
   fi
@@ -1279,7 +1279,7 @@ EOF
     USERNAME="docker"
   fi
 
-  PASSWORD=$(gum input --placeholder="$(omarchy-i18n windowsVm.passwordPlaceholder admin)" --password --header="$(omarchy-i18n windowsVm.passwordHeader)")
+  PASSWORD=$(gum input --placeholder="$(inferna-i18n windowsVm.passwordPlaceholder admin)" --password --header="$(inferna-i18n windowsVm.passwordHeader)")
   if [[ -z $PASSWORD ]]; then
     PASSWORD="admin"
     PASSWORD_DISPLAY="(default)"
@@ -1299,7 +1299,7 @@ EOF
     --margin "1" \
     --align left \
     --bold \
-    "$(omarchy-i18n windowsVm.configuration)" \
+    "$(inferna-i18n windowsVm.configuration)" \
     "" \
     "RAM:       $SELECTED_RAM" \
     "CPU:       $SELECTED_CORES cores" \
@@ -1309,7 +1309,7 @@ EOF
 
   # Ask for confirmation
   echo ""
-  if ! gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$(omarchy-i18n windowsVm.proceed)"; then
+  if ! gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n windowsVm.proceed)"; then
     echo "Installation cancelled by user"
     exit 1
   fi
@@ -1361,12 +1361,12 @@ EOF
   echo ""
   echo "Once finished, launch 'Windows' via Super + Space"
   echo ""
-  echo "To stop the VM: omarchy-windows-vm stop"
+  echo "To stop the VM: inferna-windows-vm stop"
   echo ""
 }
 
 remove_windows() {
-  if ! gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" --default=false "$(omarchy-i18n windowsVm.confirmRemove)"; then
+  if ! gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" --default=false "$(inferna-i18n windowsVm.confirmRemove)"; then
     echo "Removal cancelled by user"
     exit 1
   fi
@@ -1402,7 +1402,7 @@ launch_windows() {
 
   if ! migrate_legacy_compose; then
     if [[ ! -f $COMPOSE_FILE ]]; then
-      echo "Windows VM not configured. Please run: omarchy-windows-vm install"
+      echo "Windows VM not configured. Please run: inferna-windows-vm install"
       exit 1
     fi
   fi
@@ -1421,15 +1421,15 @@ launch_windows() {
   echo "Starting Windows VM (this may prompt for authorization)..."
   if ! priv up_wait; then
     echo "❌ Failed to start Windows VM!"
-    echo "   Try checking: omarchy-windows-vm status"
-    omarchy-notification-send -u critical "Windows VM" "$(omarchy-i18n windowsVm.failed)"
+    echo "   Try checking: inferna-windows-vm status"
+    inferna-notification-send -u critical "Windows VM" "$(inferna-i18n windowsVm.failed)"
     exit 1
   fi
 
   # Build the connection info
   if [[ $KEEP_ALIVE = "true" ]]; then
     LIFECYCLE="VM will keep running after RDP closes
-To stop: omarchy-windows-vm stop"
+To stop: inferna-windows-vm stop"
   else
     LIFECYCLE="VM will auto-stop when RDP closes"
   fi
@@ -1502,12 +1502,12 @@ To stop: omarchy-windows-vm stop"
       echo "Windows VM stopped."
     else
       echo "⚠️  Could not stop the Windows VM (authorization declined?)."
-      echo "   It may still be running. Stop it with: omarchy-windows-vm stop"
+      echo "   It may still be running. Stop it with: inferna-windows-vm stop"
     fi
   else
     echo ""
     echo "RDP session closed. Windows VM is still running."
-    echo "To stop it: omarchy-windows-vm stop"
+    echo "To stop it: inferna-windows-vm stop"
   fi
 }
 
@@ -1531,19 +1531,19 @@ status_windows() {
   migrate_legacy_compose 2>/dev/null || true
   if [[ ! -f $COMPOSE_FILE ]]; then
     echo "Windows VM not configured."
-    echo "To set up: omarchy-windows-vm install"
+    echo "To set up: inferna-windows-vm install"
     exit 1
   fi
 
   if ! CONTAINER_STATUS=$(priv status); then
     echo "Could not query the Windows VM (authorization declined?)."
-    echo "To try again: omarchy-windows-vm status"
+    echo "To try again: inferna-windows-vm status"
     exit 1
   fi
 
   if [[ -z $CONTAINER_STATUS ]]; then
     echo "Windows VM container not found."
-    echo "To start: omarchy-windows-vm launch"
+    echo "To start: inferna-windows-vm launch"
   elif [[ $CONTAINER_STATUS = "running" ]]; then
     gum style \
       --border normal \
@@ -1555,16 +1555,16 @@ status_windows() {
       "Web interface: http://127.0.0.1:8006" \
       "RDP available: port 3389" \
       "" \
-      "To connect: omarchy-windows-vm launch" \
-      "To stop:    omarchy-windows-vm stop"
+      "To connect: inferna-windows-vm launch" \
+      "To stop:    inferna-windows-vm stop"
   else
     echo "Windows VM is stopped (status: $CONTAINER_STATUS)"
-    echo "To start: omarchy-windows-vm launch"
+    echo "To start: inferna-windows-vm launch"
   fi
 }
 
 show_usage() {
-  echo "Usage: omarchy-windows-vm [command] [options]"
+  echo "Usage: inferna-windows-vm [command] [options]"
   echo ""
   echo "Commands:"
   echo "  install              Install and configure Windows VM"
@@ -1577,23 +1577,23 @@ show_usage() {
   echo "  help                 Show this help message"
   echo ""
   echo "Examples:"
-  echo "  omarchy-windows-vm install           # Set up Windows VM for first time"
-  echo "  omarchy-windows-vm launch            # Connect to VM (auto-stop on exit)"
-  echo "  omarchy-windows-vm launch -k         # Connect to VM (keep running)"
-  echo "  omarchy-windows-vm stop              # Shut down the VM"
+  echo "  inferna-windows-vm install           # Set up Windows VM for first time"
+  echo "  inferna-windows-vm launch            # Connect to VM (auto-stop on exit)"
+  echo "  inferna-windows-vm launch -k         # Connect to VM (keep running)"
+  echo "  inferna-windows-vm stop              # Shut down the VM"
 }
 
 # Main command dispatcher
 case "$1" in
 __priv)
   ((EUID == 0)) || {
-    echo "omarchy-windows-vm __priv must run as root" >&2
+    echo "inferna-windows-vm __priv must run as root" >&2
     exit 1
   }
   action="$2"
   shift 2
   valid_priv_action "$action" || {
-    echo "omarchy-windows-vm: unknown privileged action" >&2
+    echo "inferna-windows-vm: unknown privileged action" >&2
     exit 1
   }
   with_vm_lock "__priv_${action}" "$@"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy theme to Hermes as a skin
-# omarchy:args=[--activate] [--wait]
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy theme to Hermes as a skin
+# inferna:args=[--activate] [--wait]
+# inferna:hidden=true
 
 # A skin is Hermes' one theme unit for the desktop app, the TUI and the CLI;
 # its gateway watches the active skin file and repaints every surface on change.
@@ -23,7 +23,7 @@ HERMES_WAIT=0
 HERMES_WAIT_LIMIT=$((30 * 60))
 
 usage() {
-  echo "Usage: omarchy-theme-set-hermes [--activate] [--wait]"
+  echo "Usage: inferna-theme-set-hermes [--activate] [--wait]"
 }
 
 for arg in "$@"; do
@@ -63,7 +63,7 @@ if [[ ! -f $HERMES_SOURCE_PATH ]]; then
     exit 1
   fi
 
-  omarchy-theme-refresh
+  inferna-theme-refresh
 
   if [[ ! -f $HERMES_SOURCE_PATH ]]; then
     echo "Hermes skin source missing after refreshing the theme: $HERMES_SOURCE_PATH" >&2
@@ -77,7 +77,7 @@ if (( HERMES_WAIT == 1 )); then
   waited=0
   until [[ -f $HERMES_BOOTSTRAP_MARKER && -f $HERMES_CONFIG_PATH ]]; do
     if (( waited >= HERMES_WAIT_LIMIT )); then
-      echo "Hermes did not finish setting up within $((HERMES_WAIT_LIMIT / 60)) minutes; run omarchy-theme-set-hermes --activate once it has." >&2
+      echo "Hermes did not finish setting up within $((HERMES_WAIT_LIMIT / 60)) minutes; run inferna-theme-set-hermes --activate once it has." >&2
       exit 0
     fi
 
@@ -89,7 +89,7 @@ fi
 # Provisioning creates ~/.hermes on every machine for the Omarchy skill; the
 # config is what Hermes writes once it has actually run.
 if [[ ! -f $HERMES_CONFIG_PATH ]]; then
-  note "Hermes is not set up yet; launch it once, then run omarchy-theme-set-hermes --activate."
+  note "Hermes is not set up yet; launch it once, then run inferna-theme-set-hermes --activate."
   exit 0
 fi
 
@@ -184,7 +184,7 @@ active_config_path() {
 # only Hermes' default is ever replaced, so a config plainly naming another skin
 # ends it here without starting Hermes. Anything less plain is for Hermes to read.
 if (( HERMES_ACTIVATE == 0 )); then
-  omarchy-pkg-present hermes-desktop || exit 0
+  inferna-pkg-present hermes-desktop || exit 0
 
   skin_line=$(grep -m1 -x '  skin: .*' "$(active_config_path)" 2>/dev/null || true)
   case "${skin_line#  skin: }" in
@@ -195,7 +195,7 @@ fi
 
 # The probe vets the command before anything here runs it: a wrapper that is
 # not a working Hermes, or the retired mise stub that would build one.
-if ! omarchy-install-hermes-cli --check 2>/dev/null; then
+if ! inferna-install-hermes-cli --check 2>/dev/null; then
   note "Hermes is not ready, so the Omarchy skin is published but not active."
   note "Once Hermes runs, activate it with: hermes config set display.skin $HERMES_SKIN_NAME"
   exit 0

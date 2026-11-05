@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the active Omarchy dev-link git branch
-# omarchy:hidden=true
+# inferna:summary=Print the active Omarchy dev-link git branch
+# inferna:hidden=true
 
 omarchy_path=${OMARCHY_PATH:-/usr/share/omarchy}
 omarchy_path=${omarchy_path%/}

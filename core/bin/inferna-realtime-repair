@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install rtkit and repair realtime budgets left at zero without it
-# omarchy:hidden=true
-# omarchy:requires-sudo=true
+# inferna:summary=Install rtkit and repair realtime budgets left at zero without it
+# inferna:hidden=true
+# inferna:requires-sudo=true
 
 # Without rtkit, xdg-desktop-portal reports a realtime budget of 0, and
 # PipeWire's client module-rt applies it as a hard RLIMIT_RTTIME of 0. The
@@ -34,7 +34,7 @@
 
 proc_root=${OMARCHY_PROC_ROOT:-/proc}
 pending=${OMARCHY_REALTIME_REPAIR_PENDING:-/var/lib/omarchy/realtime-repair-pending}
-lock=${OMARCHY_REALTIME_REPAIR_LOCK:-/run/omarchy-realtime-repair.lock}
+lock=${OMARCHY_REALTIME_REPAIR_LOCK:-/run/inferna-realtime-repair.lock}
 
 fail() {
   echo "$1" >&2
@@ -187,7 +187,7 @@ repair_machine() {
   users=$(awk '$1 >= 1000' <<<"$users")
   uids=" $(awk '{ printf "%s ", $1 }' <<<"$users")"
 
-  if omarchy-pkg-missing rtkit; then
+  if inferna-pkg-missing rtkit; then
     sudo -n install -Dm644 /dev/null "$pending" || fail "Could not record the realtime repair"
     raise_zero_budgets 200000
 
@@ -242,7 +242,7 @@ raise_own_zero_budgets() {
 
 # The caller's own session: its zeros, its portal, and its audio units. A
 # caller with no session bus is not logged in and has none of the last two;
-# omarchy-upgrade-to-quattro runs its migrations without the user's session
+# inferna-upgrade-to-quattro runs its migrations without the user's session
 # environment, so the bus is looked for where the session puts it.
 repair_own_session() {
   local pipewire portal_failed=0
@@ -271,11 +271,11 @@ repair_own_session() {
 
 # Root needs no prompt, so it always does the machine-wide part, and the
 # users' own runs then find nothing that needs sudo.
-if omarchy-pkg-missing rtkit || [[ -e $pending ]] || [[ $(id -u) == "0" ]]; then
+if inferna-pkg-missing rtkit || [[ -e $pending ]] || [[ $(id -u) == "0" ]]; then
   repair_machine
 fi
 
-# Root has no desktop session of its own; omarchy-upgrade-to-quattro runs
+# Root has no desktop session of its own; inferna-upgrade-to-quattro runs
 # this as root for the machine-wide repair alone.
 if [[ $(id -u) != "0" ]]; then
   repair_own_session

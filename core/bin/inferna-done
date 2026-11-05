@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check or mark completed Omarchy setup tasks
-# omarchy:args=<check|mark|ensure> <name>
-# omarchy:hidden=true
+# inferna:summary=Check or mark completed Omarchy setup tasks
+# inferna:args=<check|mark|ensure> <name>
+# inferna:hidden=true
 
 set -e
 
 if (( $# != 2 )); then
-  echo "Usage: omarchy-done <check|mark|ensure> <name>" >&2
+  echo "Usage: inferna-done <check|mark|ensure> <name>" >&2
   exit 1
 fi
 
@@ -34,7 +34,7 @@ case "$action" in
     (set -o noclobber; : >"$marker") 2>/dev/null
     ;;
   *)
-    echo "Usage: omarchy-done <check|mark|ensure> <name>" >&2
+    echo "Usage: inferna-done <check|mark|ensure> <name>" >&2
     exit 1
     ;;
 esac

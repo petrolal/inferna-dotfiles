@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Shrink the NVIDIA N1x firmware's GPU memory reservation to 4 GiB
-# omarchy:requires-sudo=true
-# omarchy:hidden=true
+# inferna:summary=Shrink the NVIDIA N1x firmware's GPU memory reservation to 4 GiB
+# inferna:requires-sudo=true
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -30,7 +30,7 @@ layouts=(
   "00 00 00 40 00 00 00 00 00 00 00 00 01 00 00 00"
 )
 
-omarchy-hw-aarch64-n1x || exit 0
+inferna-hw-aarch64-n1x || exit 0
 
 if [[ ! -f $var ]]; then
   echo "Error: the N1x firmware has no EXPOSED_DISP_FRM variable to size its GPU memory with" >&2

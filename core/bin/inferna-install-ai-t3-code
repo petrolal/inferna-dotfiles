@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install T3 Code and point it at the Omarchy palette
-# omarchy:args=[stable|nightly] [--no-launch]
-# omarchy:requires-sudo=true
+# inferna:summary=Install T3 Code and point it at the Omarchy palette
+# inferna:args=[stable|nightly] [--no-launch]
+# inferna:requires-sudo=true
 
 set -e
 
@@ -55,9 +55,9 @@ for arg in "$@"; do
 done
 
 if [[ -z $channel ]]; then
-  stable=$(omarchy-i18n t3code.stable)
-  nightly=$(omarchy-i18n t3code.nightly)
-  choice=$(gum choose --header "$(omarchy-i18n t3code.selectChannel)" "$stable" "$nightly")
+  stable=$(inferna-i18n t3code.stable)
+  nightly=$(inferna-i18n t3code.nightly)
+  choice=$(gum choose --header "$(inferna-i18n t3code.selectChannel)" "$stable" "$nightly")
   if [[ $choice == "$nightly" ]]; then
     channel="nightly"
   else
@@ -66,24 +66,24 @@ if [[ -z $channel ]]; then
 fi
 
 echo "Installing T3 Code..."
-omarchy-install-t3code-app "$channel"
+inferna-install-t3code-app "$channel"
 
 echo "Matching T3 Code to the current theme..."
 mkdir -p "$T3CODE_STATE_DIR"
 
 # An updated user's current theme may have been staged before this template existed.
 if [[ ! -f $HOME/.local/state/inferna/current/theme/t3code.json ]]; then
-  omarchy-theme-refresh
+  inferna-theme-refresh
 fi
 
-omarchy-theme-set-t3code
+inferna-theme-set-t3code
 
 # Selects the published palette before the app's first launch.
 t3_cli theme set omarchy --base-dir "$T3CODE_HOME"
 
 # Only once the app is in place and themed. Until then a package is still
 # there, so the migration that replaces it stays pending and retries the lot.
-omarchy-pkg-drop t3code-bin t3code-nightly-bin
+inferna-pkg-drop t3code-bin t3code-nightly-bin
 
 # A migration replaces the app underneath a T3 Code that may already be
 # running, so it leaves opening the new one to the user.

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Watch Hyprland monitor events and recover monitor toggles when a monitor is removed
+# inferna:summary=Watch Hyprland monitor events and recover monitor toggles when a monitor is removed
 
 SOCKET="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
-LOCK="${XDG_RUNTIME_DIR:-/tmp}/omarchy-monitor-clamshell.lock"
-MODELESS_LOCK="${XDG_RUNTIME_DIR:-/tmp}/omarchy-monitor-modeless.lock"
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/inferna-monitor-clamshell.lock"
+MODELESS_LOCK="${XDG_RUNTIME_DIR:-/tmp}/inferna-monitor-modeless.lock"
 
 sync_clamshell() {
   (
     flock -n 9 || exit 0
-    omarchy-hyprland-monitor-clamshell
-    omarchy-system-lid-inhibit
+    inferna-hyprland-monitor-clamshell
+    inferna-system-lid-inhibit
   ) 9>"$LOCK"
 }
 
@@ -37,7 +37,7 @@ recover_modeless() {
     local delay=3 state reloaded unanswered=0
 
     while true; do
-      omarchy-hyprland-monitor-modeless
+      inferna-hyprland-monitor-modeless
       state=$?
 
       # A monitor reporting a mode is recovered. One the compositor cannot speak
@@ -50,8 +50,8 @@ recover_modeless() {
 
       reloaded=0
       # Reloading into half-replaced package config is what the guard prevents.
-      if (( state == 0 )) && ! omarchy-hyprland-reload-guard paused; then
-        omarchy-restart-hyprctl
+      if (( state == 0 )) && ! inferna-hyprland-reload-guard paused; then
+        inferna-restart-hyprctl
         reloaded=1
       fi
 
@@ -76,7 +76,7 @@ poll_clamshell_state() {
 # drift those binds can miss (e.g. across suspend/resume).
 poll_pid=""
 sync_poll_state() {
-  if omarchy-hw-laptop && omarchy-hyprland-monitor-external-active; then
+  if inferna-hw-laptop && inferna-hyprland-monitor-external-active; then
     if [[ -z $poll_pid ]] || ! kill -0 "$poll_pid" 2>/dev/null; then
       poll_clamshell_state &
       poll_pid=$!

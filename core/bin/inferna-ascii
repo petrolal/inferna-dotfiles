@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Render text as ASCII art in the font the Omarchy logo is drawn in
-# omarchy:args=[text...]
-# omarchy:examples=omarchy ascii Omarchy | omarchy ascii "Hello there"
+# inferna:summary=Render text as ASCII art in the font the Omarchy logo is drawn in
+# inferna:args=[text...]
+# inferna:examples=inferna ascii Omarchy | inferna ascii "Hello there"
 
 set -o pipefail
 
 usage() {
   cat <<'EOF'
-Usage: omarchy-ascii [text...]
+Usage: inferna-ascii [text...]
 
 Renders text as ASCII art in Delta Corps Priest 1, the FIGlet font the Omarchy
 logo is drawn in. Reads the text from stdin when given none.

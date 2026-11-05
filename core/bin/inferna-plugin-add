@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Add a shell plugin from git
-# omarchy:group=plugin
-# omarchy:args=[git-url] [--enable] [--yes]
-# omarchy:examples=omarchy plugin add https://github.com/acme/omarchy-weather.git --enable
-# omarchy:alias=omarchy plugin install
+# inferna:summary=Add a shell plugin from git
+# inferna:group=plugin
+# inferna:args=[git-url] [--enable] [--yes]
+# inferna:examples=inferna plugin add https://github.com/acme/inferna-weather.git --enable
+# inferna:alias=inferna plugin install
 
 set -euo pipefail
 
@@ -15,7 +15,7 @@ PLUGINS_DIR="$HOME/.config/inferna/plugins"
 ASSUME_YES=0
 
 fail() {
-  echo "omarchy-plugin-add: $*" >&2
+  echo "inferna-plugin-add: $*" >&2
   exit 1
 }
 
@@ -27,7 +27,7 @@ confirm() {
   local prompt="$1"
   (( ASSUME_YES )) && return 0
   if interactive; then
-    gum confirm --affirmative "$(omarchy-i18n common.yes)" --negative "$(omarchy-i18n common.no)" "$prompt"
+    gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$prompt"
   else
     fail "refusing to continue without confirmation; pass --yes"
   fi
@@ -48,13 +48,13 @@ select_bar_widget_placement() {
   # A manifest's center means beside the clock, which is centerEnd.
   default_section=$(jq -r '.barWidget.defaultSection // "centerEnd" | if . == "center" then "centerEnd" end' "$PLUGINS_DIR/$id/manifest.json")
   section=$(printf '%s\n' left centerBegin center centerEnd tray right |
-    gum choose --header="$(omarchy-i18n plugin.barSection "$id")" --selected "$default_section") || return 0
+    gum choose --header="$(inferna-i18n plugin.barSection "$id")" --selected "$default_section") || return 0
   [[ -n $section ]] || return 0
   ENABLE_PLACEMENT=(--section "$section")
 }
 
 plugin_id_manifest() {
-  omarchy-plugin-catalog | jq -r --arg id "$1" '
+  inferna-plugin-catalog | jq -r --arg id "$1" '
     map(select(.id == $id))[0].manifestPath // empty
   '
 }
@@ -73,7 +73,7 @@ while (( $# > 0 )); do
     shift
     ;;
   -h | --help)
-    echo "Usage: omarchy plugin add [git-url] [--enable] [--yes]"
+    echo "Usage: inferna plugin add [git-url] [--enable] [--yes]"
     exit 0
     ;;
   -*)
@@ -89,29 +89,29 @@ done
 
 if [[ -z $url ]]; then
   interactive ||
-    fail "a git URL is required (e.g. omarchy plugin add https://github.com/acme/omarchy-weather.git)"
-  url=$(gum input --prompt "$(omarchy-i18n plugin.gitUrlPrompt)") || fail "cancelled"
+    fail "a git URL is required (e.g. omarchy plugin add https://github.com/acme/inferna-weather.git)"
+  url=$(gum input --prompt "$(inferna-i18n plugin.gitUrlPrompt)") || fail "cancelled"
   [[ -n $url ]] || fail "a git URL is required"
 fi
 
 # Refuse a URL that names a git option or a transport helper before cloning, so
 # an untrusted URL cannot run a command before the plugin is validated or
-# enabled. The check is shared with omarchy-theme-install and explains itself; a
+# enabled. The check is shared with inferna-theme-install and explains itself; a
 # missing checker leaves this non-zero, which refuses the URL rather than
 # cloning it.
-omarchy-git-url-check "$url" || exit 1
+inferna-git-url-check "$url" || exit 1
 
 if (( ! ASSUME_YES )); then
   cat >&2 <<WARN
 
 ⚠️  Plugins run as arbitrary, unsandboxed code inside your long-lived
-  omarchy-shell process. Only add repos you trust, and review the code
+  inferna-shell process. Only add repos you trust, and review the code
   before you enable it.
 
       URL: $url
 
 WARN
-  confirm "$(omarchy-i18n plugin.confirmAdd)" || fail "aborted"
+  confirm "$(inferna-i18n plugin.confirmAdd)" || fail "aborted"
 fi
 
 mkdir -p "$PLUGINS_DIR"
@@ -123,7 +123,7 @@ if ! git clone -- "$url" "$stage"; then
   fail "failed to clone $url"
 fi
 
-if ! omarchy-plugin-validate "$stage"; then
+if ! inferna-plugin-validate "$stage"; then
   rm -rf "$stage"
   fail "refusing to add: validation failed"
 fi
@@ -147,12 +147,12 @@ fi
 mv "$stage" "$target"
 echo "Added $id into $target"
 
-omarchy-shell shell rescanPlugins >/dev/null
+inferna-shell shell rescanPlugins >/dev/null
 
 if [[ -z $enable_after ]]; then
   if (( ASSUME_YES )) || ! interactive; then
     enable_after=false
-  elif confirm "$(omarchy-i18n plugin.confirmEnable "$id")"; then
+  elif confirm "$(inferna-i18n plugin.confirmEnable "$id")"; then
     enable_after=true
   else
     enable_after=false
@@ -163,14 +163,14 @@ if [[ $enable_after == true ]]; then
   select_bar_widget_placement "$id"
   discovered=0
   for (( attempt = 0; attempt < 40; attempt++ )); do
-    if omarchy-plugin-list --json | jq -e --arg id "$id" 'any(.[]; .id == $id)' >/dev/null; then
+    if inferna-plugin-list --json | jq -e --arg id "$id" 'any(.[]; .id == $id)' >/dev/null; then
       discovered=1
       break
     fi
     sleep 0.05
   done
   (( discovered )) || fail "plugin '$id' is not known"
-  omarchy-plugin-enable "$id" "${ENABLE_PLACEMENT[@]}"
+  inferna-plugin-enable "$id" "${ENABLE_PLACEMENT[@]}"
 else
   echo "Enable it later with: omarchy plugin enable $id"
 fi

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check the update log for known failure conditions
+# inferna:summary=Check the update log for known failure conditions
 
-update_log="/tmp/omarchy-update.log"
+update_log="/tmp/inferna-update.log"
 
 # Check for initramfs generation failure
 if grep -q "Updating linux initcpios" "$update_log"; then

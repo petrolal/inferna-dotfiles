@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true if a battery is present on the system.
+# inferna:summary=Returns true if a battery is present on the system.
 
 # Not every battery is called BAT*: Apple Silicon reports macsmc-battery and
 # some Framework and Chromebook firmware CMB0, so decide by type, not by name.

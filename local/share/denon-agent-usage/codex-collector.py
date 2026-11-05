@@ -21,7 +21,10 @@ import sys
 import time
 from importlib.machinery import SourceFileLoader
 
-UPSTREAM = os.path.join(os.environ.get("OMARCHY_PATH", "/usr/share/omarchy"), "bin/omarchy-agent-usage-codex")
+core_dir = os.environ.get("INFERNA_PATH") or os.environ.get("OMARCHY_PATH") or (os.path.expanduser("~") + "/inferna-dotfiles/core")
+UPSTREAM = os.path.join(core_dir, "bin/inferna-agent-usage-codex")
+if not os.path.exists(UPSTREAM):
+    UPSTREAM = os.path.join(core_dir, "bin/omarchy-agent-usage-codex")
 spec = importlib.util.spec_from_loader("omarchy_codex_usage", SourceFileLoader("omarchy_codex_usage", UPSTREAM))
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)

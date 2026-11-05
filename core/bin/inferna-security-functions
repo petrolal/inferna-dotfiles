@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# omarchy:hidden=true
-# omarchy:summary=Provide internal helpers for privileged Omarchy entrypoints
+# inferna:hidden=true
+# inferna:summary=Provide internal helpers for privileged Omarchy entrypoints
 
 if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
-  echo "omarchy-security-functions is an internal function library." >&2
+  echo "inferna-security-functions is an internal function library." >&2
   exit 64
 fi
 
@@ -21,7 +21,7 @@ omarchy_security_require_privileged_bash_startup() {
     [[ $executable == "/usr/bin/bash" &&
       ( ${argv[0]:-} == "/bin/bash" || ${argv[0]:-} == "/usr/bin/bash" ) &&
       ${argv[1]:-} == "-p" ]]
-  ' omarchy-bash-startup
+  ' inferna-bash-startup
 }
 
 omarchy_security_sanitize_bash_environment() {

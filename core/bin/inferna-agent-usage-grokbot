@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the Grok Bot usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the Grok Bot usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect Grok Bot usage into one display-ready JSON record.
 
 Grok Bot runs on a Cursor account, but its weekly allowance is metered apart

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy theme to Claude Code
-# omarchy:args=[--activate]
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy theme to Claude Code
+# inferna:args=[--activate]
+# inferna:hidden=true
 
 set -euo pipefail
 
@@ -13,7 +13,7 @@ CLAUDE_SETTINGS_PATH="$CLAUDE_CONFIG_DIR/settings.json"
 CLAUDE_ACTIVATE=0
 
 usage() {
-  echo "Usage: omarchy-theme-set-claude [--activate]"
+  echo "Usage: inferna-theme-set-claude [--activate]"
 }
 
 for arg in "$@"; do
@@ -35,7 +35,7 @@ done
 if [[ ! -f $CLAUDE_SOURCE_PATH ]]; then
   if (( CLAUDE_ACTIVATE == 1 )); then
     echo "Claude Code theme source missing: $CLAUDE_SOURCE_PATH" >&2
-    echo "Run omarchy-theme-refresh after selecting an Omarchy theme." >&2
+    echo "Run inferna-theme-refresh after selecting an Omarchy theme." >&2
     exit 1
   fi
 

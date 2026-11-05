@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether any required commands are missing
+# inferna:summary=Check whether any required commands are missing
 
 for cmd in "$@"; do
   if ! command -v -- "$cmd" &>/dev/null; then

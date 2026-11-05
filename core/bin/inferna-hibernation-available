@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check if hibernation is supported
+# inferna:summary=Check if hibernation is supported
 
 SYS_POWER_PATH="${OMARCHY_SYS_POWER_PATH:-/sys/power}"
 SWAPS_PATH="${OMARCHY_SWAPS_PATH:-/proc/swaps}"

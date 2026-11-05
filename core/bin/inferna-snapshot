@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Create or restore system snapshots with snapper
-# omarchy:args=<create|restore>
-# omarchy:requires-sudo=true
+# inferna:summary=Create or restore system snapshots with snapper
+# inferna:args=<create|restore>
+# inferna:requires-sudo=true
 
 set -e
 
 COMMAND="$1"
 
 if [[ -z $COMMAND ]]; then
-  echo "Usage: omarchy-snapshot <create|restore>" >&2
+  echo "Usage: inferna-snapshot <create|restore>" >&2
   exit 1
 fi
 
-if omarchy-cmd-missing snapper; then
-  exit 127 # omarchy-update can use this to just ignore if snapper is not available
+if inferna-cmd-missing snapper; then
+  exit 127 # inferna-update can use this to just ignore if snapper is not available
 fi
 
 case "$COMMAND" in
 create)
   # The description is just a label, so never let it abort the snapshot.
-  DESC="$(omarchy-version 2>/dev/null || echo unknown)"
+  DESC="$(inferna-version 2>/dev/null || echo unknown)"
 
   # Get existing snapper config names from CSV output
   mapfile -t CONFIGS < <(sudo snapper --csvout list-configs | awk -F, 'NR>1 {print $1}')

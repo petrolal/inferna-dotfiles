@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Write the current theme color into the browser policy directories
-# omarchy:args=<rrggbb>
-# omarchy:hidden=true
+# inferna:summary=Write the current theme color into the browser policy directories
+# inferna:args=<rrggbb>
+# inferna:hidden=true
 
 set -euo pipefail
 
 # Whenever this runs as root — invoked directly through the passwordless
 # sudoers rule, or re-execed by require_root below — sudo's secure_path decides
-# where a bare helper resolves, and a dev link (etc/sudoers.d/omarchy-dev-path)
+# where a bare helper resolves, and a dev link (etc/sudoers.d/inferna-dev-path)
 # prepends a user-writable checkout bin/ to it. Every helper this script calls
 # by bare name (printf's builtin aside: install, mktemp, rm) is a system tool,
 # never an omarchy-* command, so pin PATH to trusted system directories and keep
@@ -27,13 +27,13 @@ POLICY_DIRS=(
   /etc/brave/policies/managed
 )
 
-# The path etc/sudoers.d/omarchy-theme-browser names. The privileged half always
+# The path etc/sudoers.d/inferna-theme-browser names. The privileged half always
 # runs from there rather than from whichever copy was invoked, so the rule
 # matches even where $OMARCHY_PATH points at a checkout.
-PACKAGED_PATH=/usr/bin/omarchy-theme-set-browser-policy
+PACKAGED_PATH=/usr/bin/inferna-theme-set-browser-policy
 
 usage() {
-  echo "Usage: omarchy-theme-set-browser-policy <rrggbb>" >&2
+  echo "Usage: inferna-theme-set-browser-policy <rrggbb>" >&2
 }
 
 if (( $# != 1 )); then
@@ -48,7 +48,7 @@ color="$1"
 # in sudoers, and keeping it out of argv lets the sudoers rule spell the
 # argument as a plain six-character glob.
 if [[ ! $color =~ ^[0-9a-f]{6}$ ]]; then
-  echo "omarchy-theme-set-browser-policy: expected six lowercase hex digits, got '$color'" >&2
+  echo "inferna-theme-set-browser-policy: expected six lowercase hex digits, got '$color'" >&2
   exit 1
 fi
 
@@ -56,7 +56,7 @@ fi
 # `sudo -l` on its own reports whether a command is permitted, which the blanket
 # %wheel rule answers yes to for everything; the long listing prints the matched
 # entry's tags, so !authenticate is the grant in
-# etc/sudoers.d/omarchy-theme-browser and nothing else. Listing runs nothing
+# etc/sudoers.d/inferna-theme-browser and nothing else. Listing runs nothing
 # and, under -n, prompts for nothing.
 sudo_grants_passwordless() {
   sudo -n -l -l "$PACKAGED_PATH" "$@" 2>/dev/null | grep -q '!authenticate'
@@ -102,7 +102,7 @@ for policy_dir in "${POLICY_DIRS[@]}"; do
     if ! rm -rf -- "$dest"; then
       rm -f "$staged"
       staged=""
-      echo "omarchy-theme-set-browser-policy: cannot replace $dest" >&2
+      echo "inferna-theme-set-browser-policy: cannot replace $dest" >&2
       failed=1
       continue
     fi
@@ -111,7 +111,7 @@ for policy_dir in "${POLICY_DIRS[@]}"; do
   if ! install -m 0644 -o root -g root -T "$staged" "$dest"; then
     rm -f "$staged"
     staged=""
-    echo "omarchy-theme-set-browser-policy: cannot write $dest" >&2
+    echo "inferna-theme-set-browser-policy: cannot write $dest" >&2
     failed=1
     continue
   fi

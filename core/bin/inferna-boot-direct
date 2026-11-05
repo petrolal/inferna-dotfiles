@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Check whether an active Omarchy Direct Boot EFI entry is configured.
-# omarchy:args=[--number]
-# omarchy:hidden=true
+# inferna:summary=Check whether an active Omarchy Direct Boot EFI entry is configured.
+# inferna:args=[--number]
+# inferna:hidden=true
 
 set -euo pipefail
 

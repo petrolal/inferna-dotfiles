@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove all TUIs installed via omarchy-tui-install.
+# inferna:summary=Remove all TUIs installed via inferna-tui-install.
 
 set -e
 
@@ -30,7 +30,7 @@ for file in "${tui_desktop_files[@]}"; do
   rm -f "$ICON_DIR/$icon_name.png" "$ICON_DIR/$app_name.png" "$OLD_ICON_DIR/$app_name.png"
 done
 
-if omarchy-cmd-present update-desktop-database; then
+if inferna-cmd-present update-desktop-database; then
   update-desktop-database "$APP_DIR" &>/dev/null || true
 fi
 

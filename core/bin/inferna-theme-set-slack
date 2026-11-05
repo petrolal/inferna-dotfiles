@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sync the generated Omarchy theme to running Slack windows
-# omarchy:hidden=true
+# inferna:summary=Sync the generated Omarchy theme to running Slack windows
+# inferna:hidden=true
 
 set -euo pipefail
 

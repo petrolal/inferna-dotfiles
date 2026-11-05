@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Print the config home of the active Claude, Codex, or Grok account
-# omarchy:args=<claude|codex|grok>
-# omarchy:hidden=true
+# inferna:summary=Print the config home of the active Claude, Codex, or Grok account
+# inferna:args=<claude|codex|grok>
+# inferna:hidden=true
 
 # Prints nothing while the primary account (~/.claude, ~/.codex) is active, so
 # a launch only sets CLAUDE_CONFIG_DIR / CODEX_HOME when there's somewhere
@@ -11,7 +11,7 @@
 registry="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/accounts/${1:-}.json"
 
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
-  echo "Usage: omarchy-agent-account-home <claude|codex|grok>" >&2
+  echo "Usage: inferna-agent-account-home <claude|codex|grok>" >&2
   exit 1
 fi
 
@@ -21,5 +21,5 @@ account_pin="OMARCHY_AGENT_${1^^}_HOME"
 if [[ -v $account_pin ]]; then
   printf '%s' "${!account_pin}"
 elif [[ -f $registry ]]; then
-  exec omarchy-agent-account-state home "$1"
+  exec inferna-agent-account-state home "$1"
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Choose a legible transparent bar text color
-# omarchy:hidden=true
+# inferna:summary=Choose a legible transparent bar text color
+# inferna:hidden=true
 
 set -e
 
@@ -72,7 +72,7 @@ valid_hex "$text_color" || fallback
 valid_hex "$background_color" || fallback
 [[ $position =~ ^(top|bottom|left|right)$ ]] || fallback
 [[ $bar_size =~ ^[0-9]+$ ]] || fallback
-omarchy-cmd-present magick || fallback
+inferna-cmd-present magick || fallback
 
 if [[ -z $background_path ]]; then
   background_path=$(readlink -f "$HOME/.local/state/inferna/current/background" 2>/dev/null || true)
@@ -80,7 +80,7 @@ fi
 [[ -f $background_path ]] || fallback
 
 if [[ -z $screen_size ]]; then
-  if omarchy-cmd-present hyprctl && omarchy-cmd-present jq; then
+  if inferna-cmd-present hyprctl && inferna-cmd-present jq; then
     screen_size=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0] | "\(.width)x\(.height)"' 2>/dev/null || true)
   fi
 fi

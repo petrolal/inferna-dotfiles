@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install a supported development environment
-# omarchy:name=dev-env
-# omarchy:args=<ruby|node|bun|deno|go|laravel|symfony|php|python|elixir|phoenix|rust|java|zig|ocaml|dotnet|clojure|scala>
-# omarchy:examples=omarchy install dev-env ruby | omarchy install dev-env node
-# omarchy:requires-sudo=true
+# inferna:summary=Install a supported development environment
+# inferna:name=dev-env
+# inferna:args=<ruby|node|bun|deno|go|laravel|symfony|php|python|elixir|phoenix|rust|java|zig|ocaml|dotnet|clojure|scala>
+# inferna:examples=inferna install dev-env ruby | inferna install dev-env node
+# inferna:requires-sudo=true
 
 if [[ -z $1 ]]; then
-  echo "Usage: omarchy-install-dev-env <ruby|node|bun|deno|go|laravel|symfony|php|python|elixir|phoenix|rust|java|zig|ocaml|dotnet|clojure|scala>" >&2
+  echo "Usage: inferna-install-dev-env <ruby|node|bun|deno|go|laravel|symfony|php|python|elixir|phoenix|rust|java|zig|ocaml|dotnet|clojure|scala>" >&2
   exit 1
 fi
 
@@ -22,7 +22,7 @@ install_node() {
   echo -e "Installing Node.js...\n"
   # Omarchy declares Node as a default tool. A user who removed the preinstalls,
   # like one without Omarchy's declarations, selects it in their own config.
-  if omarchy-mise-default-tools declares node; then
+  if inferna-mise-default-tools declares node; then
     mise install node
   else
     mise use --global node
@@ -32,7 +32,7 @@ install_node() {
 case "$1" in
 ruby)
   echo -e "Installing Ruby on Rails...\n"
-  omarchy-pkg-add libyaml
+  inferna-pkg-add libyaml
   mise settings add ruby.compile false
   mise settings add idiomatic_version_file_enable_tools ruby
   mise use --global ruby@latest
@@ -69,7 +69,7 @@ laravel)
 symfony)
   echo -e "Installing PHP and Symfony...\n"
   install_php
-  omarchy-pkg-add symfony-cli
+  inferna-pkg-add symfony-cli
   echo -e "\nYou can now run: symfony new --webapp myproject"
   ;;
 python)
@@ -78,7 +78,7 @@ python)
   echo -e "\nInstalling uv...\n"
   # Omarchy declares uv as a default tool. A user who removed the preinstalls,
   # like one without Omarchy's declarations, selects it in their own config.
-  if omarchy-mise-default-tools declares uv; then
+  if inferna-mise-default-tools declares uv; then
     mise install uv
   else
     mise use --global uv
@@ -106,7 +106,7 @@ rust)
   echo -e "Installing Rust...\n"
   # Crates that generate C bindings with bindgen, including Ruby gems built
   # with rb-sys, load libclang from clang.
-  omarchy-pkg-add clang
+  inferna-pkg-add clang
   bash -c "$(curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs)" -- -y
   ;;
 java)
@@ -131,7 +131,7 @@ dotnet)
   ;;
 clojure)
   echo -e "Installing Clojure...\n"
-  omarchy-pkg-add rlwrap
+  inferna-pkg-add rlwrap
   mise use --global clojure@latest
   ;;
 scala)

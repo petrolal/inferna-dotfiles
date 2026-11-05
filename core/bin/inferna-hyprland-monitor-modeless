@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Returns true when Hyprland has an enabled monitor with no mode
-# omarchy:hidden=true
+# inferna:summary=Returns true when Hyprland has an enabled monitor with no mode
+# inferna:hidden=true
 
 # A monitor powered off at boot answers with a partial EDID carrying no video
 # modes, so Hyprland brings it up at 0x0 and the screen stays black. Mirrors are

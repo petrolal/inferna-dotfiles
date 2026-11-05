@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove Superwhisper dictation and its desktop integration
-# omarchy:requires-sudo=true
+# inferna:summary=Remove Superwhisper dictation and its desktop integration
+# inferna:requires-sudo=true
 
 set -e
 
@@ -9,8 +9,8 @@ config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
 
 systemctl --user disable --now superwhisper.service 2>/dev/null || true
-omarchy-shell -q shell setPluginEnabled superwhisper.panel false >/dev/null
-omarchy-pkg-drop superwhisper-bin
+inferna-shell -q shell setPluginEnabled superwhisper.panel false >/dev/null
+inferna-pkg-drop superwhisper-bin
 systemctl --user daemon-reload
 
 # Remove the package setup's links, preserving independently installed copies
@@ -23,7 +23,7 @@ unlink_package_link() {
 
 unlink_package_link "$HOME/.local/bin/superwhisper" /usr/bin/superwhisper
 unlink_package_link "$data_home/superwhisper/app/current" /opt/superwhisper
-unlink_package_link "$config_home/omarchy/plugins/superwhisper-panel" /opt/superwhisper/assets/omarchy-plugin/superwhisper-panel
+unlink_package_link "$config_home/omarchy/plugins/superwhisper-panel" /opt/superwhisper/assets/inferna-plugin/superwhisper-panel
 for agent in .agents .claude .codex .pi/agent; do
   unlink_package_link "$HOME/$agent/skills/superwhisper" /opt/superwhisper/assets/agent-skill/superwhisper
 done
@@ -33,8 +33,8 @@ if [[ -f $backend_config && $(< "$backend_config") == "superwhisper" ]]; then
   rm "$backend_config"
 fi
 
-omarchy-shell -q shell rescanPlugins
-omarchy-restart-hyprctl
-if systemctl --user -q is-active omarchy-fcitx5.service; then
-  systemctl --user restart omarchy-fcitx5.service
+inferna-shell -q shell rescanPlugins
+inferna-restart-hyprctl
+if systemctl --user -q is-active inferna-fcitx5.service; then
+  systemctl --user restart inferna-fcitx5.service
 fi

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Sign in to a Claude, Codex, or Grok subscription
-# omarchy:args=[--check] [--events] [--reauth <account>] [claude|codex|grok] [label]
-# omarchy:examples=omarchy agent account add claude | omarchy agent account add Work | omarchy agent account add codex Side
+# inferna:summary=Sign in to a Claude, Codex, or Grok subscription
+# inferna:args=[--check] [--events] [--reauth <account>] [claude|codex|grok] [label]
+# inferna:examples=inferna agent account add claude | inferna agent account add Work | inferna agent account add codex Side
 
 set -uo pipefail
 
@@ -24,7 +24,7 @@ while [[ ${1:-} == --* ]]; do
   --reauth)
     reauth="${2:-}"
     if [[ -z $reauth || $reauth == --* ]]; then
-      echo "Usage: omarchy-agent-account-add --reauth <account> [claude|codex|grok]" >&2
+      echo "Usage: inferna-agent-account-add --reauth <account> [claude|codex|grok]" >&2
       exit 1
     fi
     shift
@@ -36,7 +36,7 @@ done
 
 # Whether a provider's own home (~/.claude, ~/.codex, ~/.grok) is signed in.
 primary_signed_in() {
-  omarchy-agent-account-state list "$1" | jq -e '.[0].accounts | any(.primary and .signedIn)' >/dev/null
+  inferna-agent-account-state list "$1" | jq -e '.[0].accounts | any(.primary and .signedIn)' >/dev/null
 }
 
 if [[ $check == "true" ]]; then
@@ -53,7 +53,7 @@ fi
 # The provider can be left out when it's your default agent:
 # `omarchy agent account add Work`.
 if [[ ${1:-} != "claude" && ${1:-} != "codex" && ${1:-} != "grok" ]]; then
-  default=$(omarchy-default-agent)
+  default=$(inferna-default-agent)
   [[ $default == "claude" || $default == "codex" || $default == "grok" ]] && set -- "$default" "$@"
 fi
 
@@ -62,7 +62,7 @@ claude) provider="claude"; name="Claude"; site="claude.ai"; package="claude"; ho
 codex) provider="codex"; name="Codex"; site="chatgpt.com"; package="codex"; home_env="CODEX_HOME" ;;
 grok) provider="grok"; name="Grok"; site="x.ai"; package="grok"; home_env="GROK_HOME" ;;
 *)
-  echo "Usage: omarchy-agent-account-add [--check] [--events] [--reauth <account>] [claude|codex|grok] [label]" >&2
+  echo "Usage: inferna-agent-account-add [--check] [--events] [--reauth <account>] [claude|codex|grok] [label]" >&2
   exit 1
   ;;
 esac
@@ -79,7 +79,7 @@ say() {
 finish() {
   if [[ $events == "true" ]]; then
     printf '@@omarchy done %s\n' "$1"
-    omarchy-notification-send -g 󰚩 "$1"
+    inferna-notification-send -g 󰚩 "$1"
   else
     echo
     echo "$1"
@@ -89,7 +89,7 @@ finish() {
 fail() {
   if [[ $events == "true" ]]; then
     printf '@@omarchy error %s\n' "$1"
-    omarchy-notification-send -g 󰚩 -u critical "$(omarchy-i18n agents.addFailed "$name")" "$1"
+    inferna-notification-send -g 󰚩 -u critical "$(inferna-i18n agents.addFailed "$name")" "$1"
   else
     echo "$1" >&2
   fi
@@ -116,10 +116,10 @@ interruptible() {
   wait $!
 }
 
-if omarchy-cmd-missing "$provider"; then
-  say "$(omarchy-i18n agents.installingCli "$name")"
+if inferna-cmd-missing "$provider"; then
+  say "$(inferna-i18n agents.installingCli "$name")"
   if [[ $events == "true" ]]; then
-    mise use -g "$package" >/dev/null 2>&1 || fail "$(omarchy-i18n agents.installCliFailed "$name")"
+    mise use -g "$package" >/dev/null 2>&1 || fail "$(inferna-i18n agents.installCliFailed "$name")"
   else
     mise use -g "$package" || exit 1
   fi
@@ -129,9 +129,9 @@ fi
 # have, and a login would quietly reuse it. The CLIs open their login page
 # through $BROWSER, so this points it at a private window instead.
 private_browser() {
-  browser=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/omarchy-account-browser.XXXXXX") || fail "$(omarchy-i18n agents.homeFailed)"
-  printf '#!/bin/bash\nexec omarchy-launch-browser --private "$1"\n' >"$browser" || fail "$(omarchy-i18n agents.homeFailed)"
-  chmod +x "$browser" || fail "$(omarchy-i18n agents.homeFailed)"
+  browser=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/inferna-account-browser.XXXXXX") || fail "$(inferna-i18n agents.homeFailed)"
+  printf '#!/bin/bash\nexec inferna-launch-browser --private "$1"\n' >"$browser" || fail "$(inferna-i18n agents.homeFailed)"
+  chmod +x "$browser" || fail "$(inferna-i18n agents.homeFailed)"
 }
 
 case "$provider" in
@@ -152,49 +152,49 @@ if [[ -n $reauth ]]; then
   if [[ $reauth == ":primary" ]]; then
     account_home="$HOME/.$provider"
   else
-    account_home=$(omarchy-agent-account-state homes "$provider" | awk -F'\t' -v id="$reauth" '$1 == id { print $2 }')
+    account_home=$(inferna-agent-account-state homes "$provider" | awk -F'\t' -v id="$reauth" '$1 == id { print $2 }')
   fi
-  [[ -n $account_home ]] || fail "$(omarchy-i18n agents.noAccountNamed "$name" "$reauth")"
+  [[ -n $account_home ]] || fail "$(inferna-i18n agents.noAccountNamed "$name" "$reauth")"
 
   if [[ $account_home == "$HOME/.$provider" ]]; then
-    say "$(omarchy-i18n agents.signInAgainBrowser "$name")"
-    login || fail "$(omarchy-i18n agents.signInFailed "$name")"
+    say "$(inferna-i18n agents.signInAgainBrowser "$name")"
+    login || fail "$(inferna-i18n agents.signInFailed "$name")"
   else
-    say "$(omarchy-i18n agents.signInAgainPrivate)"
+    say "$(inferna-i18n agents.signInAgainPrivate)"
     private_browser
-    interruptible env BROWSER="$browser" "$home_env=$account_home" "${login_command[@]}" || fail "$(omarchy-i18n agents.signInFailed "$name")"
+    interruptible env BROWSER="$browser" "$home_env=$account_home" "${login_command[@]}" || fail "$(inferna-i18n agents.signInFailed "$name")"
   fi
 
-  omarchy-agent-usage-update --force "$provider" >/dev/null 2>&1 &
-  finish "$(omarchy-i18n agents.signedInAgain "$name")"
+  inferna-agent-usage-update --force "$provider" >/dev/null 2>&1 &
+  finish "$(inferna-i18n agents.signedInAgain "$name")"
   exit 0
 fi
 
 # The first subscription signs in where the CLI always looks, through your
 # normal browser: nothing is signed in there yet that it could be mistaken for.
 if ! primary_signed_in "$provider"; then
-  say "$(omarchy-i18n agents.signInBrowser "$name")"
+  say "$(inferna-i18n agents.signInBrowser "$name")"
   if login && primary_signed_in "$provider"; then
     # The first agent signed in on a machine with none chosen becomes the
     # default, so `omarchy agent` and the panel's starter prompts have one to
     # run. A default someone already picked is never touched.
-    if [[ -z $(omarchy-default-agent) ]]; then
+    if [[ -z $(inferna-default-agent) ]]; then
       mkdir -p "$HOME/.config/inferna/defaults"
       printf '%s\n' "$provider" >"$HOME/.config/inferna/defaults/agent"
     fi
-    omarchy-agent-usage-update --force "$provider" >/dev/null 2>&1 &
-    finish "$(omarchy-i18n agents.signedIn "$name")"
+    inferna-agent-usage-update --force "$provider" >/dev/null 2>&1 &
+    finish "$(inferna-i18n agents.signedIn "$name")"
   else
-    fail "$(omarchy-i18n agents.signInFailed "$name")"
+    fail "$(inferna-i18n agents.signInFailed "$name")"
   fi
 else
   # Retry the final registration of a completed, interrupted sign-in before
   # asking for another browser login. Live sign-ins are never recovered.
-  if recovered=$(omarchy-agent-account-state recover "$provider"); then
+  if recovered=$(inferna-agent-account-state recover "$provider"); then
     if [[ $(jq 'length' <<<"$recovered") != "0" ]]; then
       added=$(jq -r 'map(.label + (if .email != "" then " (" + .email + ")" else "" end)) | join(", ")' <<<"$recovered")
-      omarchy-agent-usage-update --force "$provider" >/dev/null 2>&1 &
-      finish "$(omarchy-i18n agents.added "$added")"
+      inferna-agent-usage-update --force "$provider" >/dev/null 2>&1 &
+      finish "$(inferna-i18n agents.added "$added")"
       exit 0
     fi
   else
@@ -206,7 +206,7 @@ else
   fi
 
   if [[ $events == "true" ]]; then
-    say "$(omarchy-i18n agents.signInPrivate)"
+    say "$(inferna-i18n agents.signInPrivate)"
   else
     cat <<EOF
 
@@ -218,19 +218,19 @@ Don't log out of the $name CLI to do this: logging out revokes the saved sign-in
 EOF
   fi
 
-  home=$(omarchy-agent-account-state begin "$provider" "$label" "$$") || fail "$(omarchy-i18n agents.homeFailed)"
+  home=$(inferna-agent-account-state begin "$provider" "$label" "$$") || fail "$(inferna-i18n agents.homeFailed)"
 
   private_browser
   interruptible env BROWSER="$browser" "$home_env=$home" "${login_command[@]}"
 
-  if account=$(omarchy-agent-account-state register "$provider" "$label" "$home" 2>&1); then
+  if account=$(inferna-agent-account-state register "$provider" "$label" "$home" 2>&1); then
     home=""
     added=$(jq -r '.label + (if .email != "" then " (" + .email + ")" else "" end)' <<<"$account")
-    omarchy-agent-usage-update --force "$provider" >/dev/null 2>&1 &
+    inferna-agent-usage-update --force "$provider" >/dev/null 2>&1 &
     if [[ $events == "true" ]]; then
-      finish "$(omarchy-i18n agents.added "$added")"
+      finish "$(inferna-i18n agents.added "$added")"
     else
-      finish "$(omarchy-i18n agents.added "$added")"
+      finish "$(inferna-i18n agents.added "$added")"
       echo "Switch to it with: omarchy agent account use $provider $(jq -r .id <<<"$account")"
     fi
   else

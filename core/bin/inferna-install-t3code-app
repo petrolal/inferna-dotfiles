@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install the T3 Code desktop app from its AppImage release
-# omarchy:args=<stable|nightly>
-# omarchy:hidden=true
-# omarchy:requires-sudo=true
+# inferna:summary=Install the T3 Code desktop app from its AppImage release
+# inferna:args=<stable|nightly>
+# inferna:hidden=true
+# inferna:requires-sudo=true
 
 set -euo pipefail
 
 channel=${1:-}
 if [[ $channel != "stable" && $channel != "nightly" ]]; then
-  echo "Usage: omarchy-install-t3code-app <stable|nightly>" >&2
+  echo "Usage: inferna-install-t3code-app <stable|nightly>" >&2
   exit 1
 fi
 
@@ -32,9 +32,9 @@ if [[ $APPIMAGE =~ $exec_unsafe ]]; then
 fi
 
 # The AppImage mounts itself through a setuid fusermount at every launch.
-omarchy-pkg-add fuse3
+inferna-pkg-add fuse3
 
-if omarchy-hw-aarch64; then
+if inferna-hw-aarch64; then
   arch_suffix="-arm64"
 else
   arch_suffix=""

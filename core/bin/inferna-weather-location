@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Show or set the location used for weather reports
+# inferna:summary=Show or set the location used for weather reports
 #
 # State lives in ~/.local/state/inferna/settings/weather.json as
 # {"name": ..., "latitude": ..., "longitude": ...}. A missing file means the
@@ -26,7 +26,7 @@ case "${1:-}" in
   [[ -n $name ]] && echo "$name"
   ;;
 --set)
-  [[ -n ${2:-} ]] || { echo "Usage: omarchy-weather-location --set <name> [lat,lon]" >&2; exit 1; }
+  [[ -n ${2:-} ]] || { echo "Usage: inferna-weather-location --set <name> [lat,lon]" >&2; exit 1; }
   if [[ -n ${3:-} ]]; then
     [[ ${3} =~ $COORDS_PATTERN ]] || { echo "Invalid coordinates: $3 (expected lat,lon)" >&2; exit 1; }
     location=$(jq -n --arg name "$2" --argjson latitude "${3%,*}" --argjson longitude "${3#*,}" '{$name, $latitude, $longitude}')
@@ -40,7 +40,7 @@ case "${1:-}" in
   rm -f "$LOC_FILE"
   ;;
 *)
-  echo "Usage: omarchy-weather-location [--set <name> [lat,lon]|--clear]" >&2
+  echo "Usage: inferna-weather-location [--set <name> [lat,lon]|--clear]" >&2
   exit 1
   ;;
 esac

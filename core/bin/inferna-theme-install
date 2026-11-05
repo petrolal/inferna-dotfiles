@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Install a theme from a git repository
-# omarchy:args=[git-repo-url]
-# omarchy:examples=omarchy theme install https://github.com/example/omarchy-example-theme.git
-# omarchy:examples=omarchy theme install git@github.com:example/omarchy-example-theme.git
+# inferna:summary=Install a theme from a git repository
+# inferna:args=[git-repo-url]
+# inferna:examples=inferna theme install https://github.com/example/inferna-example-theme.git
+# inferna:examples=inferna theme install git@github.com:example/inferna-example-theme.git
 
 if [[ -z $1 ]]; then
   echo -e "\e[32mSee https://omarchy.org/themes/\n\e[0m"
-  REPO_URL=$(gum input --placeholder="$(omarchy-i18n theme.repoPlaceholder)" --header="")
+  REPO_URL=$(gum input --placeholder="$(inferna-i18n theme.repoPlaceholder)" --header="")
 else
   REPO_URL="$1"
 fi
@@ -17,15 +17,15 @@ if [[ -z $REPO_URL ]]; then
 fi
 
 # Refuse a URL that names a git option or a transport helper before cloning. The
-# check is shared with omarchy-plugin-add and explains itself; a missing checker
+# check is shared with inferna-plugin-add and explains itself; a missing checker
 # leaves this non-zero, which refuses the URL rather than cloning it.
-omarchy-git-url-check "$REPO_URL" || exit 1
+inferna-git-url-check "$REPO_URL" || exit 1
 
 THEMES_DIR="$HOME/.config/inferna/themes"
 
 # Strip user@host: prefix from scp-style SSH URLs so basename sees just the path.
 # git reads a URL as scp-style when a colon appears before any slash, so the path
-# after it need not hold one: `git@host:omarchy-blue-theme.git` is a repo in that
+# after it need not hold one: `git@host:inferna-blue-theme.git` is a repo in that
 # user's home, and leaving its prefix on names the theme after the whole URL.
 REPO_PATH="$REPO_URL"
 [[ $REPO_PATH != *"://"* && $REPO_PATH == *:* && ${REPO_PATH%%:*} != */* ]] && REPO_PATH="${REPO_PATH#*:}"
@@ -58,6 +58,6 @@ if ! git clone -- "$REPO_URL" "$THEME_PATH"; then
   exit 1
 fi
 
-# Apply the new theme with omarchy-theme-set, which stages only the files an
+# Apply the new theme with inferna-theme-set, which stages only the files an
 # extra theme is allowed to contribute and names anything it dropped.
-omarchy-theme-set "$THEME_NAME"
+inferna-theme-set "$THEME_NAME"

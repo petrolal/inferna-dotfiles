@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Open HEY webmail and translate mailto links
-# omarchy:args=[url]
+# inferna:summary=Open HEY webmail and translate mailto links
+# inferna:args=[url]
 
 url="$1"
 web_url="https://app.hey.com"
@@ -12,4 +12,4 @@ if [[ $url =~ ^mailto: ]]; then
   web_url="https://app.hey.com/messages/new?to=$email"
 fi
 
-exec omarchy-launch-webapp "$web_url"
+exec inferna-launch-webapp "$web_url"

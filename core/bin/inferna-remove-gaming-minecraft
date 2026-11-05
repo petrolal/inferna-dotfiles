@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove the Minecraft launcher along with its worlds, mods, and caches.
-# omarchy:requires-sudo=true
+# inferna:summary=Remove the Minecraft launcher along with its worlds, mods, and caches.
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-pkg-drop minecraft-launcher
+inferna-pkg-drop minecraft-launcher
 
 rm -rf \
   "$HOME/.minecraft" \

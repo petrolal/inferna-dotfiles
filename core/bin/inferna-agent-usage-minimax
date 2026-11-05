@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the MiniMax Token Plan usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the MiniMax Token Plan usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect MiniMax usage into a display-ready JSON record.
 
 The 5-hour session and weekly windows come from MiniMax's Token Plan API with

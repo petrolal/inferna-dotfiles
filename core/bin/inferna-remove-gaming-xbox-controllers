@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Remove the xpadneo Xbox controller driver and undo its module/blacklist config.
-# omarchy:group=remove
-# omarchy:name=gaming xbox-controllers
-# omarchy:requires-sudo=true
+# inferna:summary=Remove the xpadneo Xbox controller driver and undo its module/blacklist config.
+# inferna:group=remove
+# inferna:name=gaming xbox-controllers
+# inferna:requires-sudo=true
 
 set -e
 
-omarchy-pkg-drop xpadneo-dkms
+inferna-pkg-drop xpadneo-dkms
 
 sudo rm -f /etc/modprobe.d/blacklist-xpad.conf /etc/modules-load.d/xpadneo.conf
 

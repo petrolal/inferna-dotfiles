@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-# omarchy:summary=Print the OpenCode usage record as JSON
-# omarchy:args=[--force] [--limits-only]
-# omarchy:hidden=true
+# inferna:summary=Print the OpenCode usage record as JSON
+# inferna:args=[--force] [--limits-only]
+# inferna:hidden=true
 """Collect OpenCode usage into one display-ready JSON record.
 
 Local stats come from pi/omp sessions that ran through an opencode provider
@@ -275,7 +275,7 @@ def probe_limits(credential):
     "Accept": "application/json",
     # Cloudflare answers the default urllib signature with a 1010 before the
     # request reaches the API, so identify the collector instead.
-    "User-Agent": "omarchy-agent-usage-opencode/1.0",
+    "User-Agent": "inferna-agent-usage-opencode/1.0",
     **credential.headers,
   })
   unreachable = {"ok": False, "transport": True, "helpText": "Couldn't reach OpenCode's usage endpoint. Retrying shortly. Local OpenCode stats are still shown."}

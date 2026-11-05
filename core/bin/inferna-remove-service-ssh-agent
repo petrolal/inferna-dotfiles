@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# omarchy:summary=Disable the gcr-ssh-agent SSH agent and its environment override.
+# inferna:summary=Disable the gcr-ssh-agent SSH agent and its environment override.
 
 # The file goes before disable reloads the manager, or the environment generator keeps exporting it.
 rm -f "$HOME/.config/environment.d/90-gcr-ssh-agent.conf"
