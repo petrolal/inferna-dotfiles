@@ -92,8 +92,10 @@ if [[ ${1:-} == "-y" ]] || omarchy-update-confirm; then
   omarchy-update-stay-awake start
 
   # Preserve the established development-checkout update ordering.
-  omarchy-update-dev
-  omarchy-update-keyring
+  if [[ ! -f /etc/NIXOS ]]; then
+    omarchy-update-dev
+    omarchy-update-keyring
+  fi
 
   # Migrations ship with the packages installed here and are written against
   # them, so everything below waits on this finishing. An upgrade that stopped
@@ -105,7 +107,9 @@ if [[ ${1:-} == "-y" ]] || omarchy-update-confirm; then
     omarchy-restart-shell || true
   fi
   omarchy-migrate
-  omarchy-update-orphan-pkgs -y
+  if [[ ! -f /etc/NIXOS ]]; then
+    omarchy-update-orphan-pkgs -y
+  fi
 
   omarchy-update-analyze-logs
 
@@ -126,13 +130,17 @@ if [[ ${1:-} == "-y" ]] || omarchy-update-confirm; then
 
   # AUR packages build against the upgraded system, so they go after it, and
   # share the update's one authorization like every step before them.
-  omarchy-update-aur-pkgs
+  if [[ ! -f /etc/NIXOS ]]; then
+    omarchy-update-aur-pkgs
+  fi
 
   # The last sudo-capable step: the boot files every package step left, AUR
   # packages' initramfs rebuilds included, must be shown to boot the updated
   # system. Until it passes, the update neither finishes nor offers a reboot.
   boot_verified=1
-  omarchy-update-boot || boot_verified=0
+  if [[ ! -f /etc/NIXOS ]]; then
+    omarchy-update-boot || boot_verified=0
+  fi
   end_update_authorization
 
   # The sleep inhibitor covers AUR builds, hooks and mise as well. Release it

@@ -18,6 +18,20 @@ echo -e "\e[32m\nUpdate system packages\e[0m"
 errors=$(mktemp)
 trap 'rm -f "$errors"' EXIT
 
+if [[ -f /etc/NIXOS ]]; then
+  echo -e "\e[32m\n[Inferna] Updating NixOS system configuration\e[0m"
+  if [[ -f /etc/nixos/flake.nix ]]; then
+    sudo nixos-rebuild switch --flake /etc/nixos
+  elif [[ -d "$HOME/inferna-dotfiles/nixos" ]]; then
+    sudo nixos-rebuild switch --flake "$HOME/inferna-dotfiles/nixos"
+  elif [[ -d "$HOME/dotfiles/nixos" ]]; then
+    sudo nixos-rebuild switch --flake "$HOME/dotfiles/nixos"
+  else
+    sudo nixos-rebuild switch
+  fi
+  exit 0
+fi
+
 # /usr/share/omarchy is wholly Omarchy's; files can land there unowned and would
 # otherwise abort the upgrade. Packaged content wins there.
 #

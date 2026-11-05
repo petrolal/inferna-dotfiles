@@ -4,7 +4,17 @@
 # omarchy:args=<packages...>
 
 for pkg in "$@"; do
-  pacman -Q -- "$pkg" &>/dev/null || exit 1
+  if command -v "$pkg" &>/dev/null; then
+    continue
+  fi
+  if command -v pacman &>/dev/null && pacman -Q -- "$pkg" &>/dev/null; then
+    continue
+  fi
+  # NixOS profile check
+  if nix-env -q "$pkg" &>/dev/null || nix profile list 2>/dev/null | grep -q "$pkg"; then
+    continue
+  fi
+  exit 1
 done
 
 exit 0
