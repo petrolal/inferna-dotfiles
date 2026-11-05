@@ -1323,7 +1323,7 @@ Item {
       "  if [[ -L $file ]]; then rm -f -- \"$file\"; fi\n" +
       "  if [[ -f $file ]]; then chmod 600 -- \"$file\"; elif [[ ! -e $file ]]; then : >\"$file\"; fi\n" +
       "done\n",
-      "omarchy-notifications-state", service.stateDir]
+      "inferna-notifications-state", service.stateDir]
     onExited: function(code) { service.storeReady = code === 0 }
   }
 
@@ -1512,7 +1512,7 @@ Item {
       visible: !stepAside || hasSomethingToShow
       color: "transparent"
 
-      WlrLayershell.namespace: "omarchy-notifications"
+      WlrLayershell.namespace: "inferna-notifications"
       WlrLayershell.layer: WlrLayer.Overlay
       readonly property bool takesKeyboard: service.keyboardMode && service.targetDisplayName === String(modelData.name)
       WlrLayershell.keyboardFocus: takesKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None

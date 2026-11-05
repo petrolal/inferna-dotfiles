@@ -81,7 +81,7 @@ hl.animation({ leaf = "specialWorkspace", enabled = true, speed = move, bezier =
 -- wallpaper around the pill.
 hl.layer_rule({
   name = "denon-frosted-bar",
-  match = { namespace = "^omarchy-bar$" },
+  match = { namespace = "^inferna-bar$" },
   blur = true,
   ignore_alpha = 0.4,
   -- Pebble Shell seam: rail and frame are two layers; without xray the frame
@@ -119,7 +119,7 @@ hl.layer_rule({
 -- them; otherwise each neck showed a tone step against the rail.
 hl.layer_rule({
   name = "denon-shell-drawers",
-  match = { namespace = "^(denon-bar-panel|omarchy-menu)$" },
+  match = { namespace = "^(denon-bar-panel|inferna-menu)$" },
   xray = true,
 })
 

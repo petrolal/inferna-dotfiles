@@ -133,7 +133,7 @@ Item {
     visible: root.opened || card.opacity > 0.01
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
-    WlrLayershell.namespace: "omarchy-osd"
+    WlrLayershell.namespace: "inferna-osd"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore

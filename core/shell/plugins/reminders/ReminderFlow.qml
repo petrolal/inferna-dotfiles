@@ -96,7 +96,7 @@ Item {
   OverlayWindow {
     id: panel
     shown: root.opened
-    WlrLayershell.namespace: "omarchy-reminders"
+    WlrLayershell.namespace: "inferna-reminders"
 
     Rectangle {
       anchors.fill: parent

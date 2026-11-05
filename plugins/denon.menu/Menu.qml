@@ -61,8 +61,8 @@ Item {
   // JSONC menu definitions. The shell parses both at startup and merges
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
-  property string defaultMenuPath: omarchyPath + "/default/omarchy/omarchy-menu.jsonc"
-  property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/omarchy-menu.jsonc"
+  property string defaultMenuPath: omarchyPath + "/default/omarchy/inferna-menu.jsonc"
+  property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Menu title. Set "root": { "title": "YOUR NAME" } in the extension file above.
   readonly property string brandName: (root.item("root") && root.item("root").title) ? root.item("root").title : "OMARCHY"
   property var defaultMenuItems: []
@@ -965,7 +965,7 @@ Item {
   }
 
   // The JSONC sources are watched so live edits to the default file (or the
-  // user extension at ~/.config/inferna/extensions/omarchy-menu.jsonc) take
+  // user extension at ~/.config/inferna/extensions/inferna-menu.jsonc) take
   // effect without restarting the shell.
   FileView {
     id: defaultMenuFile
@@ -1084,7 +1084,7 @@ Item {
     visible: root.attached ? (want || reveal > 0.001) : want
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
-    WlrLayershell.namespace: "omarchy-menu"
+    WlrLayershell.namespace: "inferna-menu"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: !root.attached || want ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore
@@ -1143,7 +1143,7 @@ Item {
       id: hoverLeaveTimer
       interval: 350
       running: root.hoverOpened && panel.want && !zoneHover.hovered
-      onTriggered: if (root.hoverOpened && !zoneHover.hovered) Quickshell.execDetached(["omarchy-menu", "close"])
+      onTriggered: if (root.hoverOpened && !zoneHover.hovered) Quickshell.execDetached(["inferna-menu", "close"])
     }
 
     // Attached: everything below lives in a stage that ends at the bottom

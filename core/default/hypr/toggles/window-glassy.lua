@@ -8,7 +8,7 @@ require("default.hypr.glass")()
 o.window("org\\.gnome\\.Nautilus", { opacity = "0.75 0.75" })
 
 hl.layer_rule({
-  match = { namespace = "^(omarchy-bar|omarchy-menu|omarchy-notifications|omarchy-osd|omarchy-polkit|omarchy-reminders|omarchy-clipboard|omarchy-emojis|omarchy-image-selector|omarchy-keyboard-panel|omarchy-network-qr)$" },
+  match = { namespace = "^(inferna-bar|inferna-menu|inferna-notifications|inferna-osd|inferna-polkit|inferna-reminders|inferna-clipboard|inferna-emojis|inferna-image-selector|inferna-keyboard-panel|inferna-network-qr)$" },
   blur = true,
   ignore_alpha = 0.3,
 })

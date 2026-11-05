@@ -313,7 +313,7 @@ Item {
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-      WlrLayershell.namespace: "omarchy-background"
+      WlrLayershell.namespace: "inferna-background"
 
       Rectangle {
         anchors.fill: parent
@@ -353,7 +353,7 @@ Item {
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Bottom
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-      WlrLayershell.namespace: "omarchy-background"
+      WlrLayershell.namespace: "inferna-background"
 
       Rectangle {
         anchors.fill: parent

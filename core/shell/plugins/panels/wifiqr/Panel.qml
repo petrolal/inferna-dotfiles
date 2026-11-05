@@ -11,7 +11,7 @@ import "Model.js" as Model
 // heavy scrim. Esc or the scrim dismiss it.
 //
 // Standalone panel plugin: each summon regenerates the code via
-// omarchy-network-qr, which emits the interface, security, and SSID it
+// inferna-network-qr, which emits the interface, security, and SSID it
 // shared ahead of the module matrix — so a bare summon self-detects the
 // connection. The payload may pin the interface and pre-title the card:
 // {"iface": "wlan0", "ssid": "MyWifi"}.
@@ -125,8 +125,8 @@ Item {
       pwProc.running = false
     }
     qrProc.command = requestedIface
-      ? ["omarchy-network-qr", "--meta", requestedIface]
-      : ["omarchy-network-qr", "--meta"]
+      ? ["inferna-network-qr", "--meta", requestedIface]
+      : ["inferna-network-qr", "--meta"]
     qrProc.running = true
   }
 
@@ -212,7 +212,7 @@ Item {
 
   OverlayWindow {
     shown: root.opened
-    WlrLayershell.namespace: "omarchy-network-qr"
+    WlrLayershell.namespace: "inferna-network-qr"
 
     // Deep scrim: the floating code needs the backdrop to carry the contrast
     // on any wallpaper.

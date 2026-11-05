@@ -190,7 +190,7 @@ PanelWindow {
   }
 
   color: "transparent"
-  WlrLayershell.namespace: "omarchy-dock"
+  WlrLayershell.namespace: "inferna-dock"
   WlrLayershell.layer: WlrLayer.Top
   WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
   // Kept clear of the bar's reserved edge, without reserving one of its own:
@@ -557,7 +557,7 @@ PanelWindow {
           text: modelData[1]
           checked: window.position === modelData[0]
           onTriggered: {
-            Util.execDetached("omarchy-dock position " + modelData[0])
+            Util.execDetached("inferna-dock position " + modelData[0])
             window.closeMenu()
           }
         }
@@ -568,7 +568,7 @@ PanelWindow {
         text: Commons.I18n.t("dock.autoHide")
         checked: window.autohide
         onTriggered: {
-          Util.execDetached("omarchy-dock autohide " + (window.autohide ? "off" : "on"))
+          Util.execDetached("inferna-dock autohide " + (window.autohide ? "off" : "on"))
           window.closeMenu()
         }
       }

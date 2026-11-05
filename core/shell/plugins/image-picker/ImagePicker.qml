@@ -632,7 +632,7 @@ Item {
     id: panel
     shown: root.opened
     shownKeyboardFocus: root.imagesLoaded ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-    WlrLayershell.namespace: "omarchy-image-selector"
+    WlrLayershell.namespace: "inferna-image-selector"
 
     MouseArea {
       anchors.fill: parent

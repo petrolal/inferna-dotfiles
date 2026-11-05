@@ -53,7 +53,7 @@ Item {
   // JSONC menu definitions. The shell parses both at startup and merges
   // the user file on top of the defaults, so the keybind → IPC → visible
   // path doesn't have to shell out to bash + jq on every open.
-  property string defaultMenuPath: omarchyPath + "/default/omarchy/omarchy-menu.jsonc"
+  property string defaultMenuPath: omarchyPath + "/default/omarchy/inferna-menu.jsonc"
   property string userMenuPath: Quickshell.env("HOME") + "/.config/inferna/extensions/inferna-menu.jsonc"
   // Display language for the shipped rows. The code lives in
   // ~/.config/inferna/language; a missing file
@@ -1144,7 +1144,7 @@ Item {
   }
 
   // The JSONC sources are watched so live edits to the default file (or the
-  // user extension at ~/.config/inferna/extensions/omarchy-menu.jsonc) take
+  // user extension at ~/.config/inferna/extensions/inferna-menu.jsonc) take
   // effect without restarting the shell.
   FileView {
     id: defaultMenuFile
@@ -1273,7 +1273,7 @@ Item {
   OverlayWindow {
     id: panel
     shown: root.opened && root.rowsLoaded
-    WlrLayershell.namespace: "omarchy-menu"
+    WlrLayershell.namespace: "inferna-menu"
 
     // The card opens centered exactly as always. The first search keystroke
     // or submenu move freezes the top line where it currently sits — from

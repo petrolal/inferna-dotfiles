@@ -89,7 +89,7 @@ Item {
   // a debounced save timer.
   PersistentProperties {
     id: persisted
-    reloadableId: "omarchy-notifications"
+    reloadableId: "inferna-notifications"
     property bool doNotDisturb: false
     onDoNotDisturbChanged: {
       // Suppress the write that load-time hydration would otherwise trigger.
@@ -985,7 +985,7 @@ Item {
       screen: modelData
       visible: popupModel.count > 0
 
-      WlrLayershell.namespace: "omarchy-notifications"
+      WlrLayershell.namespace: "inferna-notifications"
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
       exclusionMode: ExclusionMode.Ignore
