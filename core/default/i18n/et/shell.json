@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Paroolita Sudo",
   "bar.passwordlessSudoDisableFailed": "Paroolita sudo keelamine ebaõnnestus",
   "bar.passwordlessSudoDisableFailedBody": "Kontrolli sudo seadistust ja proovi uuesti.",
-  "bar.pendingUpdates": "Ootel Omarchy värskendused",
+  "bar.pendingUpdates": "Ootel Inferna värskendused",
   "bar.remoteSession": "Kaugseanss",
   "bar.remoteSessionFrom": "Kaugseanss: %1",
   "bar.screenRecording": "Ekraani salvestamine",

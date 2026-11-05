@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "கடவுச்சொல்லற்ற Sudo",
   "bar.passwordlessSudoDisableFailed": "கடவுச்சொல்லற்ற sudo ஐ முடக்க முடியவில்லை",
   "bar.passwordlessSudoDisableFailedBody": "sudo உள்ளமைவைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
-  "bar.pendingUpdates": "நிலுவையில் உள்ள Omarchy புதுப்பிப்புகள்",
+  "bar.pendingUpdates": "நிலுவையில் உள்ள Inferna புதுப்பிப்புகள்",
   "bar.remoteSession": "தொலை அமர்வு",
   "bar.remoteSessionFrom": "%1 இலிருந்து தொலை அமர்வு",
   "bar.screenRecording": "திரை பதிவு",

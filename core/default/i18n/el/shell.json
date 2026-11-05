@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Sudo χωρίς κωδικό",
   "bar.passwordlessSudoDisableFailed": "Δεν ήταν δυνατή η απενεργοποίηση του sudo χωρίς κωδικό",
   "bar.passwordlessSudoDisableFailedBody": "Έλεγξε τη διαμόρφωση sudo και δοκίμασε ξανά.",
-  "bar.pendingUpdates": "Ενημερώσεις Omarchy σε εκκρεμότητα",
+  "bar.pendingUpdates": "Ενημερώσεις Inferna σε εκκρεμότητα",
   "bar.remoteSession": "Απομακρυσμένη συνεδρία",
   "bar.remoteSessionFrom": "Απομακρυσμένη συνεδρία από %1",
   "bar.screenRecording": "Καταγραφή οθόνης",

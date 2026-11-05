@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Sudo zonder wachtwoord",
   "bar.passwordlessSudoDisableFailed": "Kon sudo zonder wachtwoord niet uitschakelen",
   "bar.passwordlessSudoDisableFailedBody": "Controleer de sudo-configuratie en probeer het opnieuw.",
-  "bar.pendingUpdates": "Omarchy-updates in afwachting",
+  "bar.pendingUpdates": "Inferna-updates in afwachting",
   "bar.remoteSession": "Externe sessie",
   "bar.remoteSessionFrom": "Externe sessie van %1",
   "bar.screenRecording": "Schermopname",

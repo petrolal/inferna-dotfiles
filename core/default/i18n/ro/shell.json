@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo fără parolă",
   "bar.passwordlessSudoDisableFailed": "Nu s-a putut dezactiva sudo fără parolă",
   "bar.passwordlessSudoDisableFailedBody": "Verifică configurația sudo și încearcă din nou.",
-  "bar.pendingUpdates": "Actualizări Omarchy în așteptare",
+  "bar.pendingUpdates": "Actualizări Inferna în așteptare",
   "bar.remoteSession": "Sesiune la distanță",
   "bar.remoteSessionFrom": "Sesiune la distanță de la %1",
   "bar.screenRecording": "Înregistrare ecran",

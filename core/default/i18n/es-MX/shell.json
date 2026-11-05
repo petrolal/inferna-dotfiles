@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo sin contraseña",
   "bar.passwordlessSudoDisableFailed": "No se pudo desactivar sudo sin contraseña",
   "bar.passwordlessSudoDisableFailedBody": "Revisa la configuración de sudo e inténtalo de nuevo.",
-  "bar.pendingUpdates": "Actualizaciones pendientes de Omarchy",
+  "bar.pendingUpdates": "Actualizaciones pendientes de Inferna",
   "bar.remoteSession": "Sesión remota",
   "bar.remoteSessionFrom": "Sesión remota desde %1",
   "bar.screenRecording": "Grabación de pantalla",

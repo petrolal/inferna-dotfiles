@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "Sudo Tanpa Kata Sandi",
   "bar.passwordlessSudoDisableFailed": "Tidak dapat menonaktifkan sudo tanpa kata sandi",
   "bar.passwordlessSudoDisableFailedBody": "Periksa konfigurasi sudo dan coba lagi.",
-  "bar.pendingUpdates": "Pembaruan Omarchy Tertunda",
+  "bar.pendingUpdates": "Pembaruan Inferna Tertunda",
   "bar.remoteSession": "Sesi jarak jauh",
   "bar.remoteSessionFrom": "Sesi jarak jauh dari %1",
   "bar.screenRecording": "Perekaman Layar",

@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Parolasız Sudo",
   "bar.passwordlessSudoDisableFailed": "Parolasız sudo kapatılamadı",
   "bar.passwordlessSudoDisableFailedBody": "Sudo yapılandırmasını kontrol edip tekrar deneyin.",
-  "bar.pendingUpdates": "Bekleyen Omarchy Güncellemeleri",
+  "bar.pendingUpdates": "Bekleyen Inferna Güncellemeleri",
   "bar.remoteSession": "Uzak oturum",
   "bar.remoteSessionFrom": "%1 üzerinden uzak oturum",
   "bar.screenRecording": "Ekran Kaydı",

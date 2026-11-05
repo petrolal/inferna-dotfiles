@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo без лозинке",
   "bar.passwordlessSudoDisableFailed": "Није могуће онемогућити sudo без лозинке",
   "bar.passwordlessSudoDisableFailedBody": "Проверите sudo конфигурацију и покушајте поново.",
-  "bar.pendingUpdates": "Omarchy ажурирања на чекању",
+  "bar.pendingUpdates": "Inferna ажурирања на чекању",
   "bar.remoteSession": "Удаљена сесија",
   "bar.remoteSessionFrom": "Удаљена сесија од %1",
   "bar.screenRecording": "Снимање екрана",

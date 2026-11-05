@@ -166,7 +166,7 @@
   "bar.passwordlessSudo": "Беспарольный sudo",
   "bar.passwordlessSudoDisableFailed": "Не удалось отключить беспарольный sudo",
   "bar.passwordlessSudoDisableFailedBody": "Проверьте конфигурацию sudo и попробуйте снова.",
-  "bar.pendingUpdates": "Ожидающие обновления Omarchy",
+  "bar.pendingUpdates": "Ожидающие обновления Inferna",
   "bar.remoteSession": "Удалённый сеанс",
   "bar.remoteSessionFrom": "Удалённый сеанс с %1",
   "bar.screenRecording": "Запись экрана",

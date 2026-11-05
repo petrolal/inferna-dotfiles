@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "免密碼 Sudo",
   "bar.passwordlessSudoDisableFailed": "無法停用免密碼 sudo",
   "bar.passwordlessSudoDisableFailedBody": "請檢查 sudo 設定後再試一次。",
-  "bar.pendingUpdates": "待安裝的 Omarchy 更新",
+  "bar.pendingUpdates": "待安裝的 Inferna 更新",
   "bar.remoteSession": "遠端工作階段",
   "bar.remoteSessionFrom": "來自 %1 的遠端工作階段",
   "bar.screenRecording": "螢幕錄影",

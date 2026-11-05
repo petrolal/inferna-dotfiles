@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "비밀번호 없는 Sudo",
   "bar.passwordlessSudoDisableFailed": "비밀번호 없는 sudo를 비활성화할 수 없음",
   "bar.passwordlessSudoDisableFailedBody": "sudo 설정을 확인하고 다시 시도하세요.",
-  "bar.pendingUpdates": "대기 중인 Omarchy 업데이트",
+  "bar.pendingUpdates": "대기 중인 Inferna 업데이트",
   "bar.remoteSession": "원격 세션",
   "bar.remoteSessionFrom": "%1에서 온 원격 세션",
   "bar.screenRecording": "화면 녹화",

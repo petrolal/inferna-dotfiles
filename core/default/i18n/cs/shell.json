@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo bez hesla",
   "bar.passwordlessSudoDisableFailed": "Nepodařilo se vypnout sudo bez hesla",
   "bar.passwordlessSudoDisableFailedBody": "Zkontrolujte nastavení sudo a zkuste to znovu.",
-  "bar.pendingUpdates": "Čekající aktualizace Omarchy",
+  "bar.pendingUpdates": "Čekající aktualizace Inferna",
   "bar.remoteSession": "Vzdálená relace",
   "bar.remoteSessionFrom": "Vzdálená relace z %1",
   "bar.screenRecording": "Nahrávání obrazovky",

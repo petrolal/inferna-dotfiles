@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Sudo без парола",
   "bar.passwordlessSudoDisableFailed": "Не се изключи sudo без парола",
   "bar.passwordlessSudoDisableFailedBody": "Провери конфигурацията на sudo и опитай отново.",
-  "bar.pendingUpdates": "Чакащи актуализации на Omarchy",
+  "bar.pendingUpdates": "Чакащи актуализации на Inferna",
   "bar.remoteSession": "Отдалечена сесия",
   "bar.remoteSessionFrom": "Отдалечена сесия от %1",
   "bar.screenRecording": "Запис на екрана",

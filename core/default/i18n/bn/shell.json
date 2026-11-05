@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "পাসওয়ার্ডবিহীন Sudo",
   "bar.passwordlessSudoDisableFailed": "পাসওয়ার্ডবিহীন sudo বন্ধ করা যায়নি",
   "bar.passwordlessSudoDisableFailedBody": "sudo কনফিগারেশন যাচাই করে আবার চেষ্টা করুন।",
-  "bar.pendingUpdates": "মুলতুবি Omarchy আপডেট",
+  "bar.pendingUpdates": "মুলতুবি Inferna আপডেট",
   "bar.remoteSession": "রিমোট সেশন",
   "bar.remoteSessionFrom": "%1 থেকে রিমোট সেশন",
   "bar.screenRecording": "স্ক্রিন রেকর্ডিং",

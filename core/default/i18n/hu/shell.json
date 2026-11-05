@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Jelszó nélküli sudo",
   "bar.passwordlessSudoDisableFailed": "A jelszó nélküli sudo letiltása sikertelen",
   "bar.passwordlessSudoDisableFailedBody": "Ellenőrizd a sudo konfigurációt, és próbáld újra.",
-  "bar.pendingUpdates": "Függőben lévő Omarchy-frissítések",
+  "bar.pendingUpdates": "Függőben lévő Inferna-frissítések",
   "bar.remoteSession": "Távoli munkamenet",
   "bar.remoteSessionFrom": "Távoli munkamenet innen: %1",
   "bar.screenRecording": "Képernyőfelvétel",

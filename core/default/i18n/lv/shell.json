@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "sudo bez paroles",
   "bar.passwordlessSudoDisableFailed": "Neizdevās atspējot sudo bez paroles",
   "bar.passwordlessSudoDisableFailedBody": "Pārbaudi sudo konfigurāciju un mēģini vēlreiz.",
-  "bar.pendingUpdates": "Gaidoši Omarchy atjauninājumi",
+  "bar.pendingUpdates": "Gaidoši Inferna atjauninājumi",
   "bar.remoteSession": "Attālā sesija",
   "bar.remoteSessionFrom": "Attālā sesija no %1",
   "bar.screenRecording": "Ekrāna ierakstīšana",

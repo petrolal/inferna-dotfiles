@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo sense contrasenya",
   "bar.passwordlessSudoDisableFailed": "No s'ha pogut desactivar el sudo sense contrasenya",
   "bar.passwordlessSudoDisableFailedBody": "Comprova la configuració de sudo i torna-ho a provar.",
-  "bar.pendingUpdates": "Actualitzacions d'Omarchy pendents",
+  "bar.pendingUpdates": "Actualitzacions d'Inferna pendents",
   "bar.remoteSession": "Sessió remota",
   "bar.remoteSessionFrom": "Sessió remota des de %1",
   "bar.screenRecording": "Gravació de pantalla",

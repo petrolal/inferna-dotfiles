@@ -180,7 +180,7 @@
   "bar.passwordlessSudo": "Sudo بدون كلمة مرور",
   "bar.passwordlessSudoDisableFailed": "تعذّر تعطيل sudo بدون كلمة مرور",
   "bar.passwordlessSudoDisableFailedBody": "تحقق من إعداد sudo وحاول مجددًا.",
-  "bar.pendingUpdates": "تحديثات Omarchy المعلّقة",
+  "bar.pendingUpdates": "تحديثات Inferna المعلّقة",
   "bar.remoteSession": "جلسة بعيدة",
   "bar.remoteSessionFrom": "جلسة بعيدة من %1",
   "bar.screenRecording": "تسجيل الشاشة",

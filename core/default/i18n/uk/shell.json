@@ -166,7 +166,7 @@
   "bar.passwordlessSudo": "Sudo без пароля",
   "bar.passwordlessSudoDisableFailed": "Не вдалося вимкнути sudo без пароля",
   "bar.passwordlessSudoDisableFailedBody": "Перевірте конфігурацію sudo і спробуйте ще раз.",
-  "bar.pendingUpdates": "Очікувані оновлення Omarchy",
+  "bar.pendingUpdates": "Очікувані оновлення Inferna",
   "bar.remoteSession": "Віддалений сеанс",
   "bar.remoteSessionFrom": "Віддалений сеанс з %1",
   "bar.screenRecording": "Запис екрана",

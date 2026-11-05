@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo sans mot de passe",
   "bar.passwordlessSudoDisableFailed": "Impossible de désactiver le sudo sans mot de passe",
   "bar.passwordlessSudoDisableFailedBody": "Vérifiez la configuration sudo et réessayez.",
-  "bar.pendingUpdates": "Mises à jour Omarchy en attente",
+  "bar.pendingUpdates": "Mises à jour Inferna en attente",
   "bar.remoteSession": "Session distante",
   "bar.remoteSessionFrom": "Session distante depuis %1",
   "bar.screenRecording": "Enregistrement d'écran",

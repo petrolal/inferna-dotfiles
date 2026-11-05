@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "免密码 Sudo",
   "bar.passwordlessSudoDisableFailed": "无法禁用免密码 sudo",
   "bar.passwordlessSudoDisableFailedBody": "请检查 sudo 配置并重试。",
-  "bar.pendingUpdates": "待安装的 Omarchy 更新",
+  "bar.pendingUpdates": "待安装的 Inferna 更新",
   "bar.remoteSession": "远程会话",
   "bar.remoteSessionFrom": "来自 %1 的远程会话",
   "bar.screenRecording": "屏幕录制",

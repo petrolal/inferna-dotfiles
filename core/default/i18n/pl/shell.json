@@ -166,7 +166,7 @@
   "bar.passwordlessSudo": "Sudo bez hasła",
   "bar.passwordlessSudoDisableFailed": "Nie udało się wyłączyć sudo bez hasła",
   "bar.passwordlessSudoDisableFailedBody": "Sprawdź konfigurację sudo i spróbuj ponownie.",
-  "bar.pendingUpdates": "Oczekujące aktualizacje Omarchy",
+  "bar.pendingUpdates": "Oczekujące aktualizacje Inferna",
   "bar.remoteSession": "Sesja zdalna",
   "bar.remoteSessionFrom": "Sesja zdalna z %1",
   "bar.screenRecording": "Nagrywanie ekranu",

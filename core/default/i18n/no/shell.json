@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Passordfri sudo",
   "bar.passwordlessSudoDisableFailed": "Kunne ikke deaktivere passordfri sudo",
   "bar.passwordlessSudoDisableFailedBody": "Kontroller sudo-konfigurasjonen og prøv igjen.",
-  "bar.pendingUpdates": "Ventende Omarchy-oppdateringer",
+  "bar.pendingUpdates": "Ventende Inferna-oppdateringer",
   "bar.remoteSession": "Fjernøkt",
   "bar.remoteSessionFrom": "Fjernøkt fra %1",
   "bar.screenRecording": "Skjermopptak",

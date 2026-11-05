@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "Sudo không mật khẩu",
   "bar.passwordlessSudoDisableFailed": "Không tắt được sudo không mật khẩu",
   "bar.passwordlessSudoDisableFailedBody": "Kiểm tra cấu hình sudo và thử lại.",
-  "bar.pendingUpdates": "Cập nhật Omarchy đang chờ",
+  "bar.pendingUpdates": "Cập nhật Inferna đang chờ",
   "bar.remoteSession": "Phiên từ xa",
   "bar.remoteSessionFrom": "Phiên từ xa từ %1",
   "bar.screenRecording": "Ghi màn hình",

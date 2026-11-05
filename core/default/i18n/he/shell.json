@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo ללא סיסמה",
   "bar.passwordlessSudoDisableFailed": "לא ניתן היה להשבית sudo ללא סיסמה",
   "bar.passwordlessSudoDisableFailedBody": "בדקו את תצורת sudo ונסו שוב.",
-  "bar.pendingUpdates": "עדכוני Omarchy ממתינים",
+  "bar.pendingUpdates": "עדכוני Inferna ממתינים",
   "bar.remoteSession": "הפעלה מרוחקת",
   "bar.remoteSessionFrom": "הפעלה מרוחקת מ-%1",
   "bar.screenRecording": "הקלטת מסך",

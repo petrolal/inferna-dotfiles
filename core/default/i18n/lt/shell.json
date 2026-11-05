@@ -159,7 +159,7 @@
   "bar.passwordlessSudo": "Sudo be slaptažodžio",
   "bar.passwordlessSudoDisableFailed": "Nepavyko išjungti sudo be slaptažodžio",
   "bar.passwordlessSudoDisableFailedBody": "Patikrinkite sudo konfigūraciją ir bandykite dar kartą.",
-  "bar.pendingUpdates": "Laukiantys Omarchy atnaujinimai",
+  "bar.pendingUpdates": "Laukiantys Inferna atnaujinimai",
   "bar.remoteSession": "Nuotolinė sesija",
   "bar.remoteSessionFrom": "Nuotolinė sesija iš %1",
   "bar.screenRecording": "Ekrano įrašymas",

@@ -166,7 +166,7 @@
   "bar.passwordlessSudo": "Sudo brez gesla",
   "bar.passwordlessSudoDisableFailed": "Onemogočanje sudo brez gesla ni uspelo",
   "bar.passwordlessSudoDisableFailedBody": "Preverite konfiguracijo sudo in poskusite znova.",
-  "bar.pendingUpdates": "Čakajoče posodobitve Omarchy",
+  "bar.pendingUpdates": "Čakajoče posodobitve Inferna",
   "bar.remoteSession": "Oddaljena seja",
   "bar.remoteSessionFrom": "Oddaljena seja z %1",
   "bar.screenRecording": "Snemanje zaslona",

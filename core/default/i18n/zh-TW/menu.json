@@ -56,8 +56,8 @@
   "learn.keybindings": {
     "label": "快捷鍵"
   },
-  "learn.omarchy": {
-    "label": "Omarchy"
+  "learn.inferna": {
+    "label": "Inferna"
   },
   "learn.hyprland": {
     "label": "Hyprland"
@@ -1061,8 +1061,8 @@
   "remove.development.elixir.phoenix": {
     "label": "Phoenix"
   },
-  "update.omarchy": {
-    "label": "Omarchy"
+  "update.inferna": {
+    "label": "Inferna"
   },
   "update.channel": {
     "label": "頻道"

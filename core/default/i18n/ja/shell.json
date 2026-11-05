@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "パスワードなし Sudo",
   "bar.passwordlessSudoDisableFailed": "パスワードなし sudo を無効化できませんでした",
   "bar.passwordlessSudoDisableFailedBody": "sudo の設定を確認して、もう一度お試しください。",
-  "bar.pendingUpdates": "保留中の Omarchy アップデート",
+  "bar.pendingUpdates": "保留中の Inferna アップデート",
   "bar.remoteSession": "リモートセッション",
   "bar.remoteSessionFrom": "%1 からのリモートセッション",
   "bar.screenRecording": "画面録画",

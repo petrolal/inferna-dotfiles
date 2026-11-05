@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Sudo án lykilorðs",
   "bar.passwordlessSudoDisableFailed": "Ekki tókst að slökkva á sudo án lykilorðs",
   "bar.passwordlessSudoDisableFailedBody": "Athugaðu sudo-stillingarnar og reyndu aftur.",
-  "bar.pendingUpdates": "Omarchy-uppfærslur í bið",
+  "bar.pendingUpdates": "Inferna-uppfærslur í bið",
   "bar.remoteSession": "Fjartenging",
   "bar.remoteSessionFrom": "Fjartenging frá %1",
   "bar.screenRecording": "Skjáupptaka",

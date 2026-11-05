@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Salasanaton Sudo",
   "bar.passwordlessSudoDisableFailed": "Salasanattoman sudo-käytön poistaminen epäonnistui",
   "bar.passwordlessSudoDisableFailedBody": "Tarkista sudo-asetukset ja yritä uudelleen.",
-  "bar.pendingUpdates": "Odottavat Omarchy-päivitykset",
+  "bar.pendingUpdates": "Odottavat Inferna-päivitykset",
   "bar.remoteSession": "Etäistunto",
   "bar.remoteSessionFrom": "Etäistunto lähteestä %1",
   "bar.screenRecording": "Näytöntallennus",

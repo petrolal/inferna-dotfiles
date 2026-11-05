@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Sudo بدون رمز",
   "bar.passwordlessSudoDisableFailed": "غیرفعال کردن sudo بدون رمز ممکن نشد",
   "bar.passwordlessSudoDisableFailedBody": "پیکربندی sudo را بررسی کنید و دوباره تلاش کنید.",
-  "bar.pendingUpdates": "به‌روزرسانی‌های در انتظار Omarchy",
+  "bar.pendingUpdates": "به‌روزرسانی‌های در انتظار Inferna",
   "bar.remoteSession": "نشست از راه دور",
   "bar.remoteSessionFrom": "نشست از راه دور از %1",
   "bar.screenRecording": "ضبط صفحه‌نمایش",

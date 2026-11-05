@@ -145,7 +145,7 @@
   "bar.passwordlessSudo": "sudo แบบไร้รหัสผ่าน",
   "bar.passwordlessSudoDisableFailed": "ปิด sudo แบบไร้รหัสผ่านไม่สำเร็จ",
   "bar.passwordlessSudoDisableFailedBody": "ตรวจสอบการตั้งค่า sudo แล้วลองอีกครั้ง",
-  "bar.pendingUpdates": "มีอัปเดต Omarchy รออยู่",
+  "bar.pendingUpdates": "มีอัปเดต Inferna รออยู่",
   "bar.remoteSession": "เซสชันระยะไกล",
   "bar.remoteSessionFrom": "เซสชันระยะไกลจาก %1",
   "bar.screenRecording": "บันทึกหน้าจอ",

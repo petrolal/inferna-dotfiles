@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Parolsiz sudo",
   "bar.passwordlessSudoDisableFailed": "Parolsiz sudo’ni oʻchirib boʻlmadi",
   "bar.passwordlessSudoDisableFailedBody": "sudo sozlamalarini tekshirib, qayta urining.",
-  "bar.pendingUpdates": "Kutilayotgan Omarchy yangilanishlari",
+  "bar.pendingUpdates": "Kutilayotgan Inferna yangilanishlari",
   "bar.remoteSession": "Masofaviy sessiya",
   "bar.remoteSessionFrom": "%1’dan masofaviy sessiya",
   "bar.screenRecording": "Ekranni yozish",

@@ -152,7 +152,7 @@
   "bar.passwordlessSudo": "Passwordless Sudo",
   "bar.passwordlessSudoDisableFailed": "Could not disable passwordless sudo",
   "bar.passwordlessSudoDisableFailedBody": "Check the sudo configuration and try again.",
-  "bar.pendingUpdates": "Pending Omarchy Updates",
+  "bar.pendingUpdates": "Pending Inferna Updates",
   "bar.remoteSession": "Remote session",
   "bar.remoteSessionFrom": "Remote session from %1",
   "bar.screenRecording": "Screen Recording",
