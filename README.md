@@ -13,7 +13,7 @@ A frosted rail that wraps the screen as one surface, a quarter-circle control co
 <a href="LICENSE"><img alt="GPL-3.0" src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square"></a>
 </p>
 
-<img src="docs/fastfetch-claude.webp" alt="fastfetch dashboard next to Claude Code, Artzen theme" width="880">
+<img src="docs/fastfetch-claude.webp" alt="fastfetch dashboard and terminal, Inferna theme" width="880">
 
 </div>
 
@@ -31,28 +31,24 @@ A frosted rail that wraps the screen as one surface, a quarter-circle control co
 
 <table>
 <tr>
-<td width="50%"><img src="docs/fastfetch-corner.webp" alt="fastfetch dashboard and the control corner, Artzen theme"></td>
-<td width="50%"><img src="docs/usage-limits.webp" alt="Claude Code and Codex usage limits drawer, Artzen theme"></td>
+<td width="50%"><img src="docs/fastfetch-corner.webp" alt="fastfetch dashboard and system overview, Inferna theme"></td>
+<td width="50%"><img src="docs/usage-limits.webp" alt="System drawer and settings menu, Inferna theme"></td>
 </tr>
 <tr>
-<td width="50%"><img src="docs/theme-studio.webp" alt="Theme Studio over the Arc Blueberry theme"></td>
-<td width="50%"><img src="docs/menu-calendar.webp" alt="Calendar and the search-first menu, Arc Blueberry theme"></td>
+<td width="50%"><img src="docs/theme-studio.webp" alt="Interactive Theme Switcher carousel, Inferna theme"></td>
+<td width="50%"><img src="docs/menu-calendar.webp" alt="Search-first menu and application launcher, Inferna theme"></td>
 </tr>
 </table>
 
 <p align="center"><sub>
-Themes: Artzen and Arc Blueberry. The screenshots show "MARY" as the custom menu and fastfetch title;
-a fresh install says INFERNA until you <a href="#make-it-yours">set yours</a>.
-The usage drawer's banked-reset button ships for Codex only.
+Themes: Inferna (default) and Inferno. A fresh install greets you with INFERNA across the bar, menu, and fastfetch dashboard.
 </sub></p>
-
-Most of it was made by describing what I wanted to Claude Code, having it show me ten or more takes, then iterating on the one I liked.
 
 ## What you get
 
 <table>
 <tr>
-<td width="50%" valign="top"><strong>Pebble Shell.</strong><br>The bar is a rail down the left edge that joins the screen frame, blurred as one surface so there's no seam. Workspaces, clock, weather and tray live in it.</td>
+<td width="50%" valign="top"><strong>Pebble Shell.</strong><br>The bar is a rail down the left edge that joins the screen frame, blurred as one surface so there's no seam. Workspaces, clock, weather and tray live in it. High contrast separation border ensures clear distinction against the desktop.</td>
 <td width="50%" valign="top"><strong>Control corner.</strong><br>A quarter-circle drawer out of the rail's bottom corner: brightness, volume and mic as arcs, quick toggles, battery and power profile.</td>
 </tr>
 <tr>
@@ -60,54 +56,61 @@ Most of it was made by describing what I wanted to Claude Code, having it show m
 <td width="50%" valign="top"><strong>Studio drawer.</strong><br>Glass (opacity, blur, backdrop), Depth (recessed or raised windows, tuned for light and dark themes), Tricky Tiles motion and display in one place.</td>
 </tr>
 <tr>
-<td width="50%" valign="top"><strong>fastfetch dashboard.</strong><br>Hardware, live telemetry, system, desktop and network cards with your logo, laid out to fit the terminal's width.</td>
-<td width="50%" valign="top"><strong>Usage limits.</strong><br>Claude Code and Codex weekly limits and today's tokens in the bar, read from your own signed-in CLIs.</td>
+<td width="50%" valign="top"><strong>fastfetch dashboard.</strong><br>Hardware, live telemetry, system, desktop and network cards with full-width responsive blocks and Inferna ASCII branding.</td>
+<td width="50%" valign="top"><strong>Unified Terminals.</strong><br>Cohesive styling across Foot, Kitty, Alacritty, and Ghostty with automated theme color injection.</td>
 </tr>
 </table>
 
-## Everything in it
-
-**Shell and bar**
-
-| Plugin | What it does |
-|---|---|
-| `denon.shell` | Pebble Shell: the left rail and screen frame as one frosted surface. This is the bar. |
-| `denon.bar` | Shared drawer and motion code the other panels use (also works as a floating pill bar on its own). |
-| `denon.corner` | Quarter-circle drawer out of the rail's bottom corner: brightness, volume, mic, toggles, battery. |
-| `denon.menu` | Search-first desktop menu (Super + Space). |
-| `denon.studio` | One drawer for the look: Glass, Depth, Tricky Tiles and display. |
-| `denon.glass` | Opacity, blur and backdrop controls. |
-| `denon.recess` | Depth: recessed or raised windows, tuned separately for light and dark themes. |
-| `denon.workspaces`, `denon.clock`, `denon.weather`, `denon.tray`, `denon.indicators` | Restyled bar widgets. |
-
-**Panels and system UI**
-
-| Plugin | What it does |
-|---|---|
-| `denon.audio`, `denon.network`, `denon.bluetooth`, `denon.power`, `denon.monitor`, `denon.touchpad` | Drawers for sound, Wi-Fi, Bluetooth, power, display and touchpad. |
-| `denon.notifications`, `denon.osd`, `denon.polkit`, `denon.battery` | Notifications, on-screen display, password prompt and low-battery warning, restyled to match. |
-| `denon.agents` | Claude Code and Codex usage limits in the bar. Uses your own signed-in CLIs. |
-| `denon.dropbox` | Dropbox sync status. Only useful if you use Dropbox. |
-
-**Installed from their own repos** by `install.sh`:
-
-- [Hello Lock](https://github.com/denonmaryland/hello-lock): the lock screen.
-- [Theme Studio](https://github.com/denonmaryland/omarchy-theme-studio): the theme and wallpaper picker.
-- [Tricky Tiles](https://github.com/denonmaryland/omarchy-tricky-tiles): smoother window and workspace motion with trackpad swipes.
-- [Softly](https://github.com/denonmaryland/omarchy-softly): tap a key, speak, tap again. Local Whisper dictation through [Voxtype](https://voxtype.io).
-
-**Config**
-
-- `hypr/`: scrolling (carousel) layout, rounded corners, macOS-style animations, blur rules for the shell, keybindings, natural scrolling, four-finger Brave tab swipes.
-- `fastfetch/`: the dashboard-style fastfetch.
-- `foot/`: terminal config.
-
 ## Themes
 
-The screenshots use two themes. Their wallpapers come with them.
+Inferna Dotfiles ships with a focused selection of curated dark themes, complete with bundled default wallpapers, color palettes, and terminal integrations:
 
-- **Artzen** by tahfizhabib: `inferna theme install https://github.com/tahfizhabib/omarchy-artzen-theme`
-- **Arc Blueberry** by vale-c: `inferna theme install https://github.com/vale-c/omarchy-arc-blueberry`
+1. **Inferna** (Default `#1`)
+   - **Aesthetic:** Demonic abyssal blood-crimson and dark obsidian.
+   - **Original Inspiration:** Inferna Cathedral Rice.
+   - **Palette:** Rich obsidian background (`#0e0507`), arterial crimson accent (`#b81424`), arterial bar separator border, warm ember highlights.
+   - **Command:** `inferna theme set "Inferna"`
+
+2. **Inferno** (Secondary `#2`)
+   - **Aesthetic:** Volcanic ember and Doom scorched charcoal.
+   - **Original Inspiration:** Inferno / Doom Ember.
+   - **Palette:** Deep cinder background (`#120c0c`), blazing scarlet accent (`#ff4a36`), and bone ash text (`#ded1c8`).
+   - **Command:** `inferna theme set "Inferno"`
+
+3. **Last Horizon**
+   - **Aesthetic:** Twilight dusk mauve and atmospheric mist.
+   - **Original Inspiration:** Last Horizon by community.
+   - **Palette:** Soft mauve accent (`#b59790`), slate backdrop (`#0c0b0c`).
+   - **Command:** `inferna theme set "Last Horizon"`
+
+4. **Miasma**
+   - **Aesthetic:** Atmospheric moss and earthy olive forest.
+   - **Original Inspiration:** Miasma.
+   - **Palette:** Earthen olive accent (`#78824b`), warm dark stone (`#222222`).
+   - **Command:** `inferna theme set "Miasma"`
+
+5. **Vantablack**
+   - **Aesthetic:** Minimalist pure OLED monochrome.
+   - **Original Inspiration:** Vantablack.
+   - **Palette:** Absolute zero `#000000` pitch black and sharp silver/white contrast (`#ffffff`).
+   - **Command:** `inferna theme set "Vantablack"`
+
+Switch themes interactively via `inferna theme-switcher` (Super + Space &rarr; Appearance &rarr; Theme).
+
+## Terminal Setup
+
+Inferna uses **Foot** as the default Wayland-native terminal emulator, configured with JetBrainsMono Nerd Font and padding.
+
+All major modern terminals are first-class citizens and dynamically inherit the active theme colors without hardcoded distro hacks:
+- **Foot** (`~/.config/foot/foot.ini`) &mdash; Default
+- **Kitty** (`~/.config/kitty/kitty.conf`)
+- **Alacritty** (`~/.config/alacritty/alacritty.toml`)
+- **Ghostty** (`~/.config/ghostty/config`)
+
+You can set your preferred terminal anytime:
+```bash
+inferna default terminal <foot|kitty|alacritty|ghostty>
+```
 
 ## Install on NixOS
 
@@ -135,17 +138,8 @@ Everything replaced is safely backed up to `~/.config/inferna-dotfiles-backup/<t
 
 Then reload Hyprland and start the shell:
 ```bash
-hyprctl reload && inferna-restart-shell
+hyprctl reload && inferna restart shell
 ```
-
-### Optional apps
-
-These are wired up if they're installed and skipped if not:
-
-- **Snip** for screenshots and recording (Super + Ctrl + 3/4, Alt + Print).
-- **flea** as the file manager (Super + Shift + F).
-- **Voxtype** for Softly dictation.
-- **Brave** for the four-finger tab swipes.
 
 ## Make it yours
 
@@ -157,30 +151,19 @@ These are wired up if they're installed and skipped if not:
 }
 ```
 
-Without it, both say INFERNA. The big fastfetch logo is `~/.config/inferna/branding/about.txt`, so replace that file to change the logo.
+Without it, both say INFERNA. The fastfetch banner is `~/.config/inferna/branding/about.txt`, so replace that file to change the logo.
 
-**Bar layout.** `~/.config/inferna/shell.json` decides which widgets sit where. Remove any you don't want (for example `denon.dropbox` or `denon.agents`).
+**Bar layout.** `~/.config/inferna/shell.json` decides which widgets sit where.
 
 **Look.** Open the Studio drawer in the bar to change glass, depth and motion. Its panels write `hypr/glass.lua` and `hypr/recessed_windows.lua` for you.
-
-## Undo
-
-Copy the files from `~/.config/inferna-dotfiles-backup/<time>/` back into your home folder, then run `hyprctl reload && inferna restart-shell`. To drop a single plugin: `inferna plugin disable <id>`.
-
-## Notes
-
-- Built and used on Linux with NixOS and Hyprland. Multi-monitor setups are supported natively via `hypr/monitors.lua`.
-- The Touchpad drawer finds your touchpad automatically. If it picks the wrong one, set `TOUCHPAD_DEVICE` to the name shown by `hyprctl devices`.
-- `denon.agents` includes Claude Code and Codex usage monitoring.
 
 ## Credits & Attribution
 
 - **Author & Maintainer:** Lucas Petrolal ([@petrolal](https://github.com/petrolal/dotfiles))
 - Upstream shell architecture and design inspired by [omarchy-dotfiles](https://github.com/denonmaryland/omarchy-dotfiles) and [Quickshell](https://quickshell.outfoxxed.me/).
-- Built-in shell plugin bases originated as part of [Omarchy](https://github.com/basecamp/omarchy) by David Heinemeier Hansson.
-- Icons in `denon.menu/icons` and `denon.tray/icons` are from [Lucide](https://lucide.dev) (ISC).
-- Themes and wallpapers belong to their respective creators.
-- Complete third-party notices: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- Core shell plugin foundations originated as part of [Omarchy](https://github.com/basecamp/omarchy) by David Heinemeier Hansson.
+- Icons in `denon.menu/icons` and `denon.tray/icons` are from [Lucide](https://lucide.dev) (ISC License).
+- Complete third-party notices and license texts: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## License
 

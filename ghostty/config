@@ -1,0 +1,13 @@
+# Inferna Ghostty Configuration
+config-file = ~/.local/state/inferna/current/theme/ghostty.conf
+
+font-family = JetBrainsMono Nerd Font
+font-size = 10
+
+window-padding-x = 14
+window-padding-y = 14
+window-decoration = false
+background-opacity = 0.95
+
+cursor-style = block
+cursor-style-blink = false

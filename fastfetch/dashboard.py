@@ -97,6 +97,25 @@ elif terminal_name == 'kitty':
         sz_str = sz.group(1).strip() if sz else '10'
         font_label = f"{fam_str} / {sz_str}pt"
     except (OSError,AttributeError): pass
+elif terminal_name == 'alacritty':
+    try:
+        conf=(Path.home()/'.config/alacritty/alacritty.toml').read_text()
+        fam = re.search(r'family\s*=\s*"([^"]+)"', conf)
+        sz = re.search(r'size\s*=\s*([0-9.]+)', conf)
+        fam_str = fam.group(1).strip() if fam else 'JetBrainsMono Nerd Font'
+        sz_str = sz.group(1).strip() if sz else '10'
+        font_label = f"{fam_str} / {sz_str}pt"
+    except (OSError,AttributeError): pass
+elif terminal_name == 'ghostty':
+    try:
+        conf=(Path.home()/'.config/ghostty/config').read_text()
+        fam = re.search(r'font-family\s*=\s*(.+)$', conf, re.M)
+        sz = re.search(r'font-size\s*=\s*([0-9.]+)', conf, re.M)
+        fam_str = fam.group(1).strip() if fam else 'JetBrainsMono Nerd Font'
+        sz_str = sz.group(1).strip() if sz else '10'
+        font_label = f"{fam_str} / {sz_str}pt"
+    except (OSError,AttributeError): pass
+
 
 
 desktop=[('Theme',name),('Compositor',wm.get('prettyName','')+' '+wm.get('version','')),('Terminal',terminal_label),('Font',font_label),('Shell',Path(os.environ.get('SHELL','bash')).name),('GTK',d('theme').get('theme2','')),('Icons',d('icons').get('icons2','')),('Cursor',d('cursor').get('theme',''))]
@@ -129,25 +148,18 @@ subtitle='SYSTEM OVERVIEW   ·   HARDWARE / TELEMETRY / DESKTOP'
 print(M+clip(subtitle,cols)+R)
 print(M+'━'*cols+R)
 print()
-if cols>=lw+2*gap+100:
-    cw=(cols-lw-2*gap)//2
-    left=stack(card('01  HARDWARE',hardware,cw),card('02  LIVE TELEMETRY',telemetry,cw))
-    right=stack(card('03  SYSTEM',system,cw),card('04  DESKTOP',desktop,cw),card('05  NETWORK',network,cw))
-    logo_lines=[A+line+R for line in logo]
-    logo_lines+=['',B+A+pad(' '.join(BRAND.upper()),lw)+R,C+pad(name,lw)+R]
-    for i in range(max(len(logo_lines),len(left),len(right))):
-        print(pad(logo_lines[i] if i<len(logo_lines) else '',lw)+' '*gap+pad(left[i] if i<len(left) else '',cw)+' '*gap+(right[i] if i<len(right) else ''))
-else:
-    for line in logo: print(A+line+R)
+for line in logo:
+    print(A + line + R)
+print()
+for title, rows in [
+    ('HARDWARE', hardware),
+    ('LIVE TELEMETRY', telemetry),
+    ('SYSTEM', system),
+    ('DESKTOP', desktop),
+    ('NETWORK', network),
+]:
+    print('\n'.join(card(title, rows, cols)))
     print()
-    if cols>=100:
-        cw=(cols-gap)//2
-        left=stack(card('01  HARDWARE',hardware,cw),card('02  LIVE TELEMETRY',telemetry,cw))
-        right=stack(card('03  SYSTEM',system,cw),card('04  DESKTOP',desktop,cw),card('05  NETWORK',network,cw))
-        for i in range(max(len(left),len(right))): print(pad(left[i] if i<len(left) else '',cw)+' '*gap+(right[i] if i<len(right) else ''))
-    else:
-        for title,rows in [('HARDWARE',hardware),('TELEMETRY',telemetry),('SYSTEM',system),('DESKTOP',desktop),('NETWORK',network)]:
-            print('\n'.join(card(title,rows,cols))); print()
 print()
 print(M+'─'*cols+R)
 print(A+'THEME PALETTE  '+''.join(color(k,v)+'████ ' for k,v in [('background','#0f1d22'),('muted','#5d7d84'),('cyan','#6fbdd0'),('accent','#eabb6a'),('green','#8db598'),('red','#dc665d'),('magenta','#c995a8'),('foreground','#dce8e4')])+R)

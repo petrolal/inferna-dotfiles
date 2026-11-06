@@ -12,43 +12,42 @@ fi
 dir="$(inferna-cmd-terminal-cwd "$pid" 2>/dev/null || echo "$HOME")"
 [[ -d "$dir" ]] || dir="$HOME"
 
+# Standard xdg-terminal-exec if present
 if command -v xdg-terminal-exec >/dev/null 2>&1; then
   exec setsid xdg-terminal-exec --dir="$dir" "$@"
 fi
 
-preferred_term=$(inferna-default-terminal 2>/dev/null || cat ~/.config/xdg-terminals.list 2>/dev/null | grep -v '^#' | head -n 1 | sed 's/\.desktop$//' | tr '[:upper:]' '[:lower:]')
-
-case "$preferred_term" in
-  foot)
-    if command -v foot >/dev/null 2>&1; then
-      exec setsid foot --working-directory="$dir" "$@"
-    fi
-    ;;
-  kitty)
-    if command -v kitty >/dev/null 2>&1; then
-      exec setsid kitty --directory="$dir" "$@"
-    fi
-    ;;
-  alacritty)
-    if command -v alacritty >/dev/null 2>&1; then
-      exec setsid alacritty --working-directory "$dir" "$@"
-    fi
-    ;;
-  ghostty)
-    if command -v ghostty >/dev/null 2>&1; then
-      exec setsid ghostty --working-directory="$dir" "$@"
-    fi
-    ;;
-esac
-
-if command -v foot >/dev/null 2>&1; then
-  exec setsid foot --working-directory="$dir" "$@"
-elif command -v kitty >/dev/null 2>&1; then
-  exec setsid kitty --directory="$dir" "$@"
-elif command -v alacritty >/dev/null 2>&1; then
-  exec setsid alacritty --working-directory "$dir" "$@"
-elif command -v ghostty >/dev/null 2>&1; then
-  exec setsid ghostty --working-directory "$dir" "$@"
-else
-  exec setsid xterm -e "$@"
+# Detect preferred terminal from user config / xdg-terminals.list, defaulting to foot
+preferred=$(inferna-default-terminal 2>/dev/null || true)
+if [[ -z $preferred && -f ~/.config/xdg-terminals.list ]]; then
+  preferred=$(grep -v '^#' ~/.config/xdg-terminals.list 2>/dev/null | head -n 1 | sed 's/\.desktop$//' | tr '[:upper:]' '[:lower:]')
 fi
+[[ -n $preferred ]] || preferred="foot"
+
+launch_term() {
+  local term="$1"
+  case "$term" in
+    foot)
+      command -v foot >/dev/null 2>&1 && exec setsid foot -d error --working-directory="$dir" "$@"
+      ;;
+    kitty)
+      command -v kitty >/dev/null 2>&1 && exec setsid kitty --directory="$dir" "$@"
+      ;;
+    alacritty)
+      command -v alacritty >/dev/null 2>&1 && exec setsid alacritty --working-directory "$dir" "$@"
+      ;;
+    ghostty)
+      command -v ghostty >/dev/null 2>&1 && exec setsid ghostty --working-directory="$dir" "$@"
+      ;;
+  esac
+}
+
+# Try preferred terminal first
+launch_term "$preferred"
+
+# Fallback across supported terminals
+for term in foot kitty alacritty ghostty; do
+  [[ $term != "$preferred" ]] && launch_term "$term"
+done
+
+exec setsid xterm -e "$@"

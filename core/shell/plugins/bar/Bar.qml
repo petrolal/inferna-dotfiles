@@ -1833,6 +1833,16 @@ Item {
         color: root.transparent ? "transparent" : (root.glassy ? root.glassBackground : root.background)
       }
 
+      Rectangle {
+        id: barBorder
+        visible: !root.transparent
+        color: Commons.Color.bar.border
+        x: root.position === "right" ? 0 : (root.position === "left" ? parent.width - 1 : 0)
+        y: root.position === "bottom" ? 0 : (root.position === "top" ? parent.height - 1 : 0)
+        width: root.vertical ? 1 : parent.width
+        height: root.vertical ? parent.height : 1
+      }
+
       Loader {
         anchors.fill: parent
         sourceComponent: root.vertical ? verticalBar : horizontalBar

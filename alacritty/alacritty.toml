@@ -1,0 +1,19 @@
+# Inferna Alacritty Configuration
+import = [
+  "~/.local/state/inferna/current/theme/alacritty.toml"
+]
+
+[font]
+size = 10.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[window]
+padding = { x = 14, y = 14 }
+opacity = 0.95
+decorations = "None"
+
+[cursor]
+style = { shape = "Block", blinking = "Never" }
