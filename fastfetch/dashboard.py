@@ -55,9 +55,10 @@ cpu=d('cpu'); gpu=first('gpu'); mem=d('memory'); swap=d('swap'); disk=next((x fo
 net=first('netio'); bat=first('battery'); display=first('display'); wm=d('wm'); kernel=d('kernel')
 up=int(d('uptime').get('uptime',0)/1000); proc=d('processes'); usage=data.get('cpuusage') or [0]
 cores=cpu.get('cores',{})
-def meter(p):
-    p=max(0,min(100,float(p))); filled=round(p/100*16)
-    return C+'━'*filled+M+'─'*(16-filled)+F+f' {p:4.0f}%'
+bar_len = max(16, min(36, cols - 65)) if cols >= 75 else 16
+def meter(p, blen=bar_len):
+    p=max(0,min(100,float(p))); filled=round(p/100*blen)
+    return C+'━'*filled+M+'─'*(blen-filled)+F+f' {p:4.0f}%'
 def resource(key):
     v=d(key)
     if isinstance(v,list): v={k:sum(x.get(k,0) for x in v) for k in ('total','used')}
@@ -125,8 +126,8 @@ def card(title,rows,w):
     lines=[A+'╭─ '+B+title+R+A+' '+'─'*max(0,w-len(title)-5)+'╮'+R]
     for key,value in rows:
         if not value: continue
-        if '\033' in str(value): content=C+f'{key:<12} '+F+str(value)
-        else: content=C+f'{key:<12} '+F+clip(value,inner-13)
+        if '\033' in str(value): content=C+f'{key:<14} '+F+str(value)
+        else: content=C+f'{key:<14} '+F+clip(value,inner-15)
         lines.append(A+'│ '+pad(content,inner)+A+' │'+R)
     lines.append(A+'╰'+'─'*(w-2)+'╯'+R)
     return lines
