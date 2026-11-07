@@ -17,7 +17,7 @@ if (($# == 0)); then
     read -r editor <"$editor_file"
   fi
 
-  # sublime-text-4 ships `subl`; older defaults stored `sublime_text`.
+  # sublime4 ships `subl`; older defaults stored `sublime_text`.
   [[ $editor == sublime_text ]] && editor=subl
 
   [[ -n $editor ]] && echo "$editor" || echo "nvim"
@@ -45,9 +45,9 @@ if inferna-cmd-missing "$editor"; then
   else
     case "$selection" in
     code) inferna-install-editor-vscode ;;
-    cursor) inferna-pkg-add cursor-bin ;;
+    cursor) inferna-pkg-add code-cursor ;;
     zed) inferna-install-editor-zed ;;
-    sublime_text) inferna-pkg-add sublime-text-4 ;;
+    sublime_text) inferna-pkg-add sublime4 ;;
     helix) inferna-install-editor-helix ;;
     vim) inferna-pkg-add vim ;;
     emacs) inferna-install-editor-emacs ;;

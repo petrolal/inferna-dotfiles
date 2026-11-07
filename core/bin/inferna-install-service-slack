@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-inferna-pkg-add slack-desktop
+inferna-pkg-add slack
 if inferna-setup-slack; then
   setsid uwsm-app -- gtk-launch slack >/dev/null 2>&1 &
 else

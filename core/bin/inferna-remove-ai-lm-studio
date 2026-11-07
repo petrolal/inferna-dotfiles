@@ -5,7 +5,7 @@
 
 set -e
 
-inferna-pkg-drop lmstudio-bin
+inferna-pkg-drop lmstudio
 
 # LM Studio's home is relocatable and the pointer is the only record of where
 # the models went, so it has to be read before it is deleted with everything else.

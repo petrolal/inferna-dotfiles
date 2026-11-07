@@ -4,7 +4,7 @@
 # inferna:requires-sudo=true
 
 echo "Installing NordVPN..."
-inferna-pkg-add nordvpn-bin
+inferna-pkg-add nordvpn
 
 echo "Enabling NordVPN daemon..."
 sudo systemctl enable --now nordvpnd

@@ -2,7 +2,7 @@
 
 # inferna:summary=Install a packaged app and launch it once it finishes
 # inferna:args=<display-name> <packages> <desktop-id>
-# inferna:examples=inferna install and launch Cursor cursor-bin cursor
+# inferna:examples=inferna install and launch Cursor code-cursor cursor
 
 name="${1-}"
 packages="${2-}"

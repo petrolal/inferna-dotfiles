@@ -5,7 +5,7 @@
 
 set -e
 
-inferna-pkg-drop heroic-games-launcher-bin
+inferna-pkg-drop heroic
 
 rm -rf \
   "$HOME/.config/heroic" \

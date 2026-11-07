@@ -18,7 +18,7 @@ else
   editor="nvim"
 fi
 
-# sublime-text-4 ships `subl` on PATH, not `sublime_text`.
+# sublime4 ships `subl` on PATH, not `sublime_text`.
 [[ $editor == sublime_text ]] && editor=subl
 
 inferna-cmd-present "$editor" || editor="nvim"

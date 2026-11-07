@@ -44,7 +44,7 @@ echo -e "\e[32mSetting up FIDO2 device for authentication.\n\e[0m"
 
 # Install required packages
 echo "Installing required packages..."
-inferna-pkg-add libfido2 pam-u2f
+inferna-pkg-add libfido2 pam_u2f
 
 if ! check_fido2_hardware; then
   exit 1

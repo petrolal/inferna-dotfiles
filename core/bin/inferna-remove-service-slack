@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-inferna-pkg-drop slack-desktop
+inferna-pkg-drop slack
 override="$HOME/.local/share/applications/slack.desktop"
 if [[ -f $override ]] && grep -qE '^Exec=inferna-launch-slack( |$)' "$override"; then
   rm "$override"

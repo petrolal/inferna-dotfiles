@@ -6,7 +6,7 @@
 set -e
 
 systemctl --user disable --now hex.service 2>/dev/null || true
-inferna-pkg-drop hex-bin
+inferna-pkg-drop hex
 systemctl --user daemon-reload
 
 # Hex's settings, history, and downloaded models stay in ~/.local/share/hex.

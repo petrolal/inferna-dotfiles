@@ -3,7 +3,7 @@
 # inferna:summary=Install VS Code and configure Inferna defaults for secrets, updates, and theme
 
 echo "Installing VSCode..."
-inferna-pkg-add visual-studio-code-bin
+inferna-pkg-add vscode
 
 mkdir -p ~/.vscode ~/.config/Code/User
 

@@ -35,6 +35,6 @@ if [[ -e $authdir || -L $authdir ]]; then
 fi
 
 echo "Removing FIDO2 packages..."
-inferna-pkg-drop libfido2 pam-u2f
+inferna-pkg-drop libfido2 pam_u2f
 
 echo -e "\e[32mFIDO2 authentication has been completely removed.\e[0m"
