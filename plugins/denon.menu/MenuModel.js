@@ -381,7 +381,6 @@ function displayRow(items, itemOrder, checkedResults, entry, detail, score, sect
 // cached while one expression runs lives in that subshell only, so a lazy
 // memo never survives to the expression after it.
 var GUARD_READERS = [
-  "inferna-channel-current",
   "inferna-default-agent",
   "inferna-default-browser",
   "inferna-default-editor",

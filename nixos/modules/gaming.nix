@@ -9,12 +9,11 @@
 
   # 32-bit Vulkan/NVIDIA userspace for Steam/Lutris/Heroic/umu-launcher is
   # already declared unconditionally in hyprland.nix
-  # (hardware.graphics.enable32Bit) -- nothing to add here (see
-  # core/bin/inferna-install-gaming-gpu-lib32, a no-op on NixOS).
+  # (hardware.graphics.enable32Bit) -- nothing to add here.
 
   # xpadneo loads as a proper kernel module built against the running
   # kernel and blacklists the stock xpad driver itself -- no DKMS, no manual
-  # modprobe/usermod dance (see core/bin/inferna-install-gaming-xbox-controllers).
+  # modprobe/usermod dance.
   hardware.xpadneo.enable = true;
 
   environment.systemPackages = with pkgs; [

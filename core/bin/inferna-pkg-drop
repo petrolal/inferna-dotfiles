@@ -1,58 +1,26 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Remove all the named packages from the system if they're installed (otherwise ignore).
+# inferna:summary=Remove the named packages from packages-adhoc.nix and rebuild, if they're there.
 # inferna:args=<packages...>
 # inferna:requires-sudo=true
 
-if [[ -f /etc/NIXOS ]]; then
-  if ! flake_dir=$(inferna-nixos-flake-dir); then
-    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
-    exit 1
-  fi
-  adhoc_file="$flake_dir/modules/packages-adhoc.nix"
-  removed=()
-  for pkg in "$@"; do
-    if grep -qE "^\s*${pkg}\s*$" "$adhoc_file"; then
-      sed -i "/^\s*${pkg}\s*$/d" "$adhoc_file"
-      removed+=("$pkg")
-    else
-      echo -e "\e[33m'$pkg' isn't in packages-adhoc.nix\e[0m (declared elsewhere, or not installed by inferna pkg add -- not touching other modules)."
-    fi
-  done
-  if (( ${#removed[@]} == 0 )); then
-    exit 0
-  fi
-  echo -e "\e[34m[Inferna NixOS]\e[0m Removed from packages-adhoc.nix: ${removed[*]}"
-  sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
-  exit 0
-fi
-
-installed=()
-declare -A installed_exact=()
-declare -A selected=()
-
-if ! installed_packages=$(pacman -Qq); then
-  echo "Unable to query installed packages; no packages were removed." >&2
+if ! flake_dir=$(inferna-nixos-flake-dir); then
+  echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
   exit 1
 fi
-
-while IFS= read -r package_name; do
-  if [[ -n $package_name ]]; then
-    installed_exact[$package_name]=1
-  fi
-done <<< "$installed_packages"
-
+adhoc_file="$flake_dir/modules/packages-adhoc.nix"
+removed=()
 for pkg in "$@"; do
-  if [[ -n ${installed_exact[$pkg]} && -z ${selected[$pkg]} ]]; then
-    installed+=("$pkg")
-    selected[$pkg]=1
+  if grep -qE "^\s*${pkg}\s*$" "$adhoc_file"; then
+    sed -i "/^\s*${pkg}\s*$/d" "$adhoc_file"
+    removed+=("$pkg")
+  else
+    echo -e "\e[33m'$pkg' isn't in packages-adhoc.nix\e[0m (declared elsewhere, or not installed by inferna pkg add -- not touching other modules)."
   fi
 done
-
-if (( ${#installed[@]} > 0 )); then
-  if (( EUID == 0 )); then
-    pacman -Rns --noconfirm "${installed[@]}"
-  else
-    sudo pacman -Rns --noconfirm "${installed[@]}"
-  fi
+if (( ${#removed[@]} == 0 )); then
+  exit 0
 fi
+echo -e "\e[34m[Inferna]\e[0m Removed from packages-adhoc.nix: ${removed[*]}"
+sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
+exit 0

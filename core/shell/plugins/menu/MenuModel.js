@@ -424,7 +424,6 @@ var GUARD_READERS = [
   "inferna-bar get inferna.clock format",
   "inferna-bar get inferna.clock verticalFormat",
   "inferna-bar position",
-  "inferna-channel-current",
   "inferna-default-agent",
   "inferna-default-browser",
   "inferna-default-editor",

@@ -34,8 +34,9 @@ systemd, shell, or app-launcher environment; reboot to make every layer agree.
 Affects only \$INFERNA_PATH-resolved trees: bin/, default/, shell/,
 themes/, applications/, config/. Files installed at fixed system paths
 (/etc/, /usr/lib/systemd/, udev rule bodies, /etc/skel after user
-creation) are NOT covered — for those, use inferna-dev-pkg-test to build
-and install the package from the checkout.
+creation) are NOT covered — for those, run
+\`sudo nixos-rebuild switch --flake <path-to-checkout>/nixos\` instead,
+which rebuilds the whole system from the checkout.
 
 The Plymouth and SDDM themes under /usr/share are the exception: inferna
 plymouth set and inferna refresh plymouth republish them from the checkout,

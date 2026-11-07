@@ -37,6 +37,9 @@ in
   hardware.enableAllFirmware = true;
   nixpkgs.config.allowUnfree = true;
 
+  # Device firmware updates (core/bin/inferna-update-firmware runs fwupdmgr).
+  services.fwupd.enable = true;
+
   # Restrict CUDA builds (e.g. ollama-cuda) to this machine's actual GPU
   # (RTX 4050 Laptop, compute capability 8.9 per `nvidia-smi --query-gpu=compute_cap`).
   # Without this, cudaPackages.flags.realArches falls back to a ~9-architecture

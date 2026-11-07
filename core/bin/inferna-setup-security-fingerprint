@@ -146,26 +146,15 @@ if ! inferna-hw-fingerprint; then
   exit 1
 fi
 
-if [[ -f /etc/NIXOS ]]; then
-  # Standard libfprint/fprintd only -- the Apple Touch ID / secure-enclave
-  # driver (libfprint-git + aurora-apple-sep.patch) is an external PKGBUILD
-  # with no nixpkgs equivalent; porting it needs a hand-authored overlay,
-  # not something to invent here.
-  if ! command -v fprintd-enroll &>/dev/null || ! command -v fprintd-verify &>/dev/null; then
-    echo -e "\e[33mfprintd isn't installed yet.\e[0m 'services.fprintd.enable = true;' is declared" \
-      "in nixos/modules/fingerprint.nix -- run 'sudo nixos-rebuild switch --flake <dir>'" \
-      "and re-run this script."
-    exit 1
-  fi
-else
-  # libfprint-git tracks upstream ahead of the Arch release, so a new reader only
-  # needs a pin bump in inferna-pkgs. It conflicts with stock libfprint, and
-  # --noconfirm answers that prompt with N; --ask 4 accepts the replacement in
-  # one transaction, so a failed install leaves the existing driver in place.
-  if inferna-pkg-missing libfprint-git fprintd usbutils; then
-    echo "Installing required packages..."
-    sudo pacman -S --needed --noconfirm --ask 4 -- libfprint-git fprintd usbutils
-  fi
+# Standard libfprint/fprintd only -- the Apple Touch ID / secure-enclave
+# driver (libfprint-git + aurora-apple-sep.patch) is an external PKGBUILD
+# with no nixpkgs equivalent; porting it needs a hand-authored overlay,
+# not something to invent here.
+if ! command -v fprintd-enroll &>/dev/null || ! command -v fprintd-verify &>/dev/null; then
+  echo -e "\e[33mfprintd isn't installed yet.\e[0m 'services.fprintd.enable = true;' is declared" \
+    "in nixos/modules/fingerprint.nix -- run 'sudo nixos-rebuild switch --flake <dir>'" \
+    "and re-run this script."
+  exit 1
 fi
 
 # Enroll first fingerprint

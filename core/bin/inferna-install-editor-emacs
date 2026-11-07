@@ -3,7 +3,7 @@
 # inferna:summary=Install Emacs with Inferna theme and font integration via the inferna-emacs AUR package
 
 echo "Installing Emacs..."
-inferna-pkg-aur-add inferna-emacs && inferna-install-emacs
+inferna-pkg-add inferna-emacs && inferna-install-emacs
 
 # emacsclient opens a frame on the running daemon, not a second Emacs
 setsid uwsm-app -- gtk-launch emacsclient >/dev/null 2>&1 &

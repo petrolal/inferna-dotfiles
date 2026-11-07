@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install rtkit and repair realtime budgets left at zero without it
+# inferna:summary=Repair realtime budgets left at zero
 # inferna:hidden=true
 # inferna:requires-sudo=true
 
@@ -9,18 +9,14 @@
 # shell is such a client, so everything it launches inherits the zero. Once
 # rtkit is installed it accepts any hard limit at or below its own budget, 0
 # included, so a thread of such a process can be made realtime, and the kernel
-# then kills the process at its first RT watchdog check.
+# then kills the process at its first RT watchdog check. rtkit itself is
+# always installed and running here (security.rtkit.enable, nixos/modules/
+# desktop.nix), so this only ever needs to raise zeros left over from races
+# at boot, never to install anything.
 #
 # The machine-wide repair runs once, as root: raise every logged-in user's
-# hard zero to rtkit's default budget of 200 ms, install rtkit, then raise the
-# zeros to its live budget, restart each logged-in user's portal that still
-# reports a zero budget, and raise the zeros that appeared meanwhile. The
-# raise has to come before the install: dbus-broker watches its service
-# directories, so rtkit can be activated as soon as pacman extracts it, before
-# any install script or hook runs. A root-owned marker, written before the
-# install and removed once the repair has finished, makes an interrupted repair
-# run again. A machine that got rtkit any other way, such as a fresh install,
-# never has one, so later runs, and other users' runs, need no sudo.
+# hard zero to rtkit's live budget, restart each logged-in user's portal that
+# still reports a zero budget, and raise the zeros that appeared meanwhile.
 #
 # Every run then repairs the caller's own session: it raises the caller's own
 # zeros, which needs sudo only when there are any, restarts the caller's
@@ -169,10 +165,10 @@ repair_machine() {
 
   need_sudo
 
-  # Each user's update holds only its own lock, so two users can update at
-  # once. Without this one, a run whose install fails on pacman's lock would
-  # unmask rtkit in the middle of the other run's install. The file is root's,
-  # in a directory only root can write, and every user can open it to lock.
+  # Each user's repair holds only its own lock, so two users can repair at
+  # once without stepping on each other's budget raises/portal restarts. The
+  # file is root's, in a directory only root can write, and every user can
+  # open it to lock.
   # sudo keeps the caller's umask, so the mode is set and the inode kept.
   sudo -n touch "$lock" && sudo -n chmod 644 "$lock" || fail "Could not create the realtime repair lock"
   exec {lock_fd}<"$lock" || fail "Could not open the realtime repair lock"
@@ -187,27 +183,9 @@ repair_machine() {
   users=$(awk '$1 >= 1000' <<<"$users")
   uids=" $(awk '{ printf "%s ", $1 }' <<<"$users")"
 
-  # On NixOS, security.rtkit.enable (nixos/modules/desktop.nix) already keeps
-  # rtkit-daemon declared and running from boot -- there is no pacman
-  # transaction to race, so the install dance below never applies there.
-  if [[ ! -f /etc/NIXOS ]] && inferna-pkg-missing rtkit; then
-    sudo -n install -Dm644 /dev/null "$pending" || fail "Could not record the realtime repair"
-    raise_zero_budgets 200000
-
-    # dbus-broker reloads its service directories as soon as pacman extracts
-    # rtkit, so any client could activate it mid-transaction: before the
-    # portals are repaired, and before the rtkit user exists, which makes it
-    # fail into systemd's start limit. Keep it masked until the transaction is
-    # done; a client that asks meanwhile stays at normal priority.
-    # Left masked, as when sudo expires mid-install, nothing is made realtime
-    # and nothing is killed; the next run with sudo, or a reboot, releases it.
-    trap 'sudo -n systemctl unmask --runtime rtkit-daemon.service >/dev/null 2>&1 ||
-      echo "rtkit stays masked until the next inferna update or a reboot" >&2' EXIT
-    sudo -n systemctl mask --runtime rtkit-daemon.service >/dev/null || fail "Could not hold rtkit back during its install"
-    sudo -n pacman -S --needed --noconfirm -- rtkit || fail "Could not install rtkit"
-    raise_zero_budgets 200000
-  fi
-
+  # security.rtkit.enable (nixos/modules/desktop.nix) already keeps
+  # rtkit-daemon declared and running from boot, so there's never anything
+  # to install here.
   sudo -n systemctl unmask --runtime rtkit-daemon.service >/dev/null || fail "Could not release rtkit"
   sudo -n systemctl reset-failed rtkit-daemon.service >/dev/null 2>&1
   for _ in {1..20}; do

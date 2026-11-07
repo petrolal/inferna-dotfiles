@@ -1,47 +1,27 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install Arch packages if they are missing (or add them to packages-adhoc.nix on NixOS)
+# inferna:summary=Add packages to packages-adhoc.nix and rebuild
 # inferna:args=<packages...>
 # inferna:examples=inferna pkg add jq ripgrep
 # inferna:requires-sudo=true
 
-if [[ -f /etc/NIXOS ]]; then
-  if ! flake_dir=$(inferna-nixos-flake-dir); then
-    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
-    exit 1
+if ! flake_dir=$(inferna-nixos-flake-dir); then
+  echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+  exit 1
+fi
+adhoc_file="$flake_dir/modules/packages-adhoc.nix"
+added=()
+for pkg in "$@"; do
+  if grep -qE "^\s*${pkg}\s*$" "$adhoc_file"; then
+    continue
   fi
-  adhoc_file="$flake_dir/modules/packages-adhoc.nix"
-  added=()
-  for pkg in "$@"; do
-    if grep -qE "^\s*${pkg}\s*$" "$adhoc_file"; then
-      continue
-    fi
-    sed -i "s/# INFERNA_ADHOC_PACKAGES_START/# INFERNA_ADHOC_PACKAGES_START\n    ${pkg}/" "$adhoc_file"
-    added+=("$pkg")
-  done
-  if (( ${#added[@]} == 0 )); then
-    echo -e "\e[34m[Inferna NixOS]\e[0m Already declared: $*"
-    exit 0
-  fi
-  echo -e "\e[34m[Inferna NixOS]\e[0m Added to packages-adhoc.nix: ${added[*]}"
-  sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
+  sed -i "s/# INFERNA_ADHOC_PACKAGES_START/# INFERNA_ADHOC_PACKAGES_START\n    ${pkg}/" "$adhoc_file"
+  added+=("$pkg")
+done
+if (( ${#added[@]} == 0 )); then
+  echo -e "\e[34m[Inferna]\e[0m Already declared: $*"
   exit 0
 fi
-
-if inferna-pkg-missing "$@"; then
-  if (( EUID == 0 )); then
-    pacman -S --noconfirm --needed -- "$@" || exit 1
-  else
-    sudo pacman -S --noconfirm --needed -- "$@" || exit 1
-  fi
-fi
-
-for pkg in "$@"; do
-  # Secondary check to handle states where pacman doesn't actually register an error
-  if ! pacman -Q -- "$pkg" &>/dev/null; then
-    echo -e "\033[31mError: Package '$pkg' did not install\033[0m" >&2
-    exit 1
-  fi
-done
-
+echo -e "\e[34m[Inferna]\e[0m Added to packages-adhoc.nix: ${added[*]}"
+sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
 exit 0

@@ -7,25 +7,13 @@ set -e
 
 echo "Installing Steam..."
 
-if [[ -f /etc/NIXOS ]]; then
-  # Declared by nixos/modules/gaming.nix (programs.steam.enable); 32-bit
-  # driver support is handled by hardware.nix/nvidia.nix, not here.
-  if ! flake_dir=$(inferna-nixos-flake-dir); then
-    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
-    exit 1
-  fi
-  sudo nixos-rebuild switch --flake "$flake_dir"
-else
-  # Install the lib32 drivers first. Steam depends on the virtual package
-  # lib32-vulkan-driver, and inferna-pkg-add runs pacman with --noconfirm, which
-  # resolves an unsatisfied virtual dependency to the first provider without
-  # asking. That provider is currently lib32-nvidia-utils, so installing Steam
-  # ahead of the drivers pulls the NVIDIA stack onto machines that have no NVIDIA
-  # GPU.
-  inferna-install-gaming-gpu-lib32
-  inferna-pkg-add steam
-  inferna-lifecycle-dispatch post-install steam
+# Declared by nixos/modules/gaming.nix (programs.steam.enable); 32-bit
+# driver support is handled by hardware.nix/nvidia.nix, not here.
+if ! flake_dir=$(inferna-nixos-flake-dir); then
+  echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+  exit 1
 fi
+sudo nixos-rebuild switch --flake "$flake_dir"
 
 echo ""
 echo "Steam will start automatically now. This might take a while..."

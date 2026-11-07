@@ -11,21 +11,14 @@ INSTALLER_URL="https://downloader.battle.net/download/getInstallerForGame?os=win
 
 echo "Installing Battle.net..."
 
-if [[ -f /etc/NIXOS ]]; then
-  # umu-launcher is declared by nixos/modules/gaming.nix (32-bit graphics
-  # handled there too); GE-Proton itself is fetched by umu-run at runtime,
-  # not packaged.
-  if ! flake_dir=$(inferna-nixos-flake-dir); then
-    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
-    exit 1
-  fi
-  sudo nixos-rebuild switch --flake "$flake_dir"
-else
-  # Satisfy umu-launcher's lib32-vulkan-driver dependency before --noconfirm
-  # can select an NVIDIA provider on an AMD or Intel system.
-  inferna-install-gaming-gpu-lib32
-  inferna-pkg-add umu-launcher
+# umu-launcher is declared by nixos/modules/gaming.nix (32-bit graphics
+# handled there too); GE-Proton itself is fetched by umu-run at runtime,
+# not packaged.
+if ! flake_dir=$(inferna-nixos-flake-dir); then
+  echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+  exit 1
 fi
+sudo nixos-rebuild switch --flake "$flake_dir"
 
 # Detect a half-finished prefix from a closed/crashed previous run and offer
 # to wipe it before trying again. Battle.net's installer isn't idempotent.

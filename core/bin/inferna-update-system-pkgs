@@ -1,49 +1,14 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Update system packages with pacman
+# inferna:summary=Update system packages via nixos-rebuild
 # inferna:requires-sudo=true
 
 set -e
 
-# The conflict handler's last resort: pacman puts its questions to the person
-# running the update instead of answering them itself. Nothing here may capture
-# a stream, because an upgrade without --noconfirm prompts on stderr. The
-# handler has already said why, so no heading here either.
-if [[ ${INFERNA_UPDATE_CONFLICT:-} == 1 && ${INFERNA_UPDATE_INTERACTIVE:-} == 1 ]]; then
-  exec inferna-update-pacman -Syu --overwrite '/usr/share/inferna/*'
-fi
-
 echo -e "\e[32m\nUpdate system packages\e[0m"
-
-errors=$(mktemp)
-trap 'rm -f "$errors"' EXIT
-
-if [[ -f /etc/NIXOS ]]; then
-  echo -e "\e[32m\n[Inferna] Updating NixOS system configuration\e[0m"
-  if flake_dir=$(inferna-nixos-flake-dir); then
-    sudo nixos-rebuild switch --flake "$flake_dir"
-  else
-    sudo nixos-rebuild switch
-  fi
-  exit 0
+echo -e "\e[32m\n[Inferna] Updating NixOS system configuration\e[0m"
+if flake_dir=$(inferna-nixos-flake-dir); then
+  sudo nixos-rebuild switch --flake "$flake_dir"
+else
+  sudo nixos-rebuild switch
 fi
-
-# /usr/share/inferna is wholly Inferna's; files can land there unowned and would
-# otherwise abort the upgrade. Packaged content wins there.
-#
-# Progress bars stay on stdout. Errors are on stderr, kept for the conflict
-# handler below; LC_ALL=C is what keeps them parseable in any locale.
-if LC_ALL=C inferna-update-pacman -Syu --noconfirm \
-  --overwrite '/usr/share/inferna/*' 2>"$errors"; then
-  cat "$errors" >&2
-  exit 0
-fi
-cat "$errors" >&2
-
-# The handler takes it from here: it clears files pacman doesn't own yet and
-# runs this again, and puts a package conflict to whoever started the update.
-# Anything else, including a second failure, is for a human.
-[[ ${INFERNA_UPDATE_RETRY:-} != 1 ]] || exit 1
-# exec, so the EXIT trap above does not fire and the handler can still read the
-# report. It takes over deleting it.
-exec env INFERNA_UPDATE_CONFLICT=1 inferna-update-system-pkgs-when-conflicted "$errors"

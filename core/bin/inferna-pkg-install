@@ -3,39 +3,14 @@
 # inferna:summary=Show a fuzzy-finder TUI for picking new packages to install.
 # inferna:requires-sudo=true
 
-if [[ -f /etc/NIXOS ]]; then
-  cache="/tmp/inferna-nix-search-cache-$UID.json"
-  if [[ ! -s $cache || $(find "$cache" -mmin +30 2>/dev/null) ]]; then
-    nix search nixpkgs ^ --json >"$cache.tmp" 2>/dev/null && mv "$cache.tmp" "$cache"
-  fi
-  pkg_names=$(jq -r 'keys[] | sub("^legacyPackages\\.[^.]+\\."; "")' "$cache" 2>/dev/null |
-    sort -u |
-    fzf --multi --prompt='nixpkgs> ')
-  if [[ -n $pkg_names ]]; then
-    # shellcheck disable=SC2086
-    inferna-pkg-add $pkg_names
-  fi
-  exit 0
+cache="/tmp/inferna-nix-search-cache-$UID.json"
+if [[ ! -s $cache || $(find "$cache" -mmin +30 2>/dev/null) ]]; then
+  nix search nixpkgs ^ --json >"$cache.tmp" 2>/dev/null && mv "$cache.tmp" "$cache"
 fi
-
-fzf_args=(
-  --multi
-  --preview 'pacman -Sii {1}'
-  --preview-label='alt-p: toggle description, alt-j/k: scroll, tab: multi-select'
-  --preview-label-pos='bottom'
-  --preview-window 'down:65%:wrap'
-  --bind 'alt-p:toggle-preview'
-  --bind 'alt-d:preview-half-page-down,alt-u:preview-half-page-up'
-  --bind 'alt-k:preview-up,alt-j:preview-down'
-  --color 'pointer:green,marker:green'
-)
-
-pkg_names=$(pacman -Slq | fzf "${fzf_args[@]}")
-
+pkg_names=$(jq -r 'keys[] | sub("^legacyPackages\\.[^.]+\\."; "")' "$cache" 2>/dev/null |
+  sort -u |
+  fzf --multi --prompt='nixpkgs> ')
 if [[ -n $pkg_names ]]; then
-  source inferna-sudo-keepalive
-
-  # Convert newline-separated selections to space-separated for pacman
-  echo "$pkg_names" | tr '\n' ' ' | xargs sudo pacman -S --noconfirm
-  inferna-show-done $?
+  # shellcheck disable=SC2086
+  inferna-pkg-add $pkg_names
 fi

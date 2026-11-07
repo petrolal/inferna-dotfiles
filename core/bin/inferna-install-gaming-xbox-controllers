@@ -9,46 +9,14 @@ set -e
 
 echo "Installing Xbox controller Bluetooth support..."
 
-if [[ -f /etc/NIXOS ]]; then
-  # hardware.xpadneo.enable (nixos/modules/gaming.nix) builds the module
-  # against the running kernel and blacklists xpad itself -- no DKMS, no
-  # manual modprobe.d/modules-load.d files, no input-group usermod.
-  if ! flake_dir=$(inferna-nixos-flake-dir); then
-    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
-    exit 1
-  fi
-  sudo nixos-rebuild switch --flake "$flake_dir"
-  echo ""
-  echo "Reboot (or at least replug the controller) so the kernel picks up xpadneo."
-  echo "Then pair your Xbox controller with Bluetooth using Super + Ctrl + B."
-  exit 0
+# hardware.xpadneo.enable (nixos/modules/gaming.nix) builds the module
+# against the running kernel and blacklists xpad itself -- no DKMS, no
+# manual modprobe.d/modules-load.d files, no input-group usermod.
+if ! flake_dir=$(inferna-nixos-flake-dir); then
+  echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+  exit 1
 fi
-
-# Install xpadneo to ensure controllers work out of the box
-inferna-pkg-add xpadneo-dkms
-
-# Prevent xpad/xpadneo driver conflict
-echo blacklist xpad | sudo tee /etc/modprobe.d/blacklist-xpad.conf >/dev/null
-echo hid_xpadneo | sudo tee /etc/modules-load.d/xpadneo.conf >/dev/null
-
-# Ensure user is in the input group (controllers need it)
-needs_reboot=false
-if ! id -nG "$USER" | grep -qw input; then
-  sudo usermod -aG input "$USER"
-  needs_reboot=true
-fi
-
-# Swap drivers in the running kernel so a reboot isn't needed otherwise
-if lsmod | grep -q '^xpad '; then
-  sudo modprobe -r xpad 2>/dev/null || needs_reboot=true
-fi
-
-if $needs_reboot; then
-  gum confirm --affirmative "$(inferna-i18n common.yes)" --negative "$(inferna-i18n common.no)" "$(inferna-i18n xbox.rebootNeeded)" && sudo reboot now
-  exit 0
-fi
-
-sudo modprobe hid_xpadneo
-
+sudo nixos-rebuild switch --flake "$flake_dir"
 echo ""
-echo "Now you can pair your Xbox controller with Bluetooth using Super + Ctrl + B."
+echo "Reboot (or at least replug the controller) so the kernel picks up xpadneo."
+echo "Then pair your Xbox controller with Bluetooth using Super + Ctrl + B."
