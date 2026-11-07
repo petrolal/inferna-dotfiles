@@ -68,6 +68,16 @@ run_first_run_step() {
   fi
 }
 
+# Nothing else ever applies a theme on a fresh install; without this, the
+# desktop runs untheed (colors.toml/shell.toml never rendered) until someone
+# manually runs `inferna theme set`. Guarded on the state file directly,
+# rather than inferna-done, so it stays correct across first-run retries and
+# never clobbers a theme the user already picked.
+if [[ ! -s "$state_dir/current/theme.name" ]]; then
+  run_first_run_step "set default theme" \
+    env INFERNA_THEME_HEADLESS=1 inferna-theme-set inferno
+fi
+
 run_first_run_step "install fingerprint setup post-update hook" \
   inferna-hook-install post-update "$INFERNA_PATH/install/user/first-run/setup-fingerprint.hook"
 run_first_run_step "install agent setup post-update hook" \

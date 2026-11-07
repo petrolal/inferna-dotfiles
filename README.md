@@ -41,7 +41,7 @@ A frosted rail that wraps the screen as one surface, a quarter-circle control co
 </table>
 
 <p align="center"><sub>
-Themes: Inferna (default) and Inferno. A fresh install greets you with INFERNA across the bar, menu, and fastfetch dashboard.
+Themes: Inferno (default) and Inferna. A fresh install greets you with the Inferno palette; INFERNA branding stays across the bar, menu, and fastfetch dashboard regardless of theme.
 </sub></p>
 
 ## What you get
@@ -65,17 +65,17 @@ Themes: Inferna (default) and Inferno. A fresh install greets you with INFERNA a
 
 Inferna Dotfiles ships with a focused selection of curated dark themes, complete with bundled default wallpapers, color palettes, and terminal integrations:
 
-1. **Inferna** (Default `#1`)
+1. **Inferno** (Default `#1`)
+   - **Aesthetic:** Volcanic ember and Doom scorched charcoal.
+   - **Original Inspiration:** Inferno / Doom Ember.
+   - **Palette:** Deep cinder background (`#120c0c`), blazing scarlet accent (`#ff4a36`), high-contrast bar/tile separator border, bone ash text (`#ded1c8`).
+   - **Command:** `inferna theme set "Inferno"`
+
+2. **Inferna** (Secondary `#2`)
    - **Aesthetic:** Demonic abyssal blood-crimson and dark obsidian.
    - **Original Inspiration:** Inferna Cathedral Rice.
    - **Palette:** Rich obsidian background (`#0e0507`), arterial crimson accent (`#b81424`), arterial bar separator border, warm ember highlights.
    - **Command:** `inferna theme set "Inferna"`
-
-2. **Inferno** (Secondary `#2`)
-   - **Aesthetic:** Volcanic ember and Doom scorched charcoal.
-   - **Original Inspiration:** Inferno / Doom Ember.
-   - **Palette:** Deep cinder background (`#120c0c`), blazing scarlet accent (`#ff4a36`), and bone ash text (`#ded1c8`).
-   - **Command:** `inferna theme set "Inferno"`
 
 3. **Last Horizon**
    - **Aesthetic:** Twilight dusk mauve and atmospheric mist.

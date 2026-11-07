@@ -15,7 +15,7 @@ list_themes() {
 }
 
 {
-  echo "inferna"
   echo "inferno"
+  echo "inferna"
   list_themes | grep -v -E '^(inferna|inferno)$'
 } | sed -E 's/(^|-)([a-z])/\1\u\2/g; s/-/ /g'

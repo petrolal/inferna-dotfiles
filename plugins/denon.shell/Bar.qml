@@ -99,14 +99,19 @@ Item {
   }
   readonly property real recessAdapt: depthOn && !pebble ? recessNight * Math.min(1, recessScale) : 0
   function wellChannel(bg, ink) {
-    var original = bg * 0.45, charcoal = bg * 0.8 + ink * 0.09
+    // With Depth off (the common case, no ~/.config/inferna/recess.json),
+    // recessAdapt is 0 and this must read as the theme's own background, not
+    // a washed-out 45%-brightness well — that was unreadable against a dark
+    // theme's own near-black wallpaper. Depth still lifts further toward
+    // charcoal as recessAdapt rises for its near-black compensation.
+    var original = bg, charcoal = bg * 0.8 + ink * 0.09
     return original + (charcoal - original) * recessAdapt
   }
   // Recessed pills: a step darker than the wallpaper, shaded from above.
   // Near black, a small charcoal lift makes the inward shade visible again.
   readonly property color recessedBackground: lightTheme
     ? Qt.rgba(background.r * 0.94, background.g * 0.94, background.b * 0.94, frostOpacity)
-    : Qt.rgba(wellChannel(background.r, Commons.Color.bar.text.r), wellChannel(background.g, Commons.Color.bar.text.g), wellChannel(background.b, Commons.Color.bar.text.b), 0.5 + 0.25 * recessAdapt)
+    : Qt.rgba(wellChannel(background.r, Commons.Color.bar.text.r), wellChannel(background.g, Commons.Color.bar.text.g), wellChannel(background.b, Commons.Color.bar.text.b), 0.68 + 0.1 * recessAdapt)
   readonly property color recessShadow: Qt.rgba(0, 0, 0, Math.min(1, (lightTheme ? 0.16 : 0.55) * recessScale))
   readonly property color recessShadowSoft: Qt.rgba(0, 0, 0, Math.min(1, (lightTheme ? 0.07 : 0.22) * recessScale))
   readonly property color recessLip: lightTheme
