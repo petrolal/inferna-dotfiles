@@ -538,6 +538,7 @@ visible_theme_commands=(
 # for these.
 other_theme_commands=(
   inferna-theme-set-gnome
+  inferna-theme-set-gtk
   inferna-theme-set-pi
   inferna-theme-set-claude
   inferna-theme-set-hermes

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# inferna:summary=Give GTK3/4 apps (Thunar, Nautilus, etc.) the theme's accent colors
+# inferna:hidden=true
+
+# gtk.css is rendered per-theme by inferna-theme-set-templates (see
+# core/default/themed/gtk.css.tpl) alongside obsidian.css/vscode-theme.json.
+# Unlike inferna-theme-set-glass's blur import, this import always applies --
+# it is the theme's color, not a Glassy-only effect -- so it is never removed.
+
+THEME_DIR="${1:-$HOME/.local/state/inferna/current/theme}"
+GTK_CSS="$THEME_DIR/gtk.css"
+
+[[ -f $GTK_CSS ]] || exit 0
+
+status=0
+
+append_import() {
+  local file="$1"
+  local begin="/* inferna-theme begin */" end="/* inferna-theme end */"
+  local tmp
+
+  mkdir -p "${file%/*}" || return 1
+  tmp=$(mktemp) || return 1
+
+  if [[ -f $file ]]; then
+    awk -v begin="$begin" -v end="$end" '
+      $0 == begin { skip = 1; next }
+      $0 == end { skip = 0; next }
+      !skip { print }
+    ' "$file" >"$tmp"
+  fi
+
+  {
+    cat "$tmp"
+    printf '%s\n@import url("file://%s");\n%s\n' "$begin" "$GTK_CSS" "$end"
+  } >"$file.new" && mv "$file.new" "$file"
+  rm -f "$tmp"
+}
+
+append_import "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/gtk.css" || status=1
+append_import "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/gtk.css" || status=1
+
+exit $status
