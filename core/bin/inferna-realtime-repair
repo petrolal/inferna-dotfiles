@@ -187,7 +187,10 @@ repair_machine() {
   users=$(awk '$1 >= 1000' <<<"$users")
   uids=" $(awk '{ printf "%s ", $1 }' <<<"$users")"
 
-  if inferna-pkg-missing rtkit; then
+  # On NixOS, security.rtkit.enable (nixos/modules/desktop.nix) already keeps
+  # rtkit-daemon declared and running from boot -- there is no pacman
+  # transaction to race, so the install dance below never applies there.
+  if [[ ! -f /etc/NIXOS ]] && inferna-pkg-missing rtkit; then
     sudo -n install -Dm644 /dev/null "$pending" || fail "Could not record the realtime repair"
     raise_zero_budgets 200000
 
@@ -242,8 +245,8 @@ raise_own_zero_budgets() {
 
 # The caller's own session: its zeros, its portal, and its audio units. A
 # caller with no session bus is not logged in and has none of the last two;
-# inferna-upgrade-to-quattro runs its migrations without the user's session
-# environment, so the bus is looked for where the session puts it.
+# a migration or provisioning script can run as a user without that user's
+# session environment, so the bus is looked for where the session puts it.
 repair_own_session() {
   local pipewire portal_failed=0
 
@@ -275,8 +278,8 @@ if inferna-pkg-missing rtkit || [[ -e $pending ]] || [[ $(id -u) == "0" ]]; then
   repair_machine
 fi
 
-# Root has no desktop session of its own; inferna-upgrade-to-quattro runs
-# this as root for the machine-wide repair alone.
+# Root has no desktop session of its own; a provisioning run as root only
+# needs the machine-wide repair.
 if [[ $(id -u) != "0" ]]; then
   repair_own_session
 fi

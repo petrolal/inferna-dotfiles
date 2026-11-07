@@ -9,6 +9,21 @@ set -e
 
 echo "Installing Xbox controller Bluetooth support..."
 
+if [[ -f /etc/NIXOS ]]; then
+  # hardware.xpadneo.enable (nixos/modules/gaming.nix) builds the module
+  # against the running kernel and blacklists xpad itself -- no DKMS, no
+  # manual modprobe.d/modules-load.d files, no input-group usermod.
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  sudo nixos-rebuild switch --flake "$flake_dir"
+  echo ""
+  echo "Reboot (or at least replug the controller) so the kernel picks up xpadneo."
+  echo "Then pair your Xbox controller with Bluetooth using Super + Ctrl + B."
+  exit 0
+fi
+
 # Install xpadneo to ensure controllers work out of the box
 inferna-pkg-add xpadneo-dkms
 

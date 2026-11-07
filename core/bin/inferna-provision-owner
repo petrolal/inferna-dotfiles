@@ -24,6 +24,11 @@ if (( EUID != 0 )); then
   exit 1
 fi
 
+# First-boot user creation + LUKS re-key for an Arch deferred-provisioning
+# ISO install. NixOS creates users declaratively (nixos/modules/users.nix +
+# nixos-rebuild) and has no equivalent throwaway-install-key flow to rekey.
+[[ ! -f /etc/NIXOS ]] || exit 0
+
 [[ -f $PROVISIONING_DIR/pending ]] || exit 0
 
 # Never set up a user on a half-wiped system: while a factory wipe is still

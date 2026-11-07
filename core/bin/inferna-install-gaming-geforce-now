@@ -7,7 +7,8 @@
 set -e
 
 echo "Installing GeForce NOW..."
-inferna-pkg-add flatpak
+# services.flatpak.enable is already declared in nixos/modules/flatpak.nix.
+[[ -f /etc/NIXOS ]] || inferna-pkg-add flatpak
 cd /tmp
 
 # Download and run GeForce NOW

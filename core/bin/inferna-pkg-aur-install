@@ -3,6 +3,11 @@
 # inferna:summary=Show a fuzzy-finder TUI for picking new AUR packages to install.
 # inferna:requires-sudo=true
 
+if [[ -f /etc/NIXOS ]]; then
+  # nixpkgs makes no official-repo/AUR distinction -- same path as inferna pkg install.
+  exec inferna-pkg-install
+fi
+
 fzf_args=(
   --multi
   --preview 'yay -Siia {1}'

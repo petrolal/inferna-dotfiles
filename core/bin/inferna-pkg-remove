@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Show a fuzzy-finder TUI for picking packages installed on the system to be removed.
+# inferna:summary=Show a fuzzy-finder TUI for picking packages to remove. On NixOS, only lists
+# packages previously added with `inferna pkg add` (packages-adhoc.nix) -- the hand-curated
+# lists in packages.nix and other modules are edited by hand, not by this TUI.
 # inferna:requires-sudo=true
+
+if [[ -f /etc/NIXOS ]]; then
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  adhoc_file="$flake_dir/modules/packages-adhoc.nix"
+  pkg_names=$(sed -n '/INFERNA_ADHOC_PACKAGES_START/,/INFERNA_ADHOC_PACKAGES_END/p' "$adhoc_file" |
+    grep -vE 'INFERNA_ADHOC_PACKAGES_(START|END)' |
+    sed 's/^\s*//;s/\s*$//' | grep -v '^$' |
+    fzf --multi --prompt='remove> ')
+  if [[ -n $pkg_names ]]; then
+    # shellcheck disable=SC2086
+    inferna-pkg-drop $pkg_names
+  fi
+  exit 0
+fi
 
 fzf_args=(
   --multi

@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Show a fuzzy-finder TUI for picking new Arch and OPR packages to install.
+# inferna:summary=Show a fuzzy-finder TUI for picking new packages to install.
 # inferna:requires-sudo=true
+
+if [[ -f /etc/NIXOS ]]; then
+  cache="/tmp/inferna-nix-search-cache-$UID.json"
+  if [[ ! -s $cache || $(find "$cache" -mmin +30 2>/dev/null) ]]; then
+    nix search nixpkgs ^ --json >"$cache.tmp" 2>/dev/null && mv "$cache.tmp" "$cache"
+  fi
+  pkg_names=$(jq -r 'keys[] | sub("^legacyPackages\\.[^.]+\\."; "")' "$cache" 2>/dev/null |
+    sort -u |
+    fzf --multi --prompt='nixpkgs> ')
+  if [[ -n $pkg_names ]]; then
+    # shellcheck disable=SC2086
+    inferna-pkg-add $pkg_names
+  fi
+  exit 0
+fi
 
 fzf_args=(
   --multi

@@ -14,6 +14,10 @@ trap 'exit 143' TERM
 usage() { echo "Usage: inferna-channel-set [stable|rc|edge|dev]"; }
 fail() { echo "Error: $*" >&2; exit 1; }
 
+if [[ -f /etc/NIXOS ]]; then
+  fail "Stable/rc/edge are pacman mirror channels; NixOS has no such concept. Switch versions via flake inputs or git branches in your nixos/ checkout instead."
+fi
+
 confirm_dev() {
   cat <<'WARNING'
 

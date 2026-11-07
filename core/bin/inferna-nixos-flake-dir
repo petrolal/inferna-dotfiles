@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# inferna:summary=Print the NixOS flake directory to rebuild from, or exit 1 if none is found.
+
+if [[ -f /etc/nixos/flake.nix ]]; then
+  echo /etc/nixos
+elif [[ -d "$HOME/inferna-dotfiles/nixos" ]]; then
+  echo "$HOME/inferna-dotfiles/nixos"
+elif [[ -d "$HOME/dotfiles/nixos" ]]; then
+  echo "$HOME/dotfiles/nixos"
+else
+  exit 1
+fi

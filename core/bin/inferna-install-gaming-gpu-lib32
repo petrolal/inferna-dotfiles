@@ -7,6 +7,13 @@
 
 set -e
 
+if [[ -f /etc/NIXOS ]]; then
+  # hardware.graphics.enable32Bit is already declared unconditionally in
+  # nixos/modules/hyprland.nix, and hardware.nvidia (nvidia.nix) pulls in the
+  # matching 32-bit NVIDIA userspace automatically -- nothing to install.
+  exit 0
+fi
+
 # lib32 drivers come from Arch's multilib repository, which only exists on
 # x86_64. aarch64 runs Valve's native arm64 Steam client and needs none.
 inferna-hw-x86 || exit 0

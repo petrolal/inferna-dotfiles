@@ -4,6 +4,14 @@
 
 set -euo pipefail
 
+# Stable/rc/edge are pacman mirror channels; NixOS has no such concept (use
+# flake inputs or git branches instead), so report the same "no channel"
+# value the Arch path already uses for an unrecognized state.
+if [[ -f /etc/NIXOS ]]; then
+  echo unknown
+  exit 0
+fi
+
 # Dev is a linked source checkout: INFERNA_PATH points somewhere other than
 # the package-backed install at /usr/share/inferna. This takes precedence over
 # the package channels, since the checkout overrides whatever is installed.

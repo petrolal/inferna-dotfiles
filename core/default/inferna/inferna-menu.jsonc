@@ -447,10 +447,14 @@
   "update.password": {"icon":"","label":"Password"},
   "update.timezone": {"icon":"","label":"Timezone","action":"inferna-menu-timezone"},
   "update.time": {"icon":"","label":"Time","action":"inferna-launch-floating-terminal-with-presentation inferna-update-time"},
-  "update.channel.stable": {"icon":"🟢","label":"Stable","checked":"[[ \"$(inferna-channel-current)\" == \"stable\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set stable'"},
-  "update.channel.rc": {"icon":"🟡","label":"RC","checked":"[[ \"$(inferna-channel-current)\" == \"rc\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set rc'"},
-  "update.channel.edge": {"icon":"🟠","label":"Edge","checked":"[[ \"$(inferna-channel-current)\" == \"edge\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set edge'"},
-  "update.channel.dev": {"icon":"🔴","label":"Dev","checked":"[[ \"$(inferna-channel-current)\" == \"dev\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set dev'"},
+  // Stable/rc/edge/dev are pacman mirror channels (inferna-channel-set/
+  // current already refuse on NixOS -- see those scripts); "when" hides the
+  // whole Channel submenu there too, since a menu item disappears once none
+  // of its children are visible.
+  "update.channel.stable": {"icon":"🟢","label":"Stable","when":"[[ ! -f /etc/NIXOS ]]","checked":"[[ \"$(inferna-channel-current)\" == \"stable\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set stable'"},
+  "update.channel.rc": {"icon":"🟡","label":"RC","when":"[[ ! -f /etc/NIXOS ]]","checked":"[[ \"$(inferna-channel-current)\" == \"rc\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set rc'"},
+  "update.channel.edge": {"icon":"🟠","label":"Edge","when":"[[ ! -f /etc/NIXOS ]]","checked":"[[ \"$(inferna-channel-current)\" == \"edge\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set edge'"},
+  "update.channel.dev": {"icon":"🔴","label":"Dev","when":"[[ ! -f /etc/NIXOS ]]","checked":"[[ \"$(inferna-channel-current)\" == \"dev\" ]]","action":"inferna-launch-floating-terminal-with-presentation 'inferna-channel-set dev'"},
   "update.process.hyprsunset": {"icon":"","label":"Hyprsunset","action":"inferna-restart-hyprsunset"},
   "update.process.shell": {"icon":"󰍜","label":"Shell","action":"inferna-restart-shell"},
   "update.config.hyprland": {"icon":"","label":"Hyprland","action":"inferna-launch-floating-terminal-with-presentation inferna-refresh-hyprland"},

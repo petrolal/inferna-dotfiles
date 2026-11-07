@@ -6,7 +6,17 @@
 set -e
 
 echo "Installing Heroic Games Launcher..."
-inferna-pkg-add heroic-games-launcher-bin
-inferna-install-gaming-gpu-lib32
+if [[ -f /etc/NIXOS ]]; then
+  # Declared by nixos/modules/gaming.nix (environment.systemPackages: heroic);
+  # 32-bit graphics are handled there too.
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  sudo nixos-rebuild switch --flake "$flake_dir"
+else
+  inferna-pkg-add heroic-games-launcher-bin
+  inferna-install-gaming-gpu-lib32
+fi
 
 setsid uwsm-app -- gtk-launch heroic >/dev/null 2>&1 &

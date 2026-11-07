@@ -3,6 +3,11 @@
 # inferna:summary=Add the named packages to the system from the AUR if they're missing. Returns false if it couldn't be done.
 # inferna:args=<packages...>
 
+if [[ -f /etc/NIXOS ]]; then
+  # nixpkgs makes no official-repo/AUR distinction -- same path as inferna pkg add.
+  exec inferna-pkg-add "$@"
+fi
+
 if inferna-pkg-missing "$@"; then
   yay -S --noconfirm --needed -- "$@" || exit 1
 fi

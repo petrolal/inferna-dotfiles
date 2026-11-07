@@ -18,6 +18,12 @@
 
 set -euo pipefail
 
+# This whole deferred-image-provisioning queue (mkinitcpio, pacman-key, the
+# image build manifest) is Arch-installer-only. NixOS generates its initrd
+# and hardware config declaratively via nixos-rebuild/nixos-generate-config
+# (see nixos/modules/hardware.nix) -- nothing is ever deferred here.
+[[ ! -f /etc/NIXOS ]] || exit 0
+
 fail() {
   echo "Error: $*" >&2
   exit 1

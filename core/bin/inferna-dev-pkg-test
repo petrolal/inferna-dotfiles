@@ -7,6 +7,15 @@
 
 set -euo pipefail
 
+if [[ -f /etc/NIXOS && ${1:-} != "-h" && ${1:-} != "--help" ]]; then
+  echo "This builds and installs an Arch PKGBUILD (makepkg/pacman -U), which has no" >&2
+  echo "NixOS equivalent. To test local dotfiles changes on NixOS, rebuild from the" >&2
+  echo "checkout's own flake instead:" >&2
+  echo >&2
+  echo "  sudo nixos-rebuild switch --flake /path/to/checkout/nixos" >&2
+  exit 1
+fi
+
 if [[ ${1:-} == "-h" || ${1:-} == "--help" ]]; then
   cat <<USAGE
 Usage: inferna dev pkg-test [package-name] [path-to-checkout]

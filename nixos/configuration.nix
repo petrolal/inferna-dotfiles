@@ -10,6 +10,9 @@
     ./modules/fonts.nix
     ./modules/users.nix
     ./modules/packages.nix
+    ./modules/packages-adhoc.nix
+    ./modules/gaming.nix
+    ./modules/fingerprint.nix
     ./modules/nix-ld.nix
     ./modules/development.nix
     ./modules/jetbrains.nix

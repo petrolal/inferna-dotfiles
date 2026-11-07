@@ -4,6 +4,29 @@
 # inferna:args=<packages...>
 # inferna:requires-sudo=true
 
+if [[ -f /etc/NIXOS ]]; then
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  adhoc_file="$flake_dir/modules/packages-adhoc.nix"
+  removed=()
+  for pkg in "$@"; do
+    if grep -qE "^\s*${pkg}\s*$" "$adhoc_file"; then
+      sed -i "/^\s*${pkg}\s*$/d" "$adhoc_file"
+      removed+=("$pkg")
+    else
+      echo -e "\e[33m'$pkg' isn't in packages-adhoc.nix\e[0m (declared elsewhere, or not installed by inferna pkg add -- not touching other modules)."
+    fi
+  done
+  if (( ${#removed[@]} == 0 )); then
+    exit 0
+  fi
+  echo -e "\e[34m[Inferna NixOS]\e[0m Removed from packages-adhoc.nix: ${removed[*]}"
+  sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
+  exit 0
+fi
+
 installed=()
 declare -A installed_exact=()
 declare -A selected=()

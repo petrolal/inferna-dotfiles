@@ -5,28 +5,40 @@
 set -e
 
 echo "Installing RetroArch..."
-inferna-pkg-add \
-  retroarch \
-  retroarch-assets-glui retroarch-assets-ozone retroarch-assets-xmb \
-  libretro-beetle-pce libretro-beetle-pce-fast libretro-beetle-psx libretro-beetle-psx-hw libretro-beetle-supergrafx \
-  libretro-blastem \
-  libretro-bsnes libretro-bsnes-hd \
-  libretro-core-info \
-  libretro-desmume libretro-dolphin libretro-flycast \
-  libretro-gambatte libretro-genesis-plus-gx \
-  libretro-kronos \
-  libretro-mame libretro-melonds libretro-mesen libretro-mesen-s libretro-mgba libretro-mupen64plus-next \
-  libretro-nestopia \
-  libretro-overlays \
-  libretro-parallel-n64 libretro-picodrive libretro-play libretro-ppsspp \
-  libretro-sameboy libretro-scummvm libretro-shaders-slang libretro-snes9x \
-  libretro-yabause \
-  libretro-cap32-git libretro-fbneo-git libretro-uae-git \
-  libretro-vice-x128-git libretro-vice-x64-git libretro-vice-x64dtv-git libretro-vice-x64sc-git \
-  libretro-vice-xcbm2-git libretro-vice-xcbm5x0-git libretro-vice-xpet-git \
-  libretro-vice-xplus4-git libretro-vice-xscpu64-git libretro-vice-xvic-git \
-  libretro-database-git \
-  retroarch-joypad-autoconfig-git
+if [[ -f /etc/NIXOS ]]; then
+  # Declared by nixos/modules/gaming.nix (pkgs.retroarch.override { cores = ...; }).
+  # Add more cores there from pkgs.libretro.* -- the Arch libretro-* package
+  # list above has no 1:1 nixpkgs mapping for every entry (e.g. the -git VICE
+  # variants).
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  sudo nixos-rebuild switch --flake "$flake_dir"
+else
+  inferna-pkg-add \
+    retroarch \
+    retroarch-assets-glui retroarch-assets-ozone retroarch-assets-xmb \
+    libretro-beetle-pce libretro-beetle-pce-fast libretro-beetle-psx libretro-beetle-psx-hw libretro-beetle-supergrafx \
+    libretro-blastem \
+    libretro-bsnes libretro-bsnes-hd \
+    libretro-core-info \
+    libretro-desmume libretro-dolphin libretro-flycast \
+    libretro-gambatte libretro-genesis-plus-gx \
+    libretro-kronos \
+    libretro-mame libretro-melonds libretro-mesen libretro-mesen-s libretro-mgba libretro-mupen64plus-next \
+    libretro-nestopia \
+    libretro-overlays \
+    libretro-parallel-n64 libretro-picodrive libretro-play libretro-ppsspp \
+    libretro-sameboy libretro-scummvm libretro-shaders-slang libretro-snes9x \
+    libretro-yabause \
+    libretro-cap32-git libretro-fbneo-git libretro-uae-git \
+    libretro-vice-x128-git libretro-vice-x64-git libretro-vice-x64dtv-git libretro-vice-x64sc-git \
+    libretro-vice-xcbm2-git libretro-vice-xcbm5x0-git libretro-vice-xpet-git \
+    libretro-vice-xplus4-git libretro-vice-xscpu64-git libretro-vice-xvic-git \
+    libretro-database-git \
+    retroarch-joypad-autoconfig-git
+fi
 
 # Set up ~/Games for BIOS files and ROMs
 mkdir -p "$HOME/Games/bios" "$HOME/Games/roms"
@@ -47,18 +59,23 @@ set_cfg() {
 set_cfg rgui_browser_directory "$HOME/Games/roms"
 set_cfg system_directory "$HOME/Games/bios"
 
-# Point at the cores and assets installed by pacman
-set_cfg libretro_directory "/usr/lib/libretro"
-set_cfg libretro_info_path "/usr/share/libretro/info"
-set_cfg overlay_directory "/usr/share/libretro/overlays"
-set_cfg osk_overlay_directory "/usr/share/libretro/overlays/keyboards"
-set_cfg video_shader_dir "/usr/share/libretro/shaders/shaders_slang"
-set_cfg joypad_autoconfig_dir "/usr/share/libretro/autoconfig"
+if [[ ! -f /etc/NIXOS ]]; then
+  # Point at the cores and assets installed by pacman. On NixOS these all
+  # live under per-derivation Nix store paths instead of a shared /usr/share
+  # tree, and pkgs.retroarch.override already wires the wrapped binary's
+  # defaults to them -- nothing to point here.
+  set_cfg libretro_directory "/usr/lib/libretro"
+  set_cfg libretro_info_path "/usr/share/libretro/info"
+  set_cfg overlay_directory "/usr/share/libretro/overlays"
+  set_cfg osk_overlay_directory "/usr/share/libretro/overlays/keyboards"
+  set_cfg video_shader_dir "/usr/share/libretro/shaders/shaders_slang"
+  set_cfg joypad_autoconfig_dir "/usr/share/libretro/autoconfig"
 
-# Point at the database, cheats, and cursors from libretro-database-git
-set_cfg content_database_path "/usr/share/libretro/database/rdb"
-set_cfg cheat_database_path "/usr/share/libretro/database/cht"
-set_cfg cursor_directory "/usr/share/libretro/database/cursors"
+  # Point at the database, cheats, and cursors from libretro-database-git
+  set_cfg content_database_path "/usr/share/libretro/database/rdb"
+  set_cfg cheat_database_path "/usr/share/libretro/database/cht"
+  set_cfg cursor_directory "/usr/share/libretro/database/cursors"
+fi
 
 # Vulkan is required for slang shaders and unlocks hardware renderers in beetle-psx-hw, parallel-n64, dolphin
 set_cfg video_driver "vulkan"
@@ -71,9 +88,11 @@ set_cfg menu_driver "xmb"
 # preset takes precedence — setting video_shader alone in retroarch.cfg is not enough.
 set_cfg video_shader_enable "true"
 set_cfg auto_shaders_enable "true"
-mkdir -p ~/.config/retroarch/config
-echo '#reference "/usr/share/libretro/shaders/shaders_slang/crt/crt-royale.slangp"' \
-  > ~/.config/retroarch/config/global.slangp
+if [[ ! -f /etc/NIXOS ]]; then
+  mkdir -p ~/.config/retroarch/config
+  echo '#reference "/usr/share/libretro/shaders/shaders_slang/crt/crt-royale.slangp"' \
+    > ~/.config/retroarch/config/global.slangp
+fi
 
 # Hide Images and Video tabs in the main menu sidebar
 set_cfg content_show_images "false"
