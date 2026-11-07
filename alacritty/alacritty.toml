@@ -1,4 +1,5 @@
 # Inferna Alacritty Configuration
+[general]
 import = [
   "~/.local/state/inferna/current/theme/alacritty.toml"
 ]

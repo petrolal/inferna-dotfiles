@@ -11,6 +11,21 @@ let
     libGL
   ];
 
+  # Hyprland (as packaged here) doesn't advertise the xdg-toplevel-icon
+  # protocol, so every foot startup logs a harmless "compositor does not
+  # implement the xdg-toplevel-icon protocol" warning. Default the binary
+  # itself to --log-level=error so this is suppressed regardless of launch
+  # path (keybind, app menu .desktop, or a bare `foot` typed in a shell),
+  # instead of relying on every call site passing -d error.
+  footQuiet = pkgs.symlinkJoin {
+    name = "foot";
+    paths = [ pkgs.foot ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/foot --add-flags "--log-level=error"
+    '';
+  };
+
   buildTools = with pkgs; [
     gnumake
     cmake
@@ -126,7 +141,7 @@ let
     kitty
     ghostty
     alacritty
-    foot         # Inferna terminal emulator
+    footQuiet    # Inferna terminal emulator (wrapped to default --log-level=error)
     thunar  # standalone GTK file manager; no longer pulled in transitively now that desktopManager.xfce is gone
     grim         # Wayland screenshot capture, bound in config/hypr/hyprland.lua
     slurp        # region selection for grim
