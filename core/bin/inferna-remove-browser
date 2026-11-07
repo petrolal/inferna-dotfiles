@@ -61,7 +61,7 @@ firefox)
 zen)
   echo "Removing Zen..."
   set_fallback_default_browser zen.desktop
-  inferna-pkg-drop zen-browser-bin
+  inferna-pkg-drop zen-browser
   ;;
 *)
   echo "Usage: inferna-remove-browser <chrome|brave|brave-origin|edge|firefox|zen>"

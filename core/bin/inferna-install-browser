@@ -107,9 +107,14 @@ firefox)
   ;;
 zen)
   echo "Installing Zen..."
-  inferna-pkg-add zen-browser-bin || exit 1
+  # Declared via the zen-browser flake input in nixos/flake.nix (not in
+  # nixpkgs) -- same nixos-rebuild pattern as the gaming packages.
+  if ! flake_dir=$(inferna-nixos-flake-dir); then
+    echo -e "\033[31mError: could not find a NixOS flake directory.\033[0m" >&2
+    exit 1
+  fi
+  sudo nixos-rebuild switch --flake "$flake_dir" || exit 1
 
-  browser_policy_setup_firefox_distribution /opt/zen-browser/distribution
   setup_firefox_wayland
   inferna-lifecycle-dispatch post-install zen
   announce_browser_installed "Zen"

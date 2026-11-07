@@ -10,8 +10,8 @@
 # installer makes the only Hermes that can update itself: a checkout under
 # ~/.hermes with its own venv, which `hermes update` fast-forwards. The mise
 # build this replaced had no checkout, so nothing an update could move.
-# Choosing Hermes as the default agent therefore installs the app, the way
-# Install > AI does, short of opening its window; see inferna-install-ai-hermes.
+# Choosing Hermes as the default agent therefore installs the app the same
+# way, short of opening its window.
 # Hermes is only ever installed through the app: --check asks whether the
 # app's Hermes is in and its command is what inferna-agent would run, and
 # --now installs the app whatever else answered to hermes before, saving

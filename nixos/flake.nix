@@ -12,9 +12,13 @@
       url = "github:aaddrick/claude-desktop-debian";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, antigravity-nix, nix-flatpak, claude-desktop, ... }:
+  outputs = { self, nixpkgs, antigravity-nix, nix-flatpak, claude-desktop, zen-browser, ... }:
     let
       system = "x86_64-linux";
 
@@ -67,6 +71,7 @@
 
               environment.systemPackages = [
                 antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-cli
+                zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
               ];
             })
           ] ++ nixpkgs.lib.optional (user != null) { dotfiles.username = user; }
