@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # inferna:summary=Export or import subscription account credentials for SSH transfer
 # inferna:args=<capabilities|export|bundle|receiver-command|import> [--replace] [claude|codex|grok...]
 # inferna:hidden=true

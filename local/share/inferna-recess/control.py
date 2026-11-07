@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Depth settings: recessed or raised window frames, applied through a generated Hyprland module."""
 import argparse
 import fcntl

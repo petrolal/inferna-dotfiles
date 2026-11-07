@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Inferna's Codex usage collector with a fixed RPC reader.
 
 Upstream (`inferna-agent-usage-codex`) waits on

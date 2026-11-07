@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # inferna:summary=Play a realistic run of notifications to look at the notification UI
 # inferna:hidden=true
 """A realistic run of notifications, sent straight onto the session bus as an

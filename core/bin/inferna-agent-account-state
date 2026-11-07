@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # inferna:summary=Read and change the registry of Claude, Codex, and Grok subscription accounts
 # inferna:args=<registry|home|homes|list|refresh|begin|register|recover|use|rename|remove|mode|link|autoswitch> [provider] [args...]
 # inferna:hidden=true

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # inferna:summary=Pick files with the desktop file chooser
 # inferna:args=[--title <title>] [--multiple] [--directory] [--extensions "<ext ext...>"]

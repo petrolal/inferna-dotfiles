@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Redeem one banked Codex rate-limit reset ("Full reset" credit).
 
 Usage: codex-reset.py [CREDIT_ID]

@@ -445,16 +445,18 @@ Panel {
     function history(): string { root.showHistory = !root.showHistory; return root.showHistory ? "shown" : "hidden" }
   }
 
-  // The bar slot is the fuel gauge itself: the Claude Code and Codex marks,
-  // each followed by the share of its binding window still unspent, counting
-  // down from 100%. The panel below is the same data in full. Other agents
-  // (Fireworks) stay in the panel only.
-  readonly property var gaugeIds: ["claude", "codex"]
+  // The bar slot is the fuel gauge itself: one mark per enabled agent that
+  // actually exposes a percent-based limit window, each followed by the
+  // share of its binding window still unspent, counting down from 100%. The
+  // panel below is the same data in full. Agents with no limit window (a
+  // paused token, a credit balance instead of a quota, no limits at all)
+  // stay in the panel only, same as before -- the difference is this list is
+  // no longer pinned to two hardcoded ids, so any agent that starts (or
+  // stops) reporting a limit shows up (or drops out) here on its own.
   readonly property var gaugeProviders: {
     var out = []
-    for (var i = 0; i < gaugeIds.length; i++)
-      for (var k = 0; k < providers.length; k++)
-        if (providers[k].providerId === gaugeIds[i]) { out.push(providers[k]); break }
+    for (var i = 0; i < providers.length; i++)
+      if (limitWindows(providers[i]).length > 0) out.push(providers[i])
     return out
   }
 

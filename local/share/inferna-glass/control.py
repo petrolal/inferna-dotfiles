@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Persistent Inferna glass controls, applied through a dedicated Hyprland file."""
 import argparse
 import datetime

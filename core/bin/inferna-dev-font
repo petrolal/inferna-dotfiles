@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # inferna:summary=Add branded glyphs to the Inferna icon font
 # inferna:args=[list|add] <name> <svg-file-or-url> [--codepoint U+E9xx] [--font PATH]
 # inferna:examples=inferna dev font list | inferna dev font add ollama https://simpleicons.org/icons/ollama.svg

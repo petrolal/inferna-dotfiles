@@ -122,7 +122,7 @@ Rebuild and switch to the system configuration:
 
 ```bash
 cd ~/inferna-dotfiles/nixos
-sudo nixos-rebuild switch --flake .#primary
+sudo nixos-rebuild switch --flake .#default
 ```
 
 ### 2. Deploy User Dotfiles & Plugins
@@ -159,7 +159,7 @@ Without it, both say INFERNA. The fastfetch banner is `~/.config/inferna/brandin
 
 ## Credits & Attribution
 
-- **Author & Maintainer:** Lucas Petrolal ([@petrolal](https://github.com/petrolal/dotfiles))
+- **Author & Maintainer:** Lucas Petrolal ([@petrolal](https://github.com/petrolal/inferna-dotfiles))
 - Upstream shell architecture and design inspired by [omarchy-dotfiles](https://github.com/denonmaryland/omarchy-dotfiles) and [Quickshell](https://quickshell.outfoxxed.me/).
 - Core shell plugin foundations originated as part of [Omarchy](https://github.com/basecamp/omarchy) by David Heinemeier Hansson.
 - Icons in `denon.menu/icons` and `denon.tray/icons` are from [Lucide](https://lucide.dev) (ISC License).
@@ -168,4 +168,4 @@ Without it, both say INFERNA. The fastfetch banner is `~/.config/inferna/brandin
 ## License
 
 GNU General Public License v3.0 (GPL-3.0-or-later). See [LICENSE](LICENSE).  
-Modifications, redistributions, and forks must retain attribution to Lucas Petrolal and link to the original repository (<https://github.com/petrolal/dotfiles>).
+Modifications, redistributions, and forks must retain attribution to Lucas Petrolal and link to the original repository (<https://github.com/petrolal/inferna-dotfiles>).
