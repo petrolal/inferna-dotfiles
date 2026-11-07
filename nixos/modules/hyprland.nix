@@ -8,6 +8,16 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true; # some apps are still X11-only and need Xwayland
+
+    # Without this, `start-hyprland` below is just a plain launcher binary
+    # with no systemd integration at all: graphical-session.target (and
+    # wayland-session@Hyprland.target) never activate, so everything that
+    # depends on them -- xdg-desktop-portal, xdg-desktop-portal-hyprland,
+    # hyprpolkitagent, and any app that moves itself into a systemd scope on
+    # launch (kitty, inferna-launch-browser's systemd-run handoff) -- silently
+    # fails or never starts. withUWSM makes `start-hyprland` start those
+    # targets itself (sets programs.uwsm.enable = true underneath).
+    withUWSM = true;
   };
 
   services.greetd = {

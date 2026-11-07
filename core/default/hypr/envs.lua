@@ -5,7 +5,11 @@ local require_optional = require("default.hypr.require_optional")
 require_optional.module("inferna.current.theme.gum_env")
 require_optional.module("inferna.current.theme.gum_env")
 
--- Cursor size.
+-- Cursor theme/size. DMZ-Black (from the vanilla-dmz package,
+-- nixos/modules/hyprland.nix) is a plain solid-black arrow -- without this,
+-- XCURSOR_THEME resolves to nothing installed and Hyprland falls back to
+-- its own bundled hyprcursor pattern cursor.
+hl.env("XCURSOR_THEME", "DMZ-Black")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 

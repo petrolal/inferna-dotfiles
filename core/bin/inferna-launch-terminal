@@ -24,20 +24,24 @@ if [[ -z $preferred && -f ~/.config/xdg-terminals.list ]]; then
 fi
 [[ -n $preferred ]] || preferred="foot"
 
+# "$@" inside launch_term is the FUNCTION's own args, not the script's --
+# capture the real command/args to run inside the terminal before shadowing it.
+cmd_args=("$@")
+
 launch_term() {
   local term="$1"
   case "$term" in
     foot)
-      command -v foot >/dev/null 2>&1 && exec setsid foot -d error --working-directory="$dir" "$@"
+      command -v foot >/dev/null 2>&1 && exec setsid foot -d error --working-directory="$dir" "${cmd_args[@]}"
       ;;
     kitty)
-      command -v kitty >/dev/null 2>&1 && exec setsid kitty --directory="$dir" "$@"
+      command -v kitty >/dev/null 2>&1 && exec setsid kitty --directory="$dir" "${cmd_args[@]}"
       ;;
     alacritty)
-      command -v alacritty >/dev/null 2>&1 && exec setsid alacritty --working-directory "$dir" "$@"
+      command -v alacritty >/dev/null 2>&1 && exec setsid alacritty --working-directory "$dir" "${cmd_args[@]}"
       ;;
     ghostty)
-      command -v ghostty >/dev/null 2>&1 && exec setsid ghostty --working-directory="$dir" "$@"
+      command -v ghostty >/dev/null 2>&1 && exec setsid ghostty --working-directory="$dir" "${cmd_args[@]}"
       ;;
   esac
 }
