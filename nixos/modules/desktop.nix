@@ -45,5 +45,19 @@
   environment.sessionVariables = {
     INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
     INFERNA_DOTFILES = "/home/petrolal/inferna-dotfiles";
+
+    # nixpkgs nests each package's gsettings schemas under its own
+    # share/gsettings-schemas/<name>/ subdir (to avoid collisions when several
+    # schema providers are installed), so plain systemPackages membership
+    # alone never puts them on XDG_DATA_DIRS the way a normal
+    # share/glib-2.0/schemas tree would. NixOS merges every module's
+    # sessionVariables into one list (see /etc/set-environment), so this adds
+    # to the existing dirs rather than replacing them. Without this, gsettings
+    # (and every GTK3/4 app reading it -- Thunar included) can't find
+    # org.gnome.desktop.interface at all and silently renders unthemed.
+    XDG_DATA_DIRS = [
+      "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
+      "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+    ];
   };
 }
