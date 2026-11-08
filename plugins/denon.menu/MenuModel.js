@@ -388,33 +388,19 @@ var GUARD_READERS = [
   "inferna-dns"
 ]
 
-// Package and command presence account for most of what the guards ask, and
-// asked one at a time they are almost all fork: the shipped menu spends over
-// a second on them. Answer them inside the guard process instead. These
-// shadow the real commands for the batch only, so they have to agree with
-// them everywhere, including for no arguments at all (present is true of
-// nothing, missing is not).
-//
-// `pacman -Q` resolves a name through what installed packages provide, not
-// just what they are called -- with gvim installed it reports `vim` as
-// present -- so the set has to carry provides too, or `install.editor.vim`
-// comes back and offers to install what is already there. A version
-// constraint (`bash>=1`) is not a name any set can answer, so it goes to
-// pacman itself; no shipped guard writes one.
-//
-// `pacman -Qi` wraps a long list across continuation lines whenever COLUMNS
-// is set in the environment, which a login shell may well have done, so the
-// parser follows the indented lines rather than reading the first one and
-// dropping half of what is installed.
+// Command presence accounts for most of what the guards ask. `command -v` is
+// already a builtin -- no fork, nothing to cache or snapshot -- so the guard
+// process just shadows inferna-pkg-present/-missing/inferna-cmd-present/
+// -missing directly with the same logic those scripts use (core/bin/
+// inferna-pkg-present, core/bin/inferna-pkg-missing): a package on NixOS is
+// present once its binary is on PATH, regardless of which Nix mechanism
+// (systemPackages, packages-adhoc.nix, home-manager, nix-env, nix profile)
+// put it there. The nix-env/nix-profile fallbacks only matter for the rare
+// package whose binary name differs from its attribute name.
 function guardHelpers() {
-  return 'declare -A __inferna_pkgs=()\n'
-    + 'mapfile -t __inferna_pkg_names < <({ pacman -Qq; LC_ALL=C pacman -Qi'
-    + " | awk '/^[A-Za-z]/ { provides = ($0 ~ /^Provides/); sub(/^[^:]*: /, \"\") }"
-    + ' provides && $0 != "None" { n = split($0, p, " ");'
-    + ' for (i = 1; i <= n; i++) { sub(/[<>=].*/, "", p[i]); print p[i] } }\'; } 2>/dev/null)\n'
-    + 'for __inferna_pkg in "${__inferna_pkg_names[@]}"; do __inferna_pkgs[$__inferna_pkg]=1; done\n'
-    + '__inferna_pkg_has() { [[ -n ${__inferna_pkgs[$1]-} ]] && return 0; '
-    + '[[ $1 == *[\\<\\>=]* ]] && { pacman -Q "$1" &>/dev/null; return; }; return 1; }\n'
+  return '__inferna_pkg_has() { command -v "$1" &>/dev/null && return 0; '
+    + 'nix-env -q "$1" &>/dev/null && return 0; '
+    + 'nix profile list 2>/dev/null | grep -q "$1"; }\n'
     + 'inferna-pkg-present() { local p; for p in "$@"; do __inferna_pkg_has "$p" || return 1; done; return 0; }\n'
     + 'inferna-pkg-missing() { local p; for p in "$@"; do __inferna_pkg_has "$p" || return 0; done; return 1; }\n'
     + 'inferna-cmd-present() { local c; for c in "$@"; do command -v "$c" &>/dev/null || return 1; done; return 0; }\n'

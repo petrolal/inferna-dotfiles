@@ -3,8 +3,6 @@
 # inferna:summary=Prompt for required reboot or service restarts after updates
 # inferna:args=[--services-only|--reboot-only]
 
-kernel_modules_path="${INFERNA_KERNEL_MODULES_PATH:-/usr/lib/modules}"
-
 mode="${1:-all}"
 case "$mode" in
   all|--services-only|--reboot-only) ;;
@@ -22,20 +20,15 @@ confirm_reboot() {
 }
 
 if [[ $mode != "--services-only" ]]; then
-  running_kernel=$(uname -r)
-  kernel_updated=true
-
-  # Every kernel package owns modules.builtin; Arch Linux ARM's ships no vmlinuz here (#12440).
-  for kernel in "$kernel_modules_path"/*/modules.builtin; do
-    if [[ -f $kernel ]] && pacman -Qo "$kernel" &>/dev/null; then
-      installed_kernel=$(basename "$(dirname "$kernel")")
-
-      if [[ $installed_kernel == $running_kernel ]]; then
-        kernel_updated=false
-        break
-      fi
-    fi
-  done
+  # /run/booted-system is the generation actually running; /run/current-system
+  # is the one `nixos-rebuild switch` last activated. They share a kernel
+  # store path until a switch changes it, so a reboot is needed exactly when
+  # the two diverge -- the NixOS equivalent of comparing `uname -r` against
+  # the package manager's installed kernel.
+  booted_kernel=$(readlink -f /run/booted-system/kernel 2>/dev/null)
+  current_kernel=$(readlink -f /run/current-system/kernel 2>/dev/null)
+  kernel_updated=false
+  [[ -n $booted_kernel && -n $current_kernel && $booted_kernel != "$current_kernel" ]] && kernel_updated=true
 
   if [[ $kernel_updated == "true" ]]; then
     confirm_reboot "$(inferna-i18n update.kernelReboot)"
