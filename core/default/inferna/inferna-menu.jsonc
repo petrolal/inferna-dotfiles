@@ -387,7 +387,7 @@
   "remove.ai.lm-studio": {"icon":"","iconFont":"inferna","label":"LM Studio","when":"inferna-pkg-present lmstudio","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-ai-lm-studio"},
   "remove.ai.ollama": {"icon":"","iconFont":"inferna","label":"Ollama","when":"inferna-pkg-present ollama","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-ai-ollama"},
   "remove.ai.openclaw": {"icon":"","iconFont":"inferna","label":"OpenClaw","when":"inferna-pkg-present openclaw","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-ai-openclaw"},
-  "remove.ai.t3-code": {"icon":"","iconFont":"inferna","label":"T3 Code","when":"[[ -f \"$HOME/.local/share/t3code/T3-Code.AppImage\" ]] || inferna-pkg-present t3code-bin || inferna-pkg-present t3code-nightly-bin","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-ai-t3-code"},
+  "remove.ai.t3-code": {"icon":"","iconFont":"inferna","label":"T3 Code","when":"[[ -f \"$HOME/.local/share/t3code/T3-Code.AppImage\" ]]","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-ai-t3-code"},
   "remove.gaming.steam": {"icon":"","label":"Steam","when":"inferna-pkg-present steam","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-gaming-steam"},
   "remove.gaming.retroarch": {"icon":"","label":"RetroArch","when":"inferna-pkg-present retroarch","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-gaming-retroarch"},
   "remove.gaming.minecraft": {"icon":"󰍳","label":"Minecraft","when":"inferna-pkg-present minecraft-launcher","action":"inferna-launch-floating-terminal-with-presentation inferna-remove-gaming-minecraft"},
