@@ -143,6 +143,11 @@ let
     alacritty
     footQuiet    # Inferna terminal emulator (wrapped to default --log-level=error)
     thunar  # standalone GTK file manager; no longer pulled in transitively now that desktopManager.xfce is gone
+    glib    # gsettings CLI, used by inferna-theme-set-gnome; also keeps a single
+            # canonical build on PATH instead of its old /nix/store/*-glib-*
+            # wildcard fallback, which could match a GIO-module-incompatible
+            # build (e.g. a 32-bit glib pulled in by hardware.graphics.enable32Bit)
+    gsettings-desktop-schemas # org.gnome.desktop.interface schema gsettings needs
     grim         # Wayland screenshot capture, bound in config/hypr/hyprland.lua
     slurp        # region selection for grim
     wl-clipboard
