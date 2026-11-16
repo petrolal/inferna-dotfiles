@@ -20,20 +20,6 @@ if [[ $INFERNA_PATH != "/usr/share/inferna" ]]; then
   fi
 fi
 
-package=""
-if pacman -Qq inferna-dev >/dev/null 2>&1; then
-  package=inferna-dev
-elif pacman -Qq inferna >/dev/null 2>&1; then
-  package=inferna
-fi
-
-if [[ -n $package ]]; then
-  update=$(checkupdates --nocolor 2>/dev/null | awk -v package="$package" '$1 == package { print; exit }' || true)
-fi
-
-if [[ -n ${update:-} ]]; then
-  updates+=("$update")
-fi
 
 if (( ${#updates[@]} > 0 )); then
   printf '%s\n' "${updates[@]}"

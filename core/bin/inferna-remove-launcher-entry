@@ -88,17 +88,46 @@ if is_user_desktop_file; then
   exit 0
 fi
 
-if package_name="$(pacman -Qqo "$desktop_file" 2>/dev/null | head -1)" && [[ -n $package_name ]]; then
-  display_name="${entry_name:-$desktop_name}"
-  quoted_package="$(printf '%q' "$package_name")"
-  quoted_display="$(printf '%q' "$display_name")"
-  exec inferna-launch-floating-terminal-with-presentation "echo Uninstalling $quoted_display...; sudo pacman -Rns $quoted_package"
-fi
-
 if inferna-cmd-present flatpak && flatpak info "${desktop_file_name%.desktop}" >/dev/null 2>&1; then
   flatpak_id="${desktop_file_name%.desktop}"
   quoted_flatpak="$(printf '%q' "$flatpak_id")"
   exec inferna-launch-floating-terminal-with-presentation "flatpak uninstall $quoted_flatpak"
+fi
+
+if flake_dir="$(inferna-nixos-flake-dir 2>/dev/null)"; then
+  adhoc_file="$flake_dir/modules/packages-adhoc.nix"
+  target_pkg=""
+  if [[ -f $adhoc_file ]]; then
+    clean_name="$(echo "$desktop_name" | tr '[:upper:]' '[:lower:]')"
+    if grep -qE "^\s*${clean_name}\s*$" "$adhoc_file"; then
+      target_pkg="$clean_name"
+    else
+      target_path="$(readlink -f "$desktop_file" 2>/dev/null || true)"
+      if [[ $target_path =~ ^/nix/store/[a-z0-9]+-([^/]+)/ ]]; then
+        pname_ver="${BASH_REMATCH[1]}"
+        while read -r line; do
+          pkg_candidate="$(echo "$line" | sed 's/#.*//' | xargs)"
+          if [[ -n $pkg_candidate && $pname_ver =~ ^$pkg_candidate(-[0-9].*)?$ ]]; then
+            target_pkg="$pkg_candidate"
+            break
+          fi
+        done < "$adhoc_file"
+      fi
+    fi
+  fi
+
+  if [[ -n $target_pkg ]]; then
+    display_name="${entry_name:-$desktop_name}"
+    quoted_display="$(printf '%q' "$display_name")"
+    exec inferna-launch-floating-terminal-with-presentation "echo Uninstalling $quoted_display...; inferna-pkg-drop '$target_pkg'"
+  fi
+fi
+
+real_path="$(readlink -f "$desktop_file" 2>/dev/null || true)"
+if [[ $real_path == /nix/store/* ]]; then
+  echo "Error: ${entry_name:-$desktop_name} is managed declaratively by your NixOS configuration." >&2
+  echo "To remove it, delete it from your NixOS modules and rebuild (nixos-rebuild switch)." >&2
+  exit 1
 fi
 
 echo "Don't know how to uninstall $desktop_file_name" >&2

@@ -5,12 +5,7 @@
 
 dropbox-cli stop 2>/dev/null || true
 inferna-plugin-disable inferna.dropbox
-inferna-pkg-drop dropbox dropbox-cli python-gpgme nautilus-dropbox
-
-# Other tray apps need libappindicator too, and naming a required package fails the whole removal
-if pacman -Qqtt libappindicator &>/dev/null; then
-  inferna-pkg-drop libappindicator
-fi
+inferna-pkg-drop dropbox dropbox-cli python-gpgme nautilus-dropbox libappindicator
 
 echo ""
 echo "Dropbox has been removed."

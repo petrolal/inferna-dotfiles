@@ -16,12 +16,4 @@ if [[ -d $inferna_path ]]; then
   exit 0
 fi
 
-# The edge channel installs inferna-dev instead of inferna, so check both.
-for package in inferna-dev inferna inferna; do
-  version=$(pacman -Q "$package" 2>/dev/null | awk '{ print $2 }')
-  [[ -n $version ]] && break
-done
-
-[[ -n $version ]] || version="Inferna 1.0.0-nixos"
-
-echo "$version"
+echo "Inferna 1.0.0-nixos"

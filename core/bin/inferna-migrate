@@ -65,23 +65,6 @@ if [[ $mode == "pending" ]]; then
   fi
 fi
 
-wait_for_pacman_transaction() {
-  local lock_file=/var/lib/pacman/db.lck
-
-  [[ -e $lock_file ]] || return 0
-  echo "Waiting for pacman transaction to finish before running Inferna migrations..."
-
-  for _ in {1..900}; do
-    [[ -e $lock_file ]] || return 0
-    sleep 1
-  done
-
-  echo "Pacman transaction is still running; Inferna migrations will retry on next login."
-  exit 0
-}
-
-wait_for_pacman_transaction
-
 mkdir -p "$STATE_DIR"
 [[ -d $MIGRATIONS_DIR ]] || exit 0
 
