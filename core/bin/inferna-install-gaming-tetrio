@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# inferna:summary=Install the official TETR.IO Desktop app (signed tar.gz from tetr.io)
+# inferna:group=install
+# inferna:name=gaming tetrio
+
+# TETR.IO Desktop has no Linux package repo -- upstream ships a per-release
+# tar.gz straight off tetr.io/about/desktop/, detached-signed with osk
+# publishing's key. The page has no "latest" alias, so the current build
+# number is scraped off that page rather than hardcoded, and the signer's
+# fingerprint is pinned here so a compromised pubkey.asc can't just vouch for
+# itself.
+set -euo pipefail
+
+APP_DIR="$HOME/.local/share/tetrio-desktop"
+DESKTOP_FILE="$HOME/.local/share/applications/TETR.IO.desktop"
+ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
+PAGE_URL="https://tetr.io/about/desktop/"
+SIGNER_FINGERPRINT="34A1EDFD6AF8A4B4AC02E8B6EB6C865018C4BECD"
+
+echo "Installing TETR.IO Desktop..."
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+echo "Checking the current build..."
+curl -fsSL --retry 3 "$PAGE_URL" -o "$work/page.html"
+build=$(grep -oE 'builds/[0-9]+/TETR\.IO Setup\.tar\.gz' "$work/page.html" | head -1 | grep -oE '[0-9]+')
+if [[ -z $build ]]; then
+  echo "Could not find the current TETR.IO Desktop build on $PAGE_URL." >&2
+  exit 1
+fi
+
+base_url="https://tetr.io/about/desktop/builds/$build/TETR.IO%20Setup.tar.gz"
+echo "Downloading TETR.IO Desktop (build $build)..."
+curl -fsSL --retry 3 --progress-bar "$base_url" -o "$work/tetrio.tar.gz"
+curl -fsSL --retry 3 "$base_url.sig" -o "$work/tetrio.tar.gz.sig"
+curl -fsSL --retry 3 "https://tetr.io/about/desktop/builds/osk-publishing-pubkey.asc" -o "$work/pubkey.asc"
+
+echo "Verifying signature..."
+export GNUPGHOME="$work/gnupg"
+mkdir -m 700 "$GNUPGHOME"
+gpg --batch --quiet --import "$work/pubkey.asc"
+imported_fp=$(gpg --batch --with-colons --fingerprint | awk -F: '/^fpr:/ { print $10; exit }')
+if [[ $imported_fp != "$SIGNER_FINGERPRINT" ]]; then
+  echo "TETR.IO's public key fingerprint changed ($imported_fp) -- refusing to trust it." >&2
+  exit 1
+fi
+if ! gpg --batch --quiet --verify "$work/tetrio.tar.gz.sig" "$work/tetrio.tar.gz"; then
+  echo "TETR.IO Desktop's download does not match its signature." >&2
+  exit 1
+fi
+
+echo "Installing to $APP_DIR..."
+tar -xzf "$work/tetrio.tar.gz" -C "$work"
+extracted=$(find "$work" -mindepth 1 -maxdepth 1 -type d -name 'tetrio-desktop-*')
+if [[ -z $extracted ]]; then
+  echo "Unexpected TETR.IO Desktop archive layout." >&2
+  exit 1
+fi
+chmod 0755 "$extracted/chrome-sandbox" "$extracted/TETR.IO"
+rm -rf "$APP_DIR"
+mkdir -p "$(dirname "$APP_DIR")"
+mv "$extracted" "$APP_DIR"
+
+mkdir -p "$ICON_DIR"
+if ! curl -fsSL --retry 3 "https://www.google.com/s2/favicons?domain=tetr.io&sz=256" -o "$ICON_DIR/tetrio.png"; then
+  rm -f "$ICON_DIR/tetrio.png"
+fi
+[[ -s $ICON_DIR/tetrio.png ]] && gtk-update-icon-cache "$HOME/.local/share/icons/hicolor" &>/dev/null || true
+
+mkdir -p "$(dirname "$DESKTOP_FILE")"
+cat >"$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TETR.IO
+GenericName=Game
+Comment=TETR.IO Desktop (official build)
+Exec=$APP_DIR/TETR.IO %U
+Icon=tetrio
+Terminal=false
+Categories=Game;
+StartupNotify=true
+EOF
+chmod +x "$DESKTOP_FILE"
+update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+
+setsid "$APP_DIR/TETR.IO" >/dev/null 2>&1 &
