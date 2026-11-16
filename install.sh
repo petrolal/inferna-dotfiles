@@ -156,8 +156,8 @@ PY
 fi
 
 echo "Reloading..."
-hyprctl reload >/dev/null 2>&1 || true
 inferna-restart-shell >/dev/null 2>&1 || true
+hyprctl reload >/dev/null 2>&1 || true
 
 cat <<EOF
 

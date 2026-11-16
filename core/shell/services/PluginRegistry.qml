@@ -25,6 +25,7 @@ QtObject {
   property int registryRevision: 0
   property bool scanning: false
   property string lastEnableError: ""
+  property bool _isDestroying: false
 
   signal pluginsChanged()
   signal scanFinished()
@@ -610,6 +611,7 @@ QtObject {
   //   === EOM ===
   // (repeating for every manifest found)
   function parseScanOutput(text) {
+    if (_isDestroying) return
     var lines = String(text || "").split("\n")
     var firstParty = {}
     var thirdParty = {}
@@ -680,6 +682,7 @@ QtObject {
 
   property Process scanProcess: Process {
     onExited: function(exitCode) {
+      if (registry._isDestroying) return
       var output = scanStdout.text || ""
       registry.parseScanOutput(output)
     }
@@ -691,7 +694,7 @@ QtObject {
 
   property Process initProcess: Process {
     onExited: {
-      registry.reapOrphanedPluginWatchers()
+      if (!registry._isDestroying) registry.reapOrphanedPluginWatchers()
     }
   }
 
@@ -703,12 +706,15 @@ QtObject {
   // own command line from matching its search.
   property Process watcherReaper: Process {
     onExited: {
-      localPluginWatcher.running = true
-      registry.rescan()
+      if (!registry._isDestroying) {
+        localPluginWatcher.running = true
+        registry.rescan()
+      }
     }
   }
 
   function reapOrphanedPluginWatchers() {
+    if (_isDestroying) return
     watcherReaper.command = ["bash", "-c",
       "for p in $(pgrep -f '[i]notifywait -m -r -q -e close_write,create,delete,move' || true); do "
         + "tr '\\0' '\\n' < \"/proc/$p/cmdline\" 2>/dev/null | grep -Fxq \"$1\" || continue; "
@@ -723,8 +729,12 @@ QtObject {
   // A graceful stop takes the watcher with it; the reaper above covers the
   // stops that never run this (a killed or crashed shell).
   Component.onDestruction: {
+    _isDestroying = true
     localPluginWatcherRestart.stop()
     localPluginWatcher.running = false
+    scanProcess.running = false
+    initProcess.running = false
+    watcherReaper.running = false
   }
 
   property Process localPluginWatcher: Process {
@@ -741,20 +751,21 @@ QtObject {
     ]
     stdout: SplitParser {
       onRead: function(path) {
+        if (registry._isDestroying) return
         var pluginId = registry.localPluginIdForPath(path)
         if (pluginId) registry.localPluginChanged(pluginId)
       }
     }
-    onExited: localPluginWatcherRestart.restart()
+    onExited: if (!registry._isDestroying) localPluginWatcherRestart.restart()
   }
 
   property Timer localPluginWatcherRestart: Timer {
     interval: 1000
-    onTriggered: localPluginWatcher.running = true
+    onTriggered: if (!registry._isDestroying) localPluginWatcher.running = true
   }
 
   function rescan() {
-    if (scanning) return
+    if (scanning || _isDestroying) return
     scanning = true
     // $0 = first-party dir, $1 = third-party dir. Some bash versions need the explicit -- separator.
     // First-party plugins may be grouped one level deeper, e.g. panels/audio

@@ -99,15 +99,20 @@ inferna_shell_dirs() {
     jq -r '.[].config_path | select(endswith("/shell/shell.qml")) | rtrimstr("/shell.qml")' 2>/dev/null)
 }
 
-while timeout 30 quickshell kill -p "$CONFIG_DIR" --any-display >/dev/null 2>&1; do :; done
+while timeout 30 quickshell kill -p "$CONFIG_DIR" --any-display >/dev/null 2>&1; do sleep 0.1; done
 while IFS= read -r dir; do
-  timeout 30 quickshell kill -p "$dir" --any-display >/dev/null 2>&1
+  timeout 30 quickshell kill -p "$dir" --any-display >/dev/null 2>&1 || true
 done < <(inferna_shell_dirs)
 
 deadline=$((SECONDS + 30))
 while (( SECONDS < deadline )) && [[ -n $(inferna_shell_dirs) ]]; do
   sleep 0.1
 done
+if [[ -n $(inferna_shell_dirs) ]]; then
+  pkill -TERM -f "quickshell.*$CONFIG_DIR" 2>/dev/null || true
+  sleep 0.5
+  pkill -KILL -f "quickshell.*$CONFIG_DIR" 2>/dev/null || true
+fi
 
 # Spawn from Hyprland so the shell inherits the canonical session environment,
 # not transient variables from a terminal, SSH connection, or development tool.

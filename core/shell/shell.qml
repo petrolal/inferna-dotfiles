@@ -66,20 +66,29 @@ ShellRoot {
   property bool userConfigUnreadable: false
   property bool pluginReloading: false
   property bool pluginReloadPending: false
+  property bool _isDestroying: false
+
+  Component.onDestruction: {
+    _isDestroying = true
+    localPluginReloadTimer.stop()
+    unloadPanels()
+  }
 
   Timer {
     id: localPluginReloadTimer
     interval: 150
-    onTriggered: shell.reloadPlugins()
+    onTriggered: if (!shell._isDestroying) shell.reloadPlugins()
   }
 
   onShellConfigChanged: {
+    if (_isDestroying) return
     if (failedBarId !== "") failedBarId = ""
     pluginRegistry.registryRevision++
     pluginRegistry.pluginsChanged()
   }
 
   function applyShellConfig() {
+    if (_isDestroying) return
     // Decide which source is canonical: a valid user shell.json overrides
     // defaults entirely; otherwise fall back to defaults. We do not deep-merge.
     var defaults = Util.isPlainObject(defaultsConfig) ? defaultsConfig : builtinShellConfig
@@ -137,12 +146,13 @@ ShellRoot {
     path: shell.defaultsPath
     watchChanges: true
     printErrors: false
-    onLoaded: shell.loadDefaults(text())
+    onLoaded: if (!shell._isDestroying) shell.loadDefaults(text())
     onLoadFailed: function(error) {
+      if (shell._isDestroying) return
       console.warn("default shell.json load failed: " + error + " path=" + shell.defaultsPath)
       shell.loadDefaults("")
     }
-    onFileChanged: reload()
+    onFileChanged: if (!shell._isDestroying) reload()
   }
 
   FileView {
@@ -151,9 +161,9 @@ ShellRoot {
     watchChanges: true
     atomicWrites: true
     printErrors: false
-    onLoaded: shell.applyShellConfig()
-    onLoadFailed: function(error) { shell.applyShellConfig() }
-    onFileChanged: reload()
+    onLoaded: if (!shell._isDestroying) shell.applyShellConfig()
+    onLoadFailed: function(error) { if (!shell._isDestroying) shell.applyShellConfig() }
+    onFileChanged: if (!shell._isDestroying) reload()
   }
 
   Component.onCompleted: {
@@ -255,19 +265,18 @@ ShellRoot {
   Loader {
     id: defaultBarLoader
 
-    active: shell.activeBarId === shell.defaultBarId
+    active: !shell._isDestroying && shell.activeBarId === shell.defaultBarId
     sourceComponent: defaultBarComponent
-    onLoaded: shell.configureBar(item, shell.barManifestFor(shell.defaultBarId))
+    onLoaded: if (!shell._isDestroying) shell.configureBar(item, shell.barManifestFor(shell.defaultBarId))
     onActiveChanged: if (!active && shell.activeBarId !== shell.defaultBarId) shell.bar = null
   }
 
   Loader {
     id: pluginBarLoader
 
-    active: !shell.pluginReloading && shell.activeBarId !== shell.defaultBarId && shell.activeBarSourceUrl !== ""
+    active: !shell._isDestroying && !shell.pluginReloading && shell.activeBarId !== shell.defaultBarId && shell.activeBarSourceUrl !== ""
     source: shell.activeBarId !== shell.defaultBarId ? shell.activeBarSourceUrl : ""
-    asynchronous: true
-    onLoaded: shell.configureBar(item, shell.activeBarManifest)
+    onLoaded: if (!shell._isDestroying) shell.configureBar(item, shell.activeBarManifest)
     onActiveChanged: if (!active) shell.bar = null
     onStatusChanged: {
       if (status === Loader.Error) {
@@ -885,6 +894,7 @@ ShellRoot {
   }
 
   function syncPluginApis() {
+    if (_isDestroying) return
     shell.prunePluginApis()
     var plugins = shell.pluginRegistry.installedPlugins
     for (var id in _pluginRegistryApis) {
@@ -929,6 +939,7 @@ ShellRoot {
   }
 
   function ensureService(pluginId) {
+    if (_isDestroying) return null
     var key = String(pluginId)
     if (_services[key]) return _services[key]
     var manifest = pluginRegistry && pluginRegistry.installedPlugins
@@ -943,6 +954,7 @@ ShellRoot {
 
     var comp = Qt.createComponent(url, Component.PreferSynchronous)
     function finalize() {
+      if (_isDestroying) return
       if (comp.status !== Component.Ready) {
         console.warn("service plugin load failed for " + key + ": " + comp.errorString())
         return
@@ -981,7 +993,7 @@ ShellRoot {
   }
 
   function _syncServices() {
-    if (!pluginRegistry || !pluginRegistry.installedPlugins) return
+    if (_isDestroying || !pluginRegistry || !pluginRegistry.installedPlugins) return
     var plugins = pluginRegistry.installedPlugins
     for (var id in plugins) {
       var m = plugins[id]
@@ -1082,6 +1094,7 @@ ShellRoot {
   Connections {
     target: shell.pluginRegistry
     function onPluginsChanged() {
+      if (shell._isDestroying) return
       shell.syncPluginApis()
       if (!shell.pluginReloading) shell._syncServices()
     }
@@ -1382,12 +1395,12 @@ ShellRoot {
 
   Connections {
     target: shell.pluginRegistry
-    function onPluginsChanged() { if (!shell.pluginReloading) shell.syncPanelEntries() }
+    function onPluginsChanged() { if (!shell._isDestroying && !shell.pluginReloading) shell.syncPanelEntries() }
   }
 
   Instantiator {
     model: panelEntryModel
-    active: true
+    active: !shell._isDestroying
 
     delegate: QtObject {
       id: panelEntry
@@ -1400,10 +1413,9 @@ ShellRoot {
 
       property Loader panelLoader: Loader {
         source: panelEntry.sourceUrl
-        active: panelEntry.sourceUrl !== "" && (panelEntry.keepLoaded || shell.openPanelIds[panelEntry.pluginId] === true)
-        asynchronous: true
+        active: !shell._isDestroying && panelEntry.sourceUrl !== "" && (panelEntry.keepLoaded || shell.openPanelIds[panelEntry.pluginId] === true)
         onLoaded: {
-          if (!item) return
+          if (shell._isDestroying || !item) return
           if ("infernaPath" in item) item.infernaPath = shell.infernaPath
           if ("shell" in item) item.shell = shell.pluginShellFor(panelEntry.manifest)
           if ("manifest" in item) item.manifest = shell.publicPluginManifest(panelEntry.manifest)
@@ -1516,6 +1528,7 @@ ShellRoot {
   }
 
   function reloadPlugins() {
+    if (shell._isDestroying) return
     if (shell.pluginReloading || shell.pluginRegistry.scanning) {
       shell.pluginReloadPending = true
       return
@@ -1528,7 +1541,7 @@ ShellRoot {
   }
 
   function finishPluginReload() {
-    if (!shell.pluginReloading) return
+    if (shell._isDestroying || !shell.pluginReloading) return
     if (shell.pluginRegistry.scanning) {
       shell.pluginReloadPending = true
       return
@@ -1540,10 +1553,12 @@ ShellRoot {
   Connections {
     target: shell.pluginRegistry
     function onLocalPluginChanged(pluginId) {
+      if (shell._isDestroying) return
       console.log("Local plugin changed, reloading:", pluginId)
       localPluginReloadTimer.restart()
     }
     function onScanFinished() {
+      if (shell._isDestroying) return
       if (shell.pluginReloadPending) {
         shell.pluginReloadPending = false
         shell.pluginReloading = false
