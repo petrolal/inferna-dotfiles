@@ -75,8 +75,8 @@ ACTION=$(gum choose "${OPTIONS[@]}")
 
 case "$ACTION" in
   "Upload log")
-    echo "Uploading debug log to logs.inferna.org..."
-    URL=$(curl -sf -F "file=@$LOG_FILE" -Fexpires=24 https://logs.omarchy.org/)
+    echo "Uploading debug log..."
+    URL=$(curl -sf -F "file=@$LOG_FILE" -Fexpires=24 https://logs.inferna.org/ 2>/dev/null || curl -sf -F "file=@$LOG_FILE" -Fexpires=24 https://logs.omarchy.org/ 2>/dev/null || curl -sf -F "file=@$LOG_FILE" https://0x0.st 2>/dev/null || true)
     if (( $? == 0 )) && [[ -n $URL ]]; then
       echo "✓ Log uploaded successfully!"
       echo "Share this URL:"

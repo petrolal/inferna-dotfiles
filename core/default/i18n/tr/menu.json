@@ -1268,9 +1268,6 @@
   "remove.service.1password": {
     "label": "1Password"
   },
-  "update.kernel": {
-    "label": "Çekirdek"
-  },
   "setup.default.dictation.hex": {
     "label": "Hex"
   },

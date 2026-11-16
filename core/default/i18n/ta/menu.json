@@ -1259,9 +1259,6 @@
   "remove.service.1password": {
     "label": "1Password"
   },
-  "update.kernel": {
-    "label": "கர்னல்"
-  },
   "appearance.top-bar.indicators.battery-percentage-on": {
     "label": "பேட்டரி % காட்டு"
   },

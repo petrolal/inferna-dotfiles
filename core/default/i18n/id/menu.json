@@ -1211,9 +1211,6 @@
   "remove.service.1password": {
     "label": "1Password"
   },
-  "update.kernel": {
-    "label": "Kernel"
-  },
   "appearance.top-bar.indicators.battery-percentage-on": {
     "label": "Tampilkan % Baterai"
   },

@@ -7,9 +7,9 @@
 
 set -e
 
-inferna-pkg-drop xpadneo-dkms
-
-sudo rm -f /etc/modprobe.d/blacklist-xpad.conf /etc/modules-load.d/xpadneo.conf
+echo "Unloading xpadneo kernel module..."
+sudo modprobe -r hid_xpadneo 2>/dev/null || true
 
 echo ""
-echo "Xbox controller support removed. Reboot to fully unload xpadneo and restore xpad."
+echo "Xbox controller support unloaded."
+echo "Note: to disable it permanently across reboots, set hardware.xpadneo.enable = false in nixos/modules/gaming.nix."

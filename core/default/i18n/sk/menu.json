@@ -1208,9 +1208,6 @@
   "remove.service.1password": {
     "label": "1Password"
   },
-  "update.kernel": {
-    "label": "Jadro"
-  },
   "trigger.toggle.crash-capture-off": {
     "label": "Vypnúť zachytávanie pádov"
   },
