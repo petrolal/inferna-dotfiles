@@ -1,22 +1,22 @@
-# Omarchy bar
+# Inferna bar
 
-This is the Quickshell implementation of the Omarchy status bar. It is
-shipped as a first-party plugin of [`omarchy-shell`](../../README.md), the
+This is the Quickshell implementation of the Inferna status bar. It is
+shipped as a first-party plugin of [`inferna-shell`](../../README.md), the
 long-running shell host. The bar is mounted at startup and lives inside
 the shell for its whole session.
 
-- `manifest.json` declares the plugin (`id: omarchy.bar`, `kind: bar`) and points at `Bar.qml` as the entry point.
-- `Bar.qml` is Omarchy-owned bar engine code, loaded by the omarchy-shell host. Users should not edit it directly.
+- `manifest.json` declares the plugin (`id: inferna.bar`, `kind: bar`) and points at `Bar.qml` as the entry point.
+- `Bar.qml` is Inferna-owned bar engine code, loaded by the inferna-shell host. Users should not edit it directly.
 - `widgets/` holds simple first-party bar widgets with sibling manifests.
 - Feature plugins such as `../panels/audio/`, `../panels/network/`, `../panels/power/`, and `../agents/` provide richer popup bar plugins.
-- The bar receives its config from the host shell as a `barConfig` property; the host loads it from `~/.config/omarchy/shell.json` (or `config/omarchy/shell.json` when the user has no file).
-- `omarchy bar position` updates only the user shell.json file.
+- The bar receives its config from the host shell as a `barConfig` property; the host loads it from `~/.config/inferna/shell.json` (or `config/inferna/shell.json` when the user has no file).
+- `inferna bar position` updates only the user shell.json file.
 
 ## Customizing
 
-The bar config lives under the `bar:` key of [`~/.config/omarchy/shell.json`](../../README.md#shelljson-shape). Out of the box the shell uses [`config/omarchy/shell.json`](../../../config/omarchy/shell.json). Once you customize anything via the bar gestures, `omarchy bar ...`, or by editing shell.json directly, your file is canonical — there is no deep-merge.
+The bar config lives under the `bar:` key of [`~/.config/inferna/shell.json`](../../README.md#shelljson-shape). Out of the box the shell uses [`config/inferna/shell.json`](../../../config/inferna/shell.json). Once you customize anything via the bar gestures, `inferna bar ...`, or by editing shell.json directly, your file is canonical — there is no deep-merge.
 
-The bar is configured directly on the bar itself: drag empty bar space (or click-and-hold) to move the bar to another screen edge, double-left-click empty center-bar space to toggle transparency, and drag widgets to reorder them. The `omarchy bar position`, `omarchy bar transparent`, `omarchy bar move`, and `omarchy bar set` commands do the same from scripts. Enable or disable widgets with `omarchy plugin enable` and `omarchy plugin disable` (widget ids come from `omarchy plugin list`).
+The bar is configured directly on the bar itself: drag empty bar space (or click-and-hold) to move the bar to another screen edge, double-left-click empty center-bar space to toggle transparency, and drag widgets to reorder them. The `inferna bar position`, `inferna bar transparent`, `inferna bar move`, and `inferna bar set` commands do the same from scripts. Enable or disable widgets with `inferna plugin enable` and `inferna plugin disable` (widget ids come from `inferna plugin list`).
 
 Example `shell.json` (bar subtree only shown):
 
@@ -26,20 +26,20 @@ Example `shell.json` (bar subtree only shown):
   "bar": {
     "position": "top",
     "transparent": false,
-    "centerAnchor": "omarchy.clock",
+    "centerAnchor": "inferna.clock",
     "layout": {
       "left": [
-        { "id": "omarchy.menu" },
-        { "id": "omarchy.spacer", "size": 12 },
-        { "id": "omarchy.workspaces" }
+        { "id": "inferna.menu" },
+        { "id": "inferna.spacer", "size": 12 },
+        { "id": "inferna.workspaces" }
       ],
       "center": [
-        { "id": "omarchy.media" },
-        { "id": "omarchy.clock", "format": "HH:mm" }
+        { "id": "inferna.media" },
+        { "id": "inferna.clock", "format": "HH:mm" }
       ],
       "right": [
-        { "id": "omarchy.audio" },
-        { "id": "omarchy.power" }
+        { "id": "inferna.audio" },
+        { "id": "inferna.power" }
       ]
     }
   }
@@ -54,25 +54,25 @@ Example `shell.json` (bar subtree only shown):
 
 | Name | What it does | Interactions |
 |---|---|---|
-| `omarchy.menu` | Omarchy menu launcher | left = menu · right = terminal |
-| `omarchy.workspaces` | Hyprland workspace switcher | left = focus workspace |
-| `omarchy.clock` | Date/time label + popup with a month grid, ISO week numbers, and month stepping | left = popup · right = cycle label format · middle = timezone selector |
-| `omarchy.media` | MPRIS now-playing — scrolling track + artist, cover-art popup | left = play/pause · middle = next · scroll = prev/next · right = popup |
-| `omarchy.indicators` | Manual state indicators | left = indicator action |
-| `omarchy.system-update` | Available update indicator | left = update |
-| `omarchy.tray` | System tray | hover = reveal drawer · right on chevron = manage |
-| `omarchy.weather` | Weather icon + popup with forecast | left = popup · right = full notification |
-| `omarchy.microphone` | Mic icon + scroll volume | left = mute toggle · middle = audio panel · scroll = source volume |
+| `inferna.menu` | Inferna menu launcher | left = menu · right = terminal |
+| `inferna.workspaces` | Hyprland workspace switcher | left = focus workspace |
+| `inferna.clock` | Date/time label + popup with a month grid, ISO week numbers, and month stepping | left = popup · right = cycle label format · middle = timezone selector |
+| `inferna.media` | MPRIS now-playing — scrolling track + artist, cover-art popup | left = play/pause · middle = next · scroll = prev/next · right = popup |
+| `inferna.indicators` | Manual state indicators | left = indicator action |
+| `inferna.system-update` | Available update indicator | left = update |
+| `inferna.tray` | System tray | hover = reveal drawer · right on chevron = manage |
+| `inferna.weather` | Weather icon + popup with forecast | left = popup · right = full notification |
+| `inferna.microphone` | Mic icon + scroll volume | left = mute toggle · middle = audio panel · scroll = source volume |
 
-| `omarchy.audio` | Volume icon + popup with master slider, output-device picker, per-app mixer | left = popup · right = mute · middle = popup · scroll = volume |
-| `omarchy.network` | Wi-Fi/Ethernet icon + popup with Wi-Fi scan, signal, connect, DNS provider selection | left = popup |
-| `omarchy.tailscale` | Tailscale status, connection switcher, machine browser, and copy actions | left = popup · right = toggle · middle = refresh |
-| `omarchy.agents` | AI coding agent limits with pace, today, last week, and all-time model breakdown | left = panel · right = launch agent · middle = next subscription |
-| `omarchy.power` | Battery/AC icon + popup with battery stats, power profiles, and system info | left = popup · right = toggle percentage |
-| `omarchy.bluetooth` | Bluetooth icon + popup with device list, connect/disconnect, battery | left = popup · right = toggle radio |
-| `omarchy.monitor` | Brightness and laptop display controls | left = popup |
+| `inferna.audio` | Volume icon + popup with master slider, output-device picker, per-app mixer | left = popup · right = mute · middle = popup · scroll = volume |
+| `inferna.network` | Wi-Fi/Ethernet icon + popup with Wi-Fi scan, signal, connect, DNS provider selection | left = popup |
+| `inferna.tailscale` | Tailscale status, connection switcher, machine browser, and copy actions | left = popup · right = toggle · middle = refresh |
+| `inferna.agents` | AI coding agent limits with pace, today, last week, and all-time model breakdown | left = panel · right = launch agent · middle = next subscription |
+| `inferna.power` | Battery/AC icon + popup with battery stats, power profiles, and system info | left = popup · right = toggle percentage |
+| `inferna.bluetooth` | Bluetooth icon + popup with device list, connect/disconnect, battery | left = popup · right = toggle radio |
+| `inferna.monitor` | Brightness and laptop display controls | left = popup |
 
-The `omarchy.indicators` widget loads individual bar indicators from `indicators/`. Omit `items` (or set it to an empty array) to show all indicators in the default order, or set `items` to a subset such as `["Dnd", "Reminder", "NightLight"]`. Set `alwaysShow` to `true` to keep inactive indicators visible instead of revealing them only on hover. Multiple `omarchy.indicators` instances are allowed, so different sections can show different subsets.
+The `inferna.indicators` widget loads individual bar indicators from `indicators/`. Omit `items` (or set it to an empty array) to show all indicators in the default order, or set `items` to a subset such as `["Dnd", "Reminder", "NightLight"]`. Set `alwaysShow` to `true` to keep inactive indicators visible instead of revealing them only on hover. Multiple `inferna.indicators` instances are allowed, so different sections can show different subsets.
 
 ## Orientation
 
@@ -90,9 +90,9 @@ Command module:
   "bar": {
     "layout": {
       "right": [
-        { "id": "omarchy.tray" },
-        { "id": "vpn", "type": "command", "exec": "~/.config/omarchy/bar/scripts/vpn-status", "interval": 5, "tooltip": "VPN", "onClick": "nm-connection-editor" },
-        { "id": "omarchy.audio" }
+        { "id": "inferna.tray" },
+        { "id": "vpn", "type": "command", "exec": "~/.config/inferna/bar/scripts/vpn-status", "interval": 5, "tooltip": "VPN", "onClick": "nm-connection-editor" },
+        { "id": "inferna.audio" }
       ]
     }
   }
@@ -114,14 +114,14 @@ QML module:
     "layout": {
       "right": [
         { "id": "gpu", "type": "qml" },
-        { "id": "omarchy.audio" }
+        { "id": "inferna.audio" }
       ]
     }
   }
 }
 ```
 
-Then create `~/.config/omarchy/bar/modules/gpu.qml`. If you want to store it elsewhere, add a `source` path.
+Then create `~/.config/inferna/bar/modules/gpu.qml`. If you want to store it elsewhere, add a `source` path.
 
 Custom QML modules should be an `Item` with `implicitWidth` and `implicitHeight`. They may optionally define these properties, which the bar fills after loading:
 
@@ -146,7 +146,7 @@ Item {
 
   MouseArea {
     anchors.fill: parent
-    onClicked: if (bar) bar.run("omarchy-launch-or-focus-tui btop")
+    onClicked: if (bar) bar.run("inferna-launch-or-focus-tui btop")
   }
 }
 ```
@@ -169,15 +169,15 @@ First-party bar widgets are manifest-backed just like third-party widgets.
 Simple widgets carry sibling manifests such as `widgets/Workspaces.manifest.json`;
 richer popup plugins live in feature directories such as `../panels/audio/`,
 `../panels/network/`, and `../agents/`; and feature plugins such as
-`omarchy.menu` and `omarchy.media` declare their bar-widget entry points in their own
-`manifest.json`. Bar layout ids are namespaced, e.g. `omarchy.audio`,
-`omarchy.network`, and `omarchy.clock`. Older UpperCamelCase ids such as
+`inferna.menu` and `inferna.media` declare their bar-widget entry points in their own
+`manifest.json`. Bar layout ids are namespaced, e.g. `inferna.audio`,
+`inferna.network`, and `inferna.clock`. Older UpperCamelCase ids such as
 `AudioPanel` and `Clock` are migrated forward; new configs should use the
 namespaced ids.
 
 Third-party widgets ship as separate plugins under
-`~/.config/omarchy/plugins/<plugin-id>/` with their own `manifest.json`
+`~/.config/inferna/plugins/<plugin-id>/` with their own `manifest.json`
 declaring `kinds: ["bar-widget"]` and a `barWidget` entry point. See
 [../../README.md](../../README.md) for the manifest schema. Rescan, enable,
-and place third-party plugins with `omarchy-shell shell rescanPlugins`,
-`omarchy plugin enable`, and `omarchy bar move`.
+and place third-party plugins with `inferna-shell shell rescanPlugins`,
+`inferna plugin enable`, and `inferna bar move`.

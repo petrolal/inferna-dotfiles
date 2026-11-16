@@ -70,7 +70,9 @@ set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 "$ROOT/bin/build"
 cd "$ROOT/pkgbuild"
-exec makepkg -fsi "$@"
+# Copy binary and desktop file
+cp build/<name> ~/.local/bin/
+cp <name>.desktop ~/.local/share/applications/ "$@"
 ```
 
 ## `src/main.cpp`
@@ -186,7 +188,7 @@ private:
 
 Theme::Theme(const QString &directory, QObject *parent, const QString &hyprctl)
     : QObject(parent),
-      m_directory(directory.isEmpty() ? QDir::homePath() + "/.local/state/omarchy/current" : directory) {
+      m_directory(directory.isEmpty() ? QDir::homePath() + "/.local/state/inferna/current" : directory) {
     m_debounce.setSingleShot(true);
     m_debounce.setInterval(80);
     connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, [this] { m_debounce.start(); });
@@ -353,7 +355,7 @@ private:
 
 Translator::Translator(const QString &languageFile, const QString &catalogDirectory, QObject *parent)
     : QTranslator(parent),
-      m_languageFile(languageFile.isEmpty() ? QDir::homePath() + "/.config/omarchy/language" : languageFile),
+      m_languageFile(languageFile.isEmpty() ? QDir::homePath() + "/.config/inferna/language" : languageFile),
       m_catalogDirectory(catalogDirectory) {
     m_debounce.setSingleShot(true);
     m_debounce.setInterval(80);
@@ -411,7 +413,7 @@ QString Translator::pluralCategory(const QString &language, long long count) {
 // app's numbers and dates match the desktop's (Arabic there uses Western
 // digits); without Inferna, Qt's own locale for the code.
 QLocale Translator::formatLocale(const QString &language) {
-    QFile registry(qEnvironmentVariable("OMARCHY_PATH") + "/default/i18n/locales.json");
+    QFile registry(qEnvironmentVariable("INFERNA_PATH") + "/default/i18n/locales.json");
     if (registry.open(QIODevice::ReadOnly)) {
         const QString name = QJsonDocument::fromJson(registry.readAll()).object()
                                  .value(language).toObject().value("formatLocale").toString();
@@ -576,7 +578,7 @@ for the plural forms of counted strings.
 
 One flat JSON object per language, keyed by the English exactly as it appears
 in `qsTr()`, with Inferna's language codes as file names
-(`$OMARCHY_PATH/default/i18n/locales.json` lists all 50: `da`, `de`, `pt-BR`,
+(`$INFERNA_PATH/default/i18n/locales.json` lists all 50: `da`, `de`, `pt-BR`,
 `zh-CN`, ...). Keep `%1` placeholders, which `.arg()` fills, so a translation
 can reorder them. A counted string's value is an object of plural forms keyed
 by CLDR category: English gives `one` and `other` in `en.json`, and each

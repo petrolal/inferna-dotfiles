@@ -23,11 +23,11 @@ defaults, so overrides go here:
 - Use `hyprctl reload` to force reload
 - After ANY Hyprland Lua config change, validate with `hyprctl reload` followed by `hyprctl configerrors`
 - If `hyprctl configerrors` reports errors, address them and rerun validation until clean or until a real blocker is identified
-- Use `omarchy refresh hyprland` to reset the Lua config files to defaults
+- Use `inferna refresh hyprland` to reset the Lua config files to defaults
 
 The two `.conf` files are read by separate processes, so `hyprctl` neither
 applies nor validates them:
-- `hyprsunset.conf` (night light): apply changes with `omarchy restart hyprsunset`; reset with `omarchy refresh hyprsunset`
+- `hyprsunset.conf` (night light): apply changes with `inferna restart hyprsunset`; reset with `inferna refresh hyprsunset`
 - `xdph.conf` (screen-sharing portal): applies when the portal restarts, e.g. on next login
 
 ## Keybindings
@@ -37,10 +37,10 @@ Edit `~/.config/hypr/bindings.lua`. Format:
 o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
 o.bind("SUPER + B", "Browser", { launch = "chromium" })  -- launch wraps with uwsm-app
 o.bind("SUPER + M", "Theme menu", { menu = "theme" })     -- toggle an Inferna menu route
-o.bind("SUPER + N", "Network", { panel = "omarchy.network" })  -- toggle a shell panel
+o.bind("SUPER + N", "Network", { panel = "inferna.network" })  -- toggle a shell panel
 ```
 
-Prefer `{ menu = ... }` and `{ panel = ... }` over running `inferna-menu toggle ...` or `inferna-shell shell toggle ...` as a command. Routes and panels listed in `$OMARCHY_PATH/default/omarchy/shortcuts` go straight to the running shell as Hyprland global shortcuts, with no process started on each press; any other route or panel still works, through the command.
+Prefer `{ menu = ... }` and `{ panel = ... }` over running `inferna-menu toggle ...` or `inferna-shell shell toggle ...` as a command. Routes and panels listed in `$INFERNA_PATH/default/omarchy/shortcuts` go straight to the running shell as Hyprland global shortcuts, with no process started on each press; any other route or panel still works, through the command.
 
 View current bindings: `inferna menu keybindings --print`
 
@@ -62,12 +62,12 @@ Tell the user which action was replaced. Use `hl.unbind(...)` to remove a bindin
 
 Set a monitor's scale, resolution and position with the commands the monitor panel uses. They apply at once and save the choice for that physical monitor in `~/.local/state/inferna/monitors/settings`, which wins over `monitors.lua`:
 ```bash
-omarchy hyprland monitor scaling --monitor DP-1 1.6
-omarchy hyprland monitor resolution --monitor DP-1 3840x2160
+inferna hyprland monitor scaling --monitor DP-1 1.6
+inferna hyprland monitor resolution --monitor DP-1 3840x2160
 inferna-hyprland-monitor-layout eDP-1=0x0 DP-1=1280x0   # logical pixels, after scale
 ```
 
-Edit `~/.config/hypr/monitors.lua` only for what those don't cover: a mode the monitor panel doesn't offer (it already sets resolution, refresh rate and rotation), keeping a monitor off (`disabled = true`), 10-bit color, variable refresh rate, the default scale for monitors without a choice, or `GDK_SCALE`. The file ships with commented examples. If the user wants that file alone to set their monitors, overriding the monitor panel, add `omarchy_monitor_panel_settings = false` to it. Format:
+Edit `~/.config/hypr/monitors.lua` only for what those don't cover: a mode the monitor panel doesn't offer (it already sets resolution, refresh rate and rotation), keeping a monitor off (`disabled = true`), 10-bit color, variable refresh rate, the default scale for monitors without a choice, or `GDK_SCALE`. The file ships with commented examples. If the user wants that file alone to set their monitors, overriding the monitor panel, add `inferna_monitor_panel_settings = false` to it. Format:
 ```lua
 hl.monitor({ output = "DP-2", mode = "2560x1440@144", position = "auto", scale = 1.5 })
 ```
@@ -83,4 +83,4 @@ Before writing ANY window rules, you MUST fetch the current documentation from t
 
 DO NOT rely on cached or memorized window rule syntax. The format has changed multiple times and using outdated syntax will cause errors or unexpected behavior.
 
-Window rules go in `~/.config/hypr/hyprland.lua` or a required Lua module. Prefer Inferna's `o.window(match, rules)` helper — see examples in `$OMARCHY_PATH/default/hypr/windows.lua`.
+Window rules go in `~/.config/hypr/hyprland.lua` or a required Lua module. Prefer Inferna's `o.window(match, rules)` helper — see examples in `$INFERNA_PATH/default/hypr/windows.lua`.

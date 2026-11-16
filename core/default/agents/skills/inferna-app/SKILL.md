@@ -7,7 +7,7 @@ description: >
   Arch package so it shows up in the app launcher. Use when asked to make,
   build, or scaffold an app, tool, utility, or GUI program for the desktop.
   Triggers: new app, make me an app, desktop app, GUI, Qt, QML, Qt Quick, C++
-  app, qmake, app launcher entry, PKGBUILD for my app.
+  app, qmake, app launcher entry, desktop entry for my app.
 ---
 
 # Building an Inferna App
@@ -40,14 +40,14 @@ base-devel qt6-base qt6-declarative qt6-multimedia qt6-svg qt6-wayland ffmpeg`.
 <name>.pro              qmake project: Qt modules, sources, resources
 bin/build               qmake6 + make into build/<name>
 bin/test                builds and runs the Qt Test binary offscreen
-bin/install             makepkg -fsi, so the app lands in the launcher
+bin/install             install into ~/.local/share/applications and ~/.local/bin
 src/main.cpp            app setup; hands C++ objects to QML
 src/backend.{h,cpp}     the app's state and work, as a QObject
 src/theme.{h,cpp}       follows the Inferna accent and Hyprland's rounding
 src/Main.qml            the window: layout, keys, nothing else
 src/resources.qrc       compiles the QML into the binary
 tests/<name>_tests.{pro,cpp}
-pkgbuild/PKGBUILD  pkgbuild/<name>.desktop  pkgbuild/<name>.svg
+pkgbuild/<name>.desktop  pkgbuild/<name>.svg
 README.md  LICENSE  .gitignore
 ```
 
@@ -143,7 +143,7 @@ files committed.
    `window->grabWindow()` shows what the user would see without touching
    their desktop. Set `QT_FORCE_STDERR_LOGGING=1`, or QML warnings go to the
    journal instead of the terminal.
-5. `bin/install` builds the package with `makepkg -fsi`, which installs the
+5. `bin/install` builds the package with `local install`, which installs the
    binary, the `.desktop` entry, and the icon. The app then appears in the
    Inferna app launcher (`Super + Space`). Run it again after every change
    the user should see there.
@@ -174,7 +174,7 @@ files committed.
   files, or other personal data.
 - To ship: tag `v<version>` and make a GitHub release, then add the package to
   `omacom/inferna-pkgs` under `pkgbuilds/<name>/` building from the release
-  tarball, with `.omarchy/package.json` set to `"source": "local"`,
+  tarball, with `.inferna/package.json` set to `"source": "local"`,
   `"auto_merge": true`, and an `upstream.watch` on the GitHub repo so later
   releases sync on their own. Only once that package is published can
   Inferna install it: `install/inferna-base.packages`, the preinstall

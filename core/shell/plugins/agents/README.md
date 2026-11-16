@@ -2,7 +2,7 @@
 
 One bar icon and one panel for every AI coding subscription on the machine.
 The panel is strictly a display: it watches the usage records that
-`omarchy-agent-usage-update` writes to `~/.local/state/omarchy/agents/usage/`
+`inferna-agent-usage-update` writes to `~/.local/state/inferna/agents/usage/`
 and draws whatever appears there. `Panel.qml` owns the bar button and the
 popup; `Main.qml` discovers and watches the records (and handles the optional
 cross-device aggregation); `Agent.qml` is the per-record file watcher.
@@ -28,7 +28,7 @@ Every subscription on one page, limits first.
   small info mark beside the name whose tooltip says why they aren't current
   and what to do; each meter's tooltip says how old it is.
 - **Accounts** — an agent with more than one subscription account (see
-  `omarchy agent account`) lists each: name and plan on one line (the email on hover), and its own limit
+  `inferna agent account`) lists each: name and plan on one line (the email on hover), and its own limit
   lines. An _ACTIVE_ label marks the account new sessions start as; the
   others get a _Use_ link. Hovering the line also reveals Autoswitch, which
   moves new sessions over on their own once the active account reaches its
@@ -39,13 +39,13 @@ Every subscription on one page, limits first.
   fuel-gauge meter that drains toward empty, the remaining credit, and
   funded-versus-spent detail.
 - **Make something cool** — starter prompts (a new theme, plugin, or app) that
-  start the default agent on the task through `omarchy agent prompt`.
+  start the default agent on the task through `inferna agent prompt`.
 - **Adding a subscription** — the + in the hero's corner swaps the page for
   Claude Code, Codex, and Grok as large marks, three across, with the first
   one focused, and the hero's line reads Add an account. The + becomes the
   X that goes back. An agent that can't be added is dimmed and says why on
   hover. A further account asks for a name first, and Enter signs it in. The
-  panel then runs `omarchy-agent-account-add --events` and follows it: the
+  panel then runs `inferna-agent-account-add --events` and follows it: the
   status, the code Grok asks you to confirm in the browser, a field to paste
   Claude's code back if its page shows one instead of finishing, and a link to
   reopen the sign-in page. Esc or the X stops the login. The browser taking focus may close the panel; the sign-in
@@ -57,13 +57,13 @@ Codex, or Grok, and the first agent signed in becomes the default agent if
 none was picked. An agent appears once it is enabled in settings and has
 recorded usage, on this machine or a synced one; a CLI installed
 mid-session shows up at the next refresh. Drop the widget with
-`omarchy plugin disable omarchy.agents`.
+`inferna plugin disable inferna.agents`.
 
 ## Data
 
-Each agent is one JSON record in `~/.local/state/omarchy/agents/usage/`,
-written by `omarchy-agent-usage-update`. That command runs one
-`omarchy-agent-usage-<agent>` collector per agent; the widget invokes it
+Each agent is one JSON record in `~/.local/state/inferna/agents/usage/`,
+written by `inferna-agent-usage-update`. That command runs one
+`inferna-agent-usage-<agent>` collector per agent; the widget invokes it
 on its refresh timer and whenever you ask for a refresh, and picks up any
 record that lands in the directory regardless of who wrote it.
 
@@ -97,7 +97,7 @@ Adding an agent needs no QML changes: ship a collector that follows the contract
 
 Every collector follows the same rules, so the same situation reads the same for every agent: a recent answer is reused for 15 seconds unless refresh is pressed, each credential or account keeps its own last good answer, a failed check keeps it with its age on hover and windows that have since reset back at zero, an endpoint that can't be reached is retried soon, and an agent the machine doesn't use stays out of the panel. Tokens are counted once, under the provider that bills them: pi, omp, and opencode sessions are split by provider into the matching collector. A pi compaction's usage counts, but omp records only the context's size before and after one, not what its summary request used, so omp's compactions are missing from the tokens. pi and omp sessions are read from every profile, and from `PI_CODING_AGENT_DIR`, `PI_CODING_AGENT_SESSION_DIR`, and a `settings.json` `sessionDir` as well as the defaults when set, a forked session's copied messages once; opencode is read from both its `message` and V2 `session_message` stores in the database `OPENCODE_DB` names, a message migrated into both once and a fork's copied history not at all. A machine with none of an agent's home, CLI, or usage prints an empty record the panel skips; one that has them but no sign-in says it is waiting for one. The sections below cover where each agent's sign-in and data come from.
 
-When `~/.local/state/omarchy/agents/accounts/<claude|codex|grok>.json` registers more than one account, the `claude`, `codex`, and `grok` records also carry `accounts: [{ id, label, email, plan, active, primary, limits, stale, fetchedAt, retryAdvised, usageStatusText, authHelpText }]`, each account probed with its own sign-in (each account caches its own last limits; Codex runs one app-server per account home), and `accountSwitch: { mode, threshold }`. The record's top-level `limits` and `tierLabel` keep describing the active account, and local stats stay one set, since every account shares the primary home's history. After each run, `omarchy-agent-usage-update` hands the fresh limits to `omarchy-agent-account-state autoswitch`, which notifies or switches when the active account crosses its threshold, and re-collects the record if the active account changed.
+When `~/.local/state/inferna/agents/accounts/<claude|codex|grok>.json` registers more than one account, the `claude`, `codex`, and `grok` records also carry `accounts: [{ id, label, email, plan, active, primary, limits, stale, fetchedAt, retryAdvised, usageStatusText, authHelpText }]`, each account probed with its own sign-in (each account caches its own last limits; Codex runs one app-server per account home), and `accountSwitch: { mode, threshold }`. The record's top-level `limits` and `tierLabel` keep describing the active account, and local stats stay one set, since every account shares the primary home's history. After each run, `inferna-agent-usage-update` hands the fresh limits to `inferna-agent-account-state autoswitch`, which notifies or switches when the active account crosses its threshold, and re-collects the record if the active account changed.
 
 ### Claude Code
 
@@ -151,7 +151,7 @@ Grok Bot runs on a Cursor account, but its weekly allowance is metered apart fro
 
 GitHub exposes no supported personal-account usage API — its Copilot REST endpoints are organization- or enterprise-scoped — so the token sections come from what the Copilot CLI keeps under `~/.copilot` (or `COPILOT_HOME`). Its session store (`session-store.db`) records every billed request in an `assistant_usage_events` table: day, model, session, the token split, and the cost in nano AI units (1e9 nano units = 1 AI credit ≈ $0.01). A row is a billed request rather than a prompt; a current CLI marks the ones a typed prompt started (`initiator` "user", the agent's own follow-up calls "agent"), and those are the prompts, while an older store's counts stay out of the panel's prompt totals. A request sent to a custom provider (BYOK, `COPILOT_PROVIDER_BASE_URL`) carries no GitHub usage report and isn't Copilot's to count; the store doesn't say where it went, so it counts nowhere. CLI versions whose store predates it are served by the session transcripts under `session-state` instead, whose `session.shutdown` events carry the same per-model token split and cost.
 
-The monthly meter is the account-wide allowance of AI credits from GitHub's internal quota endpoint (the same one the editor plugins ask), which counts every machine, IDE, and agent on the entitlement and names the plan and the reset date. It needs a token from `COPILOT_QUOTA_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN`, or `gh auth token`, and only runs where the Copilot CLI has been used, so a machine with `gh` signed in but no Copilot stays out of the panel. Each account keeps its own last answer, `gh`'s keyed by the user its `hosts.yml` names, so a reused answer doesn't run `gh` at all. Without any token the section says it is waiting for a sign-in. When the endpoint can't be asked at all, a budget in `~/.config/omarchy/agents/copilot.json` gives a meter labeled "(est.)" from this machine's CLI spend alone:
+The monthly meter is the account-wide allowance of AI credits from GitHub's internal quota endpoint (the same one the editor plugins ask), which counts every machine, IDE, and agent on the entitlement and names the plan and the reset date. It needs a token from `COPILOT_QUOTA_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN`, or `gh auth token`, and only runs where the Copilot CLI has been used, so a machine with `gh` signed in but no Copilot stays out of the panel. Each account keeps its own last answer, `gh`'s keyed by the user its `hosts.yml` names, so a reused answer doesn't run `gh` at all. Without any token the section says it is waiting for a sign-in. When the endpoint can't be asked at all, a budget in `~/.config/inferna/agents/copilot.json` gives a meter labeled "(est.)" from this machine's CLI spend alone:
 
 ```json
 {
@@ -210,13 +210,13 @@ The Go meters read `OPENCODE_API_KEY` or `OPENCODE_GO_API_KEY` first, then the k
 
 ### Z.ai
 
-Z.ai limits need a key that carries a GLM Coding Plan. A pay-as-you-go key reports "no coding plan", which is no trouble: the panel shows local stats alone, and that key is asked again only hourly, a failed recheck staying quiet. The key comes from `~/.config/omarchy/agents/zai.json`, then `ZAI_API_KEY` / `ZHIPU_API_KEY` in the environment, then pi/omp's `.env`, then the key pi or omp saved in `auth.json`. Set `platform` to `"zhipu"` in the config for the China (`open.bigmodel.cn`) host. Local stats count pi, omp, and opencode sessions on Z.ai's and Zhipu's providers (`zai`, `zhipu`, `zai-coding-cn`, `zhipu-coding-plan`, `zhipuai`, `zai-coding-plan`, `zhipuai-coding-plan`), and Claude Code turns sent to `api.z.ai` or `open.bigmodel.cn`, or answered by a `glm-*` model with no `ANTHROPIC_BASE_URL`, by the [Claude Code](#claude-code) rule, and MiniMax Code replies on a custom provider (its Z.AI preset) at those hosts.
+Z.ai limits need a key that carries a GLM Coding Plan. A pay-as-you-go key reports "no coding plan", which is no trouble: the panel shows local stats alone, and that key is asked again only hourly, a failed recheck staying quiet. The key comes from `~/.config/inferna/agents/zai.json`, then `ZAI_API_KEY` / `ZHIPU_API_KEY` in the environment, then pi/omp's `.env`, then the key pi or omp saved in `auth.json`. Set `platform` to `"zhipu"` in the config for the China (`open.bigmodel.cn`) host. Local stats count pi, omp, and opencode sessions on Z.ai's and Zhipu's providers (`zai`, `zhipu`, `zai-coding-cn`, `zhipu-coding-plan`, `zhipuai`, `zai-coding-plan`, `zhipuai-coding-plan`), and Claude Code turns sent to `api.z.ai` or `open.bigmodel.cn`, or answered by a `glm-*` model with no `ANTHROPIC_BASE_URL`, by the [Claude Code](#claude-code) rule, and MiniMax Code replies on a custom provider (its Z.AI preset) at those hosts.
 
 ### Ollama Cloud
 
-Ollama Cloud reads `OLLAMA_API_KEY` first, then `apiKey` in `~/.config/omarchy/agents/ollama.json`, then the key pi or omp signed in with in `~/.pi/agent/auth.json` (or under `PI_CODING_AGENT_DIR`) or `~/.omp/agent/auth.json`. Each key keeps its own last good limits and plan.
+Ollama Cloud reads `OLLAMA_API_KEY` first, then `apiKey` in `~/.config/inferna/agents/ollama.json`, then the key pi or omp signed in with in `~/.pi/agent/auth.json` (or under `PI_CODING_AGENT_DIR`) or `~/.omp/agent/auth.json`. Each key keeps its own last good limits and plan.
 
-Ollama's balance endpoint (`/api/balance`) reports a legacy plan's session and weekly windows as the percent remaining with their reset times, and a current plan's included credits as a balance against the monthly allowance, shown as an Included credits meter that resets when the period ends. Credits bought on top of the plan (`purchased.balance_usd`, the unexpired ones left) show as a balance of what remains; the answer says nothing of how much was bought, so it raises no low-balance alarm. The limits cover the whole account — every model the key can reach — while the local stats count pi, omp, and opencode sessions on the `ollama-cloud` provider, and cloud-tagged models (`glm-4.6:cloud`, `gpt-oss:120b-cloud`) reached through the local daemon's `ollama` provider, which run on Ollama's servers too, from Codex's `--oss` rollouts as well (with the prompts typed in them, and any model on a Codex provider named `ollama-cloud`), and Claude Code turns sent to `ollama.com` or answered by a cloud-tagged model, by the [Claude Code](#claude-code) rule. To count only the Claude models Ollama Cloud serves, set a model prefix in `~/.config/omarchy/agents/ollama.json`:
+Ollama's balance endpoint (`/api/balance`) reports a legacy plan's session and weekly windows as the percent remaining with their reset times, and a current plan's included credits as a balance against the monthly allowance, shown as an Included credits meter that resets when the period ends. Credits bought on top of the plan (`purchased.balance_usd`, the unexpired ones left) show as a balance of what remains; the answer says nothing of how much was bought, so it raises no low-balance alarm. The limits cover the whole account — every model the key can reach — while the local stats count pi, omp, and opencode sessions on the `ollama-cloud` provider, and cloud-tagged models (`glm-4.6:cloud`, `gpt-oss:120b-cloud`) reached through the local daemon's `ollama` provider, which run on Ollama's servers too, from Codex's `--oss` rollouts as well (with the prompts typed in them, and any model on a Codex provider named `ollama-cloud`), and Claude Code turns sent to `ollama.com` or answered by a cloud-tagged model, by the [Claude Code](#claude-code) rule. To count only the Claude models Ollama Cloud serves, set a model prefix in `~/.config/inferna/agents/ollama.json`:
 
 ```json
 {
@@ -233,7 +233,7 @@ MiniMax reads `MINIMAX_API_KEY` first, then the API key or OAuth session saved b
 
 ### OpenRouter
 
-OpenRouter reads `OPENROUTER_API_KEY` first, then the key opencode stores in `~/.local/share/opencode/auth.json`, then the key pi (`~/.pi/agent/auth.json`, honoring `PI_CODING_AGENT_DIR`) or omp (`~/.omp/agent/auth.json`) saved when OpenRouter is signed in there, then `apiKey` in `~/.config/omarchy/agents/openrouter.json`. Without any key, the local pi, omp, and opencode usage on the OpenRouter provider still shows, and the panel waits for a key to show the balance and meter. A management key in `OPENROUTER_MANAGEMENT_KEY` (or `managementKey` in that file, from `openrouter.ai/settings/management-keys`) switches the token history from the local scan to the account-global `/activity` API; on its own it also reads the balance, with no key-limit meter. OpenRouter documents `/credits` as management-key only, so an inference key it answers with 403 shows its key-limit meter without a balance and is no sign-in to redo; with a management key as well, that key reads the balance instead.
+OpenRouter reads `OPENROUTER_API_KEY` first, then the key opencode stores in `~/.local/share/opencode/auth.json`, then the key pi (`~/.pi/agent/auth.json`, honoring `PI_CODING_AGENT_DIR`) or omp (`~/.omp/agent/auth.json`) saved when OpenRouter is signed in there, then `apiKey` in `~/.config/inferna/agents/openrouter.json`. Without any key, the local pi, omp, and opencode usage on the OpenRouter provider still shows, and the panel waits for a key to show the balance and meter. A management key in `OPENROUTER_MANAGEMENT_KEY` (or `managementKey` in that file, from `openrouter.ai/settings/management-keys`) switches the token history from the local scan to the account-global `/activity` API; on its own it also reads the balance, with no key-limit meter. OpenRouter documents `/credits` as management-key only, so an inference key it answers with 403 shows its key-limit meter without a balance and is no sign-in to redo; with a management key as well, that key reads the balance instead.
 
 The collector reads the prepaid ledger from `GET /api/v1/credits` (`remaining = total_credits - total_usage`) and reports it as a live, non-estimated balance. OpenRouter documents that endpoint as management-key only, so it is asked once per refresh, with the management key when there is one; an inference key alone asks until OpenRouter refuses it that way, which shows no balance rather than a refused key, and then isn't asked again for a day. A key with a credit limit additionally gets a draining key-limit meter from `GET /api/v1/key`, labeled with how often the limit starts over. Each key keeps its own last good meter and balance.
 
@@ -246,17 +246,17 @@ Token history comes in two tiers, selected automatically by key type:
 }
 ```
 
-Without a management key, tokens come from the local opencode database (`providerID == "openrouter"`, read-only), from pi/omp sessions whose assistant messages ran on the `openrouter` provider (and Kimchi's harness sessions run with `--provider openrouter`), from DeepSeek Harness attempts on its pi-ai `openrouter` route, from MiniMax Code replies on a custom provider at `openrouter.ai`, and from Claude Code turns while `ANTHROPIC_BASE_URL` points at `openrouter.ai`, by the [Claude Code](#claude-code) rule. With `OPENROUTER_MANAGEMENT_KEY` (or `managementKey` in `~/.config/omarchy/agents/openrouter.json`), the last 30 days come from `GET /api/v1/activity` instead: account-global per-day/per-model tokens that cover every machine and client. That record carries `"scope": "account"` and `hasPromptStats: false`, like Fireworks, so synced aggregation merges it by widest value instead of summing it.
+Without a management key, tokens come from the local opencode database (`providerID == "openrouter"`, read-only), from pi/omp sessions whose assistant messages ran on the `openrouter` provider (and Kimchi's harness sessions run with `--provider openrouter`), from DeepSeek Harness attempts on its pi-ai `openrouter` route, from MiniMax Code replies on a custom provider at `openrouter.ai`, and from Claude Code turns while `ANTHROPIC_BASE_URL` points at `openrouter.ai`, by the [Claude Code](#claude-code) rule. With `OPENROUTER_MANAGEMENT_KEY` (or `managementKey` in `~/.config/inferna/agents/openrouter.json`), the last 30 days come from `GET /api/v1/activity` instead: account-global per-day/per-model tokens that cover every machine and client. That record carries `"scope": "account"` and `hasPromptStats: false`, like Fireworks, so synced aggregation merges it by widest value instead of summing it.
 
 ### DeepSeek
 
-DeepSeek reads `DEEPSEEK_API_KEY` first, then the key pi stores in `~/.pi/agent/auth.json` (under `PI_CODING_AGENT_DIR` when set), then omp's `~/.omp/agent/auth.json`, never a `!command` or `$VAR` entry, then the key opencode stores in its own `auth.json` when DeepSeek is signed in there, and last the key DeepSeek Harness keeps in `$DSH_HOME/.credentials.yaml` (or the `.env` beside it; `$DSH_HOME` defaults to `~/.dsh`). Each key keeps its own last balance. DeepSeek answers one balance per currency (CNY or USD), and the panel shows the one holding credit, or the first when none does. When DeepSeek says the balance no longer covers API calls (`is_available` false), or it is spent, the status reads Out of credits in the urgent color. Local usage also counts dsh's own session logs under `$DSH_HOME/sessions` on its DeepSeek routes (`deepseek-official`, `deepseek-account`, and its pi-ai adapter's `deepseek` route), leaving out the history a forked session inherits, and Claude Code turns sent to `api.deepseek.com` or answered by a `deepseek-*` model, by the [Claude Code](#claude-code) rule. dsh's other pi-ai routes are billed by that provider: its `openrouter` route counts under OpenRouter, and a hand-declared gateway counts nowhere. Its `fundedAmount` estimate lives in `~/.config/omarchy/agents/deepseek.json`, the same shape the fireworks collector uses; without it the panel shows the live remaining credit and skips the funded-versus-spent line.
+DeepSeek reads `DEEPSEEK_API_KEY` first, then the key pi stores in `~/.pi/agent/auth.json` (under `PI_CODING_AGENT_DIR` when set), then omp's `~/.omp/agent/auth.json`, never a `!command` or `$VAR` entry, then the key opencode stores in its own `auth.json` when DeepSeek is signed in there, and last the key DeepSeek Harness keeps in `$DSH_HOME/.credentials.yaml` (or the `.env` beside it; `$DSH_HOME` defaults to `~/.dsh`). Each key keeps its own last balance. DeepSeek answers one balance per currency (CNY or USD), and the panel shows the one holding credit, or the first when none does. When DeepSeek says the balance no longer covers API calls (`is_available` false), or it is spent, the status reads Out of credits in the urgent color. Local usage also counts dsh's own session logs under `$DSH_HOME/sessions` on its DeepSeek routes (`deepseek-official`, `deepseek-account`, and its pi-ai adapter's `deepseek` route), leaving out the history a forked session inherits, and Claude Code turns sent to `api.deepseek.com` or answered by a `deepseek-*` model, by the [Claude Code](#claude-code) rule. dsh's other pi-ai routes are billed by that provider: its `openrouter` route counts under OpenRouter, and a hand-declared gateway counts nowhere. Its `fundedAmount` estimate lives in `~/.config/inferna/agents/deepseek.json`, the same shape the fireworks collector uses; without it the panel shows the live remaining credit and skips the funded-versus-spent line.
 
 ### Fireworks
 
 Fireworks reads `FIREWORKS_API_KEY` and `FIREWORKS_ACCOUNT_ID` first, then `~/.fireworks/auth.ini` (which `firectl set-api-key` creates), then the key pi stores in `~/.pi/agent/auth.json` when Fireworks is signed in there (honoring `PI_CODING_AGENT_DIR`, and pi's literal and `$ENV_VAR` key forms), and finally the key opencode stores in `~/.local/share/opencode/auth.json`.
 
-The collector first asks the account's `:getBalance` endpoint for the real prepaid ledger. That endpoint exists but is permission-gated, and as of August 2026 no console-issued API key passes it — Fireworks appears to reserve it for the dashboard session. The probe stays because it is cheap and the live figure lights up automatically if Fireworks ever opens it to keys. Until then the collector falls back to estimating the balance from configuration in `~/.config/omarchy/agents/fireworks.json`:
+The collector first asks the account's `:getBalance` endpoint for the real prepaid ledger. That endpoint exists but is permission-gated, and as of August 2026 no console-issued API key passes it — Fireworks appears to reserve it for the dashboard session. The probe stays because it is cheap and the live figure lights up automatically if Fireworks ever opens it to keys. Until then the collector falls back to estimating the balance from configuration in `~/.config/inferna/agents/fireworks.json`:
 
 ```json
 {
@@ -276,13 +276,13 @@ Synthetic reads `SYNTHETIC_API_KEY` first, then the key pi stores in `~/.pi/agen
 
 ### Local models
 
-The Local models section counts work that ran on hardware you own: Codex rollouts, pi and omp sessions, and opencode messages whose provider is a well-known local runtime (Ollama, LM Studio, llama.cpp, vLLM, ...), a provider named in `~/.config/omarchy/agents/local.json`, or a Codex `model_providers` entry whose `base_url` is on a loopback, private, link-local or LAN address:
+The Local models section counts work that ran on hardware you own: Codex rollouts, pi and omp sessions, and opencode messages whose provider is a well-known local runtime (Ollama, LM Studio, llama.cpp, vLLM, ...), a provider named in `~/.config/inferna/agents/local.json`, or a Codex `model_providers` entry whose `base_url` is on a loopback, private, link-local or LAN address:
 
 ```json
 { "providers": ["homelab", "my-gateway"] }
 ```
 
-A Codex rollout records its provider's id but not the URL it reached, so the collector remembers each `model_providers` endpoint it has seen in `/etc/codex/config.toml`, `config.toml` or a profile's `<name>.config.toml` (in `~/.local/state/omarchy/agents/local-codex-providers.json`), and a provider's history stays local after it leaves the config. Every provider collector reads the same map, so an entry at a provider's API counts there instead, after it leaves the config too. A provider only ever given with `codex -c model_providers...` or in a project's `.codex/config.toml` is never seen there, so name it in `local.json`.
+A Codex rollout records its provider's id but not the URL it reached, so the collector remembers each `model_providers` endpoint it has seen in `/etc/codex/config.toml`, `config.toml` or a profile's `<name>.config.toml` (in `~/.local/state/inferna/agents/local-codex-providers.json`), and a provider's history stays local after it leaves the config. Every provider collector reads the same map, so an entry at a provider's API counts there instead, after it leaves the config too. A provider only ever given with `codex -c model_providers...` or in a project's `.codex/config.toml` is never seen there, so name it in `local.json`.
 
 It is the exact complement of the provider collectors: a provider id another collector counts is never counted here, whatever `local.json` says (that collector counts it, once), but for a Codex `model_providers` entry, whose `base_url` decides whatever its id, so one under a claimed id on your own hardware (a self-hosted Kimchi gateway's `kimchi codex` setup) counts here; and the Codex collector keeps every rollout on the built-in `openai` provider, but for the models of one that a self-hosted `openai_base_url` served (see [Codex](#codex)). Two providers are claimed only for some models, and only those rows are left out: Ollama's cloud models (a `:cloud` or `-cloud` tag) run on Ollama's servers even through the local daemon, so they count under Ollama Cloud instead, and opencode's Antigravity plugin records a `google` provider with `antigravity-` models, which the Antigravity collector counts. A Codex rollout's prompts are the ones typed, and a subagent's or guardian's thread starts no session, read as the Codex collector reads them. Claude Code counts here while `ANTHROPIC_BASE_URL` is self-hosted (Ollama's `http://localhost:11434`, a LAN box), for every model but a Claude one, which a local gateway forwards on to Anthropic, and a cloud-tagged one, by the [Claude Code](#claude-code) rule; so do MiniMax Code replies on a custom provider whose `baseURL` is self-hosted, and, by the same rule, Kimi Code, Qwen Code, Hermes and Mistral Vibe requests whose recorded base URL is self-hosted, read by each one's own collector. There are no limits or balance.
 
@@ -297,7 +297,7 @@ It is the exact complement of the provider collectors: a provider id another col
   starter tiles, or the agents to add. Ctrl+Up/Down (or Ctrl+`k`/`j`) moves the
   agent the cursor is in up or down the page; dragging an agent by its mark
   does the same, lighting the header it will land on. The order is kept in
-  `~/.local/state/omarchy/agents/order.json`. Hovering moves the same cursor. Enter acts on it, or
+  `~/.local/state/inferna/agents/order.json`. Hovering moves the same cursor. Enter acts on it, or
   refreshes when nothing is lit; `r` refreshes, Tab moves to the neighboring
   bar panel, Esc closes.
 - Accounts: `1`–`9` jump to an account across every agent, and Enter makes it
@@ -305,13 +305,13 @@ It is the exact complement of the provider collectors: a provider id another col
   the picked account's agent. While an agent
   with several accounts has its active one within 15 points of its switch
   threshold (80% at the default), the limits refresh every three minutes.
-- IPC: `omarchy-shell omarchy.agents <open|close|toggle|refresh>`.
+- IPC: `inferna-shell inferna.agents <open|close|toggle|refresh>`.
 
 ## Settings
 
-Settings live in the widget's entry in `~/.config/omarchy/shell.json`. The
+Settings live in the widget's entry in `~/.config/inferna/shell.json`. The
 top-level keys can be set with
-`omarchy bar set omarchy.agents <key> <value>`:
+`inferna bar set inferna.agents <key> <value>`:
 
 | Key | Default | What it does |
 |---|---|---|
@@ -324,8 +324,8 @@ top-level keys can be set with
 Numbers need `--json`, or they land in `shell.json` as strings:
 
 ```bash
-omarchy bar set omarchy.agents refreshIntervalSec 300 --json
-omarchy bar set omarchy.agents syncDir '~/Sync/agent-usage'
+inferna bar set inferna.agents refreshIntervalSec 300 --json
+inferna bar set inferna.agents syncDir '~/Sync/agent-usage'
 ```
 
 Per-agent enablement is nested, and `set` writes its key literally rather
@@ -333,7 +333,7 @@ than walking a dotted path — so pass the whole `providers` object as JSON (or
 edit `shell.json` directly):
 
 ```bash
-omarchy bar set omarchy.agents providers '{
+inferna bar set inferna.agents providers '{
   "claude": { "enabled": true },
   "codex": { "enabled": false },
   "fireworks": { "enabled": true },

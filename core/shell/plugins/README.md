@@ -1,15 +1,15 @@
 # First-party plugins
 
-These plugins ship with Omarchy and are discovered by the shell at startup.
+These plugins ship with Inferna and are discovered by the shell at startup.
 They use the same `manifest.json` contract as third-party plugins; the
 only difference is that the shell flags them with `__isFirstParty: true`.
 First-party non-bar plugins are enabled unless listed in `disabledPlugins[]`;
-`omarchy.bar` is the default bar option and becomes inactive only while another
+`inferna.bar` is the default bar option and becomes inactive only while another
 `kind: "bar"` plugin is selected. Services and keep-loaded panels are mounted
 at startup; other panels, overlays, and menus are loaded on demand.
 
 User-installed plugins live alongside these conceptually but on disk under
-`~/.config/omarchy/plugins/<plugin-id>/` rather than in this directory.
+`~/.config/inferna/plugins/<plugin-id>/` rather than in this directory.
 
 | Plugin        | id                        | kinds                   | entry point                           |
 |---------------|---------------------------|-------------------------|---------------------------------------|

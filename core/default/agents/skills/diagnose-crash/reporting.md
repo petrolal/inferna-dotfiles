@@ -4,7 +4,7 @@ Read this only after concluding that a crash is genuinely Inferna's to fix.
 
 ## Is it even Inferna's bug?
 
-Be strict here. Inferna is a configuration layer over Arch Linux, so a crash
+Be strict here. Inferna is a configuration layer over NixOS, so a crash
 inside a third-party application — a file manager, a browser, a GNOME or Qt
 library — is almost always an upstream bug in **that** project, not in Inferna.
 
@@ -27,7 +27,7 @@ useful; filing there yourself is not part of this.
 
 1. **It is a verified bug in Inferna's sphere**, established on evidence. Issues
    are for verified bugs only. An "is this even a bug?" belongs on the Discord at
-   <https://omarchy.org/discord>; a feature idea belongs in GitHub Discussions
+   <https://github.com/petrolal/inferna-dotfiles/discussions>; a feature idea belongs in GitHub Discussions
    under Suggestions.
 2. **The user has explicitly agreed.** Show them the exact title and body you
    propose, and wait for a yes. Never file unprompted.
@@ -40,8 +40,8 @@ useful; filing there yourself is not part of this.
 A duplicate issue costs a maintainer more time than no report at all.
 
 ```bash
-gh search issues --repo omacom/omarchy "<program> crash"
-gh issue list --repo omacom/omarchy --state all --search "<signal> <program>"
+gh search issues --repo petrolal/inferna-dotfiles "<program> crash"
+gh issue list --repo petrolal/inferna-dotfiles --state all --search "<signal> <program>"
 ```
 
 Search on the crashing program, the signal, and distinctive symbols from the
@@ -59,7 +59,7 @@ more than another duplicate.
 If a plausible match comes back, read it properly first:
 
 ```bash
-gh issue view <number> --repo omacom/omarchy --comments
+gh issue view <number> --repo petrolal/inferna-dotfiles --comments
 ```
 
 Confirm it is genuinely the same failure. The same program crashing is not the
@@ -74,7 +74,7 @@ A comment that only says the bug happens to you too is noise. If that is all you
 have, tell the user so and file nothing.
 
 ```bash
-gh issue comment <number> --repo omacom/omarchy --body "..."
+gh issue comment <number> --repo petrolal/inferna-dotfiles --body "..."
 ```
 
 ## Filing a new issue
@@ -82,12 +82,12 @@ gh issue comment <number> --repo omacom/omarchy --body "..."
 Only when the search turns up nothing that matches:
 
 ```bash
-gh issue create --repo omacom/omarchy --title "..." --body "..."
+gh issue create --repo petrolal/inferna-dotfiles --title "..." --body "..."
 ```
 
 Include what happened, what was expected, steps to reproduce, system details from
-`inferna version`, and diagnostics from `omarchy debug --no-sudo --print` (which
-also writes `/tmp/inferna-debug.log`; the interactive `omarchy debug` can upload
+`inferna version`, and diagnostics from `inferna debug --no-sudo --print` (which
+also writes `/tmp/inferna-debug.log`; the interactive `inferna debug` can upload
 it and print a shareable URL worth including).
 
 `gh` cannot attach media. If a screenshot would help, save one and give the user

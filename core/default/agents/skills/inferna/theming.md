@@ -15,7 +15,7 @@ inferna theme install <url>     # Install from git repo
 ## Making a New Theme
 
 1. Create a directory under `~/.config/inferna/themes`.
-2. See how an existing theme is done via `/usr/share/omarchy/themes/catppuccin`.
+2. See how an existing theme is done via `/usr/share/inferna/themes/catppuccin`.
 3. Download a matching background (or several) from the internet and put them in `~/.config/inferna/themes/<name-of-new-theme>/backgrounds/`.
 4. When done with the theme, run `inferna theme set "Name of new theme"`.
 
@@ -44,7 +44,7 @@ built-in one. See `docs/theming.md` in the Inferna repo.
 
 ## Customizing a Stock Theme
 
-Never edit stock themes under `/usr/share/omarchy/themes/` — changes are lost
+Never edit stock themes under `/usr/share/inferna/themes/` — changes are lost
 on update. Two safe options:
 
 Both write into `~/.config/inferna/themes`, where a theme the user wrote is
@@ -56,7 +56,7 @@ applied, the stock theme is copied first and your files win on top:
 
 ```bash
 mkdir -p ~/.config/inferna/themes/catppuccin
-cp /usr/share/omarchy/themes/catppuccin/colors.toml ~/.config/inferna/themes/catppuccin/
+cp /usr/share/inferna/themes/catppuccin/colors.toml ~/.config/inferna/themes/catppuccin/
 # Edit the copied colors.toml, then re-apply:
 inferna theme set catppuccin
 ```
@@ -65,7 +65,7 @@ inferna theme set catppuccin
 variant:
 
 ```bash
-cp -r /usr/share/omarchy/themes/catppuccin ~/.config/inferna/themes/catppuccin-custom
+cp -r /usr/share/inferna/themes/catppuccin ~/.config/inferna/themes/catppuccin-custom
 # Edit ~/.config/inferna/themes/catppuccin-custom/, then:
 inferna theme set catppuccin-custom
 ```

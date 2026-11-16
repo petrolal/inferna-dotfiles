@@ -118,19 +118,9 @@ if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
   mise_updated=1
   inferna-update-mise || mise_updated=0
 
-  # The last sudo-capable step: the boot files every package step left must
-  # be shown to boot the updated system. Until it passes, the update neither
-  # finishes nor offers a reboot.
-  boot_verified=1
-  if [[ ! -f /etc/NIXOS ]]; then
-    inferna-update-boot || boot_verified=0
-  fi
   end_update_authorization
 
-  # The sleep inhibitor covers AUR builds, hooks and mise as well. Release it
-  # before offering a reboot: a confirmed reboot can terminate this
-  # process before its EXIT trap gets a chance to remove the persistent Stay
-  # Awake marker.
+  # Release the sleep inhibitor before offering a reboot.
   inferna-update-stay-awake stop
   update_stay_awake_stopped=1
 
@@ -138,10 +128,5 @@ if [[ ${1:-} == "-y" ]] || inferna-update-confirm; then
     echo -e "\e[33m\nSome mise tools could not be updated. Review the errors above and run 'inferna update mise' to retry.\e[0m" >&2
   fi
 
-  if (( boot_verified )); then
-    "$INFERNA_PATH/bin/inferna-update-restart" --reboot-only
-  else
-    echo -e "\e[31m\nThe update is not finished: its boot files did not pass verification (see above). Do not reboot until inferna update completes.\e[0m" >&2
-    exit 1
-  fi
+  "$INFERNA_PATH/bin/inferna-update-restart" --reboot-only
 fi

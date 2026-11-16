@@ -9,13 +9,13 @@ inside a single long-running Quickshell process (`inferna-shell`).
 ```
 ~/.config/inferna/shell.json             # User overrides: bar, plugins, idle
 ~/.config/inferna/plugins/<plugin-id>/   # User-owned shell plugins
-$OMARCHY_PATH/config/omarchy/shell.json  # Canonical defaults
+$INFERNA_PATH/config/inferna/shell.json  # Canonical defaults
 ```
 
 The shell hot-reloads `shell.json` on save — no restart needed for layout
 changes. `idle.screensaver` and `idle.lock` are seconds since user idle began.
 
-**Commands:** `omarchy restart shell`, `omarchy refresh shell`
+**Commands:** `inferna restart shell`, `inferna refresh shell`
 
 ## Plugin UI Safety
 
@@ -100,7 +100,7 @@ Item {
 Use the `inferna bar` group to move and manage widgets:
 
 ```bash
-inferna bar move omarchy.clock --section right
+inferna bar move inferna.clock --section right
 ```
 
 For layout edits beyond what the commands cover, edit the bar configuration
@@ -119,7 +119,7 @@ To customize a built-in bar widget, never edit `$OMARCHY_PATH/shell/plugins/`.
 Clone it into the user plugin directory instead:
 
 ```bash
-inferna plugin clone omarchy.workspaces
+inferna plugin clone inferna.workspaces
 # Edit ~/.config/inferna/plugins/<username>.workspaces/; saved changes reload automatically.
 ```
 
