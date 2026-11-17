@@ -31,7 +31,7 @@ drops only what runs code: any `*.lua` (Hyprland requires a theme's
 the terminal configs `alacritty.toml`, `foot.ini`, `ghostty.conf` and
 `kitty.conf` (each names the program the terminal launches), and `vscode.json`
 (names a VS Code extension to install). Those are regenerated from `colors.toml`
-through `$OMARCHY_PATH/default/themed/*.tpl`, and named on stderr.
+through `$INFERNA_PATH/default/themed/*.tpl`, and named on stderr.
 
 Everything else a cloned theme ships is kept, including `btop.theme`,
 `chromium.theme`, `helix.toml`, `icons.theme`, `keyboard.rgb` and `shell.toml`.

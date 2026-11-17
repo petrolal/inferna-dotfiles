@@ -237,7 +237,7 @@ When user requests system changes:
 4. **Is it automation?** Follow [`hooks.md`](hooks.md); use `inferna hook install` and the hook `.d` directories
 5. **Is it a package install?** Use `inferna pkg add <pkgs...>` 
 6. **Is it built-in shell/plugin code?** Follow [`plugins.md`](plugins.md); clone it with `inferna plugin clone`, never edit the packaged copy
-7. **Unsure if command exists?** Run `inferna commands` (or `omarchy <group> --help` for one group)
+7. **Unsure if command exists?** Run `inferna commands` (or `inferna <group> --help` for one group)
 
 ### Reminder Requests
 

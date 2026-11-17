@@ -40,7 +40,7 @@ o.bind("SUPER + M", "Theme menu", { menu = "theme" })     -- toggle an Inferna m
 o.bind("SUPER + N", "Network", { panel = "inferna.network" })  -- toggle a shell panel
 ```
 
-Prefer `{ menu = ... }` and `{ panel = ... }` over running `inferna-menu toggle ...` or `inferna-shell shell toggle ...` as a command. Routes and panels listed in `$INFERNA_PATH/default/omarchy/shortcuts` go straight to the running shell as Hyprland global shortcuts, with no process started on each press; any other route or panel still works, through the command.
+Prefer `{ menu = ... }` and `{ panel = ... }` over running `inferna-menu toggle ...` or `inferna-shell shell toggle ...` as a command. Routes and panels listed in `$INFERNA_PATH/default/inferna/shortcuts` go straight to the running shell as Hyprland global shortcuts, with no process started on each press; any other route or panel still works, through the command.
 
 View current bindings: `inferna menu keybindings --print`
 

@@ -11,8 +11,6 @@
 #   machine's own devices and configuration.
 # etc/mkinitcpio.conf.d/thunderbolt_module.conf
 #   Adds thunderbolt to MODULES only where modinfo finds it as a loadable module.
-# etc/limine-entry-tool.d/, default/limine/
-#   Read only where Limine and its entry tool are installed.
 # etc/systemd/oomd.conf.d/, default/systemd/user/app.slice.d/10-oomd.conf
 #   Inert unless systemd-oomd runs (install/config/enable-services.sh,
 #   migration 1785424256).
