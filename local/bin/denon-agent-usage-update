@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Wrapper around inferna-agent-usage-update: every collector runs upstream
 # except two:
 #  - Codex uses ~/.local/share/denon-agent-usage/codex-collector.py (fixed RPC

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Lazy-unmount gvfsd-fuse filesystems before suspend/hibernate to prevent the
 # kernel's process freeze from timing out. FUSE daemons (like gvfsd-fuse from

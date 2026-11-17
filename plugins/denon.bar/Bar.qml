@@ -17,6 +17,8 @@ Item {
 
   // The inferna-shell host injects infernaPath from INFERNA_PATH.
   property string infernaPath: Quickshell.env("INFERNA_PATH")
+  property bool _localDestroying: false
+  readonly property bool _isDestroying: _localDestroying || (root.shell ? root.shell._isDestroying === true : false)
   // Injected by the host shell so bar slots can resolve enabled widgets.
   property var barWidgetRegistry: fallbackBarWidgetRegistry
   // Read-only registry view for third-party full bars; the built-in bar does
@@ -414,6 +416,7 @@ Item {
   onModuleSlotsChanged: Qt.callLater(prunePluginBarApis)
 
   Component.onDestruction: {
+    _localDestroying = true
     for (var id in pluginBarApis) {
       root.releasePluginObjects(id)
       if (pluginBarApis[id] && typeof pluginBarApis[id].destroy === "function")
@@ -2216,8 +2219,8 @@ Item {
 
     Loader {
       id: componentLoader
-      active: !slot.qmlCustom && !slot.registered
-      sourceComponent: slot.commandCustom ? customCommandModuleComponent : emptyModuleComponent
+      active: !root._isDestroying && !slot.qmlCustom && !slot.registered
+      sourceComponent: (!root._isDestroying && slot.commandCustom) ? customCommandModuleComponent : (!root._isDestroying ? emptyModuleComponent : null)
       anchors.fill: parent
       opacity: slot.dragSource ? 0.22 : 1.0
       onLoaded: {
@@ -2228,8 +2231,8 @@ Item {
 
     Loader {
       id: registryLoader
-      active: slot.registered
-      sourceComponent: slot.registered ? slot.registryComponent : null
+      active: !root._isDestroying && slot.registered
+      sourceComponent: (!root._isDestroying && slot.registered) ? slot.registryComponent : null
       anchors.fill: parent
       opacity: slot.dragSource ? 0.22 : 1.0
       onLoaded: {
@@ -2240,8 +2243,8 @@ Item {
 
     Loader {
       id: qmlLoader
-      active: slot.qmlCustom
-      source: slot.qmlCustom ? root.customModuleSource(slot.entry) : ""
+      active: !root._isDestroying && slot.qmlCustom
+      source: (!root._isDestroying && slot.qmlCustom) ? root.customModuleSource(slot.entry) : ""
       anchors.fill: parent
       opacity: slot.dragSource ? 0.22 : 1.0
       onLoaded: {

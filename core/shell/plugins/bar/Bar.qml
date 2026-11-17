@@ -16,6 +16,8 @@ Item {
 
   // The inferna-shell host injects infernaPath from INFERNA_PATH.
   property string infernaPath: Quickshell.env("INFERNA_PATH")
+  property bool _localDestroying: false
+  readonly property bool _isDestroying: _localDestroying || (root.shell ? root.shell._isDestroying === true : false)
   // Injected by the host shell so bar slots can resolve enabled widgets.
   property var barWidgetRegistry: fallbackBarWidgetRegistry
   // Read-only registry view for third-party full bars; the built-in bar does
@@ -445,6 +447,7 @@ Item {
   onWidgetHostsChanged: Qt.callLater(prunePluginBarApis)
 
   Component.onDestruction: {
+    _localDestroying = true
     for (var id in pluginBarApis) {
       root.releasePluginObjects(id)
       if (pluginBarApis[id] && typeof pluginBarApis[id].destroy === "function")
@@ -2791,8 +2794,8 @@ Item {
 
     Loader {
       id: componentLoader
-      active: host.placed && !host.qmlCustom && !host.registered
-      sourceComponent: host.commandCustom ? customCommandModuleComponent : emptyModuleComponent
+      active: !root._isDestroying && host.placed && !host.qmlCustom && !host.registered
+      sourceComponent: (!root._isDestroying && host.commandCustom) ? customCommandModuleComponent : (!root._isDestroying ? emptyModuleComponent : null)
       width: host.widgetWidth
       height: host.widgetHeight
       opacity: host.dragSource ? 0.22 : 1.0
@@ -2804,8 +2807,8 @@ Item {
 
     Loader {
       id: registryLoader
-      active: host.placed && host.registered
-      sourceComponent: host.registered ? host.registryComponent : null
+      active: !root._isDestroying && host.placed && host.registered
+      sourceComponent: (!root._isDestroying && host.registered) ? host.registryComponent : null
       width: host.widgetWidth
       height: host.widgetHeight
       opacity: host.dragSource ? 0.22 : 1.0
@@ -2817,8 +2820,8 @@ Item {
 
     Loader {
       id: qmlLoader
-      active: host.placed && host.qmlCustom
-      source: host.qmlCustom ? root.customModuleSource(host.entry) : ""
+      active: !root._isDestroying && host.placed && host.qmlCustom
+      source: (!root._isDestroying && host.qmlCustom) ? root.customModuleSource(host.entry) : ""
       width: host.widgetWidth
       height: host.widgetHeight
       opacity: host.dragSource ? 0.22 : 1.0

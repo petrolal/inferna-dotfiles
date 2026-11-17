@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 image_dirs=${1:-}
 cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/inferna/image-selector

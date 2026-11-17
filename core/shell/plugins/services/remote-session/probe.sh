@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Lists this user's running gliff-server processes, one "<pid> [peer]" line
 # each. The peer is the ssh client address when the server was spawned over

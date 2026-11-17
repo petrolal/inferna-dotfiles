@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Join a Wi-Fi network by name (including hidden networks). Opened from the
 # "Other network…" row in the bar's Wi-Fi panel. nmcli asks for the password
 # itself (--ask), so it never appears on a command line.

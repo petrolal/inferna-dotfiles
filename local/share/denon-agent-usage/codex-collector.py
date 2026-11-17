@@ -92,9 +92,9 @@ def reset_credits_summary(result):
 _upstream_fetch = mod.fetch_codex_rpc
 
 
-def fetch_codex_rpc():
+def fetch_codex_rpc(*args, **kwargs):
   _last_results.clear()
-  result = _upstream_fetch()
+  result = _upstream_fetch(*args, **kwargs)
   summary = reset_credits_summary(_last_results.get("account/rateLimits/read") or {})
   if summary is not None:
     result["resetCredits"] = summary

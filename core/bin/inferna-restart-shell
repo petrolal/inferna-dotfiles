@@ -99,12 +99,15 @@ inferna_shell_dirs() {
     jq -r '.[].config_path | select(endswith("/shell/shell.qml")) | rtrimstr("/shell.qml")' 2>/dev/null)
 }
 
-while timeout 30 quickshell kill -p "$CONFIG_DIR" --any-display >/dev/null 2>&1; do sleep 0.1; done
+# Terminate existing supervisor instances so they do not attempt to relaunch while we restart.
+pkill -TERM -f "inferna-launch-shell" 2>/dev/null || true
+
+while timeout 5 quickshell kill -p "$CONFIG_DIR" --any-display >/dev/null 2>&1; do sleep 0.1; done
 while IFS= read -r dir; do
-  timeout 30 quickshell kill -p "$dir" --any-display >/dev/null 2>&1 || true
+  timeout 5 quickshell kill -p "$dir" --any-display >/dev/null 2>&1 || true
 done < <(inferna_shell_dirs)
 
-deadline=$((SECONDS + 30))
+deadline=$((SECONDS + 5))
 while (( SECONDS < deadline )) && [[ -n $(inferna_shell_dirs) ]]; do
   sleep 0.1
 done

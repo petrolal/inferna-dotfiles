@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Turn off keyboard backlight before hibernate to prevent hang on power-off.
 # The ASUS keyboard controller can block S4 shutdown if LEDs are active.

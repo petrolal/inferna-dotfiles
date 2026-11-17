@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Suspend can wedge fprintd's claim; restart it after resume to clear it.
 # Upstream: https://gitlab.freedesktop.org/libfprint/fprintd/-/issues/173

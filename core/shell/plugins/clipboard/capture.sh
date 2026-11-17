@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Captures the current clipboard as a JSON entry on stdout. In watch mode,
 # wl-paste invokes this with the payload on stdin and the mime as $1. Without
