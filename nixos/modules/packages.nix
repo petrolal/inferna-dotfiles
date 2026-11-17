@@ -60,10 +60,12 @@ let
   ];
 
   # TetraVim (~/TetraVim) requirements not already covered above: Neovim itself,
-  # Java (jdk21, see jetbrains.nix), ripgrep/fd (searchTools), gcc/make
-  # (buildTools), git, docker/kubectl (containers.nix) and Nerd Fonts
-  # (fonts.nix) are provided by other modules. These cover the rest.
+  # ripgrep/fd (searchTools), gcc/make (buildTools), git, docker/kubectl
+  # (containers.nix) and Nerd Fonts (fonts.nix) are provided by other
+  # modules. These cover the rest.
   nvimTools = with pkgs; [
+    jdk21       # Java LSP/tooling; also the global JDK development.nix pins
+                # its JVM buildTools (gradle/maven) to
     lazygit     # Git TUI modal (<leader>gg)
     grpcurl     # gRPC interactive client (<leader>ag)
     grpcui
@@ -197,6 +199,8 @@ let
     xarchiver   # archive manager (zip/tar/7z)
     evince      # PDF viewer
     telegram-desktop
+    thunderbird
+    google-chrome
   ];
 
 in {

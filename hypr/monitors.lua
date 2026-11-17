@@ -1,5 +1,4 @@
 -- monitors.lua --- display detection and layout
--- License: GPL-3.0-or-later
 
 -- Laptop display (eDP-1): 1920x1080 @ 165Hz (native 1:1 scale for sharp crisp proportions)
 hl.monitor({

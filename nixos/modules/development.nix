@@ -120,8 +120,8 @@ let
 
   # General-purpose JVM build tooling, independent of any specific IDE or
   # project template above. Pinned to pkgs.jdk21, the one global JDK this
-  # system exposes (see modules/jetbrains.nix, which sets JAVA_HOME/PATH to
-  # it) -- not to a project's own `jvm-init <version>` pin.
+  # system exposes (see packages.nix's nvimTools) -- not to a project's own
+  # `jvm-init <version>` pin.
   buildTools = [
     (pkgs.gradle.override { java = pkgs.jdk21; })
     (pkgs.maven.override { jdk_headless = pkgs.jdk21; })

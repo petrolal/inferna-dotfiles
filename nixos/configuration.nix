@@ -15,7 +15,6 @@
     ./modules/fingerprint.nix
     ./modules/nix-ld.nix
     ./modules/development.nix
-    ./modules/jetbrains.nix
     ./modules/containers.nix
     ./modules/flatpak.nix
     ./modules/ollama.nix

@@ -29,10 +29,6 @@ in
       description = userDesc;
       extraGroups = [ "networkmanager" "wheel" "docker" ];
       shell = pkgs.fish;
-      packages = with pkgs; [
-        thunderbird
-        google-chrome
-      ];
     };
 
     # Default login/interactive shell. Enabling the module registers fish in
