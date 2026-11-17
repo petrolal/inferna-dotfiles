@@ -20,22 +20,19 @@ set -euo pipefail
 modprobe_dir=${INFERNA_MODPROBE_DIR:-/etc/modprobe.d}
 sys_module=${INFERNA_SYS_MODULE:-/sys/module}
 conf="$modprobe_dir/inferna-toprow.conf"
-rebuild_pending=${INFERNA_TOPROW_REBUILD_PENDING:-/var/lib/inferna/toprow-rebuild-pending}
 
 usage() {
-  echo "Usage: inferna-keyboard-toprow [mediakeys|fnkeys] [--no-rebuild]" >&2
+  echo "Usage: inferna-keyboard-toprow [mediakeys|fnkeys]" >&2
   exit 1
 }
 
 state=
-rebuild=1
 for arg in "$@"; do
   case $arg in
     mediakeys | fnkeys)
       [[ -z $state ]] || usage
       state=$arg
       ;;
-    --no-rebuild) rebuild=0 ;;
     *) usage ;;
   esac
 done
@@ -102,46 +99,24 @@ if [[ -e $sys_module/hid_apple/parameters/fnmode && $(param hid_apple fnmode) !=
   echo "$fnmode" | sudo tee "$sys_module/hid_apple/parameters/fnmode" >/dev/null
 fi
 
-# A rebuild that failed or was interrupted last time is still owed, even with
-# the file in place.
-if [[ ! -e $rebuild_pending && -f $conf && $(<"$conf") == "$content" ]] && (( ${#legacy[@]} == 0 )); then
+if [[ -f $conf && $(<"$conf") == "$content" ]] && (( ${#legacy[@]} == 0 )); then
   echo "The top row already sends $first by default."
   exit 0
-fi
-
-# A loaded HID keyboard driver is in the boot image, with the options it had
-# when that was built. Record the rebuild before changing anything, so an
-# interrupted run still owes it. An owed rebuild stays owed even after the
-# keyboard that needed it is unplugged.
-needs_rebuild=0
-if (( rebuild )) && [[ -e $rebuild_pending || -d $sys_module/hid_asus || -d $sys_module/hid_apple ]]; then
-  needs_rebuild=1
-  sudo install -Dm644 /dev/null "$rebuild_pending"
 fi
 
 (( ${#legacy[@]} == 0 )) || sudo rm -f "${legacy[@]}"
 printf '%s\n' "$content" | sudo install -Dm644 /dev/stdin "$conf"
 
-if (( ! needs_rebuild )) && [[ ! -d $sys_module/hid_asus && ! -d $sys_module/hid_apple && ! -d $sys_module/asus_wmi ]]; then
+if [[ ! -d $sys_module/hid_asus && ! -d $sys_module/hid_apple && ! -d $sys_module/asus_wmi ]]; then
   echo "The top row now sends $first by default on keyboards that leave Fn-lock to Linux."
   echo "This machine's keyboard keeps Fn-lock in its own firmware, where Fn+Esc already survives a reboot."
   exit 0
 fi
 
-if (( needs_rebuild )); then
-  log=$(mktemp)
-  trap 'rm -f "$log"' EXIT
-  sudo limine-mkinitcpio 2>&1 | tee "$log"
-  status=("${PIPESTATUS[@]}")
-
-  # limine-mkinitcpio reports a kernel it could not rebuild and still exits 0.
-  if (( status[0] != 0 || status[1] != 0 )) || grep -q 'mkinitcpio failed for kernel' "$log"; then
-    echo "Could not rebuild the boot image; run inferna-keyboard-toprow $state again once that is fixed." >&2
-    exit 1
-  fi
-  sudo rm -f "$rebuild_pending"
-fi
-
+# hid_asus and asus_wmi only read their module parameter when the module
+# loads, and neither is in the initrd, so the new value takes effect once
+# the module is reloaded (e.g. on the next boot). hid_apple was already
+# applied live above.
 if [[ -d $sys_module/hid_asus || -d $sys_module/asus_wmi ]]; then
   echo "The top row sends $first by default from the next boot."
 else
