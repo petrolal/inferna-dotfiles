@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Create or restore system snapshots with snapper
-# inferna:args=<create|restore>
+# inferna:summary=Create a system snapshot with snapper
+# inferna:args=<create>
 # inferna:requires-sudo=true
 
 set -e
@@ -9,7 +9,7 @@ set -e
 COMMAND="$1"
 
 if [[ -z $COMMAND ]]; then
-  echo "Usage: inferna-snapshot <create|restore>" >&2
+  echo "Usage: inferna-snapshot <create>" >&2
   exit 1
 fi
 
@@ -42,8 +42,5 @@ create)
   done
 
   echo "Snapshots can be selected during boot."
-  ;;
-restore)
-  sudo limine-snapper-restore
   ;;
 esac

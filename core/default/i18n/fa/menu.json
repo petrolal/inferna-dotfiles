@@ -635,9 +635,6 @@
   "install.windows": {
     "label": "Windows"
   },
-  "install.aur": {
-    "label": "AUR"
-  },
   "install.preinstalls": {
     "label": "پیش‌نصب‌ها"
   },

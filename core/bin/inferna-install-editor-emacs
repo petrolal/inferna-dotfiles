@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# inferna:summary=Install Emacs with Inferna theme and font integration via the inferna-emacs AUR package
+# inferna:summary=Install Emacs with Inferna theme and font integration via the inferna-emacs package
 
 echo "Installing Emacs..."
 inferna-pkg-add inferna-emacs && inferna-install-emacs

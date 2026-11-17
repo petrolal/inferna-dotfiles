@@ -18,7 +18,6 @@ echo "Resetting Inferna user configs to shipped defaults..."
 # Trailing dot copies dotfiles; the shell wouldn't glob them with /etc/skel/*.
 cp -af /etc/skel/. ~/
 
-inferna-refresh-limine
 inferna-refresh-plymouth
 
 if inferna-cmd-present inferna-nvim-refresh; then
