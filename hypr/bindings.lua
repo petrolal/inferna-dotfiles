@@ -115,7 +115,7 @@ o.bind("SUPER + B", "Open Browser", { inferna = "browser" })
 o.bind("SUPER + E", "Open File Manager", hl.dsp.exec_cmd("thunar"))
 o.bind("SUPER + D", "Open application launcher", { menu = "apps" })
 o.bind("SUPER + CTRL + RETURN", "Open application launcher", { menu = "apps" })
-o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl activewindow | grep pid | tr -d 'pid:' | xargs kill"))
+o.bind("SUPER + SHIFT + Q", "Force quit active window", hl.dsp.exec_cmd("hyprctl activewindow -j | jq -r .pid | xargs -r kill"))
 o.bind("SUPER + CTRL + K", "Keybindings cheat sheet", "inferna-menu-keybindings")
 o.bind("SUPER + CTRL + P", "Power Menu", { menu = "system" })
 

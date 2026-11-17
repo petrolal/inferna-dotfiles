@@ -7,8 +7,12 @@ import Quickshell.Services.SystemTray
 import qs.Commons
 import qs.Commons as Commons
 import qs.Ui
-import "TrayModel.js" as TrayModel
+// Shared with denon.bar: same model, no Pebble-Shell-specific logic.
+import "../../denon.bar/widgets/TrayModel.js" as TrayModel
 
+// This file is a superset of denon.bar/widgets/Tray.qml (adds Pebble Shell
+// drawer-hover behavior). A fix here that isn't Pebble-Shell-specific
+// belongs in denon.bar/widgets/Tray.qml too.
 BarWidget {
   id: root
   moduleName: "inferna.tray"

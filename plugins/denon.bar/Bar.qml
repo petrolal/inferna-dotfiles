@@ -12,6 +12,9 @@ import qs.Ui
 import "BarModel.js" as BarModel
 import "panels" as Motion
 
+// denon.shell/Bar.qml is a superset of this file (adds Pebble Shell mode,
+// gated behind `shellMode`/`vertical`). A fix here that isn't shellMode-
+// specific (like wellChannel below) belongs in both copies.
 Item {
   id: root
 
@@ -99,7 +102,12 @@ Item {
   }
   readonly property real recessAdapt: depthOn && !pebble ? recessNight * Math.min(1, recessScale) : 0
   function wellChannel(bg, ink) {
-    var original = bg * 0.45, charcoal = bg * 0.8 + ink * 0.09
+    // With Depth off (the common case, no ~/.config/inferna/recess.json),
+    // recessAdapt is 0 and this must read as the theme's own background, not
+    // a washed-out 45%-brightness well -- that was unreadable against a dark
+    // theme's own near-black wallpaper. Depth still lifts further toward
+    // charcoal as recessAdapt rises for its near-black compensation.
+    var original = bg, charcoal = bg * 0.8 + ink * 0.09
     return original + (charcoal - original) * recessAdapt
   }
   // Recessed pills: a step darker than the wallpaper, shaded from above.

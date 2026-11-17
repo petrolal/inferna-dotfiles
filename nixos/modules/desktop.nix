@@ -43,8 +43,8 @@
 
   # Inferna environment variables
   environment.sessionVariables = {
-    INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
-    INFERNA_DOTFILES = "/home/petrolal/inferna-dotfiles";
+    INFERNA_PATH = "${config.dotfiles.repoPath}/core";
+    INFERNA_DOTFILES = config.dotfiles.repoPath;
 
     # nixpkgs nests each package's gsettings schemas under its own
     # share/gsettings-schemas/<name>/ subdir (to avoid collisions when several

@@ -1,7 +1,6 @@
 # Hyprland is now the only session: XFCE/X11/LightDM (desktop.nix) have been
-# removed outright (see docs/migration_plan.md section 0A). greetd + tuigreet
-# replaces LightDM as a minimal, Wayland-native login manager with no GTK
-# theme/greeter dependency.
+# removed outright. greetd + tuigreet replaces LightDM as a minimal,
+# Wayland-native login manager with no GTK theme/greeter dependency.
 { config, lib, pkgs, ... }:
 
 {
@@ -82,8 +81,8 @@
     NIXOS_OZONE_WL = "1";
 
     # Inferna Dotfiles and Pebble Shell environment
-    INFERNA_DOTFILES = "/home/petrolal/inferna-dotfiles";
-    INFERNA_PATH = "/home/petrolal/inferna-dotfiles/core";
+    INFERNA_DOTFILES = config.dotfiles.repoPath;
+    INFERNA_PATH = "${config.dotfiles.repoPath}/core";
 
     # QML2_IMPORT_PATH ensures Quickshell / QML finds QtQuick3D, Qt5Compat, QtMultimedia, Quickshell, and Inferna shell modules
     QML2_IMPORT_PATH = (lib.makeSearchPath "lib/qt-6/qml" [
@@ -91,7 +90,7 @@
       pkgs.qt6.qt5compat
       pkgs.qt6.qtmultimedia
       pkgs.quickshell
-    ]) + ":/home/petrolal/inferna-dotfiles/core/shell";
+    ]) + ":${config.dotfiles.repoPath}/core/shell";
   };
 
   environment.systemPackages = with pkgs; [

@@ -16,6 +16,11 @@ in
       default = "Petrola Lucas";
       description = "Full user description.";
     };
+    repoPath = lib.mkOption {
+      type = lib.types.str;
+      default = "/home/${username}/inferna-dotfiles";
+      description = "Absolute path to this dotfiles checkout (INFERNA_DOTFILES).";
+    };
   };
 
   config = {

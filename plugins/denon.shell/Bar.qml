@@ -10,10 +10,14 @@ import QtQuick.Shapes
 import qs.Commons
 import qs.Commons as Commons
 import qs.Ui
-import "BarModel.js" as BarModel
+// Shared with denon.bar: same model, no Pebble-Shell-specific logic.
+import "../denon.bar/BarModel.js" as BarModel
 // Shared with every denon.* plugin panel: one PanelMotion, one PanelHost.
 import "../denon.bar/panels" as Motion
 
+// This file is a superset of denon.bar/Bar.qml (adds Pebble Shell mode,
+// gated behind `shellMode`/`vertical`). A fix here that isn't shellMode-
+// specific belongs in denon.bar/Bar.qml too.
 Item {
   id: root
 
