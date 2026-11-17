@@ -24,4 +24,42 @@ for arg in "$@"; do
   esac
 done
 
-exec omasnap "${omasnap_args[@]}"
+if command -v omasnap &>/dev/null; then
+  exec omasnap "${omasnap_args[@]}"
+fi
+
+mode="region"
+action="both"
+
+for arg in "$@"; do
+  case "$arg" in
+    copy) action="copy" ;;
+    save) action="save" ;;
+    fullscreen) mode="fullscreen" ;;
+    smart|region|windows) mode="region" ;;
+  esac
+done
+
+[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
+save_dir="${INFERNA_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots}"
+mkdir -p "$save_dir"
+target_file="$save_dir/Screenshot_$(date +%Y-%m-%d_%H-%M-%S).png"
+
+if [[ $mode == "fullscreen" ]]; then
+  grim "$target_file" || exit 1
+else
+  geom=$(slurp 2>/dev/null)
+  [[ -z $geom ]] && exit 0
+  grim -g "$geom" "$target_file" || exit 1
+fi
+
+if [[ $action == "copy" || $action == "both" ]]; then
+  wl-copy < "$target_file" 2>/dev/null || true
+fi
+
+if [[ $action == "copy" ]]; then
+  notify-send -i "$target_file" "Screenshot" "Copied to clipboard" 2>/dev/null || true
+  rm -f "$target_file"
+else
+  notify-send -i "$target_file" "Screenshot" "Saved to $(basename "$target_file") and copied to clipboard" 2>/dev/null || true
+fi

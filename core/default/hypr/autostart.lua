@@ -12,6 +12,7 @@ hl.on("hyprland.start", function()
   -- Slow app launch fix -- set systemd and D-Bus activation vars before
   -- starting session services.
   hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+  hl.exec_cmd("systemctl --user start nixos-fake-graphical-session.target")
 
   hl.exec_cmd("inferna-launch-shell")
   hl.exec_cmd("inferna-provision-first-run")

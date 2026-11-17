@@ -7,6 +7,7 @@
     fira-code
     hack
     meslo-lg
+    symbols-only
   ] ++ (with pkgs; [
     # Broad Unicode fallback (CJK, emoji, symbols) so unsupported glyphs
     # don't render as tofu boxes in GTK apps, terminals, etc.
@@ -18,5 +19,13 @@
 
   # Enable font directory and fontconfig for proper font discovery
   fonts.fontDir.enable = true;
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      monospace = [ "JetBrainsMono Nerd Font" "Noto Color Emoji" ];
+      sansSerif = [ "Adwaita Sans" "Noto Sans" ];
+      serif = [ "Noto Serif" ];
+      emoji = [ "Noto Color Emoji" ];
+    };
+  };
 }
