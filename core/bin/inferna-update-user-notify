@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Compatibility wrapper for inferna-migrate-notify.
-# inferna:hidden=true
-
-exec inferna-migrate-notify "$@"

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Open Voxtype configuration
-
-set -e
-
-inferna-launch-floating-terminal-with-presentation "voxtype configure"
-inferna-restart-shell

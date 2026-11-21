@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Open Voxtype AI model setup
-
-set -e
-
-inferna-launch-floating-terminal-with-presentation "voxtype setup model"
-inferna-restart-shell

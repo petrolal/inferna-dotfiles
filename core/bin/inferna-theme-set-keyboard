@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Apply the current theme keyboard color to supported keyboards
-# inferna:hidden=true
-
-inferna-theme-set-keyboard-asus-rog
-inferna-theme-set-keyboard-f16

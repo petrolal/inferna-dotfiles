@@ -5,18 +5,15 @@
     ./modules/hardware.nix
     ./modules/networking.nix
     ./modules/desktop.nix
-    ./modules/hyprland.nix
+    ./modules/gnome.nix
     ./modules/nvidia.nix
     ./modules/fonts.nix
     ./modules/users.nix
     ./modules/packages.nix
-    ./modules/packages-adhoc.nix
     ./modules/gaming.nix
-    ./modules/fingerprint.nix
     ./modules/nix-ld.nix
     ./modules/development.nix
     ./modules/containers.nix
-    ./modules/flatpak.nix
     ./modules/ollama.nix
   ];
 

@@ -7,18 +7,13 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     claude-desktop = {
       url = "github:aaddrick/claude-desktop-debian";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, antigravity-nix, nix-flatpak, claude-desktop, zen-browser, ... }:
+  outputs = { self, nixpkgs, antigravity-nix, claude-desktop, ... }:
     let
       system = "x86_64-linux";
 
@@ -35,22 +30,6 @@
         then nixpkgs.lib.strings.trim (builtins.readFile /etc/hostname)
         else "nixos";
 
-      # Hyprland 0.56.2 crashes (SIGABRT/SIGSEGV, see
-      # patches/hyprland-fix-dangling-pass-element.patch's own header for
-      # the full trace) whenever a window's border/shadow/rect/etc. pass
-      # element gets queued for a frame and the window is destroyed before
-      # that frame renders -- which happens reliably at startup, when
-      # autostart apps and restored browser windows map/churn in a burst.
-      # This overlay patches the missing validity check at the root rather
-      # than disabling decorations (config/hypr/conf/input.lua's
-      # shadow.enabled = false was a prior, incomplete workaround for the
-      # same bug -- it silenced the shadow case but not borders).
-      hyprlandCrashFixOverlay = final: prev: {
-        hyprland = prev.hyprland.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [ ./patches/hyprland-fix-dangling-pass-element.patch ];
-        });
-      };
-
       # `user` defaults to null here deliberately: modules/users.nix's
       # `dotfiles.username` option default is the single source of truth for
       # "petrolal" as the normal account name. Duplicating that default here
@@ -60,9 +39,8 @@
           modules = [
             {
               nixpkgs.hostPlatform = system;
-              nixpkgs.overlays = [ claude-desktop.overlays.default hyprlandCrashFixOverlay ];
+              nixpkgs.overlays = [ claude-desktop.overlays.default ];
             }
-            nix-flatpak.nixosModules.nix-flatpak
             ./configuration.nix
 
             ({ pkgs, ... }: {
@@ -71,12 +49,12 @@
 
               environment.systemPackages = [
                 antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-cli
-                zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
               ];
             })
           ] ++ nixpkgs.lib.optional (user != null) { dotfiles.username = user; }
             ++ extraModules;
         };
+
       # Primary (and, for now, only real) workstation host: has a discrete
       # NVIDIA GPU with Intel/NVIDIA PRIME offload, so dotfiles.nvidia is
       # enabled only here (see modules/nvidia.nix) -- the bus IDs are this

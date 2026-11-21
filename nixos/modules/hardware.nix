@@ -37,7 +37,7 @@ in
   hardware.enableAllFirmware = true;
   nixpkgs.config.allowUnfree = true;
 
-  # Device firmware updates (core/bin/inferna-update-firmware runs fwupdmgr).
+  # Device firmware updates (fwupdmgr)
   services.fwupd.enable = true;
 
   # Restrict CUDA builds (e.g. ollama-cuda) to this machine's actual GPU
@@ -53,6 +53,16 @@ in
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
   '';
   hardware.keyboard.qmk.enable = true;
+
+  # Graphics acceleration (OpenGL/Vulkan, 32-bit for gaming, Intel VA-API)
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      libvdpau-va-gl
+    ];
+  };
 
   # Bluetooth
   hardware.bluetooth.enable = true;

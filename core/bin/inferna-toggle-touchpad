@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Enable, disable, or toggle the touchpad
-# inferna:args=[on|off|toggle]
-
-exec inferna-toggle-input-device touchpad "${1:-toggle}"

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Detect ASUS ExpertBook B9406 series laptops on Intel Panther Lake.
-
-inferna-hw-match "B9406" && inferna-hw-intel-ptl

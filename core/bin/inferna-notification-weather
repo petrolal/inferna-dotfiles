@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Toggle the current weather panel
-
-inferna-shell shell toggle inferna.weather

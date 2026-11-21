@@ -8,7 +8,7 @@
   };
 
   # 32-bit Vulkan/NVIDIA userspace for Steam/Lutris/Heroic/umu-launcher is
-  # already declared unconditionally in hyprland.nix
+  # already declared unconditionally in hardware.nix
   # (hardware.graphics.enable32Bit) -- nothing to add here.
 
   # xpadneo loads as a proper kernel module built against the running
@@ -19,11 +19,9 @@
   environment.systemPackages = with pkgs; [
     heroic
     lutris
-    umu-launcher # also used directly by inferna-install-gaming-battlenet
+    umu-launcher
 
-    # Core set confirmed to exist under pkgs.libretro; add more from there as
-    # needed (ported from the Arch libretro-* package list in
-    # core/bin/inferna-install-gaming-retroarch).
+    # Core set confirmed to exist under pkgs.libretro; add more as needed.
     (retroarch.withCores (
       cores: with cores; [
         mgba

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Match the Dell XPS 13 DX13260 with an Intel Panther Lake GPU.
-
-inferna-hw-match "DX13260" && inferna-hw-intel-ptl

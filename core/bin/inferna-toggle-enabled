@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Check if a toggle is enabled (flag file exists)
-# inferna:args=<flag-name>
-
-[[ -f "$HOME/.local/state/inferna/toggles/$1" ]]

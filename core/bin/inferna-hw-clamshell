@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Returns true when clamshell mode is active
-# inferna:hidden=true
-
-# Clamshell = lid closed while driving one or more external monitors.
-inferna-hw-laptop-closed && inferna-hw-external-monitors

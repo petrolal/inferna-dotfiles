@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Launch the Inferna screensaver on every display.
-# inferna:args=[force] [options]
-
-exec /usr/lib/inferna-screensaver/inferna-screensaver "$@"

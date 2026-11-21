@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Set the correct power profile on boot based on current AC/battery state.
-
-exec inferna-powerprofiles-set autodetect

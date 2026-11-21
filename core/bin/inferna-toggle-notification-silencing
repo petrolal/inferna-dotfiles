@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Toggle notification do-not-disturb mode
-
-state=$(inferna-shell notifications toggleDnd 2>/dev/null || echo "")
-inferna-shell -q inferna.indicators refresh

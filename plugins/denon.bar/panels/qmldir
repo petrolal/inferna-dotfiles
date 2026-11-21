@@ -1,8 +1,0 @@
-singleton PanelMotion 1.0 PanelMotion.qml
-PopupPanel 1.0 PopupPanel.qml
-PanelHost 1.0 PanelHost.qml
-GlassHero 1.0 GlassHero.qml
-GlassSection 1.0 GlassSection.qml
-GlassSeparator 1.0 GlassSeparator.qml
-GlassTile 1.0 GlassTile.qml
-GlassTrack 1.0 GlassTrack.qml

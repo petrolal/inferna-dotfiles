@@ -1,8 +1,0 @@
-: "${INFERNA_PATH:=${INFERNA_PATH:-$HOME/inferna-dotfiles/core}}"
-export INFERNA_PATH="$INFERNA_PATH"
-source "$INFERNA_PATH/default/bash/envs"
-source "$INFERNA_PATH/default/bash/shell"
-source "$INFERNA_PATH/default/bash/aliases"
-source "$INFERNA_PATH/default/bash/functions"
-source "$INFERNA_PATH/default/bash/init"
-[[ $- == *i* ]] && bind -f "$INFERNA_PATH/default/bash/inputrc"

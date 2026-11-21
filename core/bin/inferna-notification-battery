@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Show the current battery status notification
-
-inferna-notification-send -g 󰁹 -u low "$(inferna-battery-status)"

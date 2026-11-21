@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Launch or attach to the persistent herdr session in a terminal
-
-exec inferna-launch-terminal herdr

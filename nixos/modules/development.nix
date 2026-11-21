@@ -142,11 +142,11 @@ in
   programs.direnv.enable = true;
 
   # GnuPG + agent for signing Maven Central artifacts (and the GPG key export
-  # in github-repo-manager's scripts/get_gpg_key.sh). Qt pinentry so the
-  # passphrase prompt shows up under Hyprland even when gpg runs without a TTY.
+  # in github-repo-manager's scripts/get_gpg_key.sh). GNOME pinentry integrates
+  # with gnome-keyring and matches the native GTK/Wayland session.
   programs.gnupg.agent = {
     enable = true;
-    pinentryPackage = pkgs.pinentry-qt;
+    pinentryPackage = pkgs.pinentry-gnome3;
   };
 
   environment.systemPackages = [

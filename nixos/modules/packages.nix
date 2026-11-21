@@ -7,24 +7,13 @@ let
   # environment.systemPackages entries appimage-run and other unpatched
   # binaries can dlopen directly.
   dynamicLibs = with pkgs; [
+    stdenv.cc.cc.lib
     libx11
     libGL
+    libxkbfile
+    libsecret
+    libkrb5
   ];
-
-  # Hyprland (as packaged here) doesn't advertise the xdg-toplevel-icon
-  # protocol, so every foot startup logs a harmless "compositor does not
-  # implement the xdg-toplevel-icon protocol" warning. Default the binary
-  # itself to --log-level=error so this is suppressed regardless of launch
-  # path (keybind, app menu .desktop, or a bare `foot` typed in a shell),
-  # instead of relying on every call site passing -d error.
-  footQuiet = pkgs.symlinkJoin {
-    name = "foot";
-    paths = [ pkgs.foot ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/foot --add-flags "--log-level=error"
-    '';
-  };
 
   buildTools = with pkgs; [
     gnumake
@@ -35,13 +24,12 @@ let
     gcc  # C compiler for Tree-sitter parsers & telescope-fzf-native (TetraVim/nvim)
     gdb  # GNU Debugger for Qt Creator, C/C++ development
     graalvmPackages.graalvm-ce
+    pkg-config
   ] ++ dynamicLibs;
 
-  wallpaperTools = with pkgs; [
+  mediaTools = with pkgs; [
     mpv
-    xwinwrap
-    feh
-    mangohud  # FPS/frametime/GPU overlay for testing the OpenGL wallpaper's performance
+    mangohud  # FPS/frametime/GPU overlay
   ];
 
   devTools = with pkgs; [
@@ -108,6 +96,7 @@ let
     nodejs_22 # includes npm/npx
     python3   # includes pip/venv
     go
+    pnpm
   ];
 
   # Language servers, linters and CLIs that Hell Emacs' modules (:lang glsl,
@@ -132,7 +121,6 @@ let
     pciutils
     htop
     fastfetch
-    xclip
     curl
     wget
     zip
@@ -140,36 +128,14 @@ let
     which
     less
     rlwrap
-    kitty
-    ghostty
-    alacritty
-    footQuiet    # Inferna terminal emulator (wrapped to default --log-level=error)
-    thunar  # standalone GTK file manager; no longer pulled in transitively now that desktopManager.xfce is gone
-    glib    # gsettings CLI, used by inferna-theme-set-gnome; also keeps a single
-            # canonical build on PATH instead of its old /nix/store/*-glib-*
-            # wildcard fallback, which could match a GIO-module-incompatible
-            # build (e.g. a 32-bit glib pulled in by hardware.graphics.enable32Bit)
-    gsettings-desktop-schemas # org.gnome.desktop.interface schema gsettings needs
-    grim         # Wayland screenshot capture, bound in config/hypr/hyprland.lua
-    slurp        # region selection for grim
     wl-clipboard
-    brightnessctl # Monitor & keyboard brightness control for Inferna corner & bindings
-    socat        # Fast IPC communication socket used by Inferna shell
-    hyprsunset   # Nightlight shader & color temperature daemon
-    gum          # Charm TUI toolkit used by Inferna CLI scripts
-    imagemagick  # Wallpaper blur, palette generation, and icon transcoding
-    inotify-tools # File watcher used by plugins and theme services
     fzf          # Fuzzy finder CLI
   ];
 
   mediaUtils = with pkgs; [
     shotcut
     appimage-run
-    nomacs      # image viewer
-    celluloid   # GTK frontend for mpv, used as the default video viewer
     spotify
-    playerctl
-    gpu-screen-recorder-gtk
   ];
 
   # 3D modeling, animation, mesh processing, and viewing tools.
@@ -194,19 +160,17 @@ let
   ];
 
   # General-purpose apps reached for daily, outside any dev/media workflow.
+  # Standard GNOME utilities (Calculator, Papers PDF viewer, Loupe image viewer,
+  # File Roller archive manager, etc.) are provided by gnome.nix.
   dailyTools = with pkgs; [
-    galculator
-    xarchiver   # archive manager (zip/tar/7z)
-    evince      # PDF viewer
     telegram-desktop
-    thunderbird
     google-chrome
   ];
 
 in {
   environment.systemPackages =
     buildTools
-    ++ wallpaperTools
+    ++ mediaTools
     ++ devTools
     ++ searchTools
     ++ nvimTools

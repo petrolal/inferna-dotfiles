@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# inferna:summary=Launch emojis
-# inferna:group=menu
-# inferna:examples=inferna menu emoji
-
-inferna-shell shell toggle inferna.emojis

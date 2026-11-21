@@ -26,9 +26,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # hardware.graphics.enable/enable32Bit is already set unconditionally by
-    # hyprland.nix ("Required for any Wayland compositor") -- restating the
-    # same true/true here added nothing, just a second place to keep in sync.
+    # hardware.graphics.enable/enable32Bit is declared unconditionally in hardware.nix.
+    boot.kernelParams = [
+      "nvidia_drm.modeset=1"
+      "nvidia_drm.fbdev=1"
+    ];
 
     services.xserver.videoDrivers = [ "nvidia" ];
 

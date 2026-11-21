@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Toggles the window gaps globally between no gaps and the default.
-
-inferna-hyprland-toggle window-no-gaps

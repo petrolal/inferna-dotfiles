@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Remove the Xbox Cloud Gaming web app.
-
-set -e
-
-inferna-webapp-remove "Xbox Cloud Gaming"

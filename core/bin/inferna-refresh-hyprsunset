@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# inferna:summary=Overwrite the user config for hyprsunset with the Inferna default and restart the service.
-
-inferna-refresh-config hypr/hyprsunset.conf
-inferna-restart-hyprsunset
