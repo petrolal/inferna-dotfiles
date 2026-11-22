@@ -36,6 +36,23 @@ if status is-interactive
     if command -q starship
         starship init fish | source
     end
+
+    # Convenience aliases for full dashboard & live spinning high-res 3D GLSL ring
+    alias dash "fastfetch"
+    alias ring3d "inferna-ring --kitty --size 420 --cols 36 --rows 18 --animate"
+
+    # Spin ONLY the high-res 3D GLSL Inferna ring when opening a fresh Ghostty
+    # window (press any key to drop straight into the prompt with the crisp ring kept above).
+    if test "$SHLVL" -le 1
+        and test "$TERM_PROGRAM" = "ghostty"
+        and not set -q INSIDE_EMACS
+        and not set -q NVIM
+        and not set -q TMUX
+        and test "$COLUMNS" -ge 50
+        and test "$LINES" -ge 18
+        and command -q inferna-ring
+        inferna-ring --kitty --size 360 --cols 30 --rows 15 --animate --inline
+    end
 end
 
 # Load user-local customizations last so they can override rice defaults.

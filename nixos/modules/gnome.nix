@@ -119,6 +119,18 @@ in
     services.desktopManager.gnome.enable = true;
     services.displayManager.gdm.enable = true;
 
+    # Replace stock GNOME Console (kgx) with Ghostty (native GTK4/Libadwaita +
+    # OpenGL GPU rendering + Kitty Graphics Protocol for high-res 3D ring).
+    environment.gnome.excludePackages = [ pkgs.gnome-console ];
+    environment.etc."xdg/xdg-terminals.list".text = ''
+      com.mitchellh.ghostty.desktop
+    '';
+
+    services.desktopManager.gnome.favoriteAppsOverride = ''
+      [org.gnome.shell]
+      favorite-apps=['com.mitchellh.ghostty.desktop', 'google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop']
+    '';
+
     # ============================================================================
     # GDM Login Screen Theme (Level 1: dconf + Level 2: gresource CSS/wallpaper)
     # ============================================================================
@@ -183,6 +195,10 @@ in
       # icon-theme='Adwaita'
       # cursor-theme='Adwaita'
 
+      [org.gnome.desktop.default-applications.terminal]
+      exec='ghostty'
+      exec-arg='-e'
+
       [org.gnome.desktop.background]
       picture-uri='file://${defaultWallpaper}'
       picture-uri-dark='file://${defaultWallpaper}'
@@ -229,7 +245,7 @@ in
 
     # Essential GNOME utilities, GTK3 Libadwaita theme, and Shell extensions.
     environment.systemPackages = with pkgs; [
-      ptyxis                   # Native GTK4/Libadwaita GNOME terminal (palettes, opacity, containers)
+      ghostty                  # GPU-accelerated GTK4/Libadwaita terminal (Kitty Graphics Protocol)
       file-roller              # Native GNOME archive manager
       gnome-tweaks             # Fonts, window buttons, startup apps, appearance
       gnome-extension-manager  # Browse/enable/configure GNOME Shell extensions

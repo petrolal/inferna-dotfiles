@@ -1,0 +1,42 @@
+# Inferna — Ghostty Terminal Configuration
+# Native GTK4 / Libadwaita look + GPU OpenGL + Kitty Graphics Protocol
+
+# Font
+font-family = JetBrainsMono Nerd Font
+font-size = 10.5
+
+# Native GNOME / Libadwaita integration
+gtk-titlebar = true
+gtk-tabs-location = top
+window-decoration = true
+window-padding-x = 12
+window-padding-y = 10
+window-padding-balance = true
+confirm-close-surface = false
+
+# Inferna Palette (matching nixos/assets/wallpapers/inferna.jpeg)
+background = 100c0a
+foreground = f2e5d5
+background-opacity = 0.94
+cursor-color = ff622e
+cursor-text = 100c0a
+selection-background = 3a221c
+selection-foreground = fff6eb
+
+# 16 ANSI colors (Inferna)
+palette = 0=#15100e
+palette = 1=#d9381e
+palette = 2=#98b96a
+palette = 3=#f2a949
+palette = 4=#6e9bc2
+palette = 5=#c97288
+palette = 6=#7bb8a8
+palette = 7=#f2e5d5
+palette = 8=#5e4d45
+palette = 9=#ff622e
+palette = 10=#b4d484
+palette = 11=#ffd07a
+palette = 12=#8bb8df
+palette = 13=#e090a4
+palette = 14=#97d4c4
+palette = 15=#fff6eb

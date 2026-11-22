@@ -131,6 +131,7 @@ let
     wl-clipboard
     fzf          # Fuzzy finder CLI
     starship     # Minimal, fast shell prompt (configured in starship/starship.toml)
+    (callPackage ../pkgs/inferna-ring { }) # Real-time OpenGL/GLSL 3D Inferna NixOS ring renderer
   ];
 
   mediaUtils = with pkgs; [

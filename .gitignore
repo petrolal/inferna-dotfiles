@@ -54,6 +54,7 @@ result-*
 # Build artifacts & QML cache
 build/
 dist/
+compile_commands.json
 *.qmlc
 *.jsc
 
