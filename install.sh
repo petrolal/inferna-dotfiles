@@ -30,8 +30,6 @@ This will symlink the GNOME dotfiles into your home folder:
   - Default wallpapers             -> ~/.local/share/backgrounds/inferna/
   - Theme & extension helpers      -> ~/.local/bin/inferna-{theme,extensions}
 
-Any obsolete symlinks left over from previous Hyprland/core installs in
-~/.local/bin and ~/.local/share will be cleaned up.
 Anything replaced is backed up to ~/.config/inferna-dotfiles-backup/.
 EOF
   read -r -p "Continue? [y/N] " answer || answer=""
@@ -55,32 +53,6 @@ place() {
   mkdir -p "$(dirname "$dest")"
   ln -sfn "$src" "$dest"
 }
-
-echo "Cleaning obsolete symlinks from ~/.local/..."
-for obsolete in \
-  "$HOME/.local/bin/hypr-all-full-width" \
-  "$HOME/.local/bin/hypr-smart-focus" \
-  "$HOME/.local/bin/denon-agent-usage-update" \
-  "$HOME/.local/bin/denon-wifi-other" \
-  "$HOME/.local/share/denon-agent-usage" \
-  "$HOME/.local/share/inferna-glass" \
-  "$HOME/.local/share/inferna-recess" \
-  "$HOME/.local/share/omarchy-glass" \
-  "$HOME/.local/share/omarchy-recess" \
-  "$HOME/.local/share/touchpad-control"; do
-  [[ -L "$obsolete" ]] && rm -f -- "$obsolete"
-done
-
-# Remove symlinks in ~/.local/bin that previously pointed into this repo's old core/bin
-if [[ -d "$HOME/.local/bin" ]]; then
-  for link in "$HOME/.local/bin"/inferna*; do
-    [[ -L "$link" ]] || continue
-    target=$(readlink "$link" 2>/dev/null || true)
-    if [[ ! -e "$link" || "$target" == "$here/core/"* ]]; then
-      rm -f -- "$link"
-    fi
-  done
-fi
 
 echo "Installing fastfetch dashboard..."
 place "$here/fastfetch/config.jsonc" "$config/fastfetch/config.jsonc"

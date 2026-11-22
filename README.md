@@ -64,7 +64,6 @@ Replaced files are backed up to `~/.config/inferna-dotfiles-backup/<time>/`. Per
 ## Docs
 
 - [Como funciona o rice no GNOME + NixOS](docs/gnome-rice-guide.md)
-- [Plano e registro de limpeza da migração](docs/gnome-migration-cleanup.md)
 
 ## License
 
