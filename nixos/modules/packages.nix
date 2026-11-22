@@ -24,7 +24,6 @@ let
     gcc  # C compiler for Tree-sitter parsers & telescope-fzf-native (TetraVim/nvim)
     gdb  # GNU Debugger for Qt Creator, C/C++ development
     graalvmPackages.graalvm-ce
-    pkg-config
   ] ++ dynamicLibs;
 
   mediaTools = with pkgs; [

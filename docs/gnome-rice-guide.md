@@ -92,4 +92,6 @@ inferna-dotfiles/
   gsettings set org.gnome.desktop.interface accent-color 'red'
   gsettings reset org.gnome.desktop.interface accent-color
   ```
-- **Adicionar novas extensões declarativamente:** teste pelo **Extension Manager** (`gnome-extension-manager`) e depois declare `pkgs.gnomeExtensions.<nome>` + o UUID em `enabled-extensions` dentro de [`nixos/modules/gnome.nix`](../nixos/modules/gnome.nix) (exemplos já comentados: `blur-my-shell`, `dash-to-dock`, `just-perfection`).
+- **Adicionar novas extensões declarativamente:** teste pelo **Extension Manager** (`gnome-extension-manager`) e depois declare `pkgs.gnomeExtensions.<nome>` + o UUID em `enabled-extensions` dentro de [`nixos/modules/gnome.nix`](../nixos/modules/gnome.nix).
+- **Salvar e restaurar os ajustes das extensões:** depois de configurar as extensões no Extension Manager, rode `inferna-extensions save` para salvar em `gnome/extensions.dconf` (restaurado automaticamente pelo `./install.sh` ou com `inferna-extensions load`).
+- **Aplicar mudanças no NixOS com diff bonito (`nh`):** rode `nh os switch` (já aponta automaticamente para `~/inferna-dotfiles/nixos`).

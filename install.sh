@@ -24,7 +24,7 @@ This will symlink the GNOME dotfiles into your home folder:
   - GNOME themes (Inferna, etc.)   -> ~/.themes/
   - GTK4 / GTK3 CSS overrides      -> ~/.config/gtk-{4,3}.0/gtk.css
   - Default wallpapers             -> ~/.local/share/backgrounds/inferna/
-  - Theme switcher helper          -> ~/.local/bin/inferna-theme
+  - Theme & extension helpers      -> ~/.local/bin/inferna-{theme,extensions}
 
 Any obsolete symlinks left over from previous Hyprland/core installs in
 ~/.local/bin and ~/.local/share will be cleaned up.
@@ -83,9 +83,14 @@ place "$here/fastfetch/config.jsonc" "$config/fastfetch/config.jsonc"
 place "$here/fastfetch/dashboard.py" "$config/fastfetch/dashboard.py"
 place "$here/branding/about.txt" "$config/fastfetch/about.txt"
 
-echo "Installing GNOME themes, wallpapers, and inferna-theme helper..."
-chmod +x "$here/gnome/apply-theme.sh"
+echo "Installing GNOME themes, wallpapers, and inferna helpers..."
+chmod +x "$here/gnome/apply-theme.sh" "$here/gnome/extensions-dconf.sh"
 place "$here/gnome/apply-theme.sh" "$HOME/.local/bin/inferna-theme"
+place "$here/gnome/extensions-dconf.sh" "$HOME/.local/bin/inferna-extensions"
+
+if [[ -f "$here/gnome/extensions.dconf" && -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+  "$here/gnome/extensions-dconf.sh" load || true
+fi
 
 if [[ -d "$here/nixos/assets/wallpapers" ]]; then
   for wp in "$here/nixos/assets/wallpapers"/*; do

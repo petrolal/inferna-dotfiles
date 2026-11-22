@@ -38,6 +38,9 @@
     ui.enable = true;
   };
 
+  # Expose ~/.local/bin (e.g. inferna-theme, inferna-extensions) across all shells & GUI sessions
+  environment.localBinInPath = true;
+
   # Dotfiles repository location
   environment.sessionVariables = {
     INFERNA_DOTFILES = config.dotfiles.repoPath;

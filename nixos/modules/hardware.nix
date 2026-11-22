@@ -67,4 +67,24 @@ in
   # Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
+
+  # Performance, thermal & storage health
+  zramSwap.enable = true;
+  services.fstrim.enable = true;
+  services.thermald.enable = true;
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5;
+  };
+
+  # Nix store optimization + nh (prettier rebuilds/diffs & weekly GC)
+  nix.settings.auto-optimise-store = true;
+  programs.nh = {
+    enable = true;
+    flake = "${config.dotfiles.repoPath}/nixos";
+    clean = {
+      enable = true;
+      extraArgs = "--keep-since 14d --keep 5";
+    };
+  };
 }

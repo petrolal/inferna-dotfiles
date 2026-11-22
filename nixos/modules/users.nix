@@ -34,7 +34,7 @@ in
     # Default login/interactive shell. Enabling the module registers fish in
     # environment.shells and wires direnv's fish hook automatically (see
     # programs.direnv in development.nix). Per-user config lives in
-    # config/fish/ (deployed to ~/.config/fish/ by imp).
+    # fish/ (deployed to ~/.config/fish/ by ./install.sh).
     programs.fish.enable = true;
 
     # Allow wheel group to run sudo without password prompts
