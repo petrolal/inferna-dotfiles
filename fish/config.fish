@@ -41,8 +41,8 @@ if status is-interactive
     alias dash "fastfetch"
     alias ring3d "inferna-ring --kitty --size 420 --cols 36 --rows 18 --animate"
 
-    # Spin the high-res 3D GLSL Inferna ring side-by-side with compact fastfetch
-    # when opening a fresh Ghostty window (press any key to drop into the prompt).
+    # Upload a seamless 360-deg looping 3D GLSL animation directly into Ghostty
+    # alongside compact fastfetch and exit immediately (zero blocking, keeps spinning!).
     if test "$SHLVL" -le 1
         and test "$TERM_PROGRAM" = "ghostty"
         and not set -q INSIDE_EMACS
@@ -52,10 +52,10 @@ if status is-interactive
         and test "$LINES" -ge 18
         and command -q inferna-ring
         if command -q fastfetch; and test -f "$HOME/.config/fastfetch/compact.jsonc"
-            inferna-ring --kitty --size 360 --cols 32 --rows 16 --animate --inline \
+            inferna-ring --kitty-loop --size 288 --frames 120 --fps 16 --cols 32 --rows 16 \
                 --side-cmd "fastfetch --config $HOME/.config/fastfetch/compact.jsonc"
         else
-            inferna-ring --kitty --size 360 --cols 32 --rows 16 --animate --inline
+            inferna-ring --kitty-loop --size 288 --frames 120 --fps 16 --cols 32 --rows 16
         end
     end
 end

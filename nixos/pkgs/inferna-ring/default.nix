@@ -2,6 +2,7 @@
   stdenv,
   libGL,
   mesa,
+  zlib,
 }:
 
 stdenv.mkDerivation {
@@ -13,6 +14,7 @@ stdenv.mkDerivation {
   buildInputs = [
     libGL
     mesa
+    zlib
   ];
 
   buildPhase = ''
@@ -22,7 +24,7 @@ stdenv.mkDerivation {
     $CC -O3 -Wall -Wextra \
       -DDEFAULT_SHADER_PATH="\"$out/share/inferna-ring/ring.frag\"" \
       main.c -o $out/bin/inferna-ring \
-      -lEGL -lGLESv2 -lm
+      -lEGL -lGLESv2 -lz -lm
     runHook postBuild
   '';
 

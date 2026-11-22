@@ -2,6 +2,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <GLES3/gl3.h>
+#include <errno.h>
 #include <math.h>
 #include <poll.h>
 #include <signal.h>
@@ -10,9 +11,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <termios.h>
 #include <time.h>
 #include <unistd.h>
+#include <zlib.h>
 
 #ifndef DEFAULT_SHADER_PATH
 #define DEFAULT_SHADER_PATH "ring.frag"
@@ -25,7 +28,7 @@ static void handle_sig(int sig) {
     g_stop = 1;
 }
 
-static char *read_entire_file(const char *path) {
+static char *read_entire_file(const char *path, size_t *out_len) {
     FILE *f = fopen(path, "rb");
     if (!f) return NULL;
     fseek(f, 0, SEEK_END);
@@ -40,8 +43,18 @@ static char *read_entire_file(const char *path) {
         return NULL;
     }
     buf[sz] = '\0';
+    if (out_len) *out_len = (size_t)sz;
     fclose(f);
     return buf;
+}
+
+static uint64_t fnv1a_hash(uint64_t h, const void *data, size_t len) {
+    const uint8_t *p = (const uint8_t *)data;
+    for (size_t i = 0; i < len; i++) {
+        h ^= (uint64_t)p[i];
+        h *= 1099511628211ULL;
+    }
+    return h;
 }
 
 static GLuint compile_shader(GLenum type, const char *src) {
@@ -60,7 +73,6 @@ static GLuint compile_shader(GLenum type, const char *src) {
     return s;
 }
 
-// Fast base64 encoder for Kitty Graphics Protocol
 static size_t base64_encode(const uint8_t *in, size_t len, char *out) {
     static const char tbl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     size_t i = 0, j = 0;
@@ -83,7 +95,6 @@ static size_t base64_encode(const uint8_t *in, size_t len, char *out) {
     return j;
 }
 
-// Flip OpenGL bottom-up RGBA into top-down RGBA
 static void flip_rgba_vertical(const uint8_t *src, uint8_t *dst, int w, int h) {
     size_t row_bytes = (size_t)w * 4;
     for (int y = 0; y < h; y++) {
@@ -91,31 +102,20 @@ static void flip_rgba_vertical(const uint8_t *src, uint8_t *dst, int w, int h) {
     }
 }
 
-// Transmit full-resolution RGBA image via Kitty Graphics Protocol (Ghostty / Kitty / WezTerm)
-static void render_kitty(const uint8_t *gl_rgba, uint8_t *topdown, char *b64_buf,
-                         int w, int h, int cols, int rows, bool keep_cursor, uint32_t img_id) {
-    flip_rgba_vertical(gl_rgba, topdown, w, h);
-    size_t raw_len = (size_t)w * (size_t)h * 4;
-    size_t b64_len = base64_encode(topdown, raw_len, b64_buf);
-
+static void emit_kitty_chunks(const char *header_fmt_prefix, const uint8_t *payload,
+                              size_t payload_len, char *b64_buf) {
+    size_t b64_len = base64_encode(payload, payload_len, b64_buf);
     const size_t chunk_sz = 4096;
     size_t off = 0;
     bool first = true;
 
-    fputs("\x1b[?2026h", stdout);
     while (off < b64_len) {
         size_t n = b64_len - off;
         if (n > chunk_sz) n = chunk_sz;
         int more = (off + n < b64_len) ? 1 : 0;
 
         if (first) {
-            if (cols > 0 && rows > 0) {
-                fprintf(stdout, "\x1b_Ga=T,f=32,s=%d,v=%d,c=%d,r=%d,i=%u,p=1,q=2,C=%d,m=%d;",
-                        w, h, cols, rows, img_id, keep_cursor ? 1 : 0, more);
-            } else {
-                fprintf(stdout, "\x1b_Ga=T,f=32,s=%d,v=%d,i=%u,p=1,q=2,C=%d,m=%d;",
-                        w, h, img_id, keep_cursor ? 1 : 0, more);
-            }
+            fprintf(stdout, "\x1b_G%s,m=%d;", header_fmt_prefix, more);
             first = false;
         } else {
             fprintf(stdout, "\x1b_Gm=%d;", more);
@@ -124,8 +124,29 @@ static void render_kitty(const uint8_t *gl_rgba, uint8_t *topdown, char *b64_buf
         fputs("\x1b\\", stdout);
         off += n;
     }
+}
+
+static void render_kitty_single(const uint8_t *gl_rgba, uint8_t *topdown, char *b64_buf,
+                                int w, int h, int cols, int rows, bool keep_cursor, uint32_t img_id) {
+    flip_rgba_vertical(gl_rgba, topdown, w, h);
+    size_t raw_len = (size_t)w * (size_t)h * 4;
+    uLongf comp_len = compressBound((uLong)raw_len);
+    uint8_t *comp = malloc((size_t)comp_len);
+    char hdr[192];
+
+    fputs("\x1b[?2026h", stdout);
+    if (comp && compress2(comp, &comp_len, topdown, (uLong)raw_len, 1) == Z_OK) {
+        snprintf(hdr, sizeof(hdr), "a=T,f=32,o=z,s=%d,v=%d,c=%d,r=%d,i=%u,p=1,q=2,C=%d",
+                 w, h, cols, rows, img_id, keep_cursor ? 1 : 0);
+        emit_kitty_chunks(hdr, comp, (size_t)comp_len, b64_buf);
+    } else {
+        snprintf(hdr, sizeof(hdr), "a=T,f=32,s=%d,v=%d,c=%d,r=%d,i=%u,p=1,q=2,C=%d",
+                 w, h, cols, rows, img_id, keep_cursor ? 1 : 0);
+        emit_kitty_chunks(hdr, topdown, raw_len, b64_buf);
+    }
     fputs("\x1b[?2026l", stdout);
     fflush(stdout);
+    free(comp);
 }
 
 static void render_halfblocks(const uint8_t *rgba, int w, int h, bool home_cursor) {
@@ -148,7 +169,6 @@ static void render_halfblocks(const uint8_t *rgba, int w, int h, bool home_curso
         for (int x = 0; x < w; x++) {
             const uint8_t *pt = &rgba[(y_top * w + x) * 4];
             const uint8_t *pb = &rgba[(y_bot * w + x) * 4];
-            // Composite over Inferna #100C0A (16, 12, 10)
             float at = pt[3] / 255.0f;
             float ab = pb[3] / 255.0f;
             int fr = (int)(pt[0] * at + 16.0f * (1.0f - at));
@@ -223,21 +243,149 @@ static bool key_pressed(void) {
     return false;
 }
 
+// Binary cache format for pre-rendered compressed Kitty animation loops:
+//   [4B magic "IRK1"][4B width][4B height][4B nframes][4B gap_ms]
+//   repeated nframes times: [4B zlen][zlen bytes of zlib-compressed top-down RGBA]
+#define CACHE_MAGIC 0x314B5249u
+
+static int print_side_panel_inline(const char *side_cmd, int cols, int rows) {
+    char *side_lines[64];
+    int side_count = 0;
+    if (side_cmd) {
+        FILE *pf = popen(side_cmd, "r");
+        if (pf) {
+            char line[2048];
+            while (side_count < 64 && fgets(line, sizeof(line), pf)) {
+                size_t ln = strlen(line);
+                while (ln > 0 && (line[ln - 1] == '\n' || line[ln - 1] == '\r')) line[--ln] = '\0';
+                side_lines[side_count++] = strdup(line);
+            }
+            pclose(pf);
+        }
+    }
+
+    int total_rows = (side_count > rows) ? side_count : rows;
+    for (int r = 0; r < total_rows; r++) fputc('\n', stdout);
+    fprintf(stdout, "\x1b[%dA", total_rows);
+
+    if (side_count > 0) {
+        int side_col = cols + 4;
+        int top_pad = (total_rows - side_count) / 2;
+        for (int r = 0; r < side_count; r++) {
+            if (top_pad + r > 0) fprintf(stdout, "\x1b[%dB", top_pad + r);
+            fprintf(stdout, "\r\x1b[%dC%s\x1b[0m", side_col, side_lines[r]);
+            if (top_pad + r > 0) fprintf(stdout, "\x1b[%dA", top_pad + r);
+        }
+        fputc('\r', stdout);
+    }
+
+    for (int r = 0; r < side_count; r++) free(side_lines[r]);
+    return total_rows;
+}
+
+static bool play_kitty_loop_from_cache(const char *cache_path, int cols, int rows,
+                                       const char *side_cmd, uint32_t img_id) {
+    FILE *f = fopen(cache_path, "rb");
+    if (!f) return false;
+
+    uint32_t hdr[5];
+    if (fread(hdr, sizeof(uint32_t), 5, f) != 5 || hdr[0] != CACHE_MAGIC) {
+        fclose(f);
+        return false;
+    }
+    int w = (int)hdr[1];
+    int h = (int)hdr[2];
+    int nframes = (int)hdr[3];
+    int gap_ms = (int)hdr[4];
+    if (w < 16 || h < 16 || nframes < 2 || nframes > 240) {
+        fclose(f);
+        return false;
+    }
+
+    size_t max_raw = (size_t)w * (size_t)h * 4;
+    size_t max_comp = (size_t)compressBound((uLong)max_raw);
+    uint8_t *zbuf = malloc(max_comp);
+    char *b64 = malloc(((max_comp + 2) / 3) * 4 + 16);
+    if (!zbuf || !b64) {
+        free(zbuf);
+        free(b64);
+        fclose(f);
+        return false;
+    }
+
+    int total_rows = print_side_panel_inline(side_cmd, cols, rows);
+
+    fputs("\x1b[?2026h", stdout);
+    char khdr[256];
+    for (int k = 0; k < nframes; k++) {
+        uint32_t zlen = 0;
+        if (fread(&zlen, sizeof(uint32_t), 1, f) != 1 || zlen == 0 || zlen > max_comp) {
+            free(zbuf);
+            free(b64);
+            fclose(f);
+            return false;
+        }
+        if (fread(zbuf, 1, zlen, f) != zlen) {
+            free(zbuf);
+            free(b64);
+            fclose(f);
+            return false;
+        }
+
+        if (k == 0) {
+            snprintf(khdr, sizeof(khdr), "a=T,f=32,o=z,s=%d,v=%d,c=%d,r=%d,i=%u,p=1,q=2,C=1",
+                     w, h, cols, rows, img_id);
+            emit_kitty_chunks(khdr, zbuf, zlen, b64);
+            fprintf(stdout, "\x1b_Ga=a,i=%u,r=1,z=%d,q=2\x1b\\", img_id, gap_ms);
+        } else {
+            snprintf(khdr, sizeof(khdr), "a=f,f=32,o=z,s=%d,v=%d,i=%u,z=%d,X=1,q=2",
+                     w, h, img_id, gap_ms);
+            emit_kitty_chunks(khdr, zbuf, zlen, b64);
+        }
+    }
+    // Start native terminal infinite animation loop (s=3 running, v=1 infinite loop)
+    fprintf(stdout, "\x1b_Ga=a,i=%u,s=3,v=1,q=2\x1b\\", img_id);
+    fprintf(stdout, "\x1b[?2026l\x1b[%dB\r", total_rows);
+    fflush(stdout);
+
+    free(zbuf);
+    free(b64);
+    fclose(f);
+    return true;
+}
+
+static void ensure_cache_dir(char *out_path, size_t out_sz, uint64_t hash) {
+    const char *home = getenv("HOME");
+    if (!home) {
+        out_path[0] = '\0';
+        return;
+    }
+    char dir1[512], dir2[512];
+    snprintf(dir1, sizeof(dir1), "%s/.cache", home);
+    mkdir(dir1, 0755);
+    snprintf(dir2, sizeof(dir2), "%s/.cache/inferna-ring", home);
+    mkdir(dir2, 0755);
+    snprintf(out_path, out_sz, "%s/loop-%016llx.bin", dir2, (unsigned long long)hash);
+}
+
 static void usage(const char *argv0) {
     fprintf(stderr,
         "Usage: %s [options]\n"
-        "  --kitty            High-resolution pixel output via Kitty Graphics Protocol (Ghostty/Kitty)\n"
-        "  --size <px>        Pixel resolution for --kitty or --ppm (default: 320)\n"
-        "  --cols <n>         Display width in terminal columns (default: 26 for --kitty, 36 halfblock)\n"
-        "  --rows <n>         Display height in terminal rows (default: 13 for --kitty, 18 halfblock)\n"
+        "  --kitty            High-resolution pixel output via Kitty Graphics Protocol\n"
+        "  --kitty-loop       Upload a seamless 360-deg looping animation to Ghostty/Kitty and exit immediately!\n"
+        "  --frames <n>       Number of frames for --kitty-loop (default: 48)\n"
+        "  --no-cache         Bypass ~/.cache/inferna-ring/ when using --kitty-loop\n"
+        "  --size <px>        Pixel resolution for --kitty/--kitty-loop/--ppm (default: 288)\n"
+        "  --cols <n>         Display width in terminal columns (default: 32)\n"
+        "  --rows <n>         Display height in terminal rows (default: 16)\n"
         "  --yaw <deg>        Initial 3D yaw angle in degrees (default: 20)\n"
         "  --pitch <deg>      Initial 3D pitch angle in degrees (default: -14)\n"
         "  --time <sec>       Shader timestamp (default: 0.0)\n"
-        "  --animate          Spin the 3D GLSL ring live (press any key or Ctrl+C to continue)\n"
-        "  --duration <sec>   Optional auto-stop duration in seconds when animating (0 = infinite)\n"
-        "  --fps <n>          Animation framerate (default: 30)\n"
+        "  --animate          Interactive real-time 3D spin (press any key or Ctrl+C to exit)\n"
+        "  --duration <sec>   Optional auto-stop duration when using --animate\n"
+        "  --fps <n>          Animation framerate (default: 24 for --kitty-loop, 30 for --animate)\n"
         "  --inline           Animate inline in scrollback instead of alternate screen\n"
-        "  --side-cmd <cmd>   Run shell command (e.g. fastfetch) and print its output beside the ring\n"
+        "  --side-cmd <cmd>   Run command (e.g. fastfetch) and print output beside the 3D ring\n"
         "  --ppm <file>       Render to a PPM image file\n"
         "  --shader <path>    Custom GLSL fragment shader path\n",
         argv0);
@@ -245,7 +393,10 @@ static void usage(const char *argv0) {
 
 int main(int argc, char **argv) {
     bool use_kitty = false;
-    int size_px = 320;
+    bool kitty_loop = false;
+    bool use_cache = true;
+    int nframes = 48;
+    int size_px = 288;
     int cols = 0;
     int rows = 0;
     float yaw_deg = 20.0f;
@@ -254,13 +405,16 @@ int main(int argc, char **argv) {
     bool animate = false;
     bool inline_anim = false;
     float duration = 0.0f;
-    int fps = 30;
+    int fps = 0;
     const char *side_cmd = NULL;
     const char *ppm_path = NULL;
     const char *shader_path = DEFAULT_SHADER_PATH;
 
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--kitty")) use_kitty = true;
+        else if (!strcmp(argv[i], "--kitty-loop")) { kitty_loop = true; use_kitty = true; }
+        else if (!strcmp(argv[i], "--no-cache")) use_cache = false;
+        else if (!strcmp(argv[i], "--frames") && i + 1 < argc) nframes = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--size") && i + 1 < argc) size_px = atoi(argv[++i]);
         else if ((!strcmp(argv[i], "--cols") || !strcmp(argv[i], "--width")) && i + 1 < argc) cols = atoi(argv[++i]);
         else if ((!strcmp(argv[i], "--rows") || !strcmp(argv[i], "--height")) && i + 1 < argc) rows = atoi(argv[++i]);
@@ -278,22 +432,50 @@ int main(int argc, char **argv) {
         else { fprintf(stderr, "Unknown option: %s\n", argv[i]); usage(argv[0]); return 1; }
     }
 
-    if (cols <= 0) cols = use_kitty ? 28 : 36;
-    if (rows <= 0) rows = use_kitty ? 14 : 18;
+    if (cols <= 0) cols = use_kitty ? 32 : 36;
+    if (rows <= 0) rows = use_kitty ? 16 : 18;
+    if (fps <= 0) fps = kitty_loop ? 24 : 30;
     if (size_px < 64) size_px = 64;
     if (size_px > 1024) size_px = 1024;
+    if (nframes < 6) nframes = 6;
+    if (nframes > 120) nframes = 120;
     if (fps < 1) fps = 1;
     if (fps > 60) fps = 60;
 
     int px_w = (use_kitty || ppm_path) ? size_px : cols;
     int px_h = (use_kitty || ppm_path) ? size_px : rows * 2;
+    int gap_ms = 1000 / fps;
+    if (gap_ms < 16) gap_ms = 16;
 
-    char *frag_src = read_entire_file(shader_path);
+    size_t frag_len = 0;
+    char *frag_src = read_entire_file(shader_path, &frag_len);
     if (!frag_src) {
         fprintf(stderr, "inferna-ring: cannot read shader '%s'\n", shader_path);
         return 1;
     }
 
+    // Unique per-invocation Kitty image ID so multiple rings in scrollback never collide
+    uint32_t img_id = ((uint32_t)getpid() & 0x7FFFu) + 100u;
+
+    // Fast path: if --kitty-loop is already cached for this exact shader + params, stream in ~8ms!
+    char cache_path[600] = {0};
+    if (kitty_loop && use_cache) {
+        uint64_t h = 14695981039346656037ULL;
+        h = fnv1a_hash(h, frag_src, frag_len);
+        h = fnv1a_hash(h, &px_w, sizeof(px_w));
+        h = fnv1a_hash(h, &px_h, sizeof(px_h));
+        h = fnv1a_hash(h, &nframes, sizeof(nframes));
+        h = fnv1a_hash(h, &gap_ms, sizeof(gap_ms));
+        h = fnv1a_hash(h, &yaw_deg, sizeof(yaw_deg));
+        h = fnv1a_hash(h, &pitch_deg, sizeof(pitch_deg));
+        ensure_cache_dir(cache_path, sizeof(cache_path), h);
+        if (cache_path[0] && play_kitty_loop_from_cache(cache_path, cols, rows, side_cmd, img_id)) {
+            free(frag_src);
+            return 0;
+        }
+    }
+
+    // Initialize headless OpenGL ES 3.0 via EGL
     EGLDisplay dpy = create_headless_display();
     if (dpy == EGL_NO_DISPLAY || !eglInitialize(dpy, NULL, NULL)) {
         fprintf(stderr, "inferna-ring: eglInitialize failed\n");
@@ -399,12 +581,80 @@ int main(int argc, char **argv) {
     size_t rgba_sz = (size_t)px_w * (size_t)px_h * 4;
     uint8_t *pixels = malloc(rgba_sz);
     uint8_t *topdown = use_kitty ? malloc(rgba_sz) : NULL;
-    char *b64_buf = use_kitty ? malloc(((rgba_sz + 2) / 3) * 4 + 16) : NULL;
+    size_t max_comp = (size_t)compressBound((uLong)rgba_sz);
+    char *b64_buf = use_kitty ? malloc(((max_comp + 2) / 3) * 4 + 16) : NULL;
     if (!pixels || (use_kitty && (!topdown || !b64_buf))) return 1;
 
     const float deg2rad = 3.14159265359f / 180.0f;
+    const float tau = 6.28318530718f;
 
-    if (animate) {
+    if (kitty_loop) {
+        uint8_t *zbuf = malloc(max_comp);
+        if (!zbuf) return 1;
+
+        char tmp_cache[640] = {0};
+        FILE *cf = NULL;
+        if (cache_path[0]) {
+            snprintf(tmp_cache, sizeof(tmp_cache), "%s.%d.tmp", cache_path, (int)getpid());
+            cf = fopen(tmp_cache, "wb");
+            if (cf) {
+                uint32_t chdr[5] = { CACHE_MAGIC, (uint32_t)px_w, (uint32_t)px_h, (uint32_t)nframes, (uint32_t)gap_ms };
+                fwrite(chdr, sizeof(uint32_t), 5, cf);
+            }
+        }
+
+        int total_rows = print_side_panel_inline(side_cmd, cols, rows);
+        fputs("\x1b[?2026h", stdout);
+
+        char khdr[256];
+        for (int k = 0; k < nframes; k++) {
+            float phase = (float)k / (float)nframes;
+            float cur_yaw = (yaw_deg * deg2rad) + phase * tau;
+            float cur_pitch = (pitch_deg * deg2rad) + sinf(phase * tau) * 0.14f;
+            float cur_t = phase * (tau / 2.6f);
+
+            glUniform2f(loc_res, (float)px_w, (float)px_h);
+            glUniform1f(loc_time, cur_t);
+            glUniform1f(loc_yaw, cur_yaw);
+            glUniform1f(loc_pitch, cur_pitch);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glFinish();
+            glReadPixels(0, 0, px_w, px_h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+            flip_rgba_vertical(pixels, topdown, px_w, px_h);
+            uLongf zlen = (uLongf)max_comp;
+            if (compress2(zbuf, &zlen, topdown, (uLong)rgba_sz, 6) != Z_OK) {
+                if (cf) { fclose(cf); unlink(tmp_cache); cf = NULL; }
+                break;
+            }
+            if (cf) {
+                uint32_t zl32 = (uint32_t)zlen;
+                fwrite(&zl32, sizeof(uint32_t), 1, cf);
+                fwrite(zbuf, 1, (size_t)zlen, cf);
+            }
+
+            if (k == 0) {
+                snprintf(khdr, sizeof(khdr), "a=T,f=32,o=z,s=%d,v=%d,c=%d,r=%d,i=%u,p=1,q=2,C=1",
+                         px_w, px_h, cols, rows, img_id);
+                emit_kitty_chunks(khdr, zbuf, (size_t)zlen, b64_buf);
+                fprintf(stdout, "\x1b_Ga=a,i=%u,r=1,z=%d,q=2\x1b\\", img_id, gap_ms);
+            } else {
+                snprintf(khdr, sizeof(khdr), "a=f,f=32,o=z,s=%d,v=%d,i=%u,z=%d,X=1,q=2",
+                         px_w, px_h, img_id, gap_ms);
+                emit_kitty_chunks(khdr, zbuf, (size_t)zlen, b64_buf);
+            }
+        }
+
+        fprintf(stdout, "\x1b_Ga=a,i=%u,s=3,v=1,q=2\x1b\\", img_id);
+        fprintf(stdout, "\x1b[?2026l\x1b[%dB\r", total_rows);
+        fflush(stdout);
+
+        if (cf) {
+            fclose(cf);
+            rename(tmp_cache, cache_path);
+        }
+        free(zbuf);
+    } else if (animate) {
         signal(SIGINT, handle_sig);
         signal(SIGTERM, handle_sig);
 
@@ -420,49 +670,13 @@ int main(int argc, char **argv) {
             tty_stdin = false;
         }
 
-        // Optional side panel (e.g. fastfetch output drawn once beside the spinning 3D ring)
-        char *side_lines[64];
-        int side_count = 0;
-        if (side_cmd) {
-            FILE *pf = popen(side_cmd, "r");
-            if (pf) {
-                char line[2048];
-                while (side_count < 64 && fgets(line, sizeof(line), pf)) {
-                    size_t ln = strlen(line);
-                    while (ln > 0 && (line[ln - 1] == '\n' || line[ln - 1] == '\r')) line[--ln] = '\0';
-                    side_lines[side_count++] = strdup(line);
-                }
-                pclose(pf);
-            }
-        }
         int total_rows = rows;
-        if (side_count > total_rows) total_rows = side_count;
-
         if (inline_anim) {
-            // Reserve space inline so the spinning ring + side panel sit cleanly above the prompt
-            for (int r = 0; r < total_rows; r++) fputc('\n', stdout);
-            fprintf(stdout, "\x1b[%dA\x1b[?25l", total_rows);
-            if (side_count > 0) {
-                int side_col = cols + 4;
-                int top_pad = (total_rows - side_count) / 2;
-                for (int r = 0; r < side_count; r++) {
-                    if (top_pad + r > 0) fprintf(stdout, "\x1b[%dB", top_pad + r);
-                    fprintf(stdout, "\r\x1b[%dC%s\x1b[0m", side_col, side_lines[r]);
-                    if (top_pad + r > 0) fprintf(stdout, "\x1b[%dA", top_pad + r);
-                }
-                fputc('\r', stdout);
-            }
+            total_rows = print_side_panel_inline(side_cmd, cols, rows);
+            fputs("\x1b[?25l", stdout);
         } else {
             fputs("\x1b[?1049h\x1b[?25l\x1b[2J\x1b[H", stdout);
-            if (side_count > 0) {
-                int side_col = cols + 5;
-                for (int r = 0; r < side_count; r++) {
-                    fprintf(stdout, "\x1b[%d;%dH%s\x1b[0m", r + 2, side_col, side_lines[r]);
-                }
-                fputs("\x1b[1;1H", stdout);
-            }
         }
-        for (int r = 0; r < side_count; r++) free(side_lines[r]);
         fflush(stdout);
 
         struct timespec t0;
@@ -489,7 +703,7 @@ int main(int argc, char **argv) {
             glReadPixels(0, 0, px_w, px_h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
             if (use_kitty) {
-                render_kitty(pixels, topdown, b64_buf, px_w, px_h, cols, rows, true, 1);
+                render_kitty_single(pixels, topdown, b64_buf, px_w, px_h, cols, rows, true, img_id);
             } else {
                 render_halfblocks(pixels, px_w, px_h, !inline_anim);
                 if (inline_anim) {
@@ -527,7 +741,7 @@ int main(int argc, char **argv) {
                 return 1;
             }
         } else if (use_kitty) {
-            render_kitty(pixels, topdown, b64_buf, px_w, px_h, cols, rows, false, 1);
+            render_kitty_single(pixels, topdown, b64_buf, px_w, px_h, cols, rows, false, img_id);
             fputc('\n', stdout);
             fflush(stdout);
         } else {
