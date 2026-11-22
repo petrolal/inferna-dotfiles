@@ -30,7 +30,7 @@ inferna-dotfiles/
 
 - **NixOS ([`nixos/modules/gnome.nix`](../nixos/modules/gnome.nix)):**
   - Suíte padrão completa do GNOME + `file-roller`, `gnome-tweaks`, `gnome-extension-manager`, `dconf-editor` e `adw-gtk3`.
-  - Extensões habilitadas: `AppIndicator`, `Clipboard Indicator` e `User Themes` (carrega `gnome-shell.css` customizado).
+  - Extensões habilitadas (compatíveis com GNOME 51): `AppIndicator`, `Clipboard Indicator`, `User Themes`, `Space Bar`, `Revived Media Controls`, `Caffeine`, `Vitals`, `Rounded Window Corners Reborn`, `Blur my Shell`, `GameMode Shell Extension` e `Transparent Move`.
   - Defaults não-bloqueantes (`extraGSettingsOverrides`): modo escuro (`prefer-dark`), accent `orange` (chama), `adw-gtk3-dark`, papel de parede padrão [`nixos/assets/wallpapers/inferna.jpeg`](../nixos/assets/wallpapers/inferna.jpeg), fonte `JetBrainsMono Nerd Font 10`, botões `minimizar, maximizar, fechar`, relógio com dia da semana, bateria em %, janelas centralizadas e gestos de touchpad.
 - **Dotfiles ([`install.sh`](../install.sh)):**
   - Symlinka todos os temas de `gnome/themes/*` em `~/.themes/`.

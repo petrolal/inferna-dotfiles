@@ -24,6 +24,10 @@ in
     gamescopeSession.enable = true;
   };
 
+  # GameMode CPU governor & process priority optimizations for games
+  # (paired with gnomeExtensions.gamemode-shell-extension in gnome.nix).
+  programs.gamemode.enable = true;
+
   # 32-bit Vulkan/NVIDIA userspace for Steam/Lutris/Heroic/umu-launcher is
   # already declared unconditionally in hardware.nix
   # (hardware.graphics.enable32Bit) -- nothing to add here.

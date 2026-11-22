@@ -183,11 +183,19 @@ in
       two-finger-scrolling-enabled=true
 
       [org.gnome.shell]
-      # Enabled extensions:
+      # Enabled extensions (all verified for GNOME 51):
       # - AppIndicator: system tray icons (Steam, Spotify, Telegram)
       # - Clipboard Indicator: clipboard history in the top bar
       # - User Themes: loads custom ~/.themes/<Name>/gnome-shell/gnome-shell.css
-      enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'clipboard-indicator@tudmotu.com', 'user-theme@gnome-shell-extensions.gcampax.github.com']
+      # - Space Bar: numbered workspaces in the top bar (WM-style)
+      # - Revived Media Controls: track info & media controls in the top bar
+      # - Caffeine: inhibit sleep/screensaver (with fullscreen auto-mode)
+      # - Vitals: CPU, RAM, temperature & network telemetry in the top bar
+      # - Rounded Window Corners Reborn: uniform rounded corners for Electron/XWayland
+      # - Blur my Shell: blur for top bar, overview, menus & lock screen
+      # - GameMode Shell Extension: top bar indicator for programs.gamemode
+      # - Transparent Move: semi-transparent windows while dragging
+      enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'clipboard-indicator@tudmotu.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'space-bar@luchrioh', 'mediacontrols@GitPowerInc.github.com', 'caffeine@patapon.info', 'Vitals@CoreCoding.com', 'rounded-window-corners@fxgn', 'blur-my-shell@aunetx', 'gamemodeshellextension@trsnaqe.com', 'transparent-move@edjenn1998']
     '';
 
     # Run Chromium/Chrome/Electron apps natively on Wayland under GNOME.
@@ -203,15 +211,23 @@ in
       dconf-editor             # Inspect & experiment with GSettings/dconf keys
       adw-gtk3                 # GTK3 port of Libadwaita (pairs with gtk-3.0/gtk.css)
 
-      # Enabled GNOME Shell extensions
+      # Enabled GNOME Shell extensions (GNOME 51 compatible)
       gnomeExtensions.appindicator
       gnomeExtensions.clipboard-indicator
       gnomeExtensions.user-themes
+      gnomeExtensions.space-bar
+      gnomeExtensions.revived-media-controls
+      gnomeExtensions.caffeine
+      gnomeExtensions.vitals
+      gnomeExtensions.rounded-window-corners-reborn
+      gnomeExtensions.blur-my-shell
+      gnomeExtensions.gamemode-shell-extension
+      gnomeExtensions.transparent-move
 
       # --- Optional visual/layout extensions (uncomment when ready) ---
-      # gnomeExtensions.blur-my-shell   # UUID: blur-my-shell@aunetx
-      # gnomeExtensions.dash-to-dock    # UUID: dash-to-dock@micxgx.gmail.com
-      # gnomeExtensions.just-perfection # UUID: just-perfection-desktop@just-perfection
+      # gnomeExtensions.dash-to-dock       # UUID: dash-to-dock@micxgx.gmail.com
+      # gnomeExtensions.just-perfection    # UUID: just-perfection-desktop@just-perfection
+      # gnomeExtensions.dynamic-music-pill # UUID: dynamic-music-pill@andbal (visualizer pill alternative to revived-media-controls)
     ];
   };
 }
