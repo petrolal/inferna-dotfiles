@@ -17,6 +17,12 @@ mat2 rot2(float a) {
     return mat2(c, -s, s, c);
 }
 
+float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
 float hash31(vec3 p) {
     p = fract(p * 0.1031);
     p += dot(p, p.yzx + 33.33);
@@ -55,6 +61,22 @@ float fbm3(vec3 p) {
     return v;
 }
 
+// Seamlessly looping rising 3D FBM using dual-phase flow advection (zero loop pop!)
+float loopingFireFbm(vec3 p, float loopPhase, float speedCycles, float riseDist) {
+    float p0 = fract(loopPhase * speedCycles);
+    float p1 = fract(loopPhase * speedCycles + 0.5);
+    float w1 = abs(2.0 * p0 - 1.0);
+    float w0 = 1.0 - w1;
+
+    // Slight curling horizontal sway + upward advection
+    vec3 q0 = p + vec3(sin(p.y * 2.4 + p0 * TAU) * 0.16, -p0 * riseDist, cos(p.y * 2.0 + p0 * TAU) * 0.12);
+    vec3 q1 = p + vec3(sin(p.y * 2.4 + p1 * TAU) * 0.16, -p1 * riseDist, cos(p.y * 2.0 + p1 * TAU) * 0.12);
+
+    float f0 = fbm3(q0);
+    float f1 = fbm3(q1 + vec3(7.3, 11.9, 4.1));
+    return f0 * w0 + f1 * w1;
+}
+
 // --- SDF Primitives ---------------------------------------------------------
 float sdRoundBox(vec3 p, vec3 b, float r) {
     vec3 q = abs(p) - b + r;
@@ -71,65 +93,53 @@ float sdSeg2(vec2 p, vec2 a, vec2 b) {
 float sdRuneGlyph(vec2 uv, int id) {
     float d = 1e5;
     if (id == 0) {
-        // ᚾ Nauthiz (N)
         d = min(d, sdSeg2(uv, vec2(0.0, -0.82), vec2(0.0, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.55, 0.30), vec2(0.55, -0.30)));
     } else if (id == 1) {
-        // ᚠ Fehu (F)
         d = min(d, sdSeg2(uv, vec2(-0.35, -0.82), vec2(-0.35, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.35, 0.25), vec2(0.55, 0.80)));
         d = min(d, sdSeg2(uv, vec2(-0.35, -0.18), vec2(0.48, 0.32)));
     } else if (id == 2) {
-        // ᛉ Algiz (Z/X)
         d = min(d, sdSeg2(uv, vec2(0.0, -0.82), vec2(0.0, 0.82)));
         d = min(d, sdSeg2(uv, vec2(0.0, 0.15), vec2(-0.58, 0.78)));
         d = min(d, sdSeg2(uv, vec2(0.0, 0.15), vec2(0.58, 0.78)));
     } else if (id == 3) {
-        // ᛟ Othala (O)
         d = min(d, sdSeg2(uv, vec2(0.0, 0.82), vec2(0.56, 0.18)));
         d = min(d, sdSeg2(uv, vec2(0.0, 0.82), vec2(-0.56, 0.18)));
         d = min(d, sdSeg2(uv, vec2(0.56, 0.18), vec2(-0.50, -0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.56, 0.18), vec2(0.50, -0.82)));
     } else if (id == 4) {
-        // ᛊ Sowilo (S)
         d = min(d, sdSeg2(uv, vec2(0.48, 0.82), vec2(-0.42, 0.12)));
         d = min(d, sdSeg2(uv, vec2(-0.42, 0.12), vec2(0.42, -0.12)));
         d = min(d, sdSeg2(uv, vec2(0.42, -0.12), vec2(-0.48, -0.82)));
     } else if (id == 5) {
-        // ᚱ Raido (R)
         d = min(d, sdSeg2(uv, vec2(-0.40, -0.82), vec2(-0.40, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.40, 0.82), vec2(0.46, 0.34)));
         d = min(d, sdSeg2(uv, vec2(0.46, 0.34), vec2(-0.40, -0.05)));
         d = min(d, sdSeg2(uv, vec2(-0.40, -0.05), vec2(0.50, -0.82)));
     } else if (id == 6) {
-        // ᛖ Ehwaz (E)
         d = min(d, sdSeg2(uv, vec2(-0.50, -0.82), vec2(-0.50, 0.82)));
         d = min(d, sdSeg2(uv, vec2(0.50, -0.82), vec2(0.50, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.50, 0.72), vec2(0.0, 0.18)));
         d = min(d, sdSeg2(uv, vec2(0.50, 0.72), vec2(0.0, 0.18)));
     } else if (id == 7) {
-        // ᚨ Ansuz (A)
         d = min(d, sdSeg2(uv, vec2(-0.35, -0.82), vec2(-0.35, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.35, 0.78), vec2(0.52, 0.25)));
         d = min(d, sdSeg2(uv, vec2(-0.35, 0.26), vec2(0.52, -0.26)));
     } else if (id == 8) {
-        // ᛏ Tiwaz (T)
         d = min(d, sdSeg2(uv, vec2(0.0, -0.82), vec2(0.0, 0.82)));
         d = min(d, sdSeg2(uv, vec2(0.0, 0.82), vec2(-0.56, 0.26)));
         d = min(d, sdSeg2(uv, vec2(0.0, 0.82), vec2(0.56, 0.26)));
     } else if (id == 9) {
-        // ᛗ Mannaz (M)
         d = min(d, sdSeg2(uv, vec2(-0.50, -0.82), vec2(-0.50, 0.82)));
         d = min(d, sdSeg2(uv, vec2(0.50, -0.82), vec2(0.50, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.50, 0.76), vec2(0.50, -0.10)));
         d = min(d, sdSeg2(uv, vec2(0.50, 0.76), vec2(-0.50, -0.10)));
     } else if (id == 10) {
-        // ᚦ Thurisaz (Th)
         d = min(d, sdSeg2(uv, vec2(-0.35, -0.82), vec2(-0.35, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.35, 0.44), vec2(0.50, 0.0)));
         d = min(d, sdSeg2(uv, vec2(0.50, 0.0), vec2(-0.35, -0.44)));
     } else {
-        // ᛁ Isa (I) with carved runic cross-notch
         d = min(d, sdSeg2(uv, vec2(0.0, -0.82), vec2(0.0, 0.82)));
         d = min(d, sdSeg2(uv, vec2(-0.24, 0.76), vec2(0.24, 0.76)));
         d = min(d, sdSeg2(uv, vec2(-0.24, -0.76), vec2(0.24, -0.76)));
@@ -137,20 +147,17 @@ float sdRuneGlyph(vec2 uv, int id) {
     return d;
 }
 
-// 3D floating Elder Futhark inscriptions arcing cleanly between the 12 spear-spikes
 float sdOuterRunes3D(vec3 p, float rad, float ang) {
     float rCenter = 1.075;
     float rBand = 0.082;
     float dShell = max(abs(rad - rCenter) - (rBand + 0.025), abs(p.z) - 0.045);
     if (dShell > 0.05) return dShell;
 
-    // 12 sectors centered BETWEEN each pair of spear-spikes
-    float secStep = TAU / 12.0; // 30 degrees
+    float secStep = TAU / 12.0;
     float shifted = ang + PI;
     float secIdx = floor(shifted / secStep);
     float secLocal = mod(shifted, secStep) - secStep * 0.5;
 
-    // 4 crisp runes per sector inside ~20.5 deg arc (generous spacing, never touches spikes)
     float span = 0.36;
     float uNorm = (secLocal / span) + 0.5;
     if (uNorm < -0.05 || uNorm > 1.05) {
@@ -161,33 +168,27 @@ float sdOuterRunes3D(vec3 p, float rad, float ang) {
     float cellCenterAng = ((float(slot) + 0.5) / 4.0 - 0.5) * span;
     float dAng = secLocal - cellCenterAng;
 
-    // Uniform isotropic scale so Euclidean SDF distances stay exact & razor-sharp!
     float glyphScale = 0.062;
     vec2 uv = vec2((dAng * rCenter) / glyphScale, (rad - rCenter) / glyphScale);
 
-    // Authentic Elder Futhark 4-rune inscriptions around the 12 sectors
     int sMod = int(mod(secIdx, 4.0));
     int glyphId = 0;
     if (sMod == 0) {
-        // ᚾ ᛁ ᛉ ᛟ (NIXO)
         if (slot == 0) glyphId = 0;
         else if (slot == 1) glyphId = 11;
         else if (slot == 2) glyphId = 2;
         else glyphId = 3;
     } else if (sMod == 1) {
-        // ᚠ ᛖ ᚱ ᚾ (FERN)
         if (slot == 0) glyphId = 1;
         else if (slot == 1) glyphId = 6;
         else if (slot == 2) glyphId = 5;
         else glyphId = 0;
     } else if (sMod == 2) {
-        // ᚨ ᚱ ᛗ ᛊ (ARMS)
         if (slot == 0) glyphId = 7;
         else if (slot == 1) glyphId = 5;
         else if (slot == 2) glyphId = 9;
         else glyphId = 4;
     } else {
-        // ᛏ ᚦ ᛟ ᚱ (THOR)
         if (slot == 0) glyphId = 8;
         else if (slot == 1) glyphId = 10;
         else if (slot == 2) glyphId = 3;
@@ -198,7 +199,6 @@ float sdOuterRunes3D(vec3 p, float rad, float ang) {
     float strokeR = 0.0052;
     float dStroke = d2 - strokeR;
 
-    // Crisp 3D beveled extrusion in Z
     float zHalf = 0.013;
     vec2 w = vec2(dStroke, abs(p.z) - zHalf);
     float d3 = length(max(w, 0.0)) + min(max(w.x, w.y), 0.0) - 0.0018;
@@ -207,7 +207,6 @@ float sdOuterRunes3D(vec3 p, float rad, float ang) {
     return max(d3, arcBound);
 }
 
-// Forged iron bar with crisp 45-deg beveled edges & slightly recessed flat face
 float sdForgedBar(vec3 p, float x0, float x1, float yOff, float halfW, float halfZ, float zOff) {
     float len = (x1 - x0) * 0.5;
     float cx = (x0 + x1) * 0.5;
@@ -224,7 +223,6 @@ float sdForgedBar(vec3 p, float x0, float x1, float yOff, float halfW, float hal
     return d;
 }
 
-// Forged gothic spear-spike along +X (rStart -> rTip) with sharp central ridge & side barbs
 float sdSpearSpike(vec3 p, float rStart, float rTip, float baseW, float baseZ) {
     float span = rTip - rStart;
     float t = clamp((p.x - rStart) / span, 0.0, 1.0);
@@ -245,7 +243,6 @@ float sdSpearSpike(vec3 p, float rStart, float rTip, float baseW, float baseZ) {
     return min(dBlade, dBarb);
 }
 
-// Small sharp forged thorn sprouting from bar edge
 float sdThorn(vec3 p, vec3 base, float dirY, float tiltX, float len) {
     vec3 q = p - base;
     q.y *= dirY;
@@ -256,10 +253,6 @@ float sdThorn(vec3 p, vec3 base, float dirY, float tiltX, float len) {
     return sdRoundBox(q - vec3(0.0, len * 0.5, 0.0), vec3(w, len * 0.5, z), 0.002);
 }
 
-// Material IDs:
-// 1.0 = Dark Forged Oxidized Iron (bars, ring, spikes, thorns)
-// 2.0 = Burnished Iron Rivets
-// 3.0 = 3D Floating Glowing Runic Inscriptions
 vec2 opU(vec2 a, vec2 b) {
     return (a.x < b.x) ? a : b;
 }
@@ -281,14 +274,12 @@ vec2 mapScene(vec3 p) {
     float dRing = length(max(qRing, 0.0)) + min(max(qRing.x, qRing.y), 0.0) - 0.008;
     dRing = max(dRing, (abs(rad - ringR) * 0.65 + abs(p.z) * 0.75) - (ringHalfW * 0.65 + ringHalfZ * 0.56));
 
-    // Squared gear cogs around outer rim
     float cogStep = TAU / 36.0;
     float cogAng = mod(ang + cogStep * 0.5, cogStep) - cogStep * 0.5;
     vec3 pCog = vec3(rad - (ringR + ringHalfW + 0.016), cogAng * (ringR + ringHalfW), p.z);
     float dCog = sdRoundBox(pCog, vec3(0.020, 0.022, 0.026), 0.004);
     dRing = min(dRing, dCog);
 
-    // Small inward thorns along inner rim of the hoop
     float inThornStep = TAU / 24.0;
     float inThornAng = mod(ang + inThornStep * 0.5, inThornStep) - inThornStep * 0.5;
     float it = clamp(((ringR - ringHalfW) - rad) / 0.068, 0.0, 1.0);
@@ -299,7 +290,7 @@ vec2 mapScene(vec3 p) {
 
     res = opU(res, vec2(dRing + metalBump, 1.0));
 
-    // 2) 12 Barbed Gothic Spear-Spikes radiating every 30 degrees
+    // 2) 12 Barbed Gothic Spear-Spikes
     {
         float s12 = floor((ang + PI / 12.0) / (TAU / 12.0));
         float la = ang - s12 * (TAU / 12.0);
@@ -354,11 +345,153 @@ vec2 mapScene(vec3 p) {
     res = opU(res, vec2(dBars, 1.0));
     res = opU(res, vec2(dRivets, 2.0));
 
-    // 4) 3D Floating Runic Inscriptions circling cleanly between the 12 spikes
+    // 4) 3D Floating Runic Inscriptions
     float dRunes = sdOuterRunes3D(p, rad, ang);
     res = opU(res, vec2(dRunes, 3.0));
 
     return res;
+}
+
+// --- Clean Cinematic Bottom Flame Tongues + Rising Ember Sparks -------------
+// Evaluated strictly BEHIND the forged iron ring so the 3D metal & runes stay razor-sharp!
+vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
+    // Dual-phase seamlessly-looping 3D fBM advection for organic silky fire motion
+    float p0 = fract(loopPhase * 2.0);
+    float p1 = fract(loopPhase * 2.0 + 0.5);
+    float w1 = abs(2.0 * p0 - 1.0);
+    float w0 = 1.0 - w1;
+
+    float turbA0 = fbm3(vec3(uv.x * 2.1, uv.y * 1.7 - p0 * 3.4, 1.7)) - 0.5;
+    float turbA1 = fbm3(vec3(uv.x * 2.1, uv.y * 1.7 - p1 * 3.4, 6.3)) - 0.5;
+    float turbA = turbA0 * w0 + turbA1 * w1;
+
+    float turbB0 = fbm3(vec3(uv.x * 4.2 + 2.3, uv.y * 3.2 - p0 * 5.2, 3.1)) - 0.5;
+    float turbB1 = fbm3(vec3(uv.x * 4.2 + 2.3, uv.y * 3.2 - p1 * 5.2, 8.7)) - 0.5;
+    float turbB = turbB0 * w0 + turbB1 * w1;
+
+    // 1) Cohesive fluid bottom fire bed splitting smoothly into 9 silky curling flame tongues
+    float yBase = -1.32;
+    float energy = 0.0;
+    float coreEnergy = 0.0;
+    float wispEnergy = 0.0;
+
+    for (int i = 0; i < 9; i++) {
+        float fi = float(i);
+        float normI = (fi / 8.0) * 2.0 - 1.0; // -1 .. +1
+        float baseX = normI * 0.78 + sin(fi * 2.4) * 0.05;
+
+        // Center tongues lick up cleanly behind the lower half of the ring; outer tongues curl gracefully
+        float hProfile = mix(1.48, 0.88, pow(abs(normI), 1.15));
+        float hMax = hProfile + 0.14 * sin(loopPhase * TAU * 2.0 + fi * 1.85);
+        float yLocal = (uv.y - yBase) / hMax;
+        if (yLocal < -0.05 || yLocal > 1.12) continue;
+
+        float yc = clamp(yLocal, 0.0, 1.0);
+
+        // Organic fluid S-curve curl + turbulent billowing (stronger curl near tips)
+        float curl = sin(yc * 3.8 - loopPhase * TAU * 2.0 + fi * 1.45) * (0.07 + 0.16 * yc)
+                   + normI * pow(yc, 1.65) * 0.22
+                   + turbA * (0.16 + 0.30 * yc)
+                   + turbB * (0.04 + 0.11 * yc);
+        float dx = abs(uv.x - (baseX + curl));
+
+        // Broad overlapping liquid base tapering organically into silky sharp flame tips
+        float widthBase = mix(0.27, 0.17, abs(normI));
+        float halfW = widthBase * pow(1.0 - yc, 0.92) + 0.012;
+        // Modulate edge slightly with fine turbulence so tongues feel like real fire, not tubes
+        float edgeDist = dx / max(halfW, 0.015) + turbB * (0.28 + 0.35 * yc);
+
+        float body = smoothstep(1.18, 0.22, edgeDist)
+                   * smoothstep(1.02, 0.72, yc)
+                   * smoothstep(0.0, 0.16, yc);
+
+        // Hot luminous inner veil concentrated in the lower/middle heart of the flames
+        float innerCore = smoothstep(0.72, 0.05, edgeDist)
+                        * pow(1.0 - yc, 1.25)
+                        * body;
+
+        // Silky translucent crimson-orange outer veil for smooth overlap without hard seams
+        float veil = smoothstep(1.55, 0.45, edgeDist)
+                   * smoothstep(1.05, 0.60, yc)
+                   * smoothstep(0.0, 0.18, yc) * 0.42;
+
+        // Smooth optical accumulation (zero hard creases where flames cross!)
+        energy = 1.0 - (1.0 - energy) * (1.0 - body * 0.88);
+        coreEnergy += innerCore * 0.72;
+        wispEnergy = 1.0 - (1.0 - wispEnergy) * (1.0 - veil);
+    }
+
+    // Soft ambient warm hearth glow tucked low behind the bottom of the ring
+    float hearthGlow = exp(-pow((uv.y + 1.06) / 0.34, 2.0)) * exp(-pow(uv.x / 0.82, 2.0)) * 0.36;
+    float totalDensity = clamp(max(energy, max(wispEnergy, hearthGlow)), 0.0, 1.0);
+
+    // Smooth vertical bottom fade + gentle side margin fade (zero curved vignette clipping!)
+    float edgeFade = smoothstep(-1.32, -1.04, uv.y)
+                   * smoothstep(1.28, 0.92, abs(uv.x))
+                   * smoothstep(1.30, 0.95, uv.y);
+    float fireAlpha = clamp(totalDensity * edgeFade, 0.0, 0.96);
+
+    // Compute realistic temperature field: deep scarlet outer wisps -> rich fiery orange body -> glowing amber-gold heart
+    float heat = clamp(
+        energy * 0.52
+      + clamp(coreEnergy, 0.0, 1.2) * 0.50
+      + turbB * 0.14 * energy,
+        0.0, 1.0
+    );
+
+    vec3 cDarkRed = vec3(0.46, 0.020, 0.003);
+    vec3 cScarlet = vec3(0.88, 0.130, 0.012);
+    vec3 cOrange  = vec3(1.00, 0.340, 0.030);
+    vec3 cAmber   = vec3(1.00, 0.640, 0.120);
+    vec3 cGold    = vec3(1.00, 0.860, 0.380);
+
+    vec3 fireCol = mix(cDarkRed, cScarlet, smoothstep(0.04, 0.30, heat));
+    fireCol = mix(fireCol, cOrange, smoothstep(0.28, 0.58, heat));
+    fireCol = mix(fireCol, cAmber,  smoothstep(0.56, 0.82, heat));
+    fireCol = mix(fireCol, cGold,   smoothstep(0.82, 1.00, heat));
+
+    // 2) Crisp elongated rising ember sparks drifting cleanly around the dark background
+    vec3 sparkCol = vec3(0.0);
+    float sparkAlpha = 0.0;
+    for (int layer = 0; layer < 2; layer++) {
+        float scale = (layer == 0) ? 7.0 : 10.5;
+        float speed = (layer == 0) ? 2.0 : 3.0;
+        float sp0 = fract(loopPhase * speed);
+        float sp1 = fract(loopPhase * speed + 0.5);
+        float sw1 = abs(2.0 * sp0 - 1.0);
+        float sw0 = 1.0 - sw1;
+
+        for (int ph = 0; ph < 2; ph++) {
+            float sp = (ph == 0) ? sp0 : sp1;
+            float sw = (ph == 0) ? sw0 : sw1;
+            vec2 suv = uv * scale;
+            suv.y -= sp * 4.0;
+            suv.x += sin(suv.y * 0.65 + float(layer) * 3.1) * 0.32;
+            vec2 id = floor(suv);
+            vec2 f = fract(suv) - 0.5;
+            float h = hash21(id + vec2(float(layer) * 31.7, float(ph) * 19.3));
+            if (h > 0.895) {
+                vec2 jitter = (vec2(fract(h * 17.3), fract(h * 43.1)) - 0.5) * 0.55;
+                vec2 d = f - jitter;
+                // Slightly slanted elongated ember streak drifting upward
+                float slant = (fract(h * 61.1) - 0.5) * 0.35;
+                d.x += d.y * slant;
+                d.x *= 2.35;
+                d.y *= 0.82;
+                float glow = smoothstep(0.20, 0.015, length(d)) * sw;
+                float sFade = smoothstep(1.30, 0.96, abs(uv.x))
+                            * smoothstep(1.30, 0.96, abs(uv.y));
+                glow *= sFade;
+                vec3 sc = mix(vec3(1.00, 0.24, 0.02), vec3(1.00, 0.56, 0.08), fract(h * 91.7));
+                sparkCol += sc * glow * 1.25;
+                sparkAlpha = max(sparkAlpha, glow * 0.95);
+            }
+        }
+    }
+
+    vec3 outCol = fireCol * fireAlpha + sparkCol * (1.0 - fireAlpha * 0.55);
+    float outAlpha = clamp(max(fireAlpha, sparkAlpha), 0.0, 1.0);
+    return vec4(outCol, outAlpha);
 }
 
 vec3 calcNormal(vec3 p) {
@@ -386,7 +519,7 @@ float calcAO(vec3 p, vec3 n) {
 float calcSoftShadow(vec3 ro, vec3 rd, float mint, float maxt, float k) {
     float res = 1.0;
     float t = mint;
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < 22; i++) {
         float h = mapScene(ro + rd * t).x;
         res = min(res, k * h / t);
         t += clamp(h, 0.018, 0.16);
@@ -397,10 +530,15 @@ float calcSoftShadow(vec3 ro, vec3 rd, float mint, float maxt, float k) {
 
 vec4 renderSample(vec2 fragCoord) {
     vec2 uv = (fragCoord - 0.5 * u_res) / min(u_res.x, u_res.y);
-    uv *= 2.55;
+    uv *= 2.65;
 
-    vec3 ro = vec3(0.0, 0.0, 3.15);
-    vec3 rd = normalize(vec3(uv * 0.48, -1.0));
+    float loopPhase = fract(u_time * (2.6 / TAU));
+
+    // Shift ring slightly upward so graceful bottom flames have breathing room underneath
+    vec2 ringUV = uv - vec2(0.0, 0.12);
+
+    vec3 ro = vec3(0.0, 0.0, 3.18);
+    vec3 rd = normalize(vec3(ringUV * 0.48, -1.0));
 
     mat2 rPitch = rot2(u_pitch);
     mat2 rYaw = rot2(u_yaw);
@@ -409,116 +547,126 @@ vec4 renderSample(vec2 fragCoord) {
     ro.xz = rYaw * ro.xz;
     rd.xz = rYaw * rd.xz;
 
+    // Raymarch solid 3D forged ring + floating runes
     float bDot = dot(ro, rd);
-    float cSph = dot(ro, ro) - 1.48 * 1.48;
-    float disc = bDot * bDot - cSph;
-    if (disc < 0.0) {
-        return vec4(0.0);
-    }
-
-    float t = max(0.0, -bDot - sqrt(disc));
-    float tMax = -bDot + sqrt(disc);
+    float cSolid = dot(ro, ro) - 1.48 * 1.48;
+    float discSolid = bDot * bDot - cSolid;
+    float t = 0.0;
     float hitMat = 0.0;
     bool hit = false;
 
-    for (int i = 0; i < 84; i++) {
+    if (discSolid >= 0.0) {
+        t = max(0.0, -bDot - sqrt(discSolid));
+        float tSolidMax = -bDot + sqrt(discSolid);
+        for (int i = 0; i < 80; i++) {
+            vec3 p = ro + rd * t;
+            vec2 h = mapScene(p);
+            if (h.x < 0.0013) {
+                hit = true;
+                hitMat = h.y;
+                break;
+            }
+            t += h.x * 0.82;
+            if (t > tSolidMax) break;
+        }
+    }
+
+    if (hit) {
         vec3 p = ro + rd * t;
-        vec2 h = mapScene(p);
-        if (h.x < 0.0012) {
-            hit = true;
-            hitMat = h.y;
-            break;
-        }
-        t += h.x * 0.80;
-        if (t > tMax) break;
-    }
+        vec3 n = calcNormal(p);
+        vec3 v = -rd;
+        float ao = calcAO(p, n);
+        float grain = fbm3(p * 20.0);
 
-    if (!hit) {
-        return vec4(0.0);
-    }
+        float flicker = 0.90 + 0.10 * sin(loopPhase * TAU * 4.0 + p.x * 2.5);
 
-    vec3 p = ro + rd * t;
-    vec3 n = calcNormal(p);
-    vec3 v = -rd;
-    float ao = calcAO(p, n);
-    float grain = fbm3(p * 20.0);
-
-    vec3 col;
-    if (hitMat > 2.5) {
-        // 3D Floating Runes: forged burnt rust-orange / brownish copper (no yellow!)
-        float pulse = 0.85 + 0.15 * sin(u_time * 2.6 + atan(p.y, p.x) * 4.0);
-        vec3 l1 = normalize(vec3(-0.55, 0.78, 0.85));
-        float diff = max(dot(n, l1), 0.0);
-        float spec = pow(max(dot(n, normalize(l1 + v)), 0.0), 56.0);
-        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.4);
-        vec3 baseCopper = vec3(0.16, 0.055, 0.022);
-        vec3 rustEmber  = mix(vec3(0.46, 0.135, 0.032), vec3(0.68, 0.21, 0.048), pulse);
-        col = baseCopper * (0.35 + 0.85 * diff)
-            + rustEmber * (0.26 + 0.42 * diff)
-            + vec3(0.85, 0.38, 0.16) * (spec * 0.75 + fresnel * 0.32);
-    } else {
-        float dCenter = mapScene(p).x;
-        float edgeWear = clamp(abs(mapScene(p + n * 0.014).x - dCenter - 0.014) * 52.0, 0.0, 1.0);
-
-        vec3 ironDeep  = vec3(0.042, 0.018, 0.013);
-        vec3 ironRust  = vec3(0.115, 0.048, 0.032);
-        vec3 edgeSteel = vec3(0.42,  0.25,  0.18);
-
-        vec3 albedo = mix(ironDeep, ironRust, grain * 0.85);
-        albedo = mix(albedo, edgeSteel, edgeWear * 0.62);
-        if (hitMat > 1.5) {
-            albedo = mix(albedo, edgeSteel, 0.50);
-        }
-
-        float metallic = 0.88;
-        float shininess = mix(46.0, 96.0, edgeWear);
-
-        vec3 l1 = normalize(vec3(-0.55, 0.78, 0.85));
-        vec3 c1 = vec3(1.00, 0.86, 0.76) * 1.95;
-        float sh1 = calcSoftShadow(p + n * 0.007, l1, 0.02, 2.4, 12.0);
-
-        vec3 l2 = normalize(vec3(0.68, -0.62, 0.58));
-        vec3 c2 = vec3(0.92, 0.52, 0.34) * 0.95;
-
-        vec3 l3 = normalize(vec3(0.12, 0.32, -0.92));
-        vec3 c3 = vec3(0.95, 0.62, 0.45) * 1.15;
-
-        vec3 lit = vec3(0.0);
-        {
+        vec3 surfCol;
+        if (hitMat > 2.5) {
+            // 3D Floating Runes: warm burnt rust-orange / forged copper (crisp & readable!)
+            float pulse = 0.85 + 0.15 * sin(loopPhase * TAU * 2.0 + atan(p.y, p.x) * 4.0);
+            vec3 l1 = normalize(vec3(-0.55, 0.78, 0.85));
             float diff = max(dot(n, l1), 0.0);
-            vec3 h = normalize(l1 + v);
-            float spec = pow(max(dot(n, h), 0.0), shininess);
-            vec3 specCol = mix(vec3(1.0), albedo * 2.4 + vec3(0.24, 0.15, 0.11), metallic);
-            lit += (albedo * (1.0 - metallic * 0.40) * diff + specCol * spec * 1.45) * c1 * sh1;
-        }
-        {
-            float diff = max(dot(n, l2), 0.0);
-            vec3 h = normalize(l2 + v);
-            float spec = pow(max(dot(n, h), 0.0), shininess * 0.6);
-            vec3 specCol = mix(vec3(1.0), albedo * 1.8 + vec3(0.20, 0.11, 0.07), metallic);
-            lit += (albedo * diff + specCol * spec * 0.70) * c2;
-        }
-        {
-            float diff = max(dot(n, l3), 0.0);
-            vec3 h = normalize(l3 + v);
-            float spec = pow(max(dot(n, h), 0.0), shininess * 0.5);
-            lit += (albedo * 0.30 * diff + edgeSteel * spec * 0.85) * c3;
+            float spec = pow(max(dot(n, normalize(l1 + v)), 0.0), 56.0);
+            float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.4);
+            vec3 baseCopper = vec3(0.16, 0.055, 0.022);
+            vec3 rustEmber  = mix(vec3(0.46, 0.135, 0.032), vec3(0.68, 0.21, 0.048), pulse);
+            surfCol = baseCopper * (0.35 + 0.85 * diff)
+                    + rustEmber * (0.28 + 0.44 * diff)
+                    + vec3(0.88, 0.40, 0.16) * (spec * 0.75 + fresnel * 0.34);
+        } else {
+            float dCenter = mapScene(p).x;
+            float edgeWear = clamp(abs(mapScene(p + n * 0.014).x - dCenter - 0.014) * 52.0, 0.0, 1.0);
+
+            vec3 ironDeep  = vec3(0.040, 0.017, 0.012);
+            vec3 ironRust  = vec3(0.115, 0.048, 0.030);
+            vec3 edgeSteel = vec3(0.45,  0.26,  0.18);
+
+            vec3 albedo = mix(ironDeep, ironRust, grain * 0.85);
+            albedo = mix(albedo, edgeSteel, edgeWear * 0.65);
+            if (hitMat > 1.5) {
+                albedo = mix(albedo, edgeSteel, 0.50);
+            }
+
+            float metallic = 0.88;
+            float shininess = mix(48.0, 96.0, edgeWear);
+
+            // Key studio light + warm orange fire-light coming specifically from BELOW!
+            vec3 l1 = normalize(vec3(-0.52, 0.78, 0.88));
+            vec3 c1 = vec3(1.00, 0.86, 0.74) * 1.90;
+            float sh1 = calcSoftShadow(p + n * 0.007, l1, 0.02, 2.4, 12.0);
+
+            // Strong warm firelight shining upward from the bottom flames onto underside of bars!
+            vec3 lFire = normalize(vec3(0.05, -0.92, 0.38));
+            float bottomProximity = smoothstep(0.85, -0.95, p.y);
+            vec3 cFire = vec3(1.00, 0.34, 0.06) * (0.95 + 1.15 * bottomProximity) * flicker;
+
+            vec3 l3 = normalize(vec3(0.20, 0.30, -0.92));
+            vec3 c3 = vec3(0.95, 0.56, 0.34) * 1.15;
+
+            vec3 lit = vec3(0.0);
+            {
+                float diff = max(dot(n, l1), 0.0);
+                vec3 h = normalize(l1 + v);
+                float spec = pow(max(dot(n, h), 0.0), shininess);
+                vec3 specCol = mix(vec3(1.0), albedo * 2.3 + vec3(0.24, 0.15, 0.11), metallic);
+                lit += (albedo * (1.0 - metallic * 0.40) * diff + specCol * spec * 1.45) * c1 * sh1;
+            }
+            {
+                float diff = max(dot(n, lFire), 0.0);
+                vec3 h = normalize(lFire + v);
+                float spec = pow(max(dot(n, h), 0.0), shininess * 0.55);
+                vec3 specCol = mix(vec3(1.0), albedo * 1.9 + vec3(0.35, 0.14, 0.04), metallic);
+                lit += (albedo * diff + specCol * spec * 0.90) * cFire;
+            }
+            {
+                float diff = max(dot(n, l3), 0.0);
+                vec3 h = normalize(l3 + v);
+                float spec = pow(max(dot(n, h), 0.0), shininess * 0.5);
+                lit += (albedo * 0.30 * diff + edgeSteel * spec * 0.85) * c3;
+            }
+
+            float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.9);
+            vec3 rim = mix(vec3(0.75, 0.45, 0.30), vec3(1.00, 0.40, 0.10), bottomProximity) * fresnel * 0.72;
+
+            vec3 ambient = albedo * vec3(0.24, 0.15, 0.12);
+            surfCol = (ambient + lit) * ao + rim;
         }
 
-        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 3.0);
-        vec3 rim = vec3(0.75, 0.45, 0.32) * fresnel * 0.65;
-
-        vec3 ambient = albedo * vec3(0.24, 0.16, 0.13);
-        col = (ambient + lit) * ao + rim;
+        surfCol = (surfCol * (2.51 * surfCol + 0.03)) / (surfCol * (2.43 * surfCol + 0.59) + 0.14);
+        surfCol = pow(clamp(surfCol, 0.0, 1.0), vec3(1.0 / 2.12));
+        return vec4(surfCol, 1.0);
     }
 
-    col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
-    col = pow(clamp(col, 0.0, 1.0), vec3(1.0 / 2.15));
-
-    return vec4(col, 1.0);
+    // Ray missed the solid ring: render crisp bottom flames + rising sparks strictly BEHIND the ring!
+    vec4 bg = evalCleanBottomFire(uv, loopPhase);
+    if (bg.a <= 0.002) return vec4(0.0);
+    vec3 straightBg = clamp(bg.rgb / max(bg.a, 0.02), 0.0, 1.0);
+    straightBg = pow(straightBg, vec3(1.0 / 1.55));
+    return vec4(straightBg * bg.a, bg.a);
 }
 
 void main() {
+    // 2x2 rotated-grid supersampling anti-aliasing
     vec4 acc = vec4(0.0);
     acc += renderSample(gl_FragCoord.xy + vec2(-0.375, -0.125));
     acc += renderSample(gl_FragCoord.xy + vec2( 0.125, -0.375));
@@ -526,7 +674,7 @@ void main() {
     acc += renderSample(gl_FragCoord.xy + vec2(-0.125,  0.375));
     acc *= 0.25;
 
-    if (acc.a > 0.001) {
+    if (acc.a > 0.002) {
         acc.rgb /= acc.a;
     }
     fragColor = acc;
