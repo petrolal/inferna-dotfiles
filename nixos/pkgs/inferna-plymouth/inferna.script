@@ -1,0 +1,138 @@
+# Inferna 3D Plymouth Theme
+# Displays the seamless 360-deg spinning 3D Inferna forged-iron ring in hellfire
+# over an obsidian #0d0908 canvas, with a subtle ember progress bar & LUKS prompt.
+
+Window.SetBackgroundTopColor(0.051, 0.035, 0.031);
+Window.SetBackgroundBottomColor(0.051, 0.035, 0.031);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+# Load pre-rendered seamless 360-deg loop frames (frame-000.png .. frame-071.png)
+frame_count = 72;
+for (i = 0; i < frame_count; i++) {
+    if (i < 10)
+        fname = "frame-00" + i + ".png";
+    else if (i < 100)
+        fname = "frame-0" + i + ".png";
+    else
+        fname = "frame-" + i + ".png";
+    ring_frames[i] = Image(fname);
+}
+
+ring_w = ring_frames[0].GetWidth();
+ring_h = ring_frames[0].GetHeight();
+
+ring_sprite = Sprite(ring_frames[0]);
+ring_sprite.SetX(Math.Int(screen_w / 2 - ring_w / 2));
+ring_sprite.SetY(Math.Int(screen_h * 0.45 - ring_h / 2));
+ring_sprite.SetZ(10);
+
+# Subtle forged ember boot progress bar beneath the ring
+bar_track_img = Image("bar-track.png");
+bar_fill_img  = Image("bar-fill.png");
+bar_w = bar_track_img.GetWidth();
+bar_h = bar_track_img.GetHeight();
+bar_x = Math.Int(screen_w / 2 - bar_w / 2);
+bar_y = Math.Int(screen_h * 0.45 + ring_h / 2 + 28);
+
+bar_track = Sprite(bar_track_img);
+bar_track.SetPosition(bar_x, bar_y, 20);
+
+bar_fill = Sprite();
+bar_fill.SetPosition(bar_x, bar_y, 21);
+
+mode = Plymouth.GetMode();
+if (mode == "shutdown" || mode == "reboot") {
+    bar_track.SetOpacity(0);
+    bar_fill.SetOpacity(0);
+}
+
+fun progress_callback(duration, progress) {
+    if (mode == "shutdown" || mode == "reboot") return;
+    p = progress;
+    if (p < 0.0) p = 0.0;
+    if (p > 1.0) p = 1.0;
+    cur_w = Math.Int(bar_w * p);
+    if (cur_w < 2) cur_w = 2;
+    bar_fill.SetImage(bar_fill_img.Crop(0, 0, cur_w, bar_h));
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+# Plymouth refresh runs at 50 Hz; advance 1 frame every 2 ticks => smooth 25 FPS (~2.9s/rev)
+tick = 0;
+fun refresh_callback() {
+    tick++;
+    idx = Math.Int(tick / 2) % frame_count;
+    ring_sprite.SetImage(ring_frames[idx]);
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# Status message below progress bar (warm parchment)
+msg_sprite = Sprite();
+msg_sprite.SetZ(30);
+fun message_callback(text) {
+    if (text == "") {
+        msg_sprite.SetOpacity(0);
+        return;
+    }
+    img = Image.Text(text, 0.92, 0.85, 0.78, 1.0, "Sans 10");
+    msg_sprite.SetImage(img);
+    msg_sprite.SetPosition(Math.Int(screen_w / 2 - img.GetWidth() / 2), bar_y + 24, 30);
+    msg_sprite.SetOpacity(0.85);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+# Clean dark forged LUKS password prompt (if disk encryption is ever enabled)
+dialog.box_img = Image("dialog-box.png");
+dialog.bullet_img = Image("bullet.png");
+dialog.box = Sprite();
+dialog.prompt = Sprite();
+dialog.bullets = [];
+
+fun hide_password_dialog() {
+    dialog.box.SetOpacity(0);
+    dialog.prompt.SetOpacity(0);
+    for (i = 0; dialog.bullets[i]; i++) {
+        dialog.bullets[i].SetOpacity(0);
+    }
+}
+
+fun display_password_callback(prompt, bullets) {
+    box_w = dialog.box_img.GetWidth();
+    box_h = dialog.box_img.GetHeight();
+    bx = Math.Int(screen_w / 2 - box_w / 2);
+    by = bar_y + 22;
+
+    dialog.box.SetImage(dialog.box_img);
+    dialog.box.SetPosition(bx, by, 40);
+    dialog.box.SetOpacity(1);
+
+    p_img = Image.Text(prompt, 0.95, 0.66, 0.29, 1.0, "Sans 10");
+    dialog.prompt.SetImage(p_img);
+    dialog.prompt.SetPosition(Math.Int(screen_w / 2 - p_img.GetWidth() / 2), by - 24, 41);
+    dialog.prompt.SetOpacity(1);
+
+    max_b = 20;
+    if (bullets > max_b) bullets = max_b;
+    bw = dialog.bullet_img.GetWidth() + 4;
+    start_x = bx + 14;
+    by_mid = by + Math.Int((box_h - dialog.bullet_img.GetHeight()) / 2);
+
+    for (i = 0; i < max_b; i++) {
+        if (!dialog.bullets[i]) {
+            dialog.bullets[i] = Sprite(dialog.bullet_img);
+            dialog.bullets[i].SetZ(42);
+        }
+        if (i < bullets) {
+            dialog.bullets[i].SetPosition(start_x + i * bw, by_mid, 42);
+            dialog.bullets[i].SetOpacity(1);
+        } else {
+            dialog.bullets[i].SetOpacity(0);
+        }
+    }
+}
+
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayNormalFunction(hide_password_dialog);
+Plymouth.SetQuitFunction(hide_password_dialog);

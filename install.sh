@@ -23,6 +23,7 @@ This will symlink the GNOME dotfiles into your home folder:
   - Fish user config (if missing)  -> ~/.config/fish/user-fish.fish
   - Starship prompt config         -> ~/.config/starship.toml
   - Ghostty terminal config        -> ~/.config/ghostty/config
+  - Inferna TUI suite              -> ~/.config/{btop,yazi,cava,bat}/
   - GNOME themes (Inferna, etc.)   -> ~/.themes/
   - GTK4 / GTK3 CSS overrides      -> ~/.config/gtk-{4,3}.0/gtk.css
   - Default wallpapers             -> ~/.local/share/backgrounds/inferna/
@@ -116,10 +117,16 @@ if [[ -d "$here/gnome/themes/Inferna" ]]; then
   "$here/gnome/apply-theme.sh" Inferna
 fi
 
-echo "Installing Fish config, Starship prompt, Ghostty config, and dynamic rice paths..."
+echo "Installing Fish config, Starship prompt, Ghostty config, Inferna TUI suite, and dynamic rice paths..."
 place "$here/fish/config.fish" "$config/fish/config.fish"
 place "$here/starship/starship.toml" "$config/starship.toml"
 place "$here/ghostty/config" "$config/ghostty/config"
+place "$here/btop/btop.conf" "$config/btop/btop.conf"
+place "$here/btop/themes/inferna.theme" "$config/btop/themes/inferna.theme"
+place "$here/yazi/yazi.toml" "$config/yazi/yazi.toml"
+place "$here/yazi/theme.toml" "$config/yazi/theme.toml"
+place "$here/cava/config" "$config/cava/config"
+place "$here/bat/config" "$config/bat/config"
 
 if command -v dconf >/dev/null 2>&1 && [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
   # Bind Ctrl+Alt+T to open a new Ghostty window (preserving any other custom shortcuts)

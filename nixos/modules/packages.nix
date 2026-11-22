@@ -120,6 +120,12 @@ let
   systemTools = with pkgs; [
     pciutils
     htop
+    btop         # Resource monitor TUI with Inferna theme (CPU/RAM/Net/GPU)
+    eza          # Modern ls with Nerd Font icons & git status
+    bat          # Syntax-highlighted cat inheriting Ghostty Inferna palette
+    zoxide       # Smart directory jumper (z)
+    yazi         # Blazing-fast TUI file manager with Kitty image previews
+    cava         # Audio visualizer with Inferna fire gradient
     fastfetch
     curl
     wget

@@ -3,6 +3,7 @@
 {
   imports = [
     ./modules/hardware.nix
+    ./modules/plymouth.nix
     ./modules/networking.nix
     ./modules/desktop.nix
     ./modules/gnome.nix

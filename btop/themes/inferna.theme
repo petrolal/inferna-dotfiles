@@ -1,0 +1,59 @@
+# Inferna theme for btop — forged iron, crimson, ember orange & molten gold
+theme[main_bg]="#110c0a"
+theme[main_fg]="#f2e5d5"
+theme[title]="#f2a949"
+theme[hi_fg]="#ff622e"
+theme[selected_bg]="#332019"
+theme[selected_fg]="#f7d67a"
+theme[inactive_fg]="#6b564c"
+theme[graph_text]="#c9b4a4"
+theme[meter_bg]="#2b1d17"
+theme[proc_misc]="#e88b3a"
+
+# Box outlines (forged copper / dark crimson)
+theme[cpu_box]="#b83218"
+theme[mem_box]="#c94b20"
+theme[net_box]="#d96b27"
+theme[proc_box]="#9e2414"
+theme[div_line]="#4d3228"
+
+# Temperature graph (warm copper -> ember -> bright crimson)
+theme[temp_start]="#f2a949"
+theme[temp_mid]="#ff622e"
+theme[temp_end]="#d92414"
+
+# CPU graph (molten gold -> ember orange -> deep flame red)
+theme[cpu_start]="#f2a949"
+theme[cpu_mid]="#ff622e"
+theme[cpu_end]="#c8231a"
+
+# Memory meters
+theme[free_start]="#6e4b3c"
+theme[free_mid]="#8c6352"
+theme[free_end]="#a87b68"
+
+theme[cached_start]="#c47d3b"
+theme[cached_mid]="#e09a45"
+theme[cached_end]="#f2b85c"
+
+theme[available_start]="#a85528"
+theme[available_mid]="#d47232"
+theme[available_end]="#f29b49"
+
+theme[used_start]="#b82412"
+theme[used_mid]="#e8441c"
+theme[used_end]="#ff6b35"
+
+# Network graphs
+theme[download_start]="#c94b20"
+theme[download_mid]="#ff622e"
+theme[download_end]="#f2a949"
+
+theme[upload_start]="#8a1a10"
+theme[upload_mid]="#c82b18"
+theme[upload_end]="#f05a28"
+
+# Process gradient
+theme[process_start]="#f2a949"
+theme[process_mid]="#ff622e"
+theme[process_end]="#c8231a"

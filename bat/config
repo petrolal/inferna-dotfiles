@@ -1,0 +1,4 @@
+# Inferna bat configuration (inherits Ghostty's 16-color Inferna palette cleanly)
+--theme="ansi"
+--style="numbers,changes,header"
+--italic-text="always"

@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Inferna
+Description=3D forged-iron Inferna NixOS ring spinning in hellfire
+ModuleName=script
+
+[script]
+ImageDir=@themeDir@
+ScriptFile=@themeDir@/inferna.script

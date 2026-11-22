@@ -202,6 +202,87 @@ static void render_halfblocks(const uint8_t *rgba, int w, int h, bool home_curso
     free(out);
 }
 
+static void png_write_u32_be(FILE *f, uint32_t v) {
+    uint8_t b[4] = {
+        (uint8_t)((v >> 24) & 0xFFu),
+        (uint8_t)((v >> 16) & 0xFFu),
+        (uint8_t)((v >>  8) & 0xFFu),
+        (uint8_t)(v & 0xFFu),
+    };
+    fwrite(b, 1, 4, f);
+}
+
+static void png_write_chunk(FILE *f, const char tag[4], const uint8_t *data, uint32_t len) {
+    png_write_u32_be(f, len);
+    fwrite(tag, 1, 4, f);
+    if (len > 0) fwrite(data, 1, len, f);
+    uLong crc = crc32(0L, Z_NULL, 0);
+    crc = crc32(crc, (const Bytef *)tag, 4);
+    if (len > 0) crc = crc32(crc, data, len);
+    png_write_u32_be(f, (uint32_t)crc);
+}
+
+static bool write_png_rgb_bg(const char *path, const uint8_t *rgba, int w, int h,
+                             uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) {
+    size_t row_stride = (size_t)w * 3 + 1;
+    size_t raw_sz = row_stride * (size_t)h;
+    uint8_t *raw = malloc(raw_sz);
+    uLongf zcap = compressBound((uLong)raw_sz);
+    uint8_t *zbuf = malloc((size_t)zcap);
+    if (!raw || !zbuf) {
+        free(raw);
+        free(zbuf);
+        return false;
+    }
+
+    for (int y = 0; y < h; y++) {
+        uint8_t *dst = raw + (size_t)y * row_stride;
+        dst[0] = 0; // PNG filter: None
+        const uint8_t *src_row = rgba + (size_t)(h - 1 - y) * (size_t)w * 4;
+        for (int x = 0; x < w; x++) {
+            const uint8_t *p = src_row + (size_t)x * 4;
+            float a = p[3] / 255.0f;
+            float ia = 1.0f - a;
+            dst[1 + x * 3 + 0] = (uint8_t)(p[0] * a + bg_r * ia + 0.5f);
+            dst[1 + x * 3 + 1] = (uint8_t)(p[1] * a + bg_g * ia + 0.5f);
+            dst[1 + x * 3 + 2] = (uint8_t)(p[2] * a + bg_b * ia + 0.5f);
+        }
+    }
+
+    uLongf zlen = zcap;
+    if (compress2(zbuf, &zlen, raw, (uLong)raw_sz, 9) != Z_OK) {
+        free(raw);
+        free(zbuf);
+        return false;
+    }
+
+    FILE *f = fopen(path, "wb");
+    if (!f) {
+        free(raw);
+        free(zbuf);
+        return false;
+    }
+
+    static const uint8_t sig[8] = {137, 80, 78, 71, 13, 10, 26, 10};
+    fwrite(sig, 1, 8, f);
+
+    uint8_t ihdr[13] = {
+        (uint8_t)((w >> 24) & 0xFF), (uint8_t)((w >> 16) & 0xFF),
+        (uint8_t)((w >>  8) & 0xFF), (uint8_t)(w & 0xFF),
+        (uint8_t)((h >> 24) & 0xFF), (uint8_t)((h >> 16) & 0xFF),
+        (uint8_t)((h >>  8) & 0xFF), (uint8_t)(h & 0xFF),
+        8, 2, 0, 0, 0 // 8-bit RGB
+    };
+    png_write_chunk(f, "IHDR", ihdr, 13);
+    png_write_chunk(f, "IDAT", zbuf, (uint32_t)zlen);
+    png_write_chunk(f, "IEND", NULL, 0);
+
+    fclose(f);
+    free(raw);
+    free(zbuf);
+    return true;
+}
+
 static bool write_ppm(const char *path, const uint8_t *rgba, int w, int h) {
     FILE *f = fopen(path, "wb");
     if (!f) return false;
@@ -387,6 +468,7 @@ static void usage(const char *argv0) {
         "  --inline           Animate inline in scrollback instead of alternate screen\n"
         "  --side-cmd <cmd>   Run command (e.g. fastfetch) and print output beside the 3D ring\n"
         "  --ppm <file>       Render to a PPM image file\n"
+        "  --png-seq <dir>    Render a seamless 360-deg PNG frame sequence (frame-000.png..)\n"
         "  --shader <path>    Custom GLSL fragment shader path\n",
         argv0);
 }
@@ -408,6 +490,7 @@ int main(int argc, char **argv) {
     int fps = 0;
     const char *side_cmd = NULL;
     const char *ppm_path = NULL;
+    const char *png_seq_dir = NULL;
     const char *shader_path = DEFAULT_SHADER_PATH;
 
     for (int i = 1; i < argc; i++) {
@@ -427,6 +510,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i], "--duration") && i + 1 < argc) duration = strtof(argv[++i], NULL);
         else if (!strcmp(argv[i], "--fps") && i + 1 < argc) fps = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--ppm") && i + 1 < argc) ppm_path = argv[++i];
+        else if (!strcmp(argv[i], "--png-seq") && i + 1 < argc) png_seq_dir = argv[++i];
         else if (!strcmp(argv[i], "--shader") && i + 1 < argc) shader_path = argv[++i];
         else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) { usage(argv[0]); return 0; }
         else { fprintf(stderr, "Unknown option: %s\n", argv[i]); usage(argv[0]); return 1; }
@@ -442,8 +526,8 @@ int main(int argc, char **argv) {
     if (fps < 1) fps = 1;
     if (fps > 60) fps = 60;
 
-    int px_w = (use_kitty || ppm_path) ? size_px : cols;
-    int px_h = (use_kitty || ppm_path) ? size_px : rows * 2;
+    int px_w = (use_kitty || ppm_path || png_seq_dir) ? size_px : cols;
+    int px_h = (use_kitty || ppm_path || png_seq_dir) ? size_px : rows * 2;
     int gap_ms = 1000 / fps;
     if (gap_ms < 16) gap_ms = 16;
 
@@ -588,7 +672,30 @@ int main(int argc, char **argv) {
     const float deg2rad = 3.14159265359f / 180.0f;
     const float tau = 6.28318530718f;
 
-    if (kitty_loop) {
+    if (png_seq_dir) {
+        mkdir(png_seq_dir, 0755);
+        char out_file[640];
+        for (int k = 0; k < nframes; k++) {
+            float phase = (float)k / (float)nframes;
+            float cur_yaw = (yaw_deg * deg2rad) + phase * tau;
+            float cur_pitch = (pitch_deg * deg2rad) + sinf(phase * tau) * 0.14f;
+            float cur_t = phase * (tau / 2.6f);
+
+            glUniform2f(loc_res, (float)px_w, (float)px_h);
+            glUniform1f(loc_time, cur_t);
+            glUniform1f(loc_yaw, cur_yaw);
+            glUniform1f(loc_pitch, cur_pitch);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glFinish();
+            glReadPixels(0, 0, px_w, px_h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+            snprintf(out_file, sizeof(out_file), "%s/frame-%03d.png", png_seq_dir, k);
+            if (!write_png_rgb_bg(out_file, pixels, px_w, px_h, 13, 9, 8)) {
+                fprintf(stderr, "inferna-ring: failed to write '%s'\n", out_file);
+                return 1;
+            }
+        }
+    } else if (kitty_loop) {
         uint8_t *zbuf = malloc(max_comp);
         if (!zbuf) return 1;
 

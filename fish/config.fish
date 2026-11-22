@@ -37,6 +37,44 @@ if status is-interactive
         starship init fish | source
     end
 
+    # Smart directory jumper (zoxide)
+    if command -q zoxide
+        zoxide init fish | source
+    end
+
+    # Inferna FZF theme (ember orange, crimson border, molten gold highlights)
+    set -gx FZF_DEFAULT_OPTS "\
+--color=bg+:#2b1b15,fg:#f2e5d5,fg+:#fff3e6,hl:#ff622e,hl+:#f2a949 \
+--color=border:#a83219,prompt:#ff622e,pointer:#ff622e,marker:#f2a949 \
+--color=spinner:#f2a949,header:#947a6c,info:#c99668,gutter:#18100d \
+--border=rounded --height=45% --layout=reverse \
+--prompt='󰈸 ' --pointer='❯' --marker='◆'"
+
+    # Modern Inferna CLI aliases (overridable in user-fish.fish)
+    if command -q eza
+        set -gx EZA_COLORS "di=1;38;2;242;169;73:ln=38;2;255;124;58:ex=1;38;2;247;214;122:da=38;2;148;122;108:uu=38;2;232;139;58:gu=38;2;186;112;76:sn=38;2;255;98;46:sb=38;2;148;122;108:ga=38;2;242;169;73:gm=38;2;255;98;46:gd=38;2;217;56;30"
+        alias ls "eza --icons=auto --group-directories-first"
+        alias ll "eza -la --icons=auto --group-directories-first --git"
+        alias la "eza -a --icons=auto --group-directories-first"
+        alias lt "eza --tree --level=2 --icons=auto --group-directories-first"
+    end
+
+    if command -q bat
+        alias cat "bat --paging=never"
+    end
+
+    # Yazi wrapper: press 'y' to browse files with Kitty image preview and cd on exit
+    if command -q yazi
+        function y
+            set tmp (mktemp -t "yazi-cwd.XXXXXX")
+            yazi $argv --cwd-file="$tmp"
+            if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+                builtin cd -- "$cwd"
+            end
+            rm -f -- "$tmp"
+        end
+    end
+
     # Convenience aliases for full dashboard & live spinning high-res 3D GLSL ring
     alias dash "fastfetch"
     alias ring3d "inferna-ring --kitty --size 420 --cols 36 --rows 18 --animate"
