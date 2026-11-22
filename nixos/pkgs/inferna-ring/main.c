@@ -237,6 +237,7 @@ static void usage(const char *argv0) {
         "  --duration <sec>   Optional auto-stop duration in seconds when animating (0 = infinite)\n"
         "  --fps <n>          Animation framerate (default: 30)\n"
         "  --inline           Animate inline in scrollback instead of alternate screen\n"
+        "  --side-cmd <cmd>   Run shell command (e.g. fastfetch) and print its output beside the ring\n"
         "  --ppm <file>       Render to a PPM image file\n"
         "  --shader <path>    Custom GLSL fragment shader path\n",
         argv0);
@@ -254,6 +255,7 @@ int main(int argc, char **argv) {
     bool inline_anim = false;
     float duration = 0.0f;
     int fps = 30;
+    const char *side_cmd = NULL;
     const char *ppm_path = NULL;
     const char *shader_path = DEFAULT_SHADER_PATH;
 
@@ -267,6 +269,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i], "--time") && i + 1 < argc) t_sec = strtof(argv[++i], NULL);
         else if (!strcmp(argv[i], "--animate")) animate = true;
         else if (!strcmp(argv[i], "--inline")) inline_anim = true;
+        else if (!strcmp(argv[i], "--side-cmd") && i + 1 < argc) side_cmd = argv[++i];
         else if (!strcmp(argv[i], "--duration") && i + 1 < argc) duration = strtof(argv[++i], NULL);
         else if (!strcmp(argv[i], "--fps") && i + 1 < argc) fps = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--ppm") && i + 1 < argc) ppm_path = argv[++i];
@@ -417,13 +420,49 @@ int main(int argc, char **argv) {
             tty_stdin = false;
         }
 
+        // Optional side panel (e.g. fastfetch output drawn once beside the spinning 3D ring)
+        char *side_lines[64];
+        int side_count = 0;
+        if (side_cmd) {
+            FILE *pf = popen(side_cmd, "r");
+            if (pf) {
+                char line[2048];
+                while (side_count < 64 && fgets(line, sizeof(line), pf)) {
+                    size_t ln = strlen(line);
+                    while (ln > 0 && (line[ln - 1] == '\n' || line[ln - 1] == '\r')) line[--ln] = '\0';
+                    side_lines[side_count++] = strdup(line);
+                }
+                pclose(pf);
+            }
+        }
+        int total_rows = rows;
+        if (side_count > total_rows) total_rows = side_count;
+
         if (inline_anim) {
-            // Reserve space inline so the spinning ring sits cleanly above the prompt
-            for (int r = 0; r < rows; r++) fputc('\n', stdout);
-            fprintf(stdout, "\x1b[%dA\x1b[?25l", rows);
+            // Reserve space inline so the spinning ring + side panel sit cleanly above the prompt
+            for (int r = 0; r < total_rows; r++) fputc('\n', stdout);
+            fprintf(stdout, "\x1b[%dA\x1b[?25l", total_rows);
+            if (side_count > 0) {
+                int side_col = cols + 4;
+                int top_pad = (total_rows - side_count) / 2;
+                for (int r = 0; r < side_count; r++) {
+                    if (top_pad + r > 0) fprintf(stdout, "\x1b[%dB", top_pad + r);
+                    fprintf(stdout, "\r\x1b[%dC%s\x1b[0m", side_col, side_lines[r]);
+                    if (top_pad + r > 0) fprintf(stdout, "\x1b[%dA", top_pad + r);
+                }
+                fputc('\r', stdout);
+            }
         } else {
             fputs("\x1b[?1049h\x1b[?25l\x1b[2J\x1b[H", stdout);
+            if (side_count > 0) {
+                int side_col = cols + 5;
+                for (int r = 0; r < side_count; r++) {
+                    fprintf(stdout, "\x1b[%d;%dH%s\x1b[0m", r + 2, side_col, side_lines[r]);
+                }
+                fputs("\x1b[1;1H", stdout);
+            }
         }
+        for (int r = 0; r < side_count; r++) free(side_lines[r]);
         fflush(stdout);
 
         struct timespec t0;
@@ -464,7 +503,7 @@ int main(int argc, char **argv) {
         }
 
         if (inline_anim) {
-            fprintf(stdout, "\x1b[%dB\r\x1b[0m\x1b[?25h", rows);
+            fprintf(stdout, "\x1b[%dB\r\x1b[0m\x1b[?25h", total_rows);
         } else {
             fputs("\x1b[0m\x1b[?25h\x1b[?1049l", stdout);
         }
