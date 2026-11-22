@@ -7,6 +7,7 @@ let
   # installs get it immediately on first boot (no manual path setup required).
   defaultWallpaper = ../assets/wallpapers/inferna.jpeg;
   gdmCss = ../assets/gdm/gdm.css;
+  infernaAiTelemetry = pkgs.callPackage ../pkgs/inferna-ai-telemetry { };
 
   # Level 2 GDM Theme: repack GNOME Shell's gnome-shell-theme.gresource with
   # the Inferna login/lock-screen CSS and pre-blurred wallpaper (matching GNOME's
@@ -238,7 +239,8 @@ in
       # - Blur my Shell: blur for top bar, overview, menus & lock screen
       # - GameMode Shell Extension: top bar indicator for programs.gamemode
       # - Transparent Move: semi-transparent windows while dragging
-      enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'clipboard-indicator@tudmotu.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'space-bar@luchrioh', 'mediacontrols@GitPowerInc.github.com', 'caffeine@patapon.info', 'Vitals@CoreCoding.com', 'rounded-window-corners@fxgn', 'blur-my-shell@aunetx', 'gamemodeshellextension@trsnaqe.com', 'transparent-move@edjenn1998']
+      # - Inferna AI Telemetry: top bar quota & status widget for Claude Code, Agy & Ollama
+      enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'clipboard-indicator@tudmotu.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'space-bar@luchrioh', 'mediacontrols@GitPowerInc.github.com', 'caffeine@patapon.info', 'Vitals@CoreCoding.com', 'rounded-window-corners@fxgn', 'blur-my-shell@aunetx', 'gamemodeshellextension@trsnaqe.com', 'transparent-move@edjenn1998', 'ai-telemetry@inferna']
     '';
 
     # Run Chromium/Chrome/Electron natively on Wayland, unify Qt6 apps with the
@@ -273,6 +275,7 @@ in
       gnomeExtensions.blur-my-shell
       gnomeExtensions.gamemode-shell-extension
       gnomeExtensions.transparent-move
+      infernaAiTelemetry       # Custom GNOME 51 AI telemetry widget + `inferna-ai-usage` CLI
 
       # --- Optional visual/layout extensions (uncomment when ready) ---
       # gnomeExtensions.dash-to-dock       # UUID: dash-to-dock@micxgx.gmail.com

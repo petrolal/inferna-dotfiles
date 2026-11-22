@@ -24,7 +24,7 @@ A cohesive obsidian, forged-iron, ember-orange, and molten-gold NixOS workstatio
   - Declaratively renders 72 seamless 360° frames of the exact same `ring.frag` shader during `nixos-rebuild` (no binary PNG bloat in git), with an ember gradient progress bar and silent KMS boot straight into GDM.
 - **GNOME 51 + Blurred GDM Login Theme ([`nixos/modules/gnome.nix`](nixos/modules/gnome.nix), [`gnome/`](gnome/)):**
   - Pre-blurred Inferna GDM login/lock screen via fast `gnome-shell-theme.gresource` replacement (no GNOME Shell recompile).
-  - Custom `Inferna` Shell/GTK4/GTK3 theme, `Bibata-Modern-Amber` cursor across GNOME & GDM, and 8 verified lightweight GNOME 51 extensions (`space-bar`, `revived-media-controls`, `caffeine`, `vitals`, `rounded-window-corners-reborn`, lightweight `blur-my-shell`, `gamemode-shell-extension`, `transparent-move`).
+  - Custom `Inferna` Shell/GTK4/GTK3 theme, `Bibata-Modern-Amber` cursor across GNOME & GDM, custom native **`ai-telemetry@inferna`** top-bar widget (Claude Code, Antigravity & Ollama quotas), and 8 verified lightweight GNOME 51 extensions (`space-bar`, `revived-media-controls`, `caffeine`, `vitals`, `rounded-window-corners-reborn`, lightweight `blur-my-shell`, `gamemode-shell-extension`, `transparent-move`).
   - Helpers: `inferna-theme <ThemeName|--list|--reset>` and `inferna-extensions <save|load>`.
 - **Terminal & TUI Suite ([`ghostty/`](ghostty/), [`fish/`](fish/), [`starship/`](starship/), [`fastfetch/`](fastfetch/)):**
   - **Ghostty** (`Ctrl + Alt + T`) + **Fish** (with preserved `~/.config/fish/user-fish.fish` local overrides) + **Starship** prompt.

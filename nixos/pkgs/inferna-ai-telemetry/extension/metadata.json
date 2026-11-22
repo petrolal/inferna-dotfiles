@@ -1,0 +1,7 @@
+{
+  "uuid": "ai-telemetry@inferna",
+  "name": "Inferna AI Telemetry",
+  "description": "Top-bar telemetry widget for Claude Code, Antigravity (agy), and Ollama with Inferna ember styling.",
+  "shell-version": ["47", "48", "49", "50", "51"],
+  "version": 1
+}
