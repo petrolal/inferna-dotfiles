@@ -352,105 +352,98 @@ vec2 mapScene(vec3 p) {
     return res;
 }
 
-// --- Clean Cinematic Bottom Flame Tongues + Rising Ember Sparks -------------
-// Evaluated strictly BEHIND the forged iron ring so the 3D metal & runes stay razor-sharp!
-vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
-    // Dual-phase seamlessly-looping 3D fBM advection for organic silky fire motion
-    float p0 = fract(loopPhase * 2.0);
-    float p1 = fract(loopPhase * 2.0 + 0.5);
+// Seamless dual-phase upward-advecting 3D fBM for fluid photographic hellfire
+float fbmFireFlow(vec2 p, float speed, float loopPhase, float zSeed) {
+    float p0 = fract(loopPhase * speed);
+    float p1 = fract(loopPhase * speed + 0.5);
     float w1 = abs(2.0 * p0 - 1.0);
     float w0 = 1.0 - w1;
+    // Slight smoothstep on blend weights keeps contrast crisp during phase crossfade
+    w0 = smoothstep(0.0, 1.0, w0);
+    w1 = 1.0 - w0;
+    float a = fbm3(vec3(p.x, p.y - p0 * 3.6, zSeed + p0 * 0.45));
+    float b = fbm3(vec3(p.x, p.y - p1 * 3.6, zSeed + 5.7 + p1 * 0.45));
+    return a * w0 + b * w1;
+}
 
-    float turbA0 = fbm3(vec3(uv.x * 2.1, uv.y * 1.7 - p0 * 3.4, 1.7)) - 0.5;
-    float turbA1 = fbm3(vec3(uv.x * 2.1, uv.y * 1.7 - p1 * 3.4, 6.3)) - 0.5;
-    float turbA = turbA0 * w0 + turbA1 * w1;
+// --- Photographic Domain-Warped Hellfire + Rising Ember Sparks ---------------
+// Evaluated strictly BEHIND the forged iron ring so the 3D metal & runes stay razor-sharp!
+vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
+    // Vertical progress from bottom edge (-1.34) up to slightly above ring center (+0.26)
+    float yNorm = clamp((uv.y + 1.34) / 1.60, 0.0, 1.0);
 
-    float turbB0 = fbm3(vec3(uv.x * 4.2 + 2.3, uv.y * 3.2 - p0 * 5.2, 3.1)) - 0.5;
-    float turbB1 = fbm3(vec3(uv.x * 4.2 + 2.3, uv.y * 3.2 - p1 * 5.2, 8.7)) - 0.5;
-    float turbB = turbB0 * w0 + turbB1 * w1;
+    // 1) Multi-scale upward-stretching domain-warped fluid advection (real licking hellfire!)
+    //    Stage A: broad convection currents swaying and curling flame sheets
+    float qx = fbmFireFlow(uv * vec2(1.85, 0.95) + vec2(1.7, 0.4), 2.0, loopPhase, 1.3) - 0.5;
+    float qy = fbmFireFlow(uv * vec2(1.85, 0.95) + vec2(-2.9, 3.1), 2.0, loopPhase, 4.9) - 0.5;
+    float riseWarp = 0.18 + 1.05 * pow(yNorm, 0.80);
+    vec2 warped = uv + vec2(qx * 0.54, qy * 0.28) * riseWarp;
 
-    // 1) Cohesive fluid bottom fire bed splitting smoothly into 9 silky curling flame tongues
-    float yBase = -1.32;
-    float energy = 0.0;
-    float coreEnergy = 0.0;
-    float wispEnergy = 0.0;
+    //    Stage B: vertically stretched flame tongues + turbulent curling folds
+    //    Higher X frequency than Y frequency naturally stretches turbulence into fierce upward flames!
+    float tongues = fbmFireFlow(warped * vec2(3.15, 1.25), 2.0, loopPhase, 9.2);
+    vec2 curlCoord = warped * vec2(5.40, 2.25) + vec2((tongues - 0.5) * 1.35, -(tongues - 0.5) * 0.60);
+    float licks = fbmFireFlow(curlCoord, 3.0, loopPhase, 14.6);
 
-    for (int i = 0; i < 9; i++) {
-        float fi = float(i);
-        float normI = (fi / 8.0) * 2.0 - 1.0; // -1 .. +1
-        float baseX = normI * 0.78 + sin(fi * 2.4) * 0.05;
+    //    Sharp ridged filaments create luminous glowing flame sheets & deep dark pockets between them!
+    float ridgeBig  = pow(1.0 - abs(2.0 * tongues - 1.0), 1.85);
+    float ridgeFine = pow(1.0 - abs(2.0 * licks   - 1.0), 2.35);
 
-        // Center tongues lick up cleanly behind the lower half of the ring; outer tongues curl gracefully
-        float hProfile = mix(1.48, 0.88, pow(abs(normI), 1.15));
-        float hMax = hProfile + 0.14 * sin(loopPhase * TAU * 2.0 + fi * 1.85);
-        float yLocal = (uv.y - yBase) / hMax;
-        if (yLocal < -0.05 || yLocal > 1.12) continue;
+    //    Dark-pocket carver slices dark crimson/black negative space down into the fire body
+    //    so it NEVER turns into a solid flat yellow blob!
+    float pocket = fbmFireFlow(warped * vec2(3.6, 1.55) + vec2(4.1, -1.2), 2.0, loopPhase, 19.8);
 
-        float yc = clamp(yLocal, 0.0, 1.0);
+    // 2) Natural fire-hearth envelope strictly behind the LOWER half of the ring
+    float archW = mix(0.88, 0.46, pow(yNorm, 0.92));
+    float xPlume = (uv.x + qx * 0.20 * yNorm) / archW;
+    float horizMask = exp(-pow(abs(xPlume), 2.2));
 
-        // Organic fluid S-curve curl + turbulent billowing (stronger curl near tips)
-        float curl = sin(yc * 3.8 - loopPhase * TAU * 2.0 + fi * 1.45) * (0.07 + 0.16 * yc)
-                   + normI * pow(yc, 1.65) * 0.22
-                   + turbA * (0.16 + 0.30 * yc)
-                   + turbB * (0.04 + 0.11 * yc);
-        float dx = abs(uv.x - (baseX + curl));
+    //    Subtle curling ember wisps on lower-left / lower-right flanks (like the reference!)
+    float flankWisp = exp(-pow((abs(uv.x) - 0.72) / 0.30, 2.0))
+                    * exp(-pow((uv.y + 0.54) / 0.42, 2.0))
+                    * smoothstep(0.50, 0.82, tongues * 0.65 + licks * 0.55);
 
-        // Broad overlapping liquid base tapering organically into silky sharp flame tips
-        float widthBase = mix(0.27, 0.17, abs(normI));
-        float halfW = widthBase * pow(1.0 - yc, 0.92) + 0.012;
-        // Modulate edge slightly with fine turbulence so tongues feel like real fire, not tubes
-        float edgeDist = dx / max(halfW, 0.015) + turbB * (0.28 + 0.35 * yc);
+    float vertDecay = pow(1.0 - yNorm, 0.72);
 
-        float body = smoothstep(1.18, 0.22, edgeDist)
-                   * smoothstep(1.02, 0.72, yc)
-                   * smoothstep(0.0, 0.16, yc);
+    // 3) Structured flame density: layered translucent tongues + sharp glowing ridges + dark hollows
+    float flameShape = tongues * 0.52 + ridgeBig * 0.34 + ridgeFine * 0.26 - (1.0 - pocket) * 0.22;
+    float T = horizMask * vertDecay * (0.12 + 1.38 * flameShape)
+            + flankWisp * 0.58
+            - yNorm * 0.28;
 
-        // Hot luminous inner veil concentrated in the lower/middle heart of the flames
-        float innerCore = smoothstep(0.72, 0.05, edgeDist)
-                        * pow(1.0 - yc, 1.25)
-                        * body;
+    //    Crisp silhouetted flame tongues with dark cutouts + delicate translucent crimson outer wisps
+    float coreAlpha = smoothstep(0.18, 0.48, T);
+    float wispAlpha = smoothstep(0.06, 0.28, T) * 0.42;
+    float density = max(coreAlpha, wispAlpha);
 
-        // Silky translucent crimson-orange outer veil for smooth overlap without hard seams
-        float veil = smoothstep(1.55, 0.45, edgeDist)
-                   * smoothstep(1.05, 0.60, yc)
-                   * smoothstep(0.0, 0.18, yc) * 0.42;
+    //    Smooth fade at frame edges (bottom cools to crimson before fading so zero grey/cream edge!)
+    float bottomCool = smoothstep(-1.34, -0.96, uv.y);
+    float frameFade = smoothstep(-1.34, -1.06, uv.y)
+                    * smoothstep(1.32, 0.95, abs(uv.x))
+                    * smoothstep(1.30, 0.92, uv.y);
+    density = clamp(density * frameFade, 0.0, 0.96);
 
-        // Smooth optical accumulation (zero hard creases where flames cross!)
-        energy = 1.0 - (1.0 - energy) * (1.0 - body * 0.88);
-        coreEnergy += innerCore * 0.72;
-        wispEnergy = 1.0 - (1.0 - wispEnergy) * (1.0 - veil);
-    }
-
-    // Soft ambient warm hearth glow tucked low behind the bottom of the ring
-    float hearthGlow = exp(-pow((uv.y + 1.06) / 0.34, 2.0)) * exp(-pow(uv.x / 0.82, 2.0)) * 0.36;
-    float totalDensity = clamp(max(energy, max(wispEnergy, hearthGlow)), 0.0, 1.0);
-
-    // Smooth vertical bottom fade + gentle side margin fade (zero curved vignette clipping!)
-    float edgeFade = smoothstep(-1.32, -1.04, uv.y)
-                   * smoothstep(1.28, 0.92, abs(uv.x))
-                   * smoothstep(1.30, 0.95, uv.y);
-    float fireAlpha = clamp(totalDensity * edgeFade, 0.0, 0.96);
-
-    // Compute realistic temperature field: deep scarlet outer wisps -> rich fiery orange body -> glowing amber-gold heart
+    // 4) Rich hellfire color temperature (mostly deep crimson & vivid fiery orange;
+    //    bright amber-gold ONLY along hot inner filaments & ridges, NEVER a flat yellow wall!)
+    float filament = ridgeFine * 0.55 + ridgeBig * 0.45;
     float heat = clamp(
-        energy * 0.52
-      + clamp(coreEnergy, 0.0, 1.2) * 0.50
-      + turbB * 0.14 * energy,
+        smoothstep(0.14, 0.98, T) * 0.56
+      + filament * coreAlpha * (0.46 - 0.16 * yNorm),
         0.0, 1.0
-    );
+    ) * (0.28 + 0.72 * bottomCool);
 
-    vec3 cDarkRed = vec3(0.46, 0.020, 0.003);
-    vec3 cScarlet = vec3(0.88, 0.130, 0.012);
-    vec3 cOrange  = vec3(1.00, 0.340, 0.030);
-    vec3 cAmber   = vec3(1.00, 0.640, 0.120);
-    vec3 cGold    = vec3(1.00, 0.860, 0.380);
+    vec3 cCrimson = vec3(0.38, 0.012, 0.002);
+    vec3 cScarlet = vec3(0.84, 0.090, 0.006);
+    vec3 cOrange  = vec3(1.00, 0.290, 0.018);
+    vec3 cAmber   = vec3(1.00, 0.620, 0.085);
+    vec3 cHotGold = vec3(1.00, 0.880, 0.380);
 
-    vec3 fireCol = mix(cDarkRed, cScarlet, smoothstep(0.04, 0.30, heat));
-    fireCol = mix(fireCol, cOrange, smoothstep(0.28, 0.58, heat));
-    fireCol = mix(fireCol, cAmber,  smoothstep(0.56, 0.82, heat));
-    fireCol = mix(fireCol, cGold,   smoothstep(0.82, 1.00, heat));
+    vec3 fireCol = mix(cCrimson, cScarlet, smoothstep(0.03, 0.26, heat));
+    fireCol = mix(fireCol, cOrange,  smoothstep(0.24, 0.54, heat));
+    fireCol = mix(fireCol, cAmber,   smoothstep(0.54, 0.80, heat));
+    fireCol = mix(fireCol, cHotGold, smoothstep(0.82, 0.99, heat));
 
-    // 2) Crisp elongated rising ember sparks drifting cleanly around the dark background
+    // 5) Crisp elongated rising ember sparks drifting cleanly around the dark background
     vec3 sparkCol = vec3(0.0);
     float sparkAlpha = 0.0;
     for (int layer = 0; layer < 2; layer++) {
@@ -473,7 +466,6 @@ vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
             if (h > 0.895) {
                 vec2 jitter = (vec2(fract(h * 17.3), fract(h * 43.1)) - 0.5) * 0.55;
                 vec2 d = f - jitter;
-                // Slightly slanted elongated ember streak drifting upward
                 float slant = (fract(h * 61.1) - 0.5) * 0.35;
                 d.x += d.y * slant;
                 d.x *= 2.35;
@@ -489,8 +481,8 @@ vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
         }
     }
 
-    vec3 outCol = fireCol * fireAlpha + sparkCol * (1.0 - fireAlpha * 0.55);
-    float outAlpha = clamp(max(fireAlpha, sparkAlpha), 0.0, 1.0);
+    vec3 outCol = fireCol * density + sparkCol * (1.0 - density * 0.55);
+    float outAlpha = clamp(max(density, sparkAlpha), 0.0, 1.0);
     return vec4(outCol, outAlpha);
 }
 
