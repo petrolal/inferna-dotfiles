@@ -1,0 +1,112 @@
+# Inferna — Starship Prompt
+# Palette derived from nixos/assets/wallpapers/inferna.jpeg:
+#   Molten flame : #d9381e | Ember : #ff622e | Crimson : #c8231a
+#   Rune gold    : #f2a949 | Parchment : #f2e5d5 | Ash : #a69085
+
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = true
+command_timeout = 500
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$nix_shell\
+$nodejs\
+$python\
+$golang\
+$java\
+$rust\
+$docker_context\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = "[❯](bold #ff622e)"
+error_symbol = "[❯](bold #c8231a)"
+vimcmd_symbol = "[❮](bold #f2a949)"
+
+[username]
+show_always = false
+style_user = "bold #f2e5d5"
+style_root = "bold #c8231a"
+format = "[$user]($style) "
+
+[hostname]
+ssh_only = true
+style = "bold #f2a949"
+format = "[@$hostname]($style) "
+
+[directory]
+style = "bold #f2a949"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " 󰌾"
+read_only_style = "#c8231a"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+style = "bold #ff622e"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#f2a949"
+conflicted = "!"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?"
+stashed = "$"
+modified = "~"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+format = "([$all_status$ahead_behind]($style) )"
+
+[nix_shell]
+symbol = " "
+style = "bold #f2a949"
+impure_msg = "dev"
+pure_msg = "pure"
+format = "[$symbol$state]($style) "
+
+[cmd_duration]
+min_time = 2000
+style = "#a69085"
+format = "[󰔟 $duration]($style) "
+
+[nodejs]
+symbol = " "
+style = "#a69085"
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+style = "#a69085"
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = " "
+style = "#a69085"
+format = "[$symbol($version )]($style)"
+
+[java]
+symbol = " "
+style = "#a69085"
+format = "[$symbol($version )]($style)"
+
+[rust]
+symbol = " "
+style = "#a69085"
+format = "[$symbol($version )]($style)"
+
+[docker_context]
+symbol = " "
+style = "#a69085"
+only_with_files = true
+format = "[$symbol$context ]($style)"

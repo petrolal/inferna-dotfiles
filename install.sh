@@ -21,6 +21,8 @@ This will symlink the GNOME dotfiles into your home folder:
   - Fish base config               -> ~/.config/fish/config.fish
   - Fish dynamic rice paths        -> ~/.config/fish/conf.d/inferna-paths.fish
   - Fish user config (if missing)  -> ~/.config/fish/user-fish.fish
+  - Starship prompt config         -> ~/.config/starship.toml
+  - Ptyxis Inferna palette         -> ~/.local/share/org.gnome.Ptyxis/palettes/Inferna.palette
   - GNOME themes (Inferna, etc.)   -> ~/.themes/
   - GTK4 / GTK3 CSS overrides      -> ~/.config/gtk-{4,3}.0/gtk.css
   - Default wallpapers             -> ~/.local/share/backgrounds/inferna/
@@ -113,8 +115,26 @@ if [[ -d "$here/gnome/themes/Inferna" ]]; then
   "$here/gnome/apply-theme.sh" Inferna
 fi
 
-echo "Installing Fish config and generating dynamic rice paths..."
+echo "Installing Fish config, Starship prompt, Ptyxis palette, and dynamic rice paths..."
 place "$here/fish/config.fish" "$config/fish/config.fish"
+place "$here/starship/starship.toml" "$config/starship.toml"
+place "$here/ptyxis/Inferna.palette" "$HOME/.local/share/org.gnome.Ptyxis/palettes/Inferna.palette"
+
+if command -v dconf >/dev/null 2>&1 && [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+  ptyxis_uuid="$(dconf read /org/gnome/Ptyxis/default-profile-uuid 2>/dev/null | tr -d "'" || true)"
+  if [[ -z "$ptyxis_uuid" ]]; then
+    ptyxis_uuid="10fe24a0000040008000000000000001"
+    dconf write /org/gnome/Ptyxis/profile-uuids "['$ptyxis_uuid']" 2>/dev/null || true
+    dconf write /org/gnome/Ptyxis/default-profile-uuid "'$ptyxis_uuid'" 2>/dev/null || true
+  fi
+  dconf write /org/gnome/Ptyxis/interface-style "'dark'" 2>/dev/null || true
+  dconf write /org/gnome/Ptyxis/use-system-font "true" 2>/dev/null || true
+  dconf write /org/gnome/Ptyxis/audible-bell "false" 2>/dev/null || true
+  dconf write /org/gnome/Ptyxis/scrollbar-policy "'never'" 2>/dev/null || true
+  dconf write "/org/gnome/Ptyxis/Profiles/$ptyxis_uuid/label" "'Inferna'" 2>/dev/null || true
+  dconf write "/org/gnome/Ptyxis/Profiles/$ptyxis_uuid/palette" "'Inferna'" 2>/dev/null || true
+  dconf write "/org/gnome/Ptyxis/Profiles/$ptyxis_uuid/opacity" "0.94" 2>/dev/null || true
+fi
 
 mkdir -p "$config/fish/conf.d"
 fish_paths_file="$config/fish/conf.d/inferna-paths.fish"

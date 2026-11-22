@@ -9,9 +9,13 @@ let
   gdmCss = ../assets/gdm/gdm.css;
 
   # Level 2 GDM Theme: repack GNOME Shell's gnome-shell-theme.gresource with
-  # the Inferna login/lock-screen CSS and wallpaper without recompiling GNOME Shell.
+  # the Inferna login/lock-screen CSS and pre-blurred wallpaper (matching GNOME's
+  # lock screen BLUR_RADIUS=90 / BLUR_BRIGHTNESS=0.65) without recompiling GNOME Shell.
   infernaGdmThemeGresource = pkgs.runCommand "inferna-gdm-gnome-shell-theme.gresource" {
-    nativeBuildInputs = [ pkgs.glib.dev ];
+    nativeBuildInputs = [
+      pkgs.glib.dev
+      pkgs.imagemagick
+    ];
   } ''
     orig="${pkgs.gnome-shell}/share/gnome-shell/gnome-shell-theme.gresource"
     mkdir -p work/theme
@@ -22,7 +26,15 @@ let
       gresource extract "$orig" "$res" > "work/theme/$rel"
     done < <(gresource list "$orig")
 
-    cp "${defaultWallpaper}" work/theme/inferna-gdm-wallpaper.jpeg
+    ${if cfg.blurSigma > 0 then ''
+      magick "${defaultWallpaper}" \
+        -blur "0x${toString cfg.blurSigma}" \
+        -evaluate Multiply "${cfg.brightness}" \
+        -quality 92 \
+        work/theme/inferna-gdm-wallpaper.jpeg
+    '' else ''
+      cp "${defaultWallpaper}" work/theme/inferna-gdm-wallpaper.jpeg
+    ''}
     printf '\n' >> work/theme/gnome-shell-dark.css
     cat "${gdmCss}" >> work/theme/gnome-shell-dark.css
 
@@ -77,10 +89,22 @@ PY
   '';
 in
 {
-  options.dotfiles.gdmTheme.enable = lib.mkOption {
-    type = lib.types.bool;
-    default = true;
-    description = "Style the GDM login screen with Inferna dconf defaults (Level 1) and themed gresource wallpaper/CSS (Level 2).";
+  options.dotfiles.gdmTheme = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Style the GDM login screen with Inferna dconf defaults (Level 1) and themed gresource wallpaper/CSS (Level 2).";
+    };
+    blurSigma = lib.mkOption {
+      type = lib.types.ints.unsigned;
+      default = 42;
+      description = "Gaussian blur sigma applied to the GDM login wallpaper (0 disables blur; 42 matches GNOME lock screen).";
+    };
+    brightness = lib.mkOption {
+      type = lib.types.str;
+      default = "0.65";
+      description = "Brightness multiplier applied to the blurred GDM login wallpaper (matches GNOME Shell's BLUR_BRIGHTNESS=0.65).";
+    };
   };
 
   config = {
@@ -205,6 +229,7 @@ in
 
     # Essential GNOME utilities, GTK3 Libadwaita theme, and Shell extensions.
     environment.systemPackages = with pkgs; [
+      ptyxis                   # Native GTK4/Libadwaita GNOME terminal (palettes, opacity, containers)
       file-roller              # Native GNOME archive manager
       gnome-tweaks             # Fonts, window buttons, startup apps, appearance
       gnome-extension-manager  # Browse/enable/configure GNOME Shell extensions

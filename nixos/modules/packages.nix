@@ -130,6 +130,7 @@ let
     rlwrap
     wl-clipboard
     fzf          # Fuzzy finder CLI
+    starship     # Minimal, fast shell prompt (configured in starship/starship.toml)
   ];
 
   mediaUtils = with pkgs; [

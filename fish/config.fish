@@ -6,7 +6,36 @@
 #     ~/.config/fish/user-fish.fish              (never overwritten by ./install.sh)
 
 if status is-interactive
-    # Shared rice interactive defaults can go here.
+    # Clean terminal startup (no default "Welcome to fish" banner)
+    set -g fish_greeting
+
+    # Inferna syntax highlighting palette (overridable in user-fish.fish)
+    set -g fish_color_normal f2e5d5
+    set -g fish_color_command f2a949
+    set -g fish_color_keyword ff622e
+    set -g fish_color_quote e8b878
+    set -g fish_color_redirection ff622e
+    set -g fish_color_end a69085
+    set -g fish_color_error c8231a
+    set -g fish_color_param f2e5d5
+    set -g fish_color_valid_path --underline
+    set -g fish_color_option f5c27a
+    set -g fish_color_comment 8a756b
+    set -g fish_color_selection --background=33231d
+    set -g fish_color_search_match --background=3a221c
+    set -g fish_color_operator d9381e
+    set -g fish_color_escape ff622e
+    set -g fish_color_autosuggestion 7c675d
+    set -g fish_pager_color_progress a69085
+    set -g fish_pager_color_prefix f2a949 --bold
+    set -g fish_pager_color_completion f2e5d5
+    set -g fish_pager_color_description a69085
+    set -g fish_pager_color_selected_background --background=2d1e19
+
+    # Starship prompt (configured via ~/.config/starship.toml)
+    if command -q starship
+        starship init fish | source
+    end
 end
 
 # Load user-local customizations last so they can override rice defaults.
