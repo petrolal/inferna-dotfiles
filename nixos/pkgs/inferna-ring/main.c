@@ -297,7 +297,7 @@ static bool play_kitty_loop_from_cache(const char *cache_path, int cols, int row
     int h = (int)hdr[2];
     int nframes = (int)hdr[3];
     int gap_ms = (int)hdr[4];
-    if (w < 16 || h < 16 || nframes < 2 || nframes > 240) {
+    if (w < 16 || h < 16 || nframes < 2 || nframes > 360) {
         fclose(f);
         return false;
     }
@@ -438,7 +438,7 @@ int main(int argc, char **argv) {
     if (size_px < 64) size_px = 64;
     if (size_px > 1024) size_px = 1024;
     if (nframes < 6) nframes = 6;
-    if (nframes > 120) nframes = 120;
+    if (nframes > 360) nframes = 360;
     if (fps < 1) fps = 1;
     if (fps > 60) fps = 60;
 

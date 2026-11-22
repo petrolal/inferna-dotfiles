@@ -52,10 +52,10 @@ if status is-interactive
         and test "$LINES" -ge 18
         and command -q inferna-ring
         if command -q fastfetch; and test -f "$HOME/.config/fastfetch/compact.jsonc"
-            inferna-ring --kitty-loop --size 288 --frames 120 --fps 16 --cols 32 --rows 16 \
+            inferna-ring --kitty-loop --size 256 --frames 240 --fps 33 --cols 32 --rows 16 \
                 --side-cmd "fastfetch --config $HOME/.config/fastfetch/compact.jsonc"
         else
-            inferna-ring --kitty-loop --size 288 --frames 120 --fps 16 --cols 32 --rows 16
+            inferna-ring --kitty-loop --size 256 --frames 240 --fps 33 --cols 32 --rows 16
         end
     end
 end
