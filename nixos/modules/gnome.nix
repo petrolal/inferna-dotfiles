@@ -141,6 +141,8 @@ in
           "org/gnome/desktop/interface" = {
             color-scheme = "prefer-dark";
             accent-color = "orange";
+            cursor-theme = "Bibata-Modern-Amber";
+            cursor-size = lib.gvariant.mkInt32 24;
             monospace-font-name = "JetBrainsMono Nerd Font 10";
             clock-show-weekday = true;
             show-battery-percentage = true;
@@ -177,12 +179,14 @@ in
 
     services.desktopManager.gnome.extraGSettingsOverrides = ''
       [org.gnome.desktop.interface]
-      # Dark mode + Inferna flame accent + adw-gtk3-dark so GTK3 apps match Libadwaita
+      # Dark mode + Inferna flame accent + adw-gtk3-dark + Bibata-Modern-Amber cursor
       color-scheme='prefer-dark'
       accent-color='orange'
       gtk-theme='adw-gtk3-dark'
+      cursor-theme='Bibata-Modern-Amber'
+      cursor-size=24
 
-      # Monospace Nerd Font for GNOME Console & code views
+      # Monospace Nerd Font for terminal & code views
       monospace-font-name='JetBrainsMono Nerd Font 10'
 
       # Small quality-of-life top bar tweaks
@@ -193,7 +197,6 @@ in
       # font-name='Adwaita Sans 11'
       # document-font-name='Adwaita Sans 12'
       # icon-theme='Adwaita'
-      # cursor-theme='Adwaita'
 
       [org.gnome.desktop.default-applications.terminal]
       exec='ghostty'
@@ -238,12 +241,16 @@ in
       enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'clipboard-indicator@tudmotu.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'space-bar@luchrioh', 'mediacontrols@GitPowerInc.github.com', 'caffeine@patapon.info', 'Vitals@CoreCoding.com', 'rounded-window-corners@fxgn', 'blur-my-shell@aunetx', 'gamemodeshellextension@trsnaqe.com', 'transparent-move@edjenn1998']
     '';
 
-    # Run Chromium/Chrome/Electron apps natively on Wayland under GNOME.
+    # Run Chromium/Chrome/Electron natively on Wayland, unify Qt6 apps with the
+    # Inferna palette (qt6ct), and export Bibata-Modern-Amber for XWayland/apps.
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
+      QT_QPA_PLATFORMTHEME = "qt6ct";
+      XCURSOR_THEME = "Bibata-Modern-Amber";
+      XCURSOR_SIZE = "24";
     };
 
-    # Essential GNOME utilities, GTK3 Libadwaita theme, and Shell extensions.
+    # Essential GNOME utilities, GTK3/Qt6/cursor theming, and Shell extensions.
     environment.systemPackages = with pkgs; [
       ghostty                  # GPU-accelerated GTK4/Libadwaita terminal (Kitty Graphics Protocol)
       file-roller              # Native GNOME archive manager
@@ -251,6 +258,8 @@ in
       gnome-extension-manager  # Browse/enable/configure GNOME Shell extensions
       dconf-editor             # Inspect & experiment with GSettings/dconf keys
       adw-gtk3                 # GTK3 port of Libadwaita (pairs with gtk-3.0/gtk.css)
+      bibata-cursors           # Bibata-Modern-Amber ember cursor for GNOME & GDM
+      kdePackages.qt6ct        # Warm Inferna dark palette for Qt6 apps (Qt Creator, Shotcut, MeshLab)
 
       # Enabled GNOME Shell extensions (GNOME 51 compatible)
       gnomeExtensions.appindicator

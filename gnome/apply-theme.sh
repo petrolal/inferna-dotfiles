@@ -44,6 +44,8 @@ reset_theme() {
     gsettings reset org.gnome.desktop.interface color-scheme 2>/dev/null || true
     gsettings reset org.gnome.desktop.interface accent-color 2>/dev/null || true
     gsettings reset org.gnome.desktop.interface gtk-theme 2>/dev/null || true
+    gsettings reset org.gnome.desktop.interface cursor-theme 2>/dev/null || true
+    gsettings reset org.gnome.desktop.interface cursor-size 2>/dev/null || true
     gsettings reset org.gnome.desktop.background picture-uri 2>/dev/null || true
     gsettings reset org.gnome.desktop.background picture-uri-dark 2>/dev/null || true
     gsettings reset org.gnome.desktop.screensaver picture-uri 2>/dev/null || true
@@ -87,7 +89,7 @@ apply_theme() {
   fi
 
   # Load optional theme metadata
-  local COLOR_SCHEME="" ACCENT_COLOR="" GTK_THEME="" WALLPAPER=""
+  local COLOR_SCHEME="" ACCENT_COLOR="" GTK_THEME="" CURSOR_THEME="" CURSOR_SIZE="" WALLPAPER=""
   if [[ -f "$src/theme.env" ]]; then
     # shellcheck source=/dev/null
     source "$src/theme.env"
@@ -114,6 +116,8 @@ apply_theme() {
     [[ -n "$COLOR_SCHEME" ]] && gsettings set org.gnome.desktop.interface color-scheme "$COLOR_SCHEME" 2>/dev/null || true
     [[ -n "$ACCENT_COLOR" ]] && gsettings set org.gnome.desktop.interface accent-color "$ACCENT_COLOR" 2>/dev/null || true
     [[ -n "$GTK_THEME" ]] && gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME" 2>/dev/null || true
+    [[ -n "$CURSOR_THEME" ]] && gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR_THEME" 2>/dev/null || true
+    [[ -n "$CURSOR_SIZE" ]] && gsettings set org.gnome.desktop.interface cursor-size "$CURSOR_SIZE" 2>/dev/null || true
 
     if [[ -n "$wallpaper_file" && -f "$wallpaper_file" ]]; then
       local uri="file://$(readlink -f "$wallpaper_file")"

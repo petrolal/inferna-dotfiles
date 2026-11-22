@@ -24,6 +24,7 @@ This will symlink the GNOME dotfiles into your home folder:
   - Starship prompt config         -> ~/.config/starship.toml
   - Ghostty terminal config        -> ~/.config/ghostty/config
   - Inferna TUI suite              -> ~/.config/{btop,yazi,cava,bat}/
+  - MangoHud & Qt6 Inferna themes  -> ~/.config/{MangoHud,qt6ct}/
   - GNOME themes (Inferna, etc.)   -> ~/.themes/
   - GTK4 / GTK3 CSS overrides      -> ~/.config/gtk-{4,3}.0/gtk.css
   - Default wallpapers             -> ~/.local/share/backgrounds/inferna/
@@ -127,6 +128,11 @@ place "$here/yazi/yazi.toml" "$config/yazi/yazi.toml"
 place "$here/yazi/theme.toml" "$config/yazi/theme.toml"
 place "$here/cava/config" "$config/cava/config"
 place "$here/bat/config" "$config/bat/config"
+place "$here/mangohud/MangoHud.conf" "$config/MangoHud/MangoHud.conf"
+place "$here/qt6ct/colors/inferna.conf" "$config/qt6ct/colors/inferna.conf"
+mkdir -p "$config/qt6ct"
+save "$config/qt6ct/qt6ct.conf"
+sed "s|@HOME@|$HOME|g" "$here/qt6ct/qt6ct.conf" > "$config/qt6ct/qt6ct.conf"
 
 if command -v dconf >/dev/null 2>&1 && [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
   # Bind Ctrl+Alt+T to open a new Ghostty window (preserving any other custom shortcuts)
