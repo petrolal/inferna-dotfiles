@@ -35,6 +35,7 @@ let
   devTools = with pkgs; [
     emacs
     neovim
+    vscode
     claude-code
     bruno
   ];
@@ -93,7 +94,7 @@ let
   # $PATH anyway); most other Go/Rust Mason packages fetch prebuilt release
   # binaries and don't need a local toolchain.
   nvimRuntimes = with pkgs; [
-    nodejs_22 # includes npm/npx
+    nodejs_24 # includes npm/npx
     python3   # includes pip/venv
     go
     pnpm

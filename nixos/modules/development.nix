@@ -43,13 +43,13 @@ let
   };
 
   # node-init [VERSION] --- drop the Node.js shell.nix + .envrc into the
-  # current directory, pinned to Node.js VERSION (default 22), and allow it in
+  # current directory, pinned to Node.js VERSION (default 24), and allow it in
   # direnv.
   node-init = mkLangInit {
     name = "node-init";
     attr = "node";
     label = "Node.js";
-    default = "22";
+    default = "24";
     template = nodeTemplate;
   };
 

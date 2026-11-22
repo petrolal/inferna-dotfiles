@@ -1,0 +1,151 @@
+/* ============================================================================
+ * Inferna — GNOME Shell Theme (User Themes extension)
+ * ============================================================================
+ * Palette derived from nixos/assets/wallpapers/inferna.jpeg:
+ *   Charred stone  : #0d0908 / #15100e / #1d1512 / #241a16
+ *   Molten flame   : #d9381e (ember highlight: #ff622e)
+ *   Rune ring gold : #f2a949
+ *   Parchment text : #f2e5d5 (ivory: #fff6eb, ash: #a69085)
+ *
+ * Tips:
+ *   - After editing this file, run `inferna-theme Inferna` to live-reload CSS.
+ *   - Press Alt+F2 -> `lg` (Looking Glass) to inspect live Shell CSS classes.
+ *   - GNOME Shell StTheme uses static CSS (no :root / var() custom properties).
+ *
+ * Always import the stock GNOME Shell stylesheet first so only the elements
+ * overridden below are changed (safe across GNOME updates):
+ */
+@import url("resource:///org/gnome/shell/theme/gnome-shell-dark.css");
+
+/* --- Top Bar (#panel) ---------------------------------------------------- */
+#panel {
+  background-color: rgba(13, 9, 8, 0.88);
+  border-bottom: 1px solid rgba(217, 56, 30, 0.32);
+  color: #fff6eb;
+  font-weight: 600;
+}
+
+#panel.overview,
+#panel.unlock-screen,
+#panel.login-screen {
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+#panel .panel-button {
+  color: #f2e5d5;
+  border-radius: 99px;
+}
+
+#panel .panel-button:hover {
+  background-color: rgba(217, 56, 30, 0.24);
+  color: #fff6eb;
+}
+
+#panel .panel-button:active,
+#panel .panel-button:overview,
+#panel .panel-button:focus,
+#panel .panel-button:checked {
+  background-color: rgba(217, 56, 30, 0.38);
+  color: #fff6eb;
+}
+
+/* --- Popups, Quick Settings & Calendar ---------------------------------- */
+.popup-menu-content,
+.candidate-popup-content {
+  background-color: rgba(21, 16, 14, 0.96);
+  border: 1px solid rgba(242, 169, 73, 0.24);
+  border-radius: 16px;
+  color: #f2e5d5;
+}
+
+.popup-menu-item:hover,
+.popup-menu-item:focus,
+.popup-menu-item:selected {
+  background-color: rgba(217, 56, 30, 0.26);
+  color: #fff6eb;
+}
+
+.quick-toggle {
+  background-color: #241a16;
+  color: #f2e5d5;
+}
+
+.quick-toggle:hover {
+  background-color: #30221d;
+}
+
+.quick-toggle:checked {
+  background-color: #d9381e;
+  color: #fff6eb;
+}
+
+.quick-toggle:checked:hover {
+  background-color: #e84828;
+}
+
+/* --- Notifications & Calendar Messages ---------------------------------- */
+.notification-banner,
+.message {
+  background-color: rgba(29, 21, 18, 0.96);
+  border: 1px solid rgba(217, 56, 30, 0.32);
+  border-radius: 14px;
+  color: #f2e5d5;
+}
+
+.message:hover,
+.message:focus {
+  background-color: #2a1e1a;
+}
+
+/* --- Overview, Dash & Search -------------------------------------------- */
+#overviewGroup {
+  background-color: #0d0908;
+}
+
+.dash-background {
+  background-color: rgba(21, 16, 14, 0.90);
+  border: 1px solid rgba(242, 169, 73, 0.24);
+  border-radius: 20px;
+}
+
+.app-well-app-running-dot {
+  background-color: #f2a949;
+}
+
+.search-entry {
+  background-color: rgba(36, 26, 22, 0.92);
+  border: 1px solid rgba(217, 56, 30, 0.38);
+  border-radius: 99px;
+  color: #fff6eb;
+}
+
+.search-entry:focus {
+  border-color: #f2a949;
+  box-shadow: inset 0 0 0 1px #f2a949;
+}
+
+.workspace-thumbnail-indicator {
+  border-color: #ff622e;
+  border-radius: 8px;
+}
+
+/* --- OSD (Volume / Brightness) & Window Switcher ------------------------ */
+.osd-window,
+.switcher-list {
+  background-color: rgba(21, 16, 14, 0.95);
+  border: 1px solid rgba(242, 169, 73, 0.28);
+  border-radius: 16px;
+  color: #fff6eb;
+}
+
+.level {
+  -barlevel-background-color: rgba(242, 229, 213, 0.16);
+  -barlevel-active-background-color: #d9381e;
+  -barlevel-overdrive-color: #f2a949;
+}
+
+.switcher-list .item-box:selected {
+  background-color: rgba(217, 56, 30, 0.34);
+  border-radius: 12px;
+}

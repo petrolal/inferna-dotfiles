@@ -1,0 +1,86 @@
+/* ============================================================================
+ * Inferna — GTK4 / Libadwaita Theme Overrides
+ * ============================================================================
+ * Symlinked to ~/.config/gtk-4.0/gtk.css by ./install.sh or `inferna-theme`.
+ * Close and reopen GTK4 apps (Nautilus, GNOME Console, Settings) to see changes.
+ *
+ * Palette derived from the Inferna NixOS sigil wallpaper:
+ *   Charred stone surfaces : #0d0908 / #100c0a / #15100e / #1d1512 / #241a16
+ *   Molten flame accent    : #d9381e  (bright ember: #ff622e)
+ *   Candlelight rune gold  : #f2a949
+ *   Warm parchment text    : #f2e5d5  (ivory: #fff6eb, ash: #a69085)
+ */
+
+/* Modern Libadwaita CSS custom properties (GNOME 47+ / Libadwaita 1.6+) */
+:root {
+  --accent-bg-color: #d9381e;
+  --accent-fg-color: #fff6eb;
+  --accent-color: #ff622e;
+
+  --destructive-bg-color: #c8231a;
+  --destructive-fg-color: #fff6eb;
+  --destructive-color: #ff5442;
+
+  --success-bg-color: #4f8546;
+  --success-color: #6ea862;
+  --warning-bg-color: #b8731e;
+  --warning-color: #f2a949;
+  --error-bg-color: #c8231a;
+  --error-color: #ff473a;
+
+  --window-bg-color: #15100e;
+  --window-fg-color: #f2e5d5;
+
+  --view-bg-color: #100c0a;
+  --view-fg-color: #f2e5d5;
+
+  --headerbar-bg-color: #1d1512;
+  --headerbar-fg-color: #fff6eb;
+  --headerbar-border-color: rgba(217, 56, 30, 0.28);
+  --headerbar-backdrop-color: #15100e;
+
+  --sidebar-bg-color: #181210;
+  --sidebar-fg-color: #f2e5d5;
+  --sidebar-backdrop-color: #120d0b;
+  --sidebar-border-color: rgba(242, 169, 73, 0.14);
+
+  --secondary-sidebar-bg-color: #140f0d;
+  --secondary-sidebar-fg-color: #f2e5d5;
+
+  --card-bg-color: #241a16;
+  --card-fg-color: #f2e5d5;
+
+  --dialog-bg-color: #1d1512;
+  --dialog-fg-color: #f2e5d5;
+
+  --popover-bg-color: #241a16;
+  --popover-fg-color: #fff6eb;
+
+  --thumbnail-bg-color: #241a16;
+  --thumbnail-fg-color: #f2e5d5;
+}
+
+/* Legacy @define-color mirrors for older GTK4 apps */
+@define-color accent_bg_color #d9381e;
+@define-color accent_fg_color #fff6eb;
+@define-color accent_color #ff622e;
+@define-color destructive_bg_color #c8231a;
+@define-color destructive_fg_color #fff6eb;
+@define-color destructive_color #ff5442;
+@define-color warning_color #f2a949;
+@define-color success_color #6ea862;
+@define-color window_bg_color #15100e;
+@define-color window_fg_color #f2e5d5;
+@define-color view_bg_color #100c0a;
+@define-color view_fg_color #f2e5d5;
+@define-color headerbar_bg_color #1d1512;
+@define-color headerbar_fg_color #fff6eb;
+@define-color headerbar_backdrop_color #15100e;
+@define-color sidebar_bg_color #181210;
+@define-color sidebar_fg_color #f2e5d5;
+@define-color card_bg_color #241a16;
+@define-color card_fg_color #f2e5d5;
+@define-color dialog_bg_color #1d1512;
+@define-color dialog_fg_color #f2e5d5;
+@define-color popover_bg_color #241a16;
+@define-color popover_fg_color #fff6eb;

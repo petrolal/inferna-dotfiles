@@ -56,10 +56,10 @@ def color(hex_val):
 
 
 A = color(accent_hex)
-C = color("#6fbdd0")
-F = color("#dce8e4")
-M = color("#6f8396")
-G = color("#8db598")
+C = color("#f2a949")
+F = color("#f2e5d5")
+M = color("#a69085")
+G = color("#6ea862")
 R = "\033[0m"
 B = "\033[1m"
 

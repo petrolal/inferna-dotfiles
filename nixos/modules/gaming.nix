@@ -1,5 +1,22 @@
 { pkgs, ... }:
 
+let
+  # Force TETR.IO Desktop to run via XWayland instead of native Ozone Wayland.
+  # Electron 45+ defaults to Wayland when WAYLAND_DISPLAY is set and ignores
+  # ELECTRON_OZONE_PLATFORM_HINT=x11, hitting `eglCreateImage failed with
+  # 0x00003004` (EGL_BAD_ATTRIBUTE) on hybrid Intel/NVIDIA graphics and looping
+  # `RasterDecoderImpl: Context lost` at 100% CPU with no visible window.
+  # Passing `--ozone-platform=x11` explicitly (and unsetting NIXOS_OZONE_WL so
+  # nixpkgs' inner wrapper does not inject Wayland flags) forces XWayland while
+  # keeping full GPU WebGL2 acceleration.
+  tetrioDesktop = pkgs.tetrio-desktop.overrideAttrs (old: {
+    postFixup = (old.postFixup or "") + ''
+      wrapProgram $out/bin/tetrio \
+        --unset NIXOS_OZONE_WL \
+        --add-flags "--ozone-platform=x11"
+    '';
+  });
+in
 {
   programs.steam = {
     enable = true;
@@ -20,6 +37,7 @@
     heroic
     lutris
     umu-launcher
+    tetrioDesktop
 
     # Core set confirmed to exist under pkgs.libretro; add more as needed.
     (retroarch.withCores (

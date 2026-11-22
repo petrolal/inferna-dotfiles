@@ -1,0 +1,47 @@
+/* ============================================================================
+ * Inferna — GTK3 Theme Overrides (pairs with adw-gtk3-dark)
+ * ============================================================================
+ * Symlinked to ~/.config/gtk-3.0/gtk.css by ./install.sh or `inferna-theme`.
+ * Close and reopen GTK3 apps to see changes.
+ *
+ * Palette derived from the Inferna NixOS sigil wallpaper:
+ *   Charred stone surfaces : #100c0a / #15100e / #1d1512 / #241a16
+ *   Molten flame accent    : #d9381e  (bright ember: #ff622e)
+ *   Candlelight rune gold  : #f2a949
+ *   Warm parchment text    : #f2e5d5  (ivory: #fff6eb)
+ */
+
+@define-color accent_bg_color #d9381e;
+@define-color accent_fg_color #fff6eb;
+@define-color accent_color #ff622e;
+
+@define-color destructive_bg_color #c8231a;
+@define-color destructive_fg_color #fff6eb;
+@define-color destructive_color #ff5442;
+
+@define-color warning_color #f2a949;
+@define-color success_color #6ea862;
+
+@define-color window_bg_color #15100e;
+@define-color window_fg_color #f2e5d5;
+
+@define-color view_bg_color #100c0a;
+@define-color view_fg_color #f2e5d5;
+
+@define-color headerbar_bg_color #1d1512;
+@define-color headerbar_fg_color #fff6eb;
+@define-color headerbar_border_color rgba(217, 56, 30, 0.28);
+@define-color headerbar_backdrop_color #15100e;
+
+@define-color sidebar_bg_color #181210;
+@define-color sidebar_fg_color #f2e5d5;
+@define-color sidebar_backdrop_color #120d0b;
+
+@define-color card_bg_color #241a16;
+@define-color card_fg_color #f2e5d5;
+
+@define-color dialog_bg_color #1d1512;
+@define-color dialog_fg_color #f2e5d5;
+
+@define-color popover_bg_color #241a16;
+@define-color popover_fg_color #fff6eb;

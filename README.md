@@ -17,9 +17,10 @@ A clean, stock-Adwaita GNOME workstation on NixOS with hardware/NVIDIA/gaming/de
 
 - **Pure GNOME + GDM ([`nixos/modules/gnome.nix`](nixos/modules/gnome.nix)):**
   - Complete default GNOME app suite (Nautilus, GNOME Console, Loupe, Papers, Showtime, Calculator, Text Editor, Calendar, Clocks, Weather, System Monitor, Disks, File Roller).
-  - Essential customization tools (`gnome-tweaks`, `gnome-extension-manager`, `dconf-editor`) and minimal utility extensions (`appindicator`, `clipboard-indicator`).
-  - Minimal, non-locking GSettings defaults (Nerd Font monospace, window buttons, clock weekday, battery percentage, touchpad gestures, centered windows) while keeping the default **Adwaita** theme untouched.
-- **Workstation Modules ([`nixos/modules/`](nixos/modules/)):** Graphics acceleration (OpenGL/Vulkan + 32-bit + Intel VA-API), NVIDIA PRIME offload, PipeWire audio, gaming (Steam, Lutris, Heroic, RetroArch), Docker/Kubernetes, Ollama CUDA, and per-project Nix devshells via `direnv`.
+  - Essential customization tools (`gnome-tweaks`, `gnome-extension-manager`, `dconf-editor`), `adw-gtk3`, and extensions (`appindicator`, `clipboard-indicator`, `user-themes`).
+  - Non-locking GSettings defaults (dark mode, flame orange accent, bundled default wallpaper in `nixos/assets/wallpapers/inferna.jpeg`, Nerd Font monospace, window buttons, clock weekday, battery percentage, touchpad gestures, centered windows).
+- **Editable GNOME Theme Base ([`gnome/`](gnome/)):** Ready-to-hack `Inferna` theme (`gtk-4.0/gtk.css`, `gtk-3.0/gtk.css`, `gnome-shell/gnome-shell.css`, `theme.env`) plus `inferna-theme` helper to apply, live-reload, switch, or reset themes.
+- **Workstation Modules ([`nixos/modules/`](nixos/modules/)):** Graphics acceleration (OpenGL/Vulkan + 32-bit + Intel VA-API), NVIDIA PRIME offload, PipeWire audio, gaming (Steam, Lutris, Heroic, RetroArch, TETR.IO), dev/IDEs (Neovim, Emacs, VS Code), Docker/Kubernetes, Ollama CUDA, and per-project Nix devshells via `direnv`.
 - **Standalone fastfetch Dashboard ([`fastfetch/`](fastfetch/)):** Live hardware, telemetry, GNOME desktop, and network cards.
 
 ## Install on NixOS
@@ -31,7 +32,7 @@ cd ~/inferna-dotfiles/nixos
 sudo nixos-rebuild switch --flake .#default
 ```
 
-### 2. Deploy User Dotfiles (`fastfetch`)
+### 2. Deploy User Dotfiles (`fastfetch`, `fish`, `gnome`)
 
 ```bash
 cd ~/inferna-dotfiles

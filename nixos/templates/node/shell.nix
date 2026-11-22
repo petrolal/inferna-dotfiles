@@ -2,11 +2,11 @@
 #
 # Enter with `nix-shell`, or automatically via direnv (`use nix` in .envrc).
 # Switch the Node.js major version without editing this file:
-#   nix-shell --argstr node 24
+#   nix-shell --argstr node 22
 # Available versions: anything nixpkgs ships as nodejs_NN (22, 24, 26, ...).
 
 { pkgs ? import <nixpkgs> { }
-, node ? "22"
+, node ? "24"
 , ...
 }:
 

@@ -1,0 +1,147 @@
+/* ============================================================================
+ * Inferna — GDM Login & Lock Screen Theme
+ * ============================================================================
+ * Appended into GNOME Shell's compiled gnome-shell-theme.gresource by
+ * nixos/modules/gnome.nix (when dotfiles.gdmTheme.enable = true).
+ *
+ * Scoped strictly to GDM login & lock screen selectors so the logged-in
+ * desktop remains cleanly controlled by ~/.themes/<Theme>/gnome-shell/gnome-shell.css.
+ *
+ * Palette (from nixos/assets/wallpapers/inferna.jpeg):
+ *   Charred stone  : #0d0908 / #15100e / #1d1512 / #241a16
+ *   Molten flame   : #d9381e (ember: #ff622e)
+ *   Rune ring gold : #f2a949
+ *   Parchment text : #f2e5d5 (ivory: #fff6eb, ash: #a69085)
+ */
+
+/* --- Wallpaper Background ------------------------------------------------ */
+#lockDialogGroup {
+  background-color: #0d0908;
+  background-image: url("resource:///org/gnome/shell/theme/inferna-gdm-wallpaper.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* --- Login & Lock Top Bar ------------------------------------------------ */
+#panel.login-screen,
+#panel.unlock-screen {
+  background-color: rgba(13, 9, 8, 0.72);
+  border-bottom: 1px solid rgba(217, 56, 30, 0.30);
+  color: #fff6eb;
+}
+
+#panel.login-screen .panel-button,
+#panel.unlock-screen .panel-button {
+  color: #f2e5d5;
+  border-radius: 99px;
+}
+
+#panel.login-screen .panel-button:hover,
+#panel.unlock-screen .panel-button:hover {
+  background-color: rgba(217, 56, 30, 0.28);
+  color: #fff6eb;
+}
+
+#panel.login-screen .panel-button:active,
+#panel.login-screen .panel-button:focus,
+#panel.login-screen .panel-button:checked,
+#panel.unlock-screen .panel-button:active,
+#panel.unlock-screen .panel-button:focus,
+#panel.unlock-screen .panel-button:checked {
+  background-color: rgba(217, 56, 30, 0.42);
+  color: #fff6eb;
+}
+
+/* --- Login Dialog & User List ------------------------------------------- */
+.login-dialog {
+  background-color: transparent;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item {
+  background-color: rgba(21, 16, 14, 0.80);
+  border: 1px solid rgba(242, 169, 73, 0.22);
+  border-radius: 16px;
+  color: #fff6eb;
+}
+
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:hover,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected {
+  background-color: rgba(36, 26, 22, 0.92);
+  border-color: rgba(217, 56, 30, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(242, 169, 73, 0.35);
+}
+
+.login-dialog-prompt-entry,
+.unlock-dialog .login-dialog-prompt-entry {
+  background-color: rgba(21, 16, 14, 0.88);
+  border: 1px solid rgba(242, 169, 73, 0.34);
+  border-radius: 99px;
+  color: #fff6eb;
+  selection-background-color: #d9381e;
+  selected-color: #fff6eb;
+}
+
+.login-dialog-prompt-entry:focus,
+.unlock-dialog .login-dialog-prompt-entry:focus {
+  border-color: #ff622e;
+  box-shadow: inset 0 0 0 1px #ff622e;
+}
+
+.login-dialog-button.next-button,
+.login-dialog-button.cancel-button,
+.login-dialog-button.switch-user-button,
+.login-dialog-button.login-dialog-session-list-button,
+.login-dialog-button.login-dialog-auth-menu-button,
+.login-dialog-button.a11y-button,
+.login-dialog .login-button {
+  background-color: rgba(29, 21, 18, 0.86);
+  border: 1px solid rgba(242, 169, 73, 0.24);
+  color: #fff6eb;
+}
+
+.login-dialog-button.next-button:hover,
+.login-dialog-button.cancel-button:hover,
+.login-dialog-button.switch-user-button:hover,
+.login-dialog-button.login-dialog-session-list-button:hover,
+.login-dialog-button.login-dialog-auth-menu-button:hover,
+.login-dialog-button.a11y-button:hover,
+.login-dialog .login-button:hover {
+  background-color: rgba(217, 56, 30, 0.36);
+  border-color: rgba(255, 98, 46, 0.55);
+}
+
+.login-dialog-button.next-button:focus,
+.login-dialog .login-button:focus {
+  background-color: rgba(217, 56, 30, 0.50);
+  border-color: #f2a949;
+}
+
+.login-dialog-not-listed-button {
+  background-color: rgba(21, 16, 14, 0.72);
+  border-radius: 99px;
+  color: #f2e5d5;
+}
+
+.login-dialog-not-listed-button:hover,
+.login-dialog-not-listed-button:focus {
+  background-color: rgba(217, 56, 30, 0.30);
+  color: #fff6eb;
+}
+
+/* --- Lock Screen Clock --------------------------------------------------- */
+.unlock-dialog-clock {
+  color: #fff6eb;
+  text-shadow: 0 2px 12px rgba(13, 9, 8, 0.85);
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-date {
+  color: #f2e5d5;
+}
+
+.unlock-dialog-clock .unlock-dialog-clock-hint {
+  background-color: rgba(21, 16, 14, 0.70);
+  border: 1px solid rgba(242, 169, 73, 0.25);
+  color: #f2e5d5;
+}

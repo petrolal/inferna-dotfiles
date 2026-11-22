@@ -1,0 +1,8 @@
+# Personal / machine-local Fish configuration.
+# Sourced at the end of ~/.config/fish/config.fish.
+# This file is NOT tracked in git and is never overwritten by ./install.sh.
+#
+# Examples:
+#   fish_add_path --path "$HOME/go/bin"
+#   alias ll "ls -lah"
+#   set -gx EDITOR nvim
