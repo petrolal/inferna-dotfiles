@@ -416,11 +416,11 @@ vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
     float wispAlpha = smoothstep(0.06, 0.28, T) * 0.42;
     float density = max(coreAlpha, wispAlpha);
 
-    //    Smooth fade at frame edges (bottom cools to crimson before fading so zero grey/cream edge!)
-    float bottomCool = smoothstep(-1.34, -0.96, uv.y);
-    float frameFade = smoothstep(-1.34, -1.06, uv.y)
-                    * smoothstep(1.32, 0.95, abs(uv.x))
-                    * smoothstep(1.30, 0.92, uv.y);
+    //    Smooth fade strictly to 0.0 well inside the [-1.325..+1.325] UV bounds (zero square border!)
+    float bottomCool = smoothstep(-1.26, -0.92, uv.y);
+    float frameFade = smoothstep(-1.26, -0.96, uv.y)
+                    * smoothstep(1.26, 0.90, abs(uv.x))
+                    * smoothstep(1.26, 0.90, uv.y);
     density = clamp(density * frameFade, 0.0, 0.96);
 
     // 4) Rich hellfire color temperature (mostly deep crimson & vivid fiery orange;
@@ -471,8 +471,8 @@ vec4 evalCleanBottomFire(vec2 uv, float loopPhase) {
                 d.x *= 2.35;
                 d.y *= 0.82;
                 float glow = smoothstep(0.20, 0.015, length(d)) * sw;
-                float sFade = smoothstep(1.30, 0.96, abs(uv.x))
-                            * smoothstep(1.30, 0.96, abs(uv.y));
+                float sFade = smoothstep(1.25, 0.92, abs(uv.x))
+                            * smoothstep(1.25, 0.92, abs(uv.y));
                 glow *= sFade;
                 vec3 sc = mix(vec3(1.00, 0.24, 0.02), vec3(1.00, 0.56, 0.08), fract(h * 91.7));
                 sparkCol += sc * glow * 1.25;

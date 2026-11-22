@@ -1,9 +1,9 @@
 # Inferna 3D Plymouth Theme
 # Displays the seamless 360-deg spinning 3D Inferna forged-iron ring in hellfire
-# over an obsidian #0d0908 canvas, with a subtle ember progress bar & LUKS prompt.
+# as transparent RGBA sprites over a pure black #000000 canvas (zero visible box edge!).
 
-Window.SetBackgroundTopColor(0.051, 0.035, 0.031);
-Window.SetBackgroundBottomColor(0.051, 0.035, 0.031);
+Window.SetBackgroundTopColor(0.0, 0.0, 0.0);
+Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
 
 screen_w = Window.GetWidth();
 screen_h = Window.GetHeight();

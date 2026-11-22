@@ -222,9 +222,8 @@ static void png_write_chunk(FILE *f, const char tag[4], const uint8_t *data, uin
     png_write_u32_be(f, (uint32_t)crc);
 }
 
-static bool write_png_rgb_bg(const char *path, const uint8_t *rgba, int w, int h,
-                             uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) {
-    size_t row_stride = (size_t)w * 3 + 1;
+static bool write_png_rgba(const char *path, const uint8_t *rgba, int w, int h) {
+    size_t row_stride = (size_t)w * 4 + 1;
     size_t raw_sz = row_stride * (size_t)h;
     uint8_t *raw = malloc(raw_sz);
     uLongf zcap = compressBound((uLong)raw_sz);
@@ -239,14 +238,7 @@ static bool write_png_rgb_bg(const char *path, const uint8_t *rgba, int w, int h
         uint8_t *dst = raw + (size_t)y * row_stride;
         dst[0] = 0; // PNG filter: None
         const uint8_t *src_row = rgba + (size_t)(h - 1 - y) * (size_t)w * 4;
-        for (int x = 0; x < w; x++) {
-            const uint8_t *p = src_row + (size_t)x * 4;
-            float a = p[3] / 255.0f;
-            float ia = 1.0f - a;
-            dst[1 + x * 3 + 0] = (uint8_t)(p[0] * a + bg_r * ia + 0.5f);
-            dst[1 + x * 3 + 1] = (uint8_t)(p[1] * a + bg_g * ia + 0.5f);
-            dst[1 + x * 3 + 2] = (uint8_t)(p[2] * a + bg_b * ia + 0.5f);
-        }
+        memcpy(dst + 1, src_row, (size_t)w * 4);
     }
 
     uLongf zlen = zcap;
@@ -271,7 +263,7 @@ static bool write_png_rgb_bg(const char *path, const uint8_t *rgba, int w, int h
         (uint8_t)((w >>  8) & 0xFF), (uint8_t)(w & 0xFF),
         (uint8_t)((h >> 24) & 0xFF), (uint8_t)((h >> 16) & 0xFF),
         (uint8_t)((h >>  8) & 0xFF), (uint8_t)(h & 0xFF),
-        8, 2, 0, 0, 0 // 8-bit RGB
+        8, 6, 0, 0, 0 // 8-bit RGBA (true transparency, zero visible square edge!)
     };
     png_write_chunk(f, "IHDR", ihdr, 13);
     png_write_chunk(f, "IDAT", zbuf, (uint32_t)zlen);
@@ -690,7 +682,7 @@ int main(int argc, char **argv) {
             glReadPixels(0, 0, px_w, px_h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
             snprintf(out_file, sizeof(out_file), "%s/frame-%03d.png", png_seq_dir, k);
-            if (!write_png_rgb_bg(out_file, pixels, px_w, px_h, 13, 9, 8)) {
+            if (!write_png_rgba(out_file, pixels, px_w, px_h)) {
                 fprintf(stderr, "inferna-ring: failed to write '%s'\n", out_file);
                 return 1;
             }
