@@ -1,6 +1,13 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  cfg = config.dotfiles.gaming;
+
   # Force TETR.IO Desktop to run via XWayland instead of native Ozone Wayland.
   # Electron 45+ defaults to Wayland when WAYLAND_DISPLAY is set and ignores
   # ELECTRON_OZONE_PLATFORM_HINT=x11, hitting `eglCreateImage failed with
@@ -18,49 +25,56 @@ let
   });
 in
 {
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    gamescopeSession.enable = true;
+  options.dotfiles.gaming.enable = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Enable Steam, GameMode, Heroic, Lutris, RetroArch, TETR.IO, and xpadneo.";
   };
 
-  # GameMode CPU governor & process priority optimizations for games
-  # (paired with gnomeExtensions.gamemode-shell-extension in gnome.nix).
-  programs.gamemode.enable = true;
+  config = lib.mkIf cfg.enable {
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      gamescopeSession.enable = true;
+    };
 
-  # 32-bit Vulkan/NVIDIA userspace for Steam/Lutris/Heroic/umu-launcher is
-  # already declared unconditionally in hardware.nix
-  # (hardware.graphics.enable32Bit) -- nothing to add here.
+    # GameMode CPU governor & process priority optimizations for games
+    # (paired with gnomeExtensions.gamemode-shell-extension in gnome.nix).
+    programs.gamemode.enable = true;
 
-  # xpadneo loads as a proper kernel module built against the running
-  # kernel and blacklists the stock xpad driver itself -- no DKMS, no manual
-  # modprobe/usermod dance.
-  hardware.xpadneo.enable = true;
+    # 32-bit Vulkan/NVIDIA userspace for Steam/Lutris/Heroic/umu-launcher is
+    # already declared in hardware.nix (hardware.graphics.enable32Bit).
 
-  environment.systemPackages = with pkgs; [
-    heroic
-    lutris
-    umu-launcher
-    tetrioDesktop
+    # xpadneo loads as a proper kernel module built against the running
+    # kernel and blacklists the stock xpad driver itself -- no DKMS, no manual
+    # modprobe/usermod dance.
+    hardware.xpadneo.enable = true;
 
-    # Core set confirmed to exist under pkgs.libretro; add more as needed.
-    (retroarch.withCores (
-      cores: with cores; [
-        mgba
-        snes9x
-        genesis-plus-gx
-        beetle-psx
-        beetle-pce-fast
-        bsnes
-        mupen64plus
-        dolphin
-        flycast
-        mesen
-        picodrive
-        ppsspp
-        scummvm
-        fbneo
-      ]
-    ))
-  ];
+    environment.systemPackages = with pkgs; [
+      heroic
+      lutris
+      umu-launcher
+      tetrioDesktop
+
+      # Core set confirmed to exist under pkgs.libretro; add more as needed.
+      (retroarch.withCores (
+        cores: with cores; [
+          mgba
+          snes9x
+          genesis-plus-gx
+          beetle-psx
+          beetle-pce-fast
+          bsnes
+          mupen64plus
+          dolphin
+          flycast
+          mesen
+          picodrive
+          ppsspp
+          scummvm
+          fbneo
+        ]
+      ))
+    ];
+  };
 }

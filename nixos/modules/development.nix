@@ -1,9 +1,16 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 # Per-project toolchains the Nix way: each project carries a shell.nix and
 # direnv loads it on `cd`. Replaces version managers such as SDKMAN!, nvm,
 # pyenv and gvm.
 let
+  cfg = config.dotfiles.development;
+
   jvmTemplate = ../templates/jvm;
   nodeTemplate = ../templates/node;
   goTemplate = ../templates/go;
@@ -12,10 +19,15 @@ let
 
   # mkLangInit --- single-language variant of dev-init below: drops that
   # language's shell.nix + .envrc into the current directory, pinned to
-  # VERSION (default: `default`), and allows it in direnv. Generates the
-  # jvm-init/node-init/go-init/python-init commands, which used to be four
-  # hand-copied scripts differing only in these four values.
-  mkLangInit = { name, attr, label, default, template }:
+  # VERSION (default: `default`), and allows it in direnv.
+  mkLangInit =
+    {
+      name,
+      attr,
+      label,
+      default,
+      template,
+    }:
     pkgs.writeShellScriptBin name ''
       set -eu
       version="''${1:-${default}}"
@@ -32,8 +44,6 @@ let
       echo "${name}: ${label} $version environment created; it loads on cd."
     '';
 
-  # jvm-init [VERSION] --- drop the JVM shell.nix + .envrc into the current
-  # directory, pinned to JDK VERSION (default 25), and allow it in direnv.
   jvm-init = mkLangInit {
     name = "jvm-init";
     attr = "java";
@@ -42,9 +52,6 @@ let
     template = jvmTemplate;
   };
 
-  # node-init [VERSION] --- drop the Node.js shell.nix + .envrc into the
-  # current directory, pinned to Node.js VERSION (default 24), and allow it in
-  # direnv.
   node-init = mkLangInit {
     name = "node-init";
     attr = "node";
@@ -53,8 +60,6 @@ let
     template = nodeTemplate;
   };
 
-  # go-init [VERSION] --- drop the Go shell.nix + .envrc into the current
-  # directory, pinned to Go VERSION (default 1.26), and allow it in direnv.
   go-init = mkLangInit {
     name = "go-init";
     attr = "go";
@@ -63,9 +68,6 @@ let
     template = goTemplate;
   };
 
-  # python-init [VERSION] --- drop the Python shell.nix + .envrc into the
-  # current directory, pinned to Python VERSION (default 3.13), and allow it
-  # in direnv.
   python-init = mkLangInit {
     name = "python-init";
     attr = "python";
@@ -74,10 +76,6 @@ let
     template = pythonTemplate;
   };
 
-  # dev-init [LANG...] --- compose a multi-language environment in the current
-  # directory: copies each LANG template (default: all of them) into
-  # nix/<LANG>/shell.nix, writes a shell.nix that merges everything under nix/,
-  # and allows it in direnv. Versions are the defaults in each nix/<LANG>/shell.nix.
   dev-init = pkgs.writeShellScriptBin "dev-init" ''
     set -eu
     available=$(cd ${templates} && for d in */; do
@@ -107,10 +105,6 @@ let
     echo "dev-init: environment with" $langs "created; it loads on cd."
   '';
 
-  # devshell [--argstr NAME VERSION ...] --- enter the shell with every
-  # template from any directory. venv, GOPATH and npm -g live in
-  # ~/.local/share/devshell instead of the current directory.
-  # Drops into fish (or $SHELL) interactively so users keep their chosen shell.
   devshell = pkgs.writeShellScriptBin "devshell" ''
     export DEV_STATE_DIR="''${XDG_DATA_HOME:-$HOME/.local/share}/devshell"
     mkdir -p "$DEV_STATE_DIR"
@@ -118,10 +112,6 @@ let
     exec nix-shell ${templates}/full/shell.nix "$@" --command "exec $user_shell"
   '';
 
-  # General-purpose JVM build tooling, independent of any specific IDE or
-  # project template above. Pinned to pkgs.jdk21, the one global JDK this
-  # system exposes (see packages.nix's nvimTools) -- not to a project's own
-  # `jvm-init <version>` pin.
   buildTools = [
     (pkgs.gradle.override { java = pkgs.jdk21; })
     (pkgs.maven.override { jdk_headless = pkgs.jdk21; })
@@ -130,32 +120,40 @@ let
   ];
 in
 {
-  # `<nixpkgs>` resolves through the flake registry (pinned to this system's
-  # nixpkgs), so nix-shell needs flakes enabled.
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-  # Hooks into fish, bash, and zsh automatically; nix-direnv is enabled by default
-  # and provides `use nix` with caching.
-  programs.direnv.enable = true;
-
-  # GnuPG + agent for signing Maven Central artifacts (and the GPG key export
-  # in github-repo-manager's scripts/get_gpg_key.sh). GNOME pinentry integrates
-  # with gnome-keyring and matches the native GTK/Wayland session.
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-gnome3;
+  options.dotfiles.development.enable = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Enable direnv, GnuPG agent, dev-init/devshell templates, and JVM build tools.";
   };
 
-  environment.systemPackages = [
-    jvm-init
-    node-init
-    go-init
-    python-init
-    dev-init
-    devshell
-  ]
-  ++ buildTools;
+  config = lib.mkMerge [
+    {
+      # Flakes and nix-command are always required by Inferna itself.
+      nix.settings.experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    }
+
+    (lib.mkIf cfg.enable {
+      # Hooks into fish, bash, and zsh automatically; nix-direnv is enabled by default
+      # and provides `use nix` with caching.
+      programs.direnv.enable = true;
+
+      # GnuPG + agent with native GNOME pinentry.
+      programs.gnupg.agent = {
+        enable = true;
+        pinentryPackage = pkgs.pinentry-gnome3;
+      };
+
+      environment.systemPackages = [
+        jvm-init
+        node-init
+        go-init
+        python-init
+        dev-init
+        devshell
+      ] ++ buildTools;
+    })
+  ];
 }

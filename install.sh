@@ -149,6 +149,13 @@ else
   echo "Keeping existing personal Fish config at $user_fish"
 fi
 
+# Mark first-login setup complete when applied inside an active GNOME D-Bus session.
+if [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+  state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inferna"
+  mkdir -p "$state_dir"
+  date -Is > "$state_dir/initialized"
+fi
+
 cat <<EOF
 
 Done. Backups of anything replaced are in:

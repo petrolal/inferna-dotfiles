@@ -5,9 +5,15 @@ import GObject from 'gi://GObject';
 import St from 'gi://St';
 
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+
+const SHELL_VERSION = Number.parseInt(Config.PACKAGE_VERSION.split('.')[0], 10);
+const VERTICAL_BOX = SHELL_VERSION >= 51
+    ? {orientation: Clutter.Orientation.VERTICAL}
+    : {vertical: true};
 
 const USAGE_FILE_PATH = GLib.build_filenamev([
     GLib.get_home_dir(),
@@ -34,6 +40,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
 
         this._extensionPath = extensionPath;
         this._collecting = false;
+        this._destroyed = false;
         this._timeoutId = 0;
         this._fileMonitor = null;
         this._monitorChangedId = 0;
@@ -70,7 +77,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
             can_focus: false,
         });
         this._popupBox = new St.BoxLayout({
-            vertical: true,
+            ...VERTICAL_BOX,
             style_class: 'inferna-ai-popup',
             x_expand: true,
         });
@@ -116,7 +123,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
                 }
             });
         } catch (e) {
-            logError(e, 'Inferna AI Telemetry: failed to watch usage.json');
+            console.error('Inferna AI Telemetry: failed to watch usage.json', e);
         }
     }
 
@@ -136,11 +143,12 @@ class InfernaAiIndicator extends PanelMenu.Button {
                     // ignore non-fatal collector failure
                 }
                 this._collecting = false;
-                this._loadFromDisk();
+                if (!this._destroyed)
+                    this._loadFromDisk();
             });
         } catch (e) {
             this._collecting = false;
-            logError(e, 'Inferna AI Telemetry: failed to launch inferna-ai-usage');
+            console.error('Inferna AI Telemetry: failed to launch inferna-ai-usage', e);
             this._updateRefreshButtonState();
         }
     }
@@ -154,7 +162,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
             if (ok && argv.length > 0)
                 Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE);
         } catch (e) {
-            logError(e, `Inferna AI Telemetry: failed to launch '${cmd}'`);
+            console.error(`Inferna AI Telemetry: failed to launch '${cmd}'`, e);
         }
     }
 
@@ -212,7 +220,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
         });
 
         const titleCol = new St.BoxLayout({
-            vertical: true,
+            ...VERTICAL_BOX,
             x_expand: true,
         });
         titleCol.add_child(new St.Label({
@@ -254,7 +262,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
 
         for (const ag of agents) {
             const card = new St.BoxLayout({
-                vertical: true,
+                ...VERTICAL_BOX,
                 style_class: 'inferna-ai-card',
                 x_expand: true,
             });
@@ -303,7 +311,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
                 const suffix = levelSuffix(pct);
 
                 const row = new St.BoxLayout({
-                    vertical: true,
+                    ...VERTICAL_BOX,
                     style_class: 'inferna-ai-limit-row',
                     x_expand: true,
                 });
@@ -370,6 +378,7 @@ class InfernaAiIndicator extends PanelMenu.Button {
     }
 
     destroy() {
+        this._destroyed = true;
         if (this._startupId) {
             GLib.Source.remove(this._startupId);
             this._startupId = 0;

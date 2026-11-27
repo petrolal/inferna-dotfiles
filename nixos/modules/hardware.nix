@@ -6,85 +6,135 @@
 }:
 
 let
-  # hardware-configuration.nix is inherently per-machine (disk UUIDs, fs
-  # types, controller modules) and must never be treated as portable
-  # dotfiles content. /etc/nixos/hardware-configuration.nix is the one
-  # nixos-generate-config just wrote for *this* disk at install time, so it
-  # has to win whenever it exists -- which is every real install, since
-  # bootstrap.sh runs after that file is already there. The repo's checked-in
-  # copy is only a fallback for evaluating/building this flake somewhere
-  # without a real /etc/nixos (e.g. `nix build --impure` from a plain clone),
-  # and goes stale the moment the repo is reused on different hardware or the
-  # disk gets repartitioned -- see the 2026-10-12 boot-hang incident, caused
-  # by this fallback silently taking priority over a freshly reinstalled
-  # machine's real, correct hardware-configuration.nix.
-  etcHardware = /etc/nixos/hardware-configuration.nix;
-  localHardware = ../hardware-configuration.nix;
+  gpuVendor = config.dotfiles.gpu.vendor;
+  isIntel = lib.elem gpuVendor [
+    "intel"
+    "hybrid-intel-nvidia"
+  ];
+  bootloader = config.dotfiles.bootloader;
+
+  infernaRebuild = pkgs.writeShellScriptBin "inferna-rebuild" ''
+    set -euo pipefail
+    flake_path="${config.dotfiles.flakePath}"
+    if [[ -f "$flake_path/flake.nix" ]] && grep -q 'inferna' "$flake_path/flake.nix"; then
+      echo "Updating local inferna flake input lock in $flake_path..."
+      sudo nix flake update inferna --flake "$flake_path"
+    fi
+    exec nh os switch "$flake_path" "$@"
+  '';
 in
 {
-  imports = [
-    (if builtins.pathExists etcHardware then etcHardware else localHardware)
-  ];
-
-  boot.loader.systemd-boot.enable = true;
-
-  # Keep the boot menu short: only the 5 most recent generations.
-  boot.loader.systemd-boot.configurationLimit = 5;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # Firmware
-  hardware.enableRedistributableFirmware = true;
-  hardware.enableAllFirmware = true;
-  nixpkgs.config.allowUnfree = true;
-
-  # Device firmware updates (fwupdmgr)
-  services.fwupd.enable = true;
-
-  # Restrict CUDA builds (e.g. ollama-cuda) to this machine's actual GPU
-  # (RTX 4050 Laptop, compute capability 8.9 per `nvidia-smi --query-gpu=compute_cap`).
-  # Without this, cudaPackages.flags.realArches falls back to a ~9-architecture
-  # default list, so llama.cpp's CUDA backend gets compiled once per
-  # architecture -- turning a few-minute build into a build that looks stuck
-  # for an hour or more.
-  nixpkgs.config.cudaCapabilities = [ "8.9" ];
-
-  # WebHID / QMK / VIA keyboard configurators (e.g. qmk.top, usevia.app)
-  services.udev.extraRules = ''
-    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
-  '';
-  hardware.keyboard.qmk.enable = true;
-
-  # Graphics acceleration (OpenGL/Vulkan, 32-bit for gaming, Intel VA-API)
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      libvdpau-va-gl
-    ];
-  };
-
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-
-  # Performance, thermal & storage health
-  zramSwap.enable = true;
-  services.fstrim.enable = true;
-  services.thermald.enable = true;
-  services.earlyoom = {
-    enable = true;
-    freeMemThreshold = 5;
-  };
-
-  # Nix store optimization + nh (prettier rebuilds/diffs & weekly GC)
-  nix.settings.auto-optimise-store = true;
-  programs.nh = {
-    enable = true;
-    flake = "${config.dotfiles.repoPath}/nixos";
-    clean = {
-      enable = true;
-      extraArgs = "--keep-since 14d --keep 5";
+  options.dotfiles = {
+    bootloader = lib.mkOption {
+      type = lib.types.enum [
+        "systemd-boot"
+        "grub"
+        "none"
+      ];
+      default = "systemd-boot";
+      description = "Bootloader managed by Inferna (systemd-boot for UEFI, grub for BIOS, none for custom/VM).";
     };
+
+    grubDevice = lib.mkOption {
+      type = lib.types.str;
+      default = "nodev";
+      description = "GRUB target device when dotfiles.bootloader = \"grub\" (e.g. /dev/sda or nodev).";
+    };
+
+    gpu.vendor = lib.mkOption {
+      type = lib.types.enum [
+        "intel"
+        "amd"
+        "nvidia"
+        "hybrid-intel-nvidia"
+        "hybrid-amd-nvidia"
+        "vm"
+        "generic"
+      ];
+      default = "generic";
+      description = "Primary GPU topology detected for this machine.";
+    };
+
+    flakePath = lib.mkOption {
+      type = lib.types.str;
+      default = "/etc/nixos";
+      description = "Flake directory used by `nh os switch` and `inferna-rebuild`.";
+    };
+  };
+
+  config = {
+    # Bootloader (UEFI systemd-boot by default, BIOS GRUB fallback, or disabled)
+    boot.loader = lib.mkMerge [
+      (lib.mkIf (bootloader == "systemd-boot") {
+        systemd-boot = {
+          enable = lib.mkDefault true;
+          configurationLimit = lib.mkDefault 5;
+        };
+        efi.canTouchEfiVariables = lib.mkDefault true;
+      })
+      (lib.mkIf (bootloader == "grub") {
+        grub = {
+          enable = lib.mkDefault true;
+          device = lib.mkDefault config.dotfiles.grubDevice;
+          configurationLimit = lib.mkDefault 5;
+        };
+      })
+    ];
+
+    # Firmware
+    hardware.enableRedistributableFirmware = true;
+    hardware.enableAllFirmware = true;
+    nixpkgs.config.allowUnfree = true;
+
+    # Device firmware updates (fwupdmgr)
+    services.fwupd.enable = lib.mkIf (gpuVendor != "vm") (lib.mkDefault true);
+
+    # WebHID / QMK / VIA keyboard configurators (e.g. qmk.top, usevia.app)
+    services.udev.extraRules = ''
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
+    '';
+    hardware.keyboard.qmk.enable = true;
+
+    # Graphics acceleration (OpenGL/Vulkan, 32-bit for gaming, Intel VA-API when present)
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = lib.mkDefault true;
+      extraPackages = lib.optionals isIntel (
+        with pkgs;
+        [
+          intel-media-driver
+          libvdpau-va-gl
+        ]
+      );
+    };
+
+    # Bluetooth (GNOME enables hardware.bluetooth.enable with mkDefault true;
+    # avoid a mkDefault conflict on VMs by only disabling powerOnBoot there).
+    hardware.bluetooth = {
+      enable = lib.mkDefault true;
+      powerOnBoot = lib.mkDefault (gpuVendor != "vm");
+    };
+
+    # Performance, thermal & storage health
+    zramSwap.enable = true;
+    services.fstrim.enable = true;
+    services.thermald.enable = lib.mkDefault isIntel;
+    services.earlyoom = {
+      enable = true;
+      freeMemThreshold = 5;
+    };
+
+    # Nix store optimization + nh (prettier rebuilds/diffs & weekly GC)
+    nix.settings.auto-optimise-store = true;
+    programs.nh = {
+      enable = true;
+      flake = config.dotfiles.flakePath;
+      clean = {
+        enable = true;
+        extraArgs = "--keep-since 14d --keep 5";
+      };
+    };
+
+    environment.systemPackages = [ infernaRebuild ];
   };
 }

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   username = config.dotfiles.username;
@@ -21,13 +26,21 @@ in
       default = "/home/${username}/inferna-dotfiles";
       description = "Absolute path to this dotfiles checkout (INFERNA_DOTFILES).";
     };
+    wheelNeedsPassword = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether members of the wheel group must enter a password for sudo.";
+    };
   };
 
   config = {
     users.users.${username} = {
       isNormalUser = true;
       description = userDesc;
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ] ++ lib.optional config.dotfiles.containers.enable "docker";
       shell = pkgs.fish;
     };
 
@@ -37,10 +50,9 @@ in
     # fish/ (deployed to ~/.config/fish/ by ./install.sh).
     programs.fish.enable = true;
 
-    # Allow wheel group to run sudo without password prompts
-    security.sudo.wheelNeedsPassword = false;
+    security.sudo.wheelNeedsPassword = config.dotfiles.wheelNeedsPassword;
 
-    # Remove firefox installation
-    programs.firefox.enable = false;
+    # Keep Firefox available as a fallback browser when dailyApps (Google Chrome) is disabled.
+    programs.firefox.enable = lib.mkDefault (!config.dotfiles.packages.dailyApps.enable);
   };
 }

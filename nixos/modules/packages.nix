@@ -1,9 +1,15 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  cfg = config.dotfiles.packages;
+
   # libx11/libGL also appear in nix-ld.nix's `programs.nix-ld.libraries`
-  # (nix-ld needs its own copy of the option's value, so that overlap is
-  # inherent, not a leftover to merge away) -- here they're genuine
+  # (nix-ld needs its own copy of the option's value) -- here they're genuine
   # environment.systemPackages entries appimage-run and other unpatched
   # binaries can dlopen directly.
   dynamicLibs = with pkgs; [
@@ -15,20 +21,22 @@ let
     libkrb5
   ];
 
-  buildTools = with pkgs; [
-    gnumake
-    cmake
-    ninja
-    pkg-config
-    git
-    gcc  # C compiler for Tree-sitter parsers & telescope-fzf-native (TetraVim/nvim)
-    gdb  # GNU Debugger for Qt Creator, C/C++ development
-    graalvmPackages.graalvm-ce
-  ] ++ dynamicLibs;
+  buildTools =
+    with pkgs;
+    [
+      gnumake
+      cmake
+      ninja
+      pkg-config
+      gcc # C compiler for Tree-sitter parsers & telescope-fzf-native (TetraVim/nvim)
+      gdb # GNU Debugger for Qt Creator, C/C++ development
+      graalvmPackages.graalvm-ce
+    ]
+    ++ dynamicLibs;
 
   mediaTools = with pkgs; [
     mpv
-    mangohud  # FPS/frametime/GPU overlay
+    mangohud # FPS/frametime/GPU overlay
   ];
 
   devTools = with pkgs; [
@@ -36,96 +44,65 @@ let
     neovim
     vscode
     claude-code
+    claude-desktop # Official Claude Desktop (incl. Claude Code GUI) via claude-desktop flake overlay
     bruno
   ];
 
-  # Fast search, used by Hell Emacs' consult-ripgrep/consult-find (C-c s p / C-c s f)
-  # and by TetraVim's (~/TetraVim, symlinked to ~/.config/nvim) Telescope/Snacks
-  # picker and live grep.
   searchTools = with pkgs; [
     ripgrep
     fd
   ];
 
-  # TetraVim (~/TetraVim) requirements not already covered above: Neovim itself,
-  # ripgrep/fd (searchTools), gcc/make (buildTools), git, docker/kubectl
-  # (containers.nix) and Nerd Fonts (fonts.nix) are provided by other
-  # modules. These cover the rest.
   nvimTools = with pkgs; [
-    jdk21       # Java LSP/tooling; also the global JDK development.nix pins
-                # its JVM buildTools (gradle/maven) to
-    lazygit     # Git TUI modal (<leader>gg)
-    grpcurl     # gRPC interactive client (<leader>ag)
+    jdk21
+    lazygit
+    grpcurl
     grpcui
-    osv-scanner # dependency CVE vulnerability audits (<leader>xv)
-
-    # core/devops.lua shells out to these directly -- not Mason-installable
-    # (they're plain CLIs, not LSPs/linters mason-registry packages).
-    tflint       # <leader>otl terraform lint
-    trivy        # <leader>ots terraform security scan (preferred over tfsec)
-    awscli2      # cloudformation validate fallback when cfn-lint is absent
-    aws-sam-cli  # <leader>oc* sam build/local invoke/start-api
-    lazydocker   # <leader>od docker dashboard / editor-snacks.lua terminal
-
-    # jq: health/clients.lua HTTP client tool (<leader>ahj response filtering)
+    osv-scanner
+    tflint
+    trivy
+    awscli2
+    aws-sam-cli
+    lazydocker
     jq
-
-    # bootstrap.sh currently npm/go-installs these on first run; declaring
-    # them here means a fresh machine has them without that imperative step.
-    stylua             # Lua formatter (tools-formatting.lua), npm fallback in bootstrap.sh
-    yamlfmt            # YAML formatter (conform.nvim), go-installed in bootstrap.sh
-    mermaid-cli         # `mmdc`, Snacks.image Mermaid rendering, npm-installed in bootstrap.sh
-    sonar-scanner-cli   # `sonar-scanner`, <leader>xsp whole-codebase scan, npm-installed in bootstrap.sh
+    stylua
+    yamlfmt
+    mermaid-cli
+    sonar-scanner-cli
   ];
 
-  # Runtimes mason-tool-installer.nvim's own installers shell out to.
-  # development.nix deliberately keeps node/python/go out of
-  # environment.systemPackages (per-project only, via direnv) -- but Mason
-  # isn't a project, it's the editor's own package manager, so most of
-  # lua/TetraVim/plugins/tools-mason.lua's ensure_installed list (npm
-  # installs for typescript-language-server, eslint-lsp, the Vue/Svelte/
-  # Astro/Angular/html/css/json/yaml servers, prettier, tree-sitter-cli,
-  # ...; pip/venv installs for basedpyright, ruff, ansible-lint, cfn-lint,
-  # yamllint, djlint) silently no-ops without these on $PATH -- bootstrap.sh
-  # prints "node/python3/go not found -- skipping ..." and moves on instead
-  # of failing loudly. go covers bootstrap.sh's `go install` fallbacks
-  # (yamlfmt, shfmt, grpcurl/osv-scanner before nvimTools above wins on
-  # $PATH anyway); most other Go/Rust Mason packages fetch prebuilt release
-  # binaries and don't need a local toolchain.
   nvimRuntimes = with pkgs; [
     nodejs_24 # includes npm/npx
-    python3   # includes pip/venv
+    python3 # includes pip/venv
     go
     pnpm
   ];
 
-  # Language servers, linters and CLIs that Hell Emacs' modules (:lang glsl,
-  # :lang nix, :lang sh, :lang terraform, :lang sql, :lang protobuf, :lang org)
-  # shell out to but don't install themselves.
   languageTools = with pkgs; [
-    nixd            # Nix language server
-    glslls          # GLSL language server
-    glslang         # glslangValidator
-    shaderc         # glslc
-    shellcheck      # shell script diagnostics
+    nixd
+    glslls
+    glslang
+    shaderc
+    shellcheck
     terraform
     terraform-ls
-    protobuf        # protoc
-    postgresql      # psql client
-    pandoc          # extended Org exports
-    google-cloud-sdk # gcloud/gsutil/bq CLIs
+    protobuf
+    postgresql
+    pandoc
+    google-cloud-sdk
   ];
 
-
+  # Always installed as part of the core Inferna rice experience.
   systemTools = with pkgs; [
+    git
     pciutils
     htop
-    btop         # Resource monitor TUI with Inferna theme (CPU/RAM/Net/GPU)
-    eza          # Modern ls with Nerd Font icons & git status
-    bat          # Syntax-highlighted cat inheriting Ghostty Inferna palette
-    zoxide       # Smart directory jumper (z)
-    yazi         # Blazing-fast TUI file manager with Kitty image previews
-    cava         # Audio visualizer with Inferna fire gradient
+    btop # Resource monitor TUI with Inferna theme (CPU/RAM/Net/GPU)
+    eza # Modern ls with Nerd Font icons & git status
+    bat # Syntax-highlighted cat inheriting Ghostty Inferna palette
+    zoxide # Smart directory jumper (z)
+    yazi # Blazing-fast TUI file manager with Kitty image previews
+    cava # Audio visualizer with Inferna fire gradient
     fastfetch
     curl
     wget
@@ -135,8 +112,8 @@ let
     less
     rlwrap
     wl-clipboard
-    fzf          # Fuzzy finder CLI
-    starship     # Minimal, fast shell prompt (configured in starship/starship.toml)
+    fzf # Fuzzy finder CLI
+    starship # Minimal, fast shell prompt (configured in starship/starship.toml)
     (callPackage ../pkgs/inferna-ring { }) # Real-time OpenGL/GLSL 3D Inferna NixOS ring renderer
   ];
 
@@ -146,48 +123,59 @@ let
     spotify
   ];
 
-  # 3D modeling, animation, mesh processing, and viewing tools.
   threeDTools = with pkgs; [
     blender
-    blockbench  # low-poly 3D model editor & animator
-    f3d         # fast, lightweight 3D viewer (glTF, OBJ, FBX, STL, etc.)
-    meshlab     # 3D mesh inspection, cleaning, and processing
-    qtcreator   # IDE for editing QML with graphical form and kit inspection
-    qt6.qtdeclarative   # Provides qml and qmlscene CLI binaries for direct previewing
-    qt6.qtquick3d       # Provides Qt Quick 3D engine, QML plugins, and balsam CLI tool
-    qt6.qtquicktimeline # Dependency for keyframe-based animations inside Quick 3D
-    qt6.qtshadertools   # Compiles runtime and offline shaders (.frag / .vert to .qsb)
+    blockbench
+    f3d
+    meshlab
+    qtcreator
+    qt6.qtdeclarative
+    qt6.qtquick3d
+    qt6.qtquicktimeline
+    qt6.qtshadertools
   ];
 
-  # Raster and vector image editors.
   imageEditors = with pkgs; [
-    gimp        # raster image editor & photo retouching
-    krita       # digital painting and 2D illustration
-    inkscape    # vector graphics editor (SVG)
-    pinta       # lightweight paint and image editing
+    gimp
+    krita
+    inkscape
+    pinta
   ];
 
-  # General-purpose apps reached for daily, outside any dev/media workflow.
-  # Standard GNOME utilities (Calculator, Papers PDF viewer, Loupe image viewer,
-  # File Roller archive manager, etc.) are provided by gnome.nix.
   dailyTools = with pkgs; [
     telegram-desktop
     google-chrome
   ];
+in
+{
+  options.dotfiles.packages = {
+    devExtras.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install full developer toolchain (Emacs, Neovim, VS Code, Claude Code & Desktop, LSPs, compilers, runtimes).";
+    };
 
-in {
-  environment.systemPackages =
-    buildTools
-    ++ mediaTools
-    ++ devTools
-    ++ searchTools
-    ++ nvimTools
-    ++ nvimRuntimes
-    ++ languageTools
-    ++ systemTools
-    ++ mediaUtils
-    ++ threeDTools
-    ++ imageEditors
-    ++ dailyTools;
+    creative3d.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install 3D and image creation suite (Blender, Krita, GIMP, Inkscape, Qt Creator, MeshLab).";
+    };
+
+    dailyApps.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install daily desktop apps (Google Chrome, Telegram, Spotify, Shotcut, appimage-run).";
+    };
+  };
+
+  config = {
+    environment.systemPackages =
+      systemTools
+      ++ mediaTools
+      ++ lib.optionals cfg.devExtras.enable (
+        buildTools ++ devTools ++ searchTools ++ nvimTools ++ nvimRuntimes ++ languageTools
+      )
+      ++ lib.optionals cfg.creative3d.enable (threeDTools ++ imageEditors)
+      ++ lib.optionals cfg.dailyApps.enable (dailyTools ++ mediaUtils);
+  };
 }
-

@@ -1,4 +1,7 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -16,7 +19,8 @@
     ./modules/development.nix
     ./modules/containers.nix
     ./modules/ollama.nix
+    ./modules/first-login.nix
   ];
 
-  system.stateVersion = "26.05";
+  system.stateVersion = lib.mkDefault "26.05";
 }

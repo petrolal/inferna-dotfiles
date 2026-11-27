@@ -29,19 +29,43 @@ A cohesive obsidian, forged-iron, ember-orange, and molten-gold NixOS workstatio
 - **Terminal & TUI Suite ([`ghostty/`](ghostty/), [`fish/`](fish/), [`starship/`](starship/), [`fastfetch/`](fastfetch/)):**
   - **Ghostty** (`Ctrl + Alt + T`) + **Fish** (with preserved `~/.config/fish/user-fish.fish` local overrides) + **Starship** prompt.
   - Full Inferna TUI kit: **`btop`** (with GPU telemetry), **`yazi`** (`y` wrapper with Kitty image previews), **`cava`** (6-stop hellfire audio visualizer), **`eza`**, **`bat`**, **`zoxide`**, and **`fzf`**.
-- **Apps, Gaming & Performance ([`nixos/modules/`](nixos/modules/)):**
-  - **MangoHud** Inferna overlay ([`mangohud/MangoHud.conf`](mangohud/MangoHud.conf)), **Qt6** warm Inferna palette ([`qt6ct/`](qt6ct/)), NVIDIA PRIME offload, GameMode, Steam/Lutris/Heroic/RetroArch/TETR.IO, and `nix-ld` Electron runtime libs.
-  - Tuned for responsiveness: `zramSwap`, `thermald`, `earlyoom`, `fstrim`, `nh` automatic GC, `auto-optimise-store`, socket-activated Docker, and on-demand Ollama (`sudo systemctl start ollama`).
+- **Multi-Machine Portable NixOS Flake ([`nixos/modules/`](nixos/modules/), [`bootstrap.sh`](bootstrap.sh)):**
+  - Auto-detects Intel, AMD, dedicated NVIDIA, Intel/AMD + NVIDIA PRIME offload (PCI bus IDs), VMs, and UEFI (`systemd-boot`) vs BIOS (`grub`).
+  - Generates a **100% pure** `/etc/nixos/flake.nix` per machine (no `--impure` needed, keeps `~/inferna-dotfiles` clean for `git pull`).
+  - Automatic first-login GNOME setup (`inferna-first-login` user service) applies themes, `dconf` extensions, and keybindings on first graphical login after reboot.
 
-## Install on NixOS
+## Quick Install on Any Fresh NixOS Machine
 
-### 1. Apply NixOS System Configuration
+From a freshly installed NixOS machine (logged in as your regular user with `sudo`):
 
 ```bash
-sudo nixos-rebuild switch --flake ~/inferna-dotfiles/nixos#default
+curl -fsSL https://raw.githubusercontent.com/petrolal/inferna-dotfiles/main/bootstrap.sh | bash
 ```
 
-### 2. Deploy User Dotfiles
+What the bootstrapper does automatically:
+1. Clones `~/inferna-dotfiles` (automatically fetches `git` via `nix` if not installed yet).
+2. Detects your hostname, user, UEFI/BIOS bootloader, GPU topology (Intel / AMD / NVIDIA / PRIME bus IDs / VM), timezone, keymap, and `system.stateVersion`.
+3. Lets you pick a profile:
+   - **`full`** *(default)* — Complete workstation (GNOME 51 rice + Dev + Docker + Gaming + 3D/Image suite + Ollama)
+   - **`dev`** — Developer desktop (GNOME 51 rice + Dev + Docker + Daily apps)
+   - **`minimal`** — Pure Inferna rice only (GNOME 51, Plymouth, GDM, Ghostty, Fish, TUI suite, Firefox)
+4. Backs up `/etc/nixos`, writes a pure `/etc/nixos/flake.nix` pointing to your local `hardware-configuration.nix`, runs `nixos-rebuild switch`, and deploys dotfiles.
+5. After you **reboot** and log into GNOME, `inferna-first-login` automatically finishes applying the GNOME Shell theme, `extensions.dconf`, and `Ctrl+Alt+T` shortcut.
+
+### Non-Interactive & Dry-Run Examples
+
+```bash
+# Preview detected hardware and generated /etc/nixos/flake.nix without touching the system
+curl -fsSL https://raw.githubusercontent.com/petrolal/inferna-dotfiles/main/bootstrap.sh | bash -s -- --dry-run
+
+# Unattended full workstation install
+curl -fsSL https://raw.githubusercontent.com/petrolal/inferna-dotfiles/main/bootstrap.sh | bash -s -- --yes --profile full
+
+# Unattended minimal rice install (great for laptops/VMs)
+curl -fsSL https://raw.githubusercontent.com/petrolal/inferna-dotfiles/main/bootstrap.sh | bash -s -- --yes --profile minimal
+```
+
+### Manual Dotfiles-Only Redeploy
 
 ```bash
 cd ~/inferna-dotfiles
@@ -54,6 +78,7 @@ Replaced files are backed up to `~/.config/inferna-dotfiles-backup/<time>/`. Per
 
 | Command | Description |
 | --- | --- |
+| `inferna-rebuild` | Update local `/etc/nixos` flake lock and switch with `nh os switch` |
 | `inferna-theme Inferna` | Apply / live-reload the Inferna GNOME, GTK & cursor theme |
 | `inferna-extensions save` | Snapshot current GNOME extension dconf settings to the repo |
 | `ring3d` | Interactive high-resolution live 3D GLSL Inferna ring in Ghostty |
